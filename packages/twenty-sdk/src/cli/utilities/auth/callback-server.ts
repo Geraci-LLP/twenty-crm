@@ -17,10 +17,18 @@ const SUCCESS_HTML = `<!DOCTYPE html>
 <p>You can close this window and return to the terminal.</p>
 </body></html>`;
 
+const escapeHtml = (text: string): string =>
+  text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
 const ERROR_HTML = (error: string) => `<!DOCTYPE html>
 <html><body style="font-family:sans-serif;text-align:center;padding:60px">
 <h2>Authentication failed</h2>
-<p>${error}</p>
+<p>${escapeHtml(error)}</p>
 <p>Please return to the terminal and try again.</p>
 </body></html>`;
 

@@ -66,8 +66,31 @@ export class ApiService {
 
     this.client.interceptors.response.use(
       (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
+      async (error) => {
+        if (
+          error.response?.status === 401 &&
+          !error.config?._retryAfterRefresh
+        ) {
+          const twentyConfig = await this.configService.getConfig();
+
+          if (
+            twentyConfig.applicationRefreshToken &&
+            twentyConfig.oauthClientId
+          ) {
+            const refreshed = await this.tryRefreshToken(
+              twentyConfig.applicationRefreshToken,
+              error.config.baseURL as string,
+              twentyConfig.oauthClientId,
+            );
+
+            if (refreshed) {
+              error.config._retryAfterRefresh = true;
+              error.config.headers.Authorization = `Bearer ${refreshed}`;
+
+              return this.client.request(error.config);
+            }
+          }
+
           console.error(
             chalk.red(
               'Authentication failed. Please run `yarn twenty auth:login`.',
