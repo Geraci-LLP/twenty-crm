@@ -37,15 +37,9 @@ export class ApiService {
         if (
           !token &&
           authToken === twentyConfig.applicationAccessToken &&
-          twentyConfig.applicationRefreshToken &&
-          twentyConfig.oauthClientId &&
           this.isTokenExpired(authToken)
         ) {
-          const refreshed = await this.tryRefreshToken(
-            twentyConfig.applicationRefreshToken,
-            config.baseURL as string,
-            twentyConfig.oauthClientId,
-          );
+          const refreshed = await this.refreshToken();
 
           if (refreshed) {
             config.headers.Authorization = `Bearer ${refreshed}`;
@@ -67,30 +61,7 @@ export class ApiService {
     this.client.interceptors.response.use(
       (response) => response,
       async (error) => {
-        if (
-          error.response?.status === 401 &&
-          !error.config?._retryAfterRefresh
-        ) {
-          const twentyConfig = await this.configService.getConfig();
-
-          if (
-            twentyConfig.applicationRefreshToken &&
-            twentyConfig.oauthClientId
-          ) {
-            const refreshed = await this.tryRefreshToken(
-              twentyConfig.applicationRefreshToken,
-              error.config.baseURL as string,
-              twentyConfig.oauthClientId,
-            );
-
-            if (refreshed) {
-              error.config._retryAfterRefresh = true;
-              error.config.headers.Authorization = `Bearer ${refreshed}`;
-
-              return this.client.request(error.config);
-            }
-          }
-
+        if (error.response?.status === 401) {
           console.error(
             chalk.red(
               'Authentication failed. Please run `yarn twenty auth:login`.',
@@ -202,58 +173,31 @@ export class ApiService {
     }
   }
 
-  async renewApplicationToken(applicationRefreshToken: string): Promise<
-    ApiResponse<{
-      applicationAccessToken: { token: string; expiresAt: string };
-      applicationRefreshToken: { token: string; expiresAt: string };
-    }>
-  > {
+  async refreshToken(): Promise<string | null> {
+    const config = await this.configService.getConfig();
+
+    if (!config.applicationRefreshToken || !config.oauthClientId) {
+      return null;
+    }
+
     try {
-      const mutation = `
-        mutation RenewApplicationToken($applicationRefreshToken: String!) {
-          renewApplicationToken(applicationRefreshToken: $applicationRefreshToken) {
-            applicationAccessToken {
-              token
-              expiresAt
-            }
-            applicationRefreshToken {
-              token
-              expiresAt
-            }
-          }
-        }
-      `;
+      const tokenResponse = await axios.post(`${config.apiUrl}/oauth/token`, {
+        grant_type: 'refresh_token',
+        refresh_token: config.applicationRefreshToken,
+        client_id: config.oauthClientId,
+      });
 
-      const response: AxiosResponse = await this.client.post(
-        '/metadata',
-        {
-          query: mutation,
-          variables: { applicationRefreshToken },
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: '*/*',
-          },
-        },
-      );
+      const { access_token: newAccessToken, refresh_token: newRefreshToken } =
+        tokenResponse.data;
 
-      if (response.data.errors) {
-        return {
-          success: false,
-          error: response.data.errors[0],
-        };
-      }
+      await this.configService.setConfig({
+        applicationAccessToken: newAccessToken,
+        applicationRefreshToken: newRefreshToken,
+      });
 
-      return {
-        success: true,
-        data: response.data.data.renewApplicationToken,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error,
-      };
+      return newAccessToken;
+    } catch {
+      return null;
     }
   }
 
@@ -1005,38 +949,10 @@ export class ApiService {
         Buffer.from(token.split('.')[1], 'base64').toString(),
       );
 
-      // Treat as expired if less than 60 seconds remain
-      return payload.exp * 1000 < Date.now() + 60_000;
+      // Treat as expired if less than 30 seconds remain
+      return payload.exp * 1000 < Date.now() + 30_000;
     } catch {
       return false;
-    }
-  }
-
-  private async tryRefreshToken(
-    refreshToken: string,
-    baseUrl: string,
-    clientId: string,
-  ): Promise<string | null> {
-    try {
-      const tokenResponse = await axios.post(`${baseUrl}/oauth/token`, {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-        client_id: clientId,
-      });
-
-      const { access_token: newAccessToken, refresh_token: newRefreshToken } =
-        tokenResponse.data;
-
-      await this.configService.setConfig({
-        applicationAccessToken: newAccessToken,
-        applicationRefreshToken: newRefreshToken,
-      });
-
-      return newAccessToken;
-    } catch {
-      // Don't wipe tokens — the refresh token may still be valid on retry,
-      // or the user can re-authenticate manually
-      return null;
     }
   }
 
