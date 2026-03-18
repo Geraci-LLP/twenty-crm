@@ -105,7 +105,8 @@ export const useTextVariableEditor = ({
           const rootDocSelection = new AllSelection(tr.doc);
           tr.setSelection(rootDocSelection);
           tr.replaceSelectionWith(formattedDocNode);
-          tr.setSelection(TextSelection.create(tr.doc, originalPos));
+          const clampedPos = Math.min(originalPos, tr.doc.content.size);
+          tr.setSelection(TextSelection.create(tr.doc, clampedPos));
 
           view.dispatch(tr);
           return true;
