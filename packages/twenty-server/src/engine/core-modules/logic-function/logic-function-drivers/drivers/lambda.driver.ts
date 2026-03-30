@@ -8,6 +8,7 @@ import {
   DeleteFunctionCommand,
   DeleteLayerVersionCommand,
   GetFunctionCommand,
+  GetFunctionCommandOutput,
   InvokeCommand,
   type InvokeCommandInput,
   Lambda,
@@ -842,21 +843,15 @@ export class LambdaDriver implements LogicFunctionDriver {
     } while (isDefined(marker));
   }
 
-  private async isAlreadyBuilt({
-    flatLogicFunction,
+  private async hasExpectedLayers({
+    lambdaExecutor,
     flatApplication,
     applicationUniversalIdentifier,
   }: {
-    flatLogicFunction: FlatLogicFunction;
+    lambdaExecutor: GetFunctionCommandOutput;
     flatApplication: FlatApplication;
     applicationUniversalIdentifier: string;
   }) {
-    const lambdaExecutor = await this.getLambdaExecutor(flatLogicFunction);
-
-    if (!isDefined(lambdaExecutor)) {
-      return false;
-    }
-
     const layers = lambdaExecutor.Configuration?.Layers;
 
     if (!isDefined(layers) || layers.length !== 2) {
@@ -875,7 +870,7 @@ export class LambdaDriver implements LogicFunctionDriver {
     );
   }
 
-  private async updateLambdaFunction({
+  private async updateLambdaExecutorConfiguration({
     flatLogicFunction,
     depsLayerArn,
     sdkLayerArn,
@@ -906,7 +901,7 @@ export class LambdaDriver implements LogicFunctionDriver {
     }
   }
 
-  private async build({
+  private async buildLambdaExecutor({
     flatLogicFunction,
     flatApplication,
     applicationUniversalIdentifier,
@@ -915,16 +910,7 @@ export class LambdaDriver implements LogicFunctionDriver {
     flatApplication: FlatApplication;
     applicationUniversalIdentifier: string;
   }) {
-    if (
-      !flatApplication.isSdkLayerStale &&
-      (await this.isAlreadyBuilt({
-        flatLogicFunction,
-        flatApplication,
-        applicationUniversalIdentifier,
-      }))
-    ) {
-      return;
-    }
+    const lambdaExecutor = await this.getLambdaExecutor(flatLogicFunction);
 
     const depsLayerArn = await this.getLayerArn({
       flatApplication,
@@ -935,27 +921,34 @@ export class LambdaDriver implements LogicFunctionDriver {
       flatApplication,
       applicationUniversalIdentifier,
     });
-
-    const lambdaExecutor = await this.getLambdaExecutor(flatLogicFunction);
-
-    if (isDefined(lambdaExecutor)) {
-      await this.updateLambdaFunction({
+    if (!isDefined(lambdaExecutor)) {
+      await this.createLambdaExecutor({
         flatLogicFunction,
         depsLayerArn,
         sdkLayerArn,
       });
-
       return;
     }
 
-    await this.createLambdaFunction({
+    if (
+      !flatApplication.isSdkLayerStale &&
+      (await this.hasExpectedLayers({
+        lambdaExecutor,
+        flatApplication,
+        applicationUniversalIdentifier,
+      }))
+    ) {
+      return;
+    }
+
+    await this.updateLambdaExecutorConfiguration({
       flatLogicFunction,
       depsLayerArn,
       sdkLayerArn,
     });
   }
 
-  private async createLambdaFunction({
+  private async createLambdaExecutor({
     flatLogicFunction,
     depsLayerArn,
     sdkLayerArn,
@@ -1029,7 +1022,7 @@ export class LambdaDriver implements LogicFunctionDriver {
     env,
     timeoutMs = 900_000,
   }: LogicFunctionExecuteParams): Promise<LogicFunctionExecuteResult> {
-    await this.build({
+    await this.buildLambdaExecutor({
       flatLogicFunction,
       flatApplication,
       applicationUniversalIdentifier,
