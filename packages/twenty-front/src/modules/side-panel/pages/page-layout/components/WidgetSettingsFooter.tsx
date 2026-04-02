@@ -1,11 +1,12 @@
 import { useDeletePageLayoutWidget } from '@/page-layout/hooks/useDeletePageLayoutWidget';
 import { useDuplicatePageLayoutWidget } from '@/page-layout/hooks/useDuplicatePageLayoutWidget';
 import { pageLayoutEditingWidgetIdComponentState } from '@/page-layout/states/pageLayoutEditingWidgetIdComponentState';
+import { useIsDashboardPageLayout } from '@/side-panel/pages/page-layout/hooks/useIsDashboardPageLayout';
 import { OptionsDropdownMenu } from '@/ui/layout/dropdown/components/OptionsDropdownMenu';
 import { useCloseDropdown } from '@/ui/layout/dropdown/hooks/useCloseDropdown';
-import { SidePanelFooter } from '@/ui/layout/side-panel/components/SidePanelFooter';
 import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
 import { selectedItemIdComponentState } from '@/ui/layout/selectable-list/states/selectedItemIdComponentState';
+import { SidePanelFooter } from '@/ui/layout/side-panel/components/SidePanelFooter';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { useLingui } from '@lingui/react/macro';
 import { useId } from 'react';
@@ -18,6 +19,7 @@ export const WidgetSettingsFooter = ({
 }: {
   pageLayoutId: string;
 }) => {
+  const isDashboardPageLayout = useIsDashboardPageLayout();
   const dropdownId = useId();
   const { t } = useLingui();
   const { closeDropdown } = useCloseDropdown();
@@ -46,6 +48,10 @@ export const WidgetSettingsFooter = ({
     selectedItemIdComponentState,
     dropdownId,
   );
+
+  if (!isDashboardPageLayout) {
+    return null;
+  }
 
   return (
     <SidePanelFooter
