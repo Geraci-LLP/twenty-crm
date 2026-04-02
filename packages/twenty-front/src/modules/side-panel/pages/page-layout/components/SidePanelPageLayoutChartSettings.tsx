@@ -7,6 +7,7 @@ import { WidgetSettingsFooter } from '@/side-panel/pages/page-layout/components/
 import { WidgetSettingsManageSection } from '@/side-panel/pages/page-layout/components/WidgetSettingsManageSection';
 import { WidgetSettingsPlacementSection } from '@/side-panel/pages/page-layout/components/WidgetSettingsPlacementSection';
 import { WIDGET_SETTINGS_SELECTABLE_ITEM_IDS } from '@/side-panel/pages/page-layout/constants/settings/WidgetSettingsSelectableItemIds';
+import { useIsDashboardPageLayout } from '@/side-panel/pages/page-layout/hooks/useIsDashboardPageLayout';
 import { usePageLayoutIdFromContextStore } from '@/side-panel/pages/page-layout/hooks/usePageLayoutIdFromContextStore';
 import { isChartWidget } from '@/side-panel/pages/page-layout/utils/isChartWidget';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
@@ -21,6 +22,7 @@ const StyledContainer = styled.div`
 
 export const SidePanelPageLayoutChartSettings = () => {
   const { pageLayoutId } = usePageLayoutIdFromContextStore();
+  const isDashboardPageLayout = useIsDashboardPageLayout();
 
   const pageLayoutDraft = useAtomComponentStateValue(
     pageLayoutDraftComponentState,
@@ -41,8 +43,12 @@ export const SidePanelPageLayoutChartSettings = () => {
   }
 
   const selectableItemIds = [
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
+    ...(isDashboardPageLayout
+      ? []
+      : [
+          WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
+          WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
+        ]),
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_DOWN,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_UP,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_TO_TAB,

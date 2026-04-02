@@ -9,6 +9,7 @@ import { WidgetSettingsFooter } from '@/side-panel/pages/page-layout/components/
 import { WidgetSettingsManageSection } from '@/side-panel/pages/page-layout/components/WidgetSettingsManageSection';
 import { WidgetSettingsPlacementSection } from '@/side-panel/pages/page-layout/components/WidgetSettingsPlacementSection';
 import { WIDGET_SETTINGS_SELECTABLE_ITEM_IDS } from '@/side-panel/pages/page-layout/constants/settings/WidgetSettingsSelectableItemIds';
+import { useIsDashboardPageLayout } from '@/side-panel/pages/page-layout/hooks/useIsDashboardPageLayout';
 import { usePageLayoutIdFromContextStore } from '@/side-panel/pages/page-layout/hooks/usePageLayoutIdFromContextStore';
 import { useUpdateCurrentWidgetConfig } from '@/side-panel/pages/page-layout/hooks/useUpdateCurrentWidgetConfig';
 import { useWidgetInEditMode } from '@/side-panel/pages/page-layout/hooks/useWidgetInEditMode';
@@ -38,6 +39,7 @@ export const SidePanelPageLayoutFieldsSettings = () => {
   const { navigateToSidePanelSubPage } = useSidePanelSubPageHistory();
   const { pageLayoutId, objectNameSingular } =
     usePageLayoutIdFromContextStore();
+  const isDashboardPageLayout = useIsDashboardPageLayout();
 
   const { updateCurrentWidgetConfig } =
     useUpdateCurrentWidgetConfig(pageLayoutId);
@@ -83,8 +85,12 @@ export const SidePanelPageLayoutFieldsSettings = () => {
     'new-field-default-visibility',
     'display-more-fields-button',
     'action-button',
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
+    ...(isDashboardPageLayout
+      ? []
+      : [
+          WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
+          WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
+        ]),
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_DOWN,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_UP,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_TO_TAB,

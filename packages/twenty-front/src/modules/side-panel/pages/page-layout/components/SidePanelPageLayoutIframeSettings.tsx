@@ -5,6 +5,7 @@ import { WidgetSettingsFooter } from '@/side-panel/pages/page-layout/components/
 import { WidgetSettingsManageSection } from '@/side-panel/pages/page-layout/components/WidgetSettingsManageSection';
 import { WidgetSettingsPlacementSection } from '@/side-panel/pages/page-layout/components/WidgetSettingsPlacementSection';
 import { WIDGET_SETTINGS_SELECTABLE_ITEM_IDS } from '@/side-panel/pages/page-layout/constants/settings/WidgetSettingsSelectableItemIds';
+import { useIsDashboardPageLayout } from '@/side-panel/pages/page-layout/hooks/useIsDashboardPageLayout';
 import { usePageLayoutIdFromContextStore } from '@/side-panel/pages/page-layout/hooks/usePageLayoutIdFromContextStore';
 import { useWidgetInEditMode } from '@/side-panel/pages/page-layout/hooks/useWidgetInEditMode';
 import { styled } from '@linaria/react';
@@ -31,6 +32,7 @@ const StyledContainer = styled.div`
 
 export const SidePanelPageLayoutIframeSettings = () => {
   const { pageLayoutId } = usePageLayoutIdFromContextStore();
+  const isDashboardPageLayout = useIsDashboardPageLayout();
 
   const { widgetInEditMode } = useWidgetInEditMode(pageLayoutId);
 
@@ -88,8 +90,12 @@ export const SidePanelPageLayoutIframeSettings = () => {
   };
 
   const selectableItemIds = [
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
+    ...(isDashboardPageLayout
+      ? []
+      : [
+          WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
+          WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
+        ]),
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_DOWN,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_UP,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_TO_TAB,
