@@ -1,6 +1,7 @@
 import { InjectDataSource } from '@nestjs/typeorm';
 
 import { Command } from 'nest-commander';
+import { isDefined } from 'twenty-shared/utils';
 import { DataSource } from 'typeorm';
 import { v4, v5 } from 'uuid';
 
@@ -19,9 +20,9 @@ import {
   buildNavigationFlatCommandMenuItem,
   NAVIGATION_COMMAND_UUID_NAMESPACE,
 } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-flat-command-menu-item.util';
-import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { STANDARD_COMMAND_MENU_ITEMS } from 'src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant';
 import { TWENTY_STANDARD_APPLICATION } from 'src/engine/workspace-manager/twenty-standard-application/constants/twenty-standard-applications';
+import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
 
 const GO_TO_ENGINE_KEYS = [
@@ -48,6 +49,7 @@ export class RefactorNavigationCommandsCommand extends ActiveOrSuspendedWorkspac
     private readonly coreDataSource: DataSource,
     private readonly applicationService: ApplicationService,
     private readonly workspaceMigrationValidateBuildAndRunService: WorkspaceMigrationValidateBuildAndRunService,
+    private readonly workspaceCacheService: WorkspaceCacheService,
   ) {
     super(workspaceIteratorService);
   }
@@ -98,178 +100,163 @@ export class RefactorNavigationCommandsCommand extends ActiveOrSuspendedWorkspac
       `${isDryRun ? '[DRY RUN] ' : ''}Refactoring navigation commands for workspace ${workspaceId}`,
     );
 
-    const queryRunner = this.coreDataSource.createQueryRunner();
-
-    await queryRunner.connect();
-
-    try {
-      const deleteResult = isDryRun
-        ? await queryRunner.query(
-            `SELECT COUNT(*) as count FROM core."commandMenuItem"
-             WHERE "workspaceId" = $1
-               AND "engineComponentKey" = ANY($2)`,
-            [workspaceId, GO_TO_ENGINE_KEYS],
-          )
-        : await queryRunner.query(
-            `DELETE FROM core."commandMenuItem"
-             WHERE "workspaceId" = $1
-               AND "engineComponentKey" = ANY($2)`,
-            [workspaceId, GO_TO_ENGINE_KEYS],
-          );
-
-      const deletedCount = isDryRun
-        ? deleteResult?.[0]?.count ?? 0
-        : deleteResult?.[1] ?? 0;
-
-      this.logger.log(
-        `${isDryRun ? '[DRY RUN] Would delete' : 'Deleted'} ${deletedCount} old GO_TO_* command(s) for workspace ${workspaceId}`,
+    const { twentyStandardFlatApplication } =
+      await this.applicationService.findWorkspaceTwentyStandardAndCustomApplicationOrThrow(
+        { workspaceId },
       );
 
-      const objectMetadataItems: ObjectMetadataEntity[] =
-        await queryRunner.query(
-          `SELECT id, "nameSingular", "namePlural", "labelPlural", icon, "isSystem", "isActive", "universalIdentifier", "shortcut"
-           FROM core."objectMetadata"
-           WHERE "workspaceId" = $1 AND "isActive" = true`,
-          [workspaceId],
-        );
+    const { flatCommandMenuItemMaps, flatObjectMetadataMaps } =
+      await this.workspaceCacheService.getOrRecompute(workspaceId, [
+        'flatCommandMenuItemMaps',
+        'flatObjectMetadataMaps',
+      ]);
 
-      this.logger.log(
-        `Found ${objectMetadataItems.length} active object(s) for workspace ${workspaceId}`,
+    const allCommandMenuItems = Object.values(
+      flatCommandMenuItemMaps.byUniversalIdentifier,
+    ).filter(isDefined);
+
+    const standardAppCommandMenuItems = allCommandMenuItems.filter(
+      (item) => item.applicationId === twentyStandardFlatApplication.id,
+    );
+
+    const goToItemsToDelete = standardAppCommandMenuItems.filter((item) =>
+      GO_TO_ENGINE_KEYS.includes(item.engineComponentKey),
+    );
+
+    this.logger.log(
+      `${isDryRun ? '[DRY RUN] Would delete' : 'Deleting'} ${goToItemsToDelete.length} old GO_TO_* command(s) for workspace ${workspaceId}`,
+    );
+
+    const existingNavigationUniversalIdentifiers = new Set(
+      allCommandMenuItems
+        .filter(
+          (item) => item.engineComponentKey === EngineComponentKey.NAVIGATION,
+        )
+        .map((item) => item.universalIdentifier),
+    );
+
+    const activeObjects = Object.values(
+      flatObjectMetadataMaps.byUniversalIdentifier,
+    )
+      .filter(isDefined)
+      .filter((objectMetadata) => objectMetadata.isActive);
+
+    this.logger.log(
+      `Found ${activeObjects.length} active object(s) for workspace ${workspaceId}`,
+    );
+
+    const nonGoToItems = allCommandMenuItems.filter(
+      (item) => !GO_TO_ENGINE_KEYS.includes(item.engineComponentKey),
+    );
+
+    let nextPosition =
+      nonGoToItems.reduce((max, item) => Math.max(max, item.position), -1) + 1;
+
+    const now = new Date().toISOString();
+    const flatCommandMenuItemsToCreate: FlatCommandMenuItem[] = [];
+
+    for (const objectMetadata of activeObjects) {
+      const universalIdentifier = v5(
+        objectMetadata.universalIdentifier,
+        NAVIGATION_COMMAND_UUID_NAMESPACE,
       );
 
-      const existingNavigationRows: { universalIdentifier: string }[] =
-        await queryRunner.query(
-          `SELECT "universalIdentifier" FROM core."commandMenuItem"
-           WHERE "workspaceId" = $1
-             AND "engineComponentKey" = $2`,
-          [workspaceId, EngineComponentKey.NAVIGATION],
-        );
-
-      const existingUniversalIdentifiers = new Set(
-        existingNavigationRows.map((row) => row.universalIdentifier),
-      );
-
-      const maxPositionResult = await queryRunner.query(
-        `SELECT COALESCE(MAX(position), -1) as "maxPosition"
-         FROM core."commandMenuItem"
-         WHERE "workspaceId" = $1
-           AND "engineComponentKey" != ALL($2)`,
-        [workspaceId, GO_TO_ENGINE_KEYS],
-      );
-
-      let nextPosition =
-        Number(maxPositionResult?.[0]?.maxPosition ?? -1) + 1;
-
-      const { twentyStandardFlatApplication } =
-        await this.applicationService.findWorkspaceTwentyStandardAndCustomApplicationOrThrow(
-          { workspaceId },
-        );
-
-      const now = new Date().toISOString();
-      const flatCommandMenuItemsToCreate: FlatCommandMenuItem[] = [];
-
-      for (const objectMetadata of objectMetadataItems) {
-        const universalIdentifier = v5(
-          objectMetadata.universalIdentifier,
-          NAVIGATION_COMMAND_UUID_NAMESPACE,
-        );
-
-        if (existingUniversalIdentifiers.has(universalIdentifier)) {
-          continue;
-        }
-
-        const position = nextPosition++;
-
-        flatCommandMenuItemsToCreate.push(
-          buildNavigationFlatCommandMenuItem({
-            objectMetadata,
-            commandMenuItemId: v4(),
-            applicationId: twentyStandardFlatApplication.id,
-            workspaceId,
-            position,
-            now,
-          }),
-        );
+      if (existingNavigationUniversalIdentifiers.has(universalIdentifier)) {
+        continue;
       }
 
-      const settingsUniversalIdentifier =
-        STANDARD_COMMAND_MENU_ITEMS.goToSettings.universalIdentifier;
-
-      if (!existingUniversalIdentifiers.has(settingsUniversalIdentifier)) {
-        flatCommandMenuItemsToCreate.push({
-          id: v4(),
-          universalIdentifier: settingsUniversalIdentifier,
+      flatCommandMenuItemsToCreate.push(
+        buildNavigationFlatCommandMenuItem({
+          objectMetadata,
+          commandMenuItemId: v4(),
           applicationId: twentyStandardFlatApplication.id,
-          applicationUniversalIdentifier:
-            TWENTY_STANDARD_APPLICATION.universalIdentifier,
           workspaceId,
-          label: 'Go to Settings',
-          shortLabel: 'Settings',
-          icon: 'IconSettings',
           position: nextPosition++,
-          isPinned: false,
-          availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
-          conditionalAvailabilityExpression: null,
-          frontComponentId: null,
-          frontComponentUniversalIdentifier: null,
-          engineComponentKey: EngineComponentKey.NAVIGATION,
-          payload: { path: '/settings/profile' },
-          hotKeys: ['G', 'S'],
-          workflowVersionId: null,
-          availabilityObjectMetadataId: null,
-          availabilityObjectMetadataUniversalIdentifier: null,
-          createdAt: now,
-          updatedAt: now,
-        });
-      }
-
-      if (flatCommandMenuItemsToCreate.length === 0) {
-        this.logger.log(
-          `All NAVIGATION commands already exist for workspace ${workspaceId}, skipping`,
-        );
-
-        return;
-      }
-
-      this.logger.log(
-        `${isDryRun ? '[DRY RUN] Would create' : 'Creating'} ${flatCommandMenuItemsToCreate.length} NAVIGATION command(s) for workspace ${workspaceId}`,
+          now,
+        }),
       );
-
-      if (isDryRun) {
-        return;
-      }
-
-      const validateAndBuildResult =
-        await this.workspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigration(
-          {
-            allFlatEntityOperationByMetadataName: {
-              commandMenuItem: {
-                flatEntityToCreate: flatCommandMenuItemsToCreate,
-                flatEntityToDelete: [],
-                flatEntityToUpdate: [],
-              },
-            },
-            workspaceId,
-            applicationUniversalIdentifier:
-              twentyStandardFlatApplication.universalIdentifier,
-          },
-        );
-
-      if (validateAndBuildResult.status === 'fail') {
-        this.logger.error(
-          `Failed to create navigation commands:\n${JSON.stringify(validateAndBuildResult, null, 2)}`,
-        );
-
-        throw new Error(
-          `Failed to create navigation commands for workspace ${workspaceId}`,
-        );
-      }
-
-      this.logger.log(
-        `Successfully refactored navigation commands for workspace ${workspaceId}`,
-      );
-    } finally {
-      await queryRunner.release();
     }
+
+    const settingsUniversalIdentifier =
+      STANDARD_COMMAND_MENU_ITEMS.goToSettings.universalIdentifier;
+
+    if (
+      !existingNavigationUniversalIdentifiers.has(settingsUniversalIdentifier)
+    ) {
+      flatCommandMenuItemsToCreate.push({
+        id: v4(),
+        universalIdentifier: settingsUniversalIdentifier,
+        applicationId: twentyStandardFlatApplication.id,
+        applicationUniversalIdentifier:
+          TWENTY_STANDARD_APPLICATION.universalIdentifier,
+        workspaceId,
+        label: 'Go to Settings',
+        shortLabel: 'Settings',
+        icon: 'IconSettings',
+        position: nextPosition++,
+        isPinned: false,
+        availabilityType: CommandMenuItemAvailabilityType.GLOBAL,
+        conditionalAvailabilityExpression: null,
+        frontComponentId: null,
+        frontComponentUniversalIdentifier: null,
+        engineComponentKey: EngineComponentKey.NAVIGATION,
+        payload: { path: '/settings/profile' },
+        hotKeys: ['G', 'S'],
+        workflowVersionId: null,
+        availabilityObjectMetadataId: null,
+        availabilityObjectMetadataUniversalIdentifier: null,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
+    if (
+      goToItemsToDelete.length === 0 &&
+      flatCommandMenuItemsToCreate.length === 0
+    ) {
+      this.logger.log(
+        `All NAVIGATION commands already exist for workspace ${workspaceId}, skipping`,
+      );
+
+      return;
+    }
+
+    this.logger.log(
+      `${isDryRun ? '[DRY RUN] Would create' : 'Creating'} ${flatCommandMenuItemsToCreate.length} NAVIGATION command(s) for workspace ${workspaceId}`,
+    );
+
+    if (isDryRun) {
+      return;
+    }
+
+    const validateAndBuildResult =
+      await this.workspaceMigrationValidateBuildAndRunService.validateBuildAndRunWorkspaceMigration(
+        {
+          allFlatEntityOperationByMetadataName: {
+            commandMenuItem: {
+              flatEntityToCreate: flatCommandMenuItemsToCreate,
+              flatEntityToDelete: goToItemsToDelete,
+              flatEntityToUpdate: [],
+            },
+          },
+          workspaceId,
+          applicationUniversalIdentifier:
+            twentyStandardFlatApplication.universalIdentifier,
+        },
+      );
+
+    if (validateAndBuildResult.status === 'fail') {
+      this.logger.error(
+        `Failed to refactor navigation commands:\n${JSON.stringify(validateAndBuildResult, null, 2)}`,
+      );
+
+      throw new Error(
+        `Failed to refactor navigation commands for workspace ${workspaceId}`,
+      );
+    }
+
+    this.logger.log(
+      `Successfully refactored navigation commands for workspace ${workspaceId}`,
+    );
   }
 }

@@ -53,7 +53,7 @@ export const fromCreateCommandMenuItemInputToFlatCommandMenuItemToCreate = ({
     payload:
       createCommandMenuItemInput.engineComponentKey ===
       EngineComponentKey.NAVIGATION
-        ? createCommandMenuItemInput.payload ?? null
+        ? (createCommandMenuItemInput.payload ?? null)
         : null,
     hotKeys: createCommandMenuItemInput.hotKeys ?? null,
     availabilityType:

@@ -12,7 +12,8 @@ export class AddPayloadToCommandMenuItem1775129635528
       `ALTER TABLE "core"."commandMenuItem" ADD "payload" jsonb`,
     );
 
-    const savepointName = 'sp_add_payload_check_constraint_to_command_menu_item';
+    const savepointName =
+      'sp_add_payload_check_constraint_to_command_menu_item';
 
     try {
       await queryRunner.query(`SAVEPOINT ${savepointName}`);
