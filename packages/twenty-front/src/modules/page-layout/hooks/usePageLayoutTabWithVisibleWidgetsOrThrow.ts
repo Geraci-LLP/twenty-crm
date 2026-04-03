@@ -7,6 +7,7 @@ import { sortWidgetsByVerticalListPosition } from '@/page-layout/utils/sortWidge
 import { useLayoutRenderingContext } from '@/ui/layout/contexts/LayoutRenderingContext';
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import { isDefined } from 'twenty-shared/utils';
+import { PageLayoutTabLayoutMode } from '~/generated-metadata/graphql';
 
 export const usePageLayoutTabWithVisibleWidgetsOrThrow = (
   tabId: string,
@@ -29,16 +30,25 @@ export const usePageLayoutTabWithVisibleWidgetsOrThrow = (
   if (isPageLayoutInEditMode) {
     return {
       ...tab,
-      widgets: sortWidgetsByVerticalListPosition(tab.widgets),
+      widgets:
+        tab.layoutMode === PageLayoutTabLayoutMode.VERTICAL_LIST
+          ? sortWidgetsByVerticalListPosition(tab.widgets)
+          : tab.widgets,
     };
   }
 
   const context = buildWidgetVisibilityContext({ isMobile, isInSidePanel });
 
+  const visibleWidgets = filterVisibleWidgets({
+    widgets: tab.widgets,
+    context,
+  });
+
   return {
     ...tab,
-    widgets: sortWidgetsByVerticalListPosition(
-      filterVisibleWidgets({ widgets: tab.widgets, context }),
-    ),
+    widgets:
+      tab.layoutMode === PageLayoutTabLayoutMode.VERTICAL_LIST
+        ? sortWidgetsByVerticalListPosition(visibleWidgets)
+        : visibleWidgets,
   };
 };
