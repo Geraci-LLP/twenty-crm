@@ -9,9 +9,13 @@ import { widgetInsertionContextComponentState } from '@/page-layout/states/widge
 import { type PageLayoutWidget } from '@/page-layout/types/PageLayoutWidget';
 import { addWidgetToTab } from '@/page-layout/utils/addWidgetToTab';
 import { createDefaultFieldWidget } from '@/page-layout/utils/createDefaultFieldWidget';
+import { createDefaultFieldsWidget } from '@/page-layout/utils/createDefaultFieldsWidget';
 import { getTabListInstanceIdFromPageLayoutAndRecord } from '@/page-layout/utils/getTabListInstanceIdFromPageLayoutAndRecord';
 import { isVerticalListPosition } from '@/page-layout/utils/isVerticalListPosition';
 import { removeWidgetFromTab } from '@/page-layout/utils/removeWidgetFromTab';
+import { getWidgetConfigurationViewId } from '@/page-layout/utils/getWidgetConfigurationViewId';
+import { useCreateViewForFieldsWidget } from '@/page-layout/widgets/fields/hooks/useCreateViewForFieldsWidget';
+import { useDeleteViewForFieldsWidget } from '@/page-layout/widgets/fields/hooks/useDeleteViewForFieldsWidget';
 import { useDeleteViewForRecordTableWidget } from '@/page-layout/widgets/record-table/hooks/useDeleteViewForRecordTableWidget';
 import { SidePanelGroup } from '@/side-panel/components/SidePanelGroup';
 import { SidePanelList } from '@/side-panel/components/SidePanelList';
@@ -87,6 +91,10 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
   const { insertCreatedWidgetAtContext } =
     useInsertCreatedWidgetAtContext(pageLayoutId);
 
+  const { createViewForFieldsWidget } = useCreateViewForFieldsWidget();
+
+  const { deleteViewForFieldsWidget } = useDeleteViewForFieldsWidget();
+
   const { deleteViewForRecordTableWidget } =
     useDeleteViewForRecordTableWidget();
 
@@ -136,16 +144,20 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       return;
     }
 
-    if (
-      existingWidget?.type === WidgetType.RECORD_TABLE &&
-      'viewId' in (existingWidget.configuration ?? {}) &&
-      isDefined(
-        (existingWidget.configuration as { viewId: string | null }).viewId,
-      )
-    ) {
-      deleteViewForRecordTableWidget(
-        (existingWidget.configuration as { viewId: string }).viewId,
+    if (isDefined(existingWidget)) {
+      const viewId = getWidgetConfigurationViewId(
+        existingWidget.configuration,
       );
+
+      if (isDefined(viewId)) {
+        if (existingWidget.type === WidgetType.RECORD_TABLE) {
+          deleteViewForRecordTableWidget(viewId);
+        }
+
+        if (existingWidget.type === WidgetType.FIELDS) {
+          deleteViewForFieldsWidget(viewId);
+        }
+      }
     }
 
     store.set(pageLayoutDraftState, (prev) => ({
@@ -153,6 +165,7 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       tabs: removeWidgetFromTab(prev.tabs, tabId, pageLayoutEditingWidgetId),
     }));
   }, [
+    deleteViewForFieldsWidget,
     deleteViewForRecordTableWidget,
     existingWidget,
     isReplaceMode,
@@ -175,7 +188,7 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     }),
   );
 
-  const handleCreateFieldsWidget = useCallback(() => {
+  const handleCreateFieldsWidget = useCallback(async () => {
     if (!isDefined(tabId)) {
       return;
     }
@@ -183,40 +196,27 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     const replacePositionIndex = getExistingWidgetPositionIndex();
     removeExistingWidgetIfReplacing();
 
+    const viewId = await createViewForFieldsWidget({
+      objectMetadataId: objectMetadataItem.id,
+      viewName: `${objectMetadataItem.labelSingular} Fields`,
+    });
+
+    if (viewId === null) {
+      return;
+    }
+
     const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
     const positionIndex =
       replacePositionIndex ?? activeTab?.widgets.length ?? 0;
     const widgetId = uuidv4();
 
-    const newWidget: PageLayoutWidget = {
-      __typename: 'PageLayoutWidget',
+    const newWidget = createDefaultFieldsWidget({
       id: widgetId,
       pageLayoutTabId: tabId,
-      title: t`Fields`,
-      type: WidgetType.FIELDS,
-      configuration: {
-        __typename: 'FieldsConfiguration',
-        configurationType: WidgetConfigurationType.FIELDS,
-        viewId: null,
-      },
-      gridPosition: {
-        __typename: 'GridPosition',
-        row: 0,
-        column: 0,
-        rowSpan: 1,
-        columnSpan: 12,
-      },
-      position: {
-        __typename: 'PageLayoutWidgetVerticalListPosition',
-        layoutMode: PageLayoutTabLayoutMode.VERTICAL_LIST,
-        index: positionIndex,
-      },
-      objectMetadataId: null,
-      isOverridden: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      deletedAt: null,
-    };
+      viewId,
+      objectMetadataId: objectMetadataItem.id,
+      positionIndex,
+    });
 
     store.set(pageLayoutDraftState, (prev) => ({
       ...prev,
@@ -232,9 +232,12 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       resetNavigationStack: true,
     });
   }, [
+    createViewForFieldsWidget,
     getExistingWidgetPositionIndex,
     insertCreatedWidgetAtContext,
     navigatePageLayoutSidePanel,
+    objectMetadataItem.id,
+    objectMetadataItem.labelSingular,
     pageLayoutDraft.tabs,
     pageLayoutDraftState,
     removeExistingWidgetIfReplacing,
