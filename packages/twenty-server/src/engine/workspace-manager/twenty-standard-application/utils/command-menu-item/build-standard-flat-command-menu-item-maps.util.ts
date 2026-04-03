@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 
 import { type FlatCommandMenuItemMaps } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item-maps.type';
 import { buildNavigationFlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-flat-command-menu-item.util';
+import { compareObjectMetadataForNavigationPosition } from 'src/engine/metadata-modules/flat-command-menu-item/utils/compare-object-metadata-for-navigation-position.util';
 import { createEmptyFlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/constant/create-empty-flat-entity-maps.constant';
 import { type FlatEntityMaps } from 'src/engine/metadata-modules/flat-entity/types/flat-entity-maps.type';
 import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object-metadata/types/flat-object-metadata.type';
@@ -48,9 +49,12 @@ export const buildStandardFlatCommandMenuItemMaps = ({
     });
   }
 
-  const allObjects = Object.values(
+  const activeObjects = Object.values(
     flatObjectMetadataMaps.byUniversalIdentifier,
-  ).filter(isDefined);
+  )
+    .filter(isDefined)
+    .filter((flatObject) => flatObject.isActive)
+    .sort(compareObjectMetadataForNavigationPosition);
 
   const maxStandardPosition = Object.values(
     flatCommandMenuItemMaps.byUniversalIdentifier,
@@ -61,11 +65,7 @@ export const buildStandardFlatCommandMenuItemMaps = ({
 
   let nextPosition = maxStandardPosition + 1;
 
-  for (const flatObject of allObjects) {
-    if (!flatObject.isActive) {
-      continue;
-    }
-
+  for (const flatObject of activeObjects) {
     const position = nextPosition++;
 
     const navigationItem = buildNavigationFlatCommandMenuItem({
