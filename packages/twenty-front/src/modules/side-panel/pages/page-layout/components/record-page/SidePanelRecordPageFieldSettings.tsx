@@ -9,6 +9,7 @@ import { WidgetSettingsPlacementSection } from '@/side-panel/pages/page-layout/c
 import { WIDGET_SETTINGS_SELECTABLE_ITEM_IDS } from '@/side-panel/pages/page-layout/constants/settings/WidgetSettingsSelectableItemIds';
 import { usePageLayoutIdFromContextStore } from '@/side-panel/pages/page-layout/hooks/usePageLayoutIdFromContextStore';
 import { useWidgetInEditMode } from '@/side-panel/pages/page-layout/hooks/useWidgetInEditMode';
+import { useWidgetSettingsPlacementSelectableItemIds } from '@/side-panel/pages/page-layout/hooks/useWidgetSettingsPlacementSelectableItemIds';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
 import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
 import { styled } from '@linaria/react';
@@ -36,6 +37,9 @@ const StyledSidePanelContainer = styled.div`
 export const SidePanelRecordPageFieldSettings = () => {
   const { t } = useLingui();
   const { pageLayoutId } = usePageLayoutIdFromContextStore();
+
+  const { placementSelectableItemIds } =
+    useWidgetSettingsPlacementSelectableItemIds(pageLayoutId);
 
   const { widgetInEditMode } = useWidgetInEditMode(pageLayoutId);
 
@@ -69,11 +73,7 @@ export const SidePanelRecordPageFieldSettings = () => {
     'layout',
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_UP,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_DOWN,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.MOVE_TO_TAB,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.ADD_WIDGET_ABOVE,
-    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.ADD_WIDGET_BELOW,
+    ...placementSelectableItemIds,
   ];
 
   return (
