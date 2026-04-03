@@ -23445,10 +23445,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tabler/icons-react@npm:^3.41.1":
+  version: 3.41.1
+  resolution: "@tabler/icons-react@npm:3.41.1"
+  dependencies:
+    "@tabler/icons": "npm:3.41.1"
+  peerDependencies:
+    react: ">= 16"
+  checksum: 10c0/d103816d91df212ef6a4fc05e9f8d5f01deec2197d3accc4a398d325d1cfa8910e06b4daaf82cd08749f242c3908885ac60b21c4129b21094ece9fe0ecd46e4c
+  languageName: node
+  linkType: hard
+
 "@tabler/icons@npm:3.31.0":
   version: 3.31.0
   resolution: "@tabler/icons@npm:3.31.0"
   checksum: 10c0/03fcfff0b705e1474030acee2ff0523bfa1fda7a29a33d031a9fd8e3b52ecc2e0380f9cf5e81bd054b30dc0acdb819b1e08ab746805be8d660934a08b2c3545e
+  languageName: node
+  linkType: hard
+
+"@tabler/icons@npm:3.41.1":
+  version: 3.41.1
+  resolution: "@tabler/icons@npm:3.41.1"
+  checksum: 10c0/b1238157fe6e57c0202f1f7153621ad937a6f73ff7c0f0af5a71fcbdace18a3281cddd6632229029c3a3df7c530ae8bcefa75c18e35db4b65e7f884282762cf1
   languageName: node
   linkType: hard
 
@@ -40342,7 +40360,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"handlebars@npm:*, handlebars@npm:4.7.8, handlebars@npm:^4.7.7, handlebars@npm:^4.7.8":
+"handlebars@npm:*, handlebars@npm:^4.7.7, handlebars@npm:^4.7.9":
+  version: 4.7.9
+  resolution: "handlebars@npm:4.7.9"
+  dependencies:
+    minimist: "npm:^1.2.5"
+    neo-async: "npm:^2.6.2"
+    source-map: "npm:^0.6.1"
+    uglify-js: "npm:^3.1.4"
+    wordwrap: "npm:^1.0.0"
+  dependenciesMeta:
+    uglify-js:
+      optional: true
+  bin:
+    handlebars: bin/handlebars
+  checksum: 10c0/22f8105a7e68e81aff2662bb434edf05f757d21d850731d71cec886d69c10cd33d3c43e34b2892968ec62de8241611851d3d0674c8ef324ea3e01dc66262faa9
+  languageName: node
+  linkType: hard
+
+"handlebars@npm:4.7.8":
   version: 4.7.8
   resolution: "handlebars@npm:4.7.8"
   dependencies:
@@ -60168,7 +60204,7 @@ __metadata:
     class-validator: "npm:^0.14.0"
     expr-eval-fork: "npm:3.0.3"
     glob: "npm:^11.1.0"
-    handlebars: "npm:^4.7.8"
+    handlebars: "npm:^4.7.9"
     libphonenumber-js: "npm:^1.10.26"
     lodash.camelcase: "npm:^4.3.0"
     qs: "npm:^6.11.2"
@@ -60236,6 +60272,7 @@ __metadata:
     "@base-ui/utils": "npm:^0.2.6"
     "@linaria/core": "npm:^7.0.0"
     "@linaria/react": "npm:^7.0.1"
+    "@tabler/icons-react": "npm:^3.41.1"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"

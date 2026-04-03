@@ -1422,7 +1422,7 @@ export interface PublicFeatureFlag {
     __typename: 'PublicFeatureFlag'
 }
 
-export type FeatureFlagKey = 'IS_UNIQUE_INDEXES_ENABLED' | 'IS_JSON_FILTER_ENABLED' | 'IS_AI_ENABLED' | 'IS_COMMAND_MENU_ITEM_ENABLED' | 'IS_MARKETPLACE_ENABLED' | 'IS_RECORD_PAGE_LAYOUT_EDITING_ENABLED' | 'IS_PUBLIC_DOMAIN_ENABLED' | 'IS_EMAILING_DOMAIN_ENABLED' | 'IS_JUNCTION_RELATIONS_ENABLED' | 'IS_DRAFT_EMAIL_ENABLED' | 'IS_USAGE_ANALYTICS_ENABLED' | 'IS_RICH_TEXT_V1_MIGRATED' | 'IS_DIRECT_GRAPHQL_EXECUTION_ENABLED' | 'IS_RECORD_PAGE_LAYOUT_GLOBAL_EDITION_ENABLED' | 'IS_CONNECTED_ACCOUNT_MIGRATED' | 'IS_GRAPHQL_QUERY_TIMING_ENABLED' | 'IS_RECORD_TABLE_WIDGET_ENABLED' | 'IS_DATASOURCE_MIGRATED'
+export type FeatureFlagKey = 'IS_UNIQUE_INDEXES_ENABLED' | 'IS_JSON_FILTER_ENABLED' | 'IS_AI_ENABLED' | 'IS_COMMAND_MENU_ITEM_ENABLED' | 'IS_MARKETPLACE_ENABLED' | 'IS_RECORD_PAGE_LAYOUT_EDITING_ENABLED' | 'IS_PUBLIC_DOMAIN_ENABLED' | 'IS_EMAILING_DOMAIN_ENABLED' | 'IS_JUNCTION_RELATIONS_ENABLED' | 'IS_DRAFT_EMAIL_ENABLED' | 'IS_USAGE_ANALYTICS_ENABLED' | 'IS_RICH_TEXT_V1_MIGRATED' | 'IS_DIRECT_GRAPHQL_EXECUTION_ENABLED' | 'IS_RECORD_PAGE_LAYOUT_GLOBAL_EDITION_ENABLED' | 'IS_CONNECTED_ACCOUNT_MIGRATED' | 'IS_RECORD_TABLE_WIDGET_ENABLED' | 'IS_DATASOURCE_MIGRATED'
 
 export interface ClientConfigMaintenanceMode {
     startAt: Scalars['DateTime']
@@ -1955,6 +1955,36 @@ export interface FieldConnection {
     __typename: 'FieldConnection'
 }
 
+export interface AuthToken {
+    token: Scalars['String']
+    expiresAt: Scalars['DateTime']
+    __typename: 'AuthToken'
+}
+
+export interface ApplicationTokenPair {
+    applicationAccessToken: AuthToken
+    applicationRefreshToken: AuthToken
+    __typename: 'ApplicationTokenPair'
+}
+
+export interface FrontComponent {
+    id: Scalars['UUID']
+    name: Scalars['String']
+    description?: Scalars['String']
+    sourceComponentPath: Scalars['String']
+    builtComponentPath: Scalars['String']
+    componentName: Scalars['String']
+    builtComponentChecksum: Scalars['String']
+    universalIdentifier?: Scalars['UUID']
+    applicationId: Scalars['UUID']
+    createdAt: Scalars['DateTime']
+    updatedAt: Scalars['DateTime']
+    isHeadless: Scalars['Boolean']
+    usesSdkClient: Scalars['Boolean']
+    applicationTokenPair?: ApplicationTokenPair
+    __typename: 'FrontComponent'
+}
+
 export interface LogicFunctionLogs {
     /** Execution Logs */
     logs: Scalars['String']
@@ -1980,12 +2010,6 @@ export interface VerifyTwoFactorAuthenticationMethod {
 export interface AuthorizeApp {
     redirectUrl: Scalars['String']
     __typename: 'AuthorizeApp'
-}
-
-export interface AuthToken {
-    token: Scalars['String']
-    expiresAt: Scalars['DateTime']
-    __typename: 'AuthToken'
 }
 
 export interface AuthTokenPair {
@@ -2117,12 +2141,6 @@ export interface WorkspaceMigration {
     __typename: 'WorkspaceMigration'
 }
 
-export interface ApplicationTokenPair {
-    applicationAccessToken: AuthToken
-    applicationRefreshToken: AuthToken
-    __typename: 'ApplicationTokenPair'
-}
-
 export interface File {
     id: Scalars['UUID']
     path: Scalars['String']
@@ -2249,24 +2267,6 @@ export interface PostgresCredentials {
     __typename: 'PostgresCredentials'
 }
 
-export interface FrontComponent {
-    id: Scalars['UUID']
-    name: Scalars['String']
-    description?: Scalars['String']
-    sourceComponentPath: Scalars['String']
-    builtComponentPath: Scalars['String']
-    componentName: Scalars['String']
-    builtComponentChecksum: Scalars['String']
-    universalIdentifier?: Scalars['UUID']
-    applicationId: Scalars['UUID']
-    createdAt: Scalars['DateTime']
-    updatedAt: Scalars['DateTime']
-    isHeadless: Scalars['Boolean']
-    usesSdkClient: Scalars['Boolean']
-    applicationTokenPair?: ApplicationTokenPair
-    __typename: 'FrontComponent'
-}
-
 export interface CommandMenuItem {
     id: Scalars['UUID']
     workflowVersionId?: Scalars['UUID']
@@ -2297,6 +2297,7 @@ export interface ToolIndexEntry {
     description: Scalars['String']
     category: Scalars['String']
     objectName?: Scalars['String']
+    icon?: Scalars['String']
     inputSchema?: Scalars['JSON']
     __typename: 'ToolIndexEntry'
 }
@@ -2698,6 +2699,8 @@ export interface Query {
     getView?: View
     getViewSorts: ViewSort[]
     getViewSort?: ViewSort
+    getViewFields: ViewField[]
+    getViewField?: ViewField
     getViewFieldGroups: ViewFieldGroup[]
     getViewFieldGroup?: ViewFieldGroup
     apiKeys: ApiKey[]
@@ -2727,8 +2730,6 @@ export interface Query {
     objectRecordCounts: ObjectRecordCount[]
     object: Object
     objects: ObjectConnection
-    getViewFields: ViewField[]
-    getViewField?: ViewField
     index: Index
     indexMetadatas: IndexConnection
     findManyAgents: Agent[]
@@ -2849,6 +2850,11 @@ export interface Mutation {
     updateViewSort: ViewSort
     deleteViewSort: Scalars['Boolean']
     destroyViewSort: Scalars['Boolean']
+    updateViewField: ViewField
+    createViewField: ViewField
+    createManyViewFields: ViewField[]
+    deleteViewField: ViewField
+    destroyViewField: ViewField
     updateViewFieldGroup: ViewFieldGroup
     createViewFieldGroup: ViewFieldGroup
     createManyViewFieldGroups: ViewFieldGroup[]
@@ -2902,11 +2908,6 @@ export interface Mutation {
     createOneObject: Object
     deleteOneObject: Object
     updateOneObject: Object
-    updateViewField: ViewField
-    createViewField: ViewField
-    createManyViewFields: ViewField[]
-    deleteViewField: ViewField
-    destroyViewField: ViewField
     createOneAgent: Agent
     updateOneAgent: Agent
     deleteOneAgent: Agent
@@ -5097,6 +5098,39 @@ export interface FieldConnectionGenqlSelection{
     __scalar?: boolean | number
 }
 
+export interface AuthTokenGenqlSelection{
+    token?: boolean | number
+    expiresAt?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+export interface ApplicationTokenPairGenqlSelection{
+    applicationAccessToken?: AuthTokenGenqlSelection
+    applicationRefreshToken?: AuthTokenGenqlSelection
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+export interface FrontComponentGenqlSelection{
+    id?: boolean | number
+    name?: boolean | number
+    description?: boolean | number
+    sourceComponentPath?: boolean | number
+    builtComponentPath?: boolean | number
+    componentName?: boolean | number
+    builtComponentChecksum?: boolean | number
+    universalIdentifier?: boolean | number
+    applicationId?: boolean | number
+    createdAt?: boolean | number
+    updatedAt?: boolean | number
+    isHeadless?: boolean | number
+    usesSdkClient?: boolean | number
+    applicationTokenPair?: ApplicationTokenPairGenqlSelection
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
 export interface LogicFunctionLogsGenqlSelection{
     /** Execution Logs */
     logs?: boolean | number
@@ -5125,13 +5159,6 @@ export interface VerifyTwoFactorAuthenticationMethodGenqlSelection{
 
 export interface AuthorizeAppGenqlSelection{
     redirectUrl?: boolean | number
-    __typename?: boolean | number
-    __scalar?: boolean | number
-}
-
-export interface AuthTokenGenqlSelection{
-    token?: boolean | number
-    expiresAt?: boolean | number
     __typename?: boolean | number
     __scalar?: boolean | number
 }
@@ -5286,13 +5313,6 @@ export interface WorkspaceMigrationGenqlSelection{
     __scalar?: boolean | number
 }
 
-export interface ApplicationTokenPairGenqlSelection{
-    applicationAccessToken?: AuthTokenGenqlSelection
-    applicationRefreshToken?: AuthTokenGenqlSelection
-    __typename?: boolean | number
-    __scalar?: boolean | number
-}
-
 export interface FileGenqlSelection{
     id?: boolean | number
     path?: boolean | number
@@ -5429,25 +5449,6 @@ export interface PostgresCredentialsGenqlSelection{
     __scalar?: boolean | number
 }
 
-export interface FrontComponentGenqlSelection{
-    id?: boolean | number
-    name?: boolean | number
-    description?: boolean | number
-    sourceComponentPath?: boolean | number
-    builtComponentPath?: boolean | number
-    componentName?: boolean | number
-    builtComponentChecksum?: boolean | number
-    universalIdentifier?: boolean | number
-    applicationId?: boolean | number
-    createdAt?: boolean | number
-    updatedAt?: boolean | number
-    isHeadless?: boolean | number
-    usesSdkClient?: boolean | number
-    applicationTokenPair?: ApplicationTokenPairGenqlSelection
-    __typename?: boolean | number
-    __scalar?: boolean | number
-}
-
 export interface CommandMenuItemGenqlSelection{
     id?: boolean | number
     workflowVersionId?: boolean | number
@@ -5475,6 +5476,7 @@ export interface ToolIndexEntryGenqlSelection{
     description?: boolean | number
     category?: boolean | number
     objectName?: boolean | number
+    icon?: boolean | number
     inputSchema?: boolean | number
     __typename?: boolean | number
     __scalar?: boolean | number
@@ -5885,6 +5887,8 @@ export interface QueryGenqlSelection{
     getView?: (ViewGenqlSelection & { __args: {id: Scalars['String']} })
     getViewSorts?: (ViewSortGenqlSelection & { __args?: {viewId?: (Scalars['String'] | null)} })
     getViewSort?: (ViewSortGenqlSelection & { __args: {id: Scalars['String']} })
+    getViewFields?: (ViewFieldGenqlSelection & { __args: {viewId: Scalars['String']} })
+    getViewField?: (ViewFieldGenqlSelection & { __args: {id: Scalars['String']} })
     getViewFieldGroups?: (ViewFieldGroupGenqlSelection & { __args: {viewId: Scalars['String']} })
     getViewFieldGroup?: (ViewFieldGroupGenqlSelection & { __args: {id: Scalars['String']} })
     apiKeys?: ApiKeyGenqlSelection
@@ -5920,8 +5924,6 @@ export interface QueryGenqlSelection{
     paging: CursorPaging, 
     /** Specify to filter the records returned. */
     filter: ObjectFilter} })
-    getViewFields?: (ViewFieldGenqlSelection & { __args: {viewId: Scalars['String']} })
-    getViewField?: (ViewFieldGenqlSelection & { __args: {id: Scalars['String']} })
     index?: (IndexGenqlSelection & { __args: {
     /** The id of the record to find. */
     id: Scalars['UUID']} })
@@ -6079,6 +6081,11 @@ export interface MutationGenqlSelection{
     updateViewSort?: (ViewSortGenqlSelection & { __args: {input: UpdateViewSortInput} })
     deleteViewSort?: { __args: {input: DeleteViewSortInput} }
     destroyViewSort?: { __args: {input: DestroyViewSortInput} }
+    updateViewField?: (ViewFieldGenqlSelection & { __args: {input: UpdateViewFieldInput} })
+    createViewField?: (ViewFieldGenqlSelection & { __args: {input: CreateViewFieldInput} })
+    createManyViewFields?: (ViewFieldGenqlSelection & { __args: {inputs: CreateViewFieldInput[]} })
+    deleteViewField?: (ViewFieldGenqlSelection & { __args: {input: DeleteViewFieldInput} })
+    destroyViewField?: (ViewFieldGenqlSelection & { __args: {input: DestroyViewFieldInput} })
     updateViewFieldGroup?: (ViewFieldGroupGenqlSelection & { __args: {input: UpdateViewFieldGroupInput} })
     createViewFieldGroup?: (ViewFieldGroupGenqlSelection & { __args: {input: CreateViewFieldGroupInput} })
     createManyViewFieldGroups?: (ViewFieldGroupGenqlSelection & { __args: {inputs: CreateViewFieldGroupInput[]} })
@@ -6132,11 +6139,6 @@ export interface MutationGenqlSelection{
     createOneObject?: (ObjectGenqlSelection & { __args: {input: CreateOneObjectInput} })
     deleteOneObject?: (ObjectGenqlSelection & { __args: {input: DeleteOneObjectInput} })
     updateOneObject?: (ObjectGenqlSelection & { __args: {input: UpdateOneObjectInput} })
-    updateViewField?: (ViewFieldGenqlSelection & { __args: {input: UpdateViewFieldInput} })
-    createViewField?: (ViewFieldGenqlSelection & { __args: {input: CreateViewFieldInput} })
-    createManyViewFields?: (ViewFieldGenqlSelection & { __args: {inputs: CreateViewFieldInput[]} })
-    deleteViewField?: (ViewFieldGenqlSelection & { __args: {input: DeleteViewFieldInput} })
-    destroyViewField?: (ViewFieldGenqlSelection & { __args: {input: DestroyViewFieldInput} })
     createOneAgent?: (AgentGenqlSelection & { __args: {input: CreateAgentInput} })
     updateOneAgent?: (AgentGenqlSelection & { __args: {input: UpdateAgentInput} })
     deleteOneAgent?: (AgentGenqlSelection & { __args: {input: AgentIdInput} })
@@ -6323,6 +6325,24 @@ export interface DestroyViewSortInput {
 /** The id of the view sort to destroy. */
 id: Scalars['UUID']}
 
+export interface UpdateViewFieldInput {
+/** The id of the view field to update */
+id: Scalars['UUID'],
+/** The view field to update */
+update: UpdateViewFieldInputUpdates}
+
+export interface UpdateViewFieldInputUpdates {isVisible?: (Scalars['Boolean'] | null),size?: (Scalars['Float'] | null),position?: (Scalars['Float'] | null),aggregateOperation?: (AggregateOperations | null),viewFieldGroupId?: (Scalars['UUID'] | null)}
+
+export interface CreateViewFieldInput {id?: (Scalars['UUID'] | null),fieldMetadataId: Scalars['UUID'],viewId: Scalars['UUID'],isVisible?: (Scalars['Boolean'] | null),size?: (Scalars['Float'] | null),position?: (Scalars['Float'] | null),aggregateOperation?: (AggregateOperations | null),viewFieldGroupId?: (Scalars['UUID'] | null)}
+
+export interface DeleteViewFieldInput {
+/** The id of the view field to delete. */
+id: Scalars['UUID']}
+
+export interface DestroyViewFieldInput {
+/** The id of the view field to destroy. */
+id: Scalars['UUID']}
+
 export interface UpdateViewFieldGroupInput {
 /** The id of the view field group to update */
 id: Scalars['UUID'],
@@ -6434,24 +6454,6 @@ export interface UpdateOneObjectInput {update: UpdateObjectPayload,
 id: Scalars['UUID']}
 
 export interface UpdateObjectPayload {labelSingular?: (Scalars['String'] | null),labelPlural?: (Scalars['String'] | null),nameSingular?: (Scalars['String'] | null),namePlural?: (Scalars['String'] | null),description?: (Scalars['String'] | null),icon?: (Scalars['String'] | null),shortcut?: (Scalars['String'] | null),color?: (Scalars['String'] | null),isActive?: (Scalars['Boolean'] | null),labelIdentifierFieldMetadataId?: (Scalars['UUID'] | null),imageIdentifierFieldMetadataId?: (Scalars['UUID'] | null),isLabelSyncedWithName?: (Scalars['Boolean'] | null),isSearchable?: (Scalars['Boolean'] | null)}
-
-export interface UpdateViewFieldInput {
-/** The id of the view field to update */
-id: Scalars['UUID'],
-/** The view field to update */
-update: UpdateViewFieldInputUpdates}
-
-export interface UpdateViewFieldInputUpdates {isVisible?: (Scalars['Boolean'] | null),size?: (Scalars['Float'] | null),position?: (Scalars['Float'] | null),aggregateOperation?: (AggregateOperations | null),viewFieldGroupId?: (Scalars['UUID'] | null)}
-
-export interface CreateViewFieldInput {id?: (Scalars['UUID'] | null),fieldMetadataId: Scalars['UUID'],viewId: Scalars['UUID'],isVisible?: (Scalars['Boolean'] | null),size?: (Scalars['Float'] | null),position?: (Scalars['Float'] | null),aggregateOperation?: (AggregateOperations | null),viewFieldGroupId?: (Scalars['UUID'] | null)}
-
-export interface DeleteViewFieldInput {
-/** The id of the view field to delete. */
-id: Scalars['UUID']}
-
-export interface DestroyViewFieldInput {
-/** The id of the view field to destroy. */
-id: Scalars['UUID']}
 
 export interface CreateAgentInput {name?: (Scalars['String'] | null),label: Scalars['String'],icon?: (Scalars['String'] | null),description?: (Scalars['String'] | null),prompt: Scalars['String'],modelId: Scalars['String'],roleId?: (Scalars['UUID'] | null),responseFormat?: (Scalars['JSON'] | null),modelConfiguration?: (Scalars['JSON'] | null),evaluationInputs?: (Scalars['String'][] | null)}
 
@@ -8030,6 +8032,30 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     
 
 
+    const AuthToken_possibleTypes: string[] = ['AuthToken']
+    export const isAuthToken = (obj?: { __typename?: any } | null): obj is AuthToken => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isAuthToken"')
+      return AuthToken_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const ApplicationTokenPair_possibleTypes: string[] = ['ApplicationTokenPair']
+    export const isApplicationTokenPair = (obj?: { __typename?: any } | null): obj is ApplicationTokenPair => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isApplicationTokenPair"')
+      return ApplicationTokenPair_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const FrontComponent_possibleTypes: string[] = ['FrontComponent']
+    export const isFrontComponent = (obj?: { __typename?: any } | null): obj is FrontComponent => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isFrontComponent"')
+      return FrontComponent_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const LogicFunctionLogs_possibleTypes: string[] = ['LogicFunctionLogs']
     export const isLogicFunctionLogs = (obj?: { __typename?: any } | null): obj is LogicFunctionLogs => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isLogicFunctionLogs"')
@@ -8066,14 +8092,6 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     export const isAuthorizeApp = (obj?: { __typename?: any } | null): obj is AuthorizeApp => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isAuthorizeApp"')
       return AuthorizeApp_possibleTypes.includes(obj.__typename)
-    }
-    
-
-
-    const AuthToken_possibleTypes: string[] = ['AuthToken']
-    export const isAuthToken = (obj?: { __typename?: any } | null): obj is AuthToken => {
-      if (!obj?.__typename) throw new Error('__typename is missing in "isAuthToken"')
-      return AuthToken_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -8246,14 +8264,6 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     
 
 
-    const ApplicationTokenPair_possibleTypes: string[] = ['ApplicationTokenPair']
-    export const isApplicationTokenPair = (obj?: { __typename?: any } | null): obj is ApplicationTokenPair => {
-      if (!obj?.__typename) throw new Error('__typename is missing in "isApplicationTokenPair"')
-      return ApplicationTokenPair_possibleTypes.includes(obj.__typename)
-    }
-    
-
-
     const File_possibleTypes: string[] = ['File']
     export const isFile = (obj?: { __typename?: any } | null): obj is File => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isFile"')
@@ -8362,14 +8372,6 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     export const isPostgresCredentials = (obj?: { __typename?: any } | null): obj is PostgresCredentials => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isPostgresCredentials"')
       return PostgresCredentials_possibleTypes.includes(obj.__typename)
-    }
-    
-
-
-    const FrontComponent_possibleTypes: string[] = ['FrontComponent']
-    export const isFrontComponent = (obj?: { __typename?: any } | null): obj is FrontComponent => {
-      if (!obj?.__typename) throw new Error('__typename is missing in "isFrontComponent"')
-      return FrontComponent_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -9096,7 +9098,6 @@ export const enumFeatureFlagKey = {
    IS_DIRECT_GRAPHQL_EXECUTION_ENABLED: 'IS_DIRECT_GRAPHQL_EXECUTION_ENABLED' as const,
    IS_RECORD_PAGE_LAYOUT_GLOBAL_EDITION_ENABLED: 'IS_RECORD_PAGE_LAYOUT_GLOBAL_EDITION_ENABLED' as const,
    IS_CONNECTED_ACCOUNT_MIGRATED: 'IS_CONNECTED_ACCOUNT_MIGRATED' as const,
-   IS_GRAPHQL_QUERY_TIMING_ENABLED: 'IS_GRAPHQL_QUERY_TIMING_ENABLED' as const,
    IS_RECORD_TABLE_WIDGET_ENABLED: 'IS_RECORD_TABLE_WIDGET_ENABLED' as const,
    IS_DATASOURCE_MIGRATED: 'IS_DATASOURCE_MIGRATED' as const
 }

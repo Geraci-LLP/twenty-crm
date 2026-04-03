@@ -1,24 +1,22 @@
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 
 import { Command } from 'nest-commander';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { v4 } from 'uuid';
 
+import { ActiveOrSuspendedWorkspaceCommandRunner } from 'src/database/commands/command-runners/active-or-suspended-workspace.command-runner';
+import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import {
-  ActiveOrSuspendedWorkspacesMigrationCommandRunner,
-  type ActiveOrSuspendedWorkspacesMigrationCommandOptions,
-} from 'src/database/commands/command-runners/active-or-suspended-workspaces-migration.command-runner';
-import { RunOnWorkspaceArgs } from 'src/database/commands/command-runners/workspaces-migration.command-runner';
+  type RunOnWorkspaceArgs,
+  type WorkspaceCommandOptions,
+} from 'src/database/commands/command-runners/workspace.command-runner';
 import { addPayloadCheckConstraintToCommandMenuItem } from 'src/database/typeorm/core/migrations/utils/1775129635528-add-payload-to-command-menu-item.util';
 import { ApplicationService } from 'src/engine/core-modules/application/application.service';
-import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { CommandMenuItemAvailabilityType } from 'src/engine/metadata-modules/command-menu-item/enums/command-menu-item-availability-type.enum';
 import { EngineComponentKey } from 'src/engine/metadata-modules/command-menu-item/enums/engine-component-key.enum';
-import { DataSourceService } from 'src/engine/metadata-modules/data-source/data-source.service';
 import { type FlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/types/flat-command-menu-item.type';
 import { buildNavigationFlatCommandMenuItem } from 'src/engine/metadata-modules/flat-command-menu-item/utils/build-navigation-flat-command-menu-item.util';
 import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
-import { GlobalWorkspaceOrmManager } from 'src/engine/twenty-orm/global-workspace-datasource/global-workspace-orm.manager';
 import { STANDARD_COMMAND_MENU_ITEMS } from 'src/engine/workspace-manager/twenty-standard-application/constants/standard-command-menu-item.constant';
 import { TWENTY_STANDARD_APPLICATION } from 'src/engine/workspace-manager/twenty-standard-application/constants/twenty-standard-applications';
 import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
@@ -40,27 +38,24 @@ const GO_TO_ENGINE_KEYS = [
   description:
     'Replace GO_TO_* command menu items with unified NAVIGATION engine key and payload',
 })
-export class RefactorNavigationCommandsCommand extends ActiveOrSuspendedWorkspacesMigrationCommandRunner {
+export class RefactorNavigationCommandsCommand extends ActiveOrSuspendedWorkspaceCommandRunner {
   constructor(
-    @InjectRepository(WorkspaceEntity)
-    protected readonly workspaceRepository: Repository<WorkspaceEntity>,
+    protected readonly workspaceIteratorService: WorkspaceIteratorService,
     @InjectDataSource()
     private readonly coreDataSource: DataSource,
-    protected readonly twentyORMGlobalManager: GlobalWorkspaceOrmManager,
-    protected readonly dataSourceService: DataSourceService,
     private readonly applicationService: ApplicationService,
     private readonly workspaceMigrationValidateBuildAndRunService: WorkspaceMigrationValidateBuildAndRunService,
   ) {
-    super(workspaceRepository, twentyORMGlobalManager, dataSourceService);
+    super(workspaceIteratorService);
   }
 
-  override async runMigrationCommand(
+  override async run(
     passedParams: string[],
-    options: ActiveOrSuspendedWorkspacesMigrationCommandOptions,
+    options: WorkspaceCommandOptions,
   ): Promise<void> {
-    await super.runMigrationCommand(passedParams, options);
+    await super.run(passedParams, options);
 
-    if (this.workspaceIds.size > 0) {
+    if (options.workspaceId && options.workspaceId.size > 0) {
       this.logger.log(
         'Skipping CHECK constraint application: command was not launched for all workspaces',
       );
