@@ -6,6 +6,7 @@ import { AddGlobalKeyValuePairUniqueIndexCommand } from 'src/database/commands/u
 import { BackfillDatasourceToWorkspaceCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-backfill-datasource-to-workspace.command';
 import { BackfillPageLayoutsAndFieldsWidgetViewFieldsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-backfill-page-layouts-and-fields-widget-view-fields.command';
 import { DeduplicateEngineCommandsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-deduplicate-engine-commands.command';
+import { FixSelectAllCommandMenuItemsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-fix-select-all-command-menu-items.command';
 import { MigrateAiAgentTextToJsonResponseFormatCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-migrate-ai-agent-text-to-json-response-format.command';
 import { RefactorNavigationCommandsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-refactor-navigation-commands.command';
 import { UpdateEditLayoutCommandMenuItemLabelCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-update-edit-layout-command-menu-item-label.command';
@@ -32,6 +33,7 @@ import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace
     BackfillDatasourceToWorkspaceCommand,
     BackfillPageLayoutsAndFieldsWidgetViewFieldsCommand,
     DeduplicateEngineCommandsCommand,
+    FixSelectAllCommandMenuItemsCommand,
     MigrateAiAgentTextToJsonResponseFormatCommand,
     UpdateEditLayoutCommandMenuItemLabelCommand,
     RefactorNavigationCommandsCommand,
@@ -41,6 +43,7 @@ import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace
     BackfillDatasourceToWorkspaceCommand,
     BackfillPageLayoutsAndFieldsWidgetViewFieldsCommand,
     DeduplicateEngineCommandsCommand,
+    FixSelectAllCommandMenuItemsCommand,
     MigrateAiAgentTextToJsonResponseFormatCommand,
     UpdateEditLayoutCommandMenuItemLabelCommand,
     RefactorNavigationCommandsCommand,
