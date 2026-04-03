@@ -35,7 +35,7 @@ export const WidgetSettingsManageSection = ({
 
   const handleReplaceWidget = () => {
     navigatePageLayoutSidePanel({
-      sidePanelPage: SidePanelPages.PageLayoutWidgetTypeSelect,
+      sidePanelPage: SidePanelPages.PageLayoutRecordPageWidgetTypeSelect,
     });
   };
 

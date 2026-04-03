@@ -5,9 +5,14 @@ import { useFieldListFieldMetadataItems } from '@/object-record/record-field-lis
 import { useInsertCreatedWidgetAtContext } from '@/page-layout/hooks/useInsertCreatedWidgetAtContext';
 import { pageLayoutDraftComponentState } from '@/page-layout/states/pageLayoutDraftComponentState';
 import { pageLayoutEditingWidgetIdComponentState } from '@/page-layout/states/pageLayoutEditingWidgetIdComponentState';
+import { widgetInsertionContextComponentState } from '@/page-layout/states/widgetInsertionContextComponentState';
 import { type PageLayoutWidget } from '@/page-layout/types/PageLayoutWidget';
 import { addWidgetToTab } from '@/page-layout/utils/addWidgetToTab';
 import { createDefaultFieldWidget } from '@/page-layout/utils/createDefaultFieldWidget';
+import { getTabListInstanceIdFromPageLayoutAndRecord } from '@/page-layout/utils/getTabListInstanceIdFromPageLayoutAndRecord';
+import { isVerticalListPosition } from '@/page-layout/utils/isVerticalListPosition';
+import { removeWidgetFromTab } from '@/page-layout/utils/removeWidgetFromTab';
+import { useDeleteViewForRecordTableWidget } from '@/page-layout/widgets/record-table/hooks/useDeleteViewForRecordTableWidget';
 import { SidePanelGroup } from '@/side-panel/components/SidePanelGroup';
 import { SidePanelList } from '@/side-panel/components/SidePanelList';
 import { useSidePanelMenu } from '@/side-panel/hooks/useSidePanelMenu';
@@ -15,6 +20,7 @@ import { useNavigatePageLayoutSidePanel } from '@/side-panel/pages/page-layout/h
 import { usePageLayoutIdFromContextStore } from '@/side-panel/pages/page-layout/hooks/usePageLayoutIdFromContextStore';
 import { getFrontComponentWidgetTypeSelectItemId } from '@/side-panel/pages/page-layout/utils/getFrontComponentWidgetTypeSelectItemId';
 import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
+import { activeTabIdComponentState } from '@/ui/layout/tab-list/states/activeTabIdComponentState';
 import { useAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentState';
 import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateCallbackState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
@@ -34,8 +40,11 @@ import {
 } from '~/generated-metadata/graphql';
 
 export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
-  const { pageLayoutId, objectNameSingular: targetObjectNameSingular } =
-    usePageLayoutIdFromContextStore();
+  const {
+    pageLayoutId,
+    recordId,
+    objectNameSingular: targetObjectNameSingular,
+  } = usePageLayoutIdFromContextStore();
 
   const { closeSidePanelMenu } = useSidePanelMenu();
 
@@ -57,10 +66,29 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       pageLayoutId,
     );
 
+  const widgetInsertionContext = useAtomComponentStateValue(
+    widgetInsertionContextComponentState,
+    pageLayoutId,
+  );
+
+  const tabListInstanceId = getTabListInstanceIdFromPageLayoutAndRecord({
+    pageLayoutId,
+    layoutType: pageLayoutDraft.type,
+    targetRecordIdentifier: { id: recordId, targetObjectNameSingular: '' },
+  });
+
+  const activeTabId = useAtomComponentStateValue(
+    activeTabIdComponentState,
+    tabListInstanceId,
+  );
+
   const store = useStore();
 
   const { insertCreatedWidgetAtContext } =
     useInsertCreatedWidgetAtContext(pageLayoutId);
+
+  const { deleteViewForRecordTableWidget } =
+    useDeleteViewForRecordTableWidget();
 
   const { objectMetadataItem } = useObjectMetadataItem({
     objectNameSingular: targetObjectNameSingular,
@@ -76,7 +104,70 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       )
     : undefined;
 
-  const tabId = editingWidgetTab?.id;
+  const tabId = editingWidgetTab?.id ?? activeTabId;
+
+  const isReplaceMode =
+    isDefined(pageLayoutEditingWidgetId) && !isDefined(widgetInsertionContext);
+
+  const existingWidget = isReplaceMode
+    ? pageLayoutDraft.tabs
+        .flatMap((tab) => tab.widgets)
+        .find((widget) => widget.id === pageLayoutEditingWidgetId)
+    : undefined;
+
+  const getExistingWidgetPositionIndex = useCallback(() => {
+    if (!isDefined(existingWidget?.position)) {
+      return undefined;
+    }
+
+    if (isVerticalListPosition(existingWidget.position)) {
+      return existingWidget.position.index;
+    }
+
+    return undefined;
+  }, [existingWidget]);
+
+  const removeExistingWidgetIfReplacing = useCallback(
+    (newWidgetType: WidgetType) => {
+      if (
+        !isReplaceMode ||
+        !isDefined(pageLayoutEditingWidgetId) ||
+        !isDefined(tabId)
+      ) {
+        return;
+      }
+
+      if (existingWidget?.type === newWidgetType) {
+        return;
+      }
+
+      if (
+        existingWidget?.type === WidgetType.RECORD_TABLE &&
+        'viewId' in (existingWidget.configuration ?? {}) &&
+        isDefined(
+          (existingWidget.configuration as { viewId: string | null }).viewId,
+        )
+      ) {
+        deleteViewForRecordTableWidget(
+          (existingWidget.configuration as { viewId: string }).viewId,
+        );
+      }
+
+      store.set(pageLayoutDraftState, (prev) => ({
+        ...prev,
+        tabs: removeWidgetFromTab(prev.tabs, tabId, pageLayoutEditingWidgetId),
+      }));
+    },
+    [
+      deleteViewForRecordTableWidget,
+      existingWidget,
+      isReplaceMode,
+      pageLayoutDraftState,
+      pageLayoutEditingWidgetId,
+      store,
+      tabId,
+    ],
+  );
 
   const { data: frontComponentsData } = useQuery<{
     frontComponents: FrontComponent[];
@@ -96,8 +187,12 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       return;
     }
 
+    const replacePositionIndex = getExistingWidgetPositionIndex();
+    removeExistingWidgetIfReplacing(WidgetType.FIELDS);
+
     const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
-    const positionIndex = activeTab?.widgets.length ?? 0;
+    const positionIndex =
+      replacePositionIndex ?? activeTab?.widgets.length ?? 0;
     const widgetId = uuidv4();
 
     const newWidget: PageLayoutWidget = {
@@ -144,10 +239,12 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       resetNavigationStack: true,
     });
   }, [
+    getExistingWidgetPositionIndex,
     insertCreatedWidgetAtContext,
     navigatePageLayoutSidePanel,
     pageLayoutDraft.tabs,
     pageLayoutDraftState,
+    removeExistingWidgetIfReplacing,
     setPageLayoutEditingWidgetId,
     store,
     tabId,
@@ -158,9 +255,12 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       return;
     }
 
+    const replacePositionIndex = getExistingWidgetPositionIndex();
+    removeExistingWidgetIfReplacing(WidgetType.FIELD);
+
     const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
     const existingWidgets = activeTab?.widgets ?? [];
-    const positionIndex = existingWidgets.length;
+    const positionIndex = replacePositionIndex ?? existingWidgets.length;
     const widgetId = uuidv4();
 
     const usedFieldMetadataIds = new Set(
@@ -212,11 +312,13 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     });
   }, [
     boxedRelationFieldMetadataItems,
+    getExistingWidgetPositionIndex,
     insertCreatedWidgetAtContext,
     navigatePageLayoutSidePanel,
     objectMetadataItem.id,
     pageLayoutDraft.tabs,
     pageLayoutDraftState,
+    removeExistingWidgetIfReplacing,
     setPageLayoutEditingWidgetId,
     store,
     tabId,
@@ -228,8 +330,12 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
         return;
       }
 
+      const replacePositionIndex = getExistingWidgetPositionIndex();
+      removeExistingWidgetIfReplacing(WidgetType.FRONT_COMPONENT);
+
       const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
-      const positionIndex = activeTab?.widgets.length ?? 0;
+      const positionIndex =
+        replacePositionIndex ?? activeTab?.widgets.length ?? 0;
       const widgetId = uuidv4();
 
       const newWidget: PageLayoutWidget = {
@@ -274,9 +380,11 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     },
     [
       closeSidePanelMenu,
+      getExistingWidgetPositionIndex,
       insertCreatedWidgetAtContext,
       pageLayoutDraft.tabs,
       pageLayoutDraftState,
+      removeExistingWidgetIfReplacing,
       setPageLayoutEditingWidgetId,
       store,
       tabId,

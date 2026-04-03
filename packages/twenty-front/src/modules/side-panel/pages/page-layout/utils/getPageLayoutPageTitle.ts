@@ -5,7 +5,7 @@ import { assertUnreachable } from 'twenty-shared/utils';
 
 export const getPageLayoutPageTitle = (page: PageLayoutSidePanelPage) => {
   switch (page) {
-    case SidePanelPages.PageLayoutWidgetTypeSelect:
+    case SidePanelPages.PageLayoutDashboardWidgetTypeSelect:
       return t`Add Widget`;
     case SidePanelPages.DashboardChartSettings:
     case SidePanelPages.RecordPageChartSettings:

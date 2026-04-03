@@ -17,9 +17,9 @@ import { SidePanelRecordPageFieldSettings } from '@/side-panel/pages/page-layout
 import { SidePanelRecordPageFieldsSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageFieldsSettings';
 import { SidePanelRecordPageIframeSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageIframeSettings';
 import { SidePanelRecordPageRecordTableSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageRecordTableSettings';
+import { SidePanelPageLayoutDashboardWidgetTypeSelect } from '@/side-panel/pages/page-layout/components/SidePanelPageLayoutDashboardWidgetTypeSelect';
 import { SidePanelPageLayoutRecordPageWidgetTypeSelect } from '@/side-panel/pages/page-layout/components/SidePanelPageLayoutRecordPageWidgetTypeSelect';
 import { SidePanelPageLayoutTabSettings } from '@/side-panel/pages/page-layout/components/SidePanelPageLayoutTabSettings';
-import { SidePanelPageLayoutWidgetTypeSelect } from '@/side-panel/pages/page-layout/components/SidePanelPageLayoutWidgetTypeSelect';
 import { SidePanelMergeRecordPage } from '@/side-panel/pages/record-page/components/SidePanelMergeRecordPage';
 import { SidePanelRecordPage } from '@/side-panel/pages/record-page/components/SidePanelRecordPage';
 import { SidePanelUpdateMultipleRecords } from '@/side-panel/pages/record-page/components/SidePanelUpdateMultipleRecords';
@@ -58,8 +58,8 @@ export const SIDE_PANEL_PAGES_CONFIG = new Map<SidePanelPages, React.ReactNode>(
     [SidePanelPages.AskAI, <SidePanelAskAIPage />],
     [SidePanelPages.ViewPreviousAIChats, <SidePanelAIChatThreadsPage />],
     [
-      SidePanelPages.PageLayoutWidgetTypeSelect,
-      <SidePanelPageLayoutWidgetTypeSelect />,
+      SidePanelPages.PageLayoutDashboardWidgetTypeSelect,
+      <SidePanelPageLayoutDashboardWidgetTypeSelect />,
     ],
     [
       SidePanelPages.DashboardChartSettings,

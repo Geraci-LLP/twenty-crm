@@ -71,7 +71,7 @@ export const useSidePanelCloseAnimationCompleteCleanup = () => {
       resetContextStoreStates(SIDE_PANEL_PREVIOUS_COMPONENT_INSTANCE_ID);
 
       const isPageLayoutEditingPage =
-        currentPage === SidePanelPages.PageLayoutWidgetTypeSelect ||
+        currentPage === SidePanelPages.PageLayoutDashboardWidgetTypeSelect ||
         currentPage === SidePanelPages.DashboardChartSettings ||
         currentPage === SidePanelPages.DashboardIframeSettings ||
         currentPage === SidePanelPages.DashboardFieldsSettings ||

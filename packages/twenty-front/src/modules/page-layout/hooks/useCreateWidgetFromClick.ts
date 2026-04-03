@@ -1,7 +1,7 @@
-import { useNavigatePageLayoutSidePanel } from '@/side-panel/pages/page-layout/hooks/useNavigatePageLayoutSidePanel';
 import { pageLayoutDraggedAreaComponentState } from '@/page-layout/states/pageLayoutDraggedAreaComponentState';
 import { pageLayoutEditingWidgetIdComponentState } from '@/page-layout/states/pageLayoutEditingWidgetIdComponentState';
 import { parseCellIdToCoordinates } from '@/page-layout/utils/parseCellIdToCoordinates';
+import { useNavigatePageLayoutSidePanel } from '@/side-panel/pages/page-layout/hooks/useNavigatePageLayoutSidePanel';
 import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateCallbackState';
 import { useStore } from 'jotai';
 import { useCallback } from 'react';
@@ -29,7 +29,7 @@ export const useCreateWidgetFromClick = () => {
       store.set(pageLayoutEditingWidgetIdState, null);
 
       navigatePageLayoutSidePanel({
-        sidePanelPage: SidePanelPages.PageLayoutWidgetTypeSelect,
+        sidePanelPage: SidePanelPages.PageLayoutDashboardWidgetTypeSelect,
         resetNavigationStack: true,
       });
     },

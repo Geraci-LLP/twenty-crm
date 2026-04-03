@@ -96,7 +96,7 @@ export const SidePanelPageInfo = ({ pageChip }: SidePanelPageInfoProps) => {
 
   const isPageLayoutPage = pageChip.page?.page
     ? [
-        SidePanelPages.PageLayoutWidgetTypeSelect,
+        SidePanelPages.PageLayoutDashboardWidgetTypeSelect,
         SidePanelPages.DashboardChartSettings,
         SidePanelPages.DashboardIframeSettings,
         SidePanelPages.PageLayoutTabSettings,

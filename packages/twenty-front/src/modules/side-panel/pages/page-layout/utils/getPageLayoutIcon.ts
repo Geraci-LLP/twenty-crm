@@ -12,7 +12,7 @@ import {
 
 export const getPageLayoutIcon = (page: PageLayoutSidePanelPage) => {
   switch (page) {
-    case SidePanelPages.PageLayoutWidgetTypeSelect:
+    case SidePanelPages.PageLayoutDashboardWidgetTypeSelect:
       return IconAppWindow;
     case SidePanelPages.DashboardChartSettings:
     case SidePanelPages.RecordPageChartSettings:

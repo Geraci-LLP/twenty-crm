@@ -38,7 +38,7 @@ import {
   WidgetType,
 } from '~/generated-metadata/graphql';
 
-export const SidePanelPageLayoutWidgetTypeSelect = () => {
+export const SidePanelPageLayoutDashboardWidgetTypeSelect = () => {
   const { pageLayoutId, recordId } = usePageLayoutIdFromContextStore();
 
   const { closeSidePanelMenu } = useSidePanelMenu();
