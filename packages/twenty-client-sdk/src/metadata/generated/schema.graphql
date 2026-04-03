@@ -47,6 +47,7 @@ type ApplicationRegistration {
   latestAvailableVersion: String
   isListed: Boolean!
   isFeatured: Boolean!
+  logoUrl: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -284,6 +285,7 @@ type ApplicationRegistrationSummary {
   id: UUID!
   latestAvailableVersion: String
   sourceType: ApplicationRegistrationSourceType!
+  logoUrl: String
 }
 
 type ApplicationVariable {
@@ -1729,12 +1731,16 @@ enum FeatureFlagKey {
   IS_DRAFT_EMAIL_ENABLED
   IS_USAGE_ANALYTICS_ENABLED
   IS_RICH_TEXT_V1_MIGRATED
-  IS_DIRECT_GRAPHQL_EXECUTION_ENABLED
   IS_RECORD_PAGE_LAYOUT_GLOBAL_EDITION_ENABLED
   IS_CONNECTED_ACCOUNT_MIGRATED
-  IS_GRAPHQL_QUERY_TIMING_ENABLED
   IS_RECORD_TABLE_WIDGET_ENABLED
   IS_DATASOURCE_MIGRATED
+}
+
+type ClientConfigMaintenanceMode {
+  startAt: DateTime!
+  endAt: DateTime!
+  link: String
 }
 
 type ClientConfig {
@@ -1765,6 +1771,8 @@ type ClientConfig {
   calendarBookingPageId: String
   isCloudflareIntegrationEnabled: Boolean!
   isClickHouseConfigured: Boolean!
+  isWorkspaceSchemaDDLLocked: Boolean!
+  maintenance: ClientConfigMaintenanceMode
 }
 
 type UsageBreakdownItem {
@@ -1959,6 +1967,12 @@ type AdminPanelHealthServiceData {
   errorMessage: String
   details: String
   queues: [AdminPanelWorkerQueueHealth!]
+}
+
+type MaintenanceMode {
+  startAt: DateTime!
+  endAt: DateTime!
+  link: String
 }
 
 type ModelsDevModelSuggestion {
@@ -2267,6 +2281,33 @@ type FieldConnection {
   edges: [FieldEdge!]!
 }
 
+type AuthToken {
+  token: String!
+  expiresAt: DateTime!
+}
+
+type ApplicationTokenPair {
+  applicationAccessToken: AuthToken!
+  applicationRefreshToken: AuthToken!
+}
+
+type FrontComponent {
+  id: UUID!
+  name: String!
+  description: String
+  sourceComponentPath: String!
+  builtComponentPath: String!
+  componentName: String!
+  builtComponentChecksum: String!
+  universalIdentifier: UUID
+  applicationId: UUID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  isHeadless: Boolean!
+  usesSdkClient: Boolean!
+  applicationTokenPair: ApplicationTokenPair
+}
+
 type LogicFunctionLogs {
   """Execution Logs"""
   logs: String!
@@ -2287,11 +2328,6 @@ type VerifyTwoFactorAuthenticationMethod {
 
 type AuthorizeApp {
   redirectUrl: String!
-}
-
-type AuthToken {
-  token: String!
-  expiresAt: DateTime!
 }
 
 type AuthTokenPair {
@@ -2400,11 +2436,6 @@ type DevelopmentApplication {
 type WorkspaceMigration {
   applicationUniversalIdentifier: String!
   actions: JSON!
-}
-
-type ApplicationTokenPair {
-  applicationAccessToken: AuthToken!
-  applicationRefreshToken: AuthToken!
 }
 
 type File {
@@ -2526,23 +2557,6 @@ type PostgresCredentials {
   workspaceId: UUID!
 }
 
-type FrontComponent {
-  id: UUID!
-  name: String!
-  description: String
-  sourceComponentPath: String!
-  builtComponentPath: String!
-  componentName: String!
-  builtComponentChecksum: String!
-  universalIdentifier: UUID
-  applicationId: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  isHeadless: Boolean!
-  usesSdkClient: Boolean!
-  applicationTokenPair: ApplicationTokenPair
-}
-
 type CommandMenuItem {
   id: UUID!
   workflowVersionId: UUID
@@ -2567,20 +2581,15 @@ enum EngineComponentKey {
   NAVIGATE_TO_NEXT_RECORD
   NAVIGATE_TO_PREVIOUS_RECORD
   CREATE_NEW_RECORD
-  DELETE_SINGLE_RECORD
-  DELETE_MULTIPLE_RECORDS
-  RESTORE_SINGLE_RECORD
-  RESTORE_MULTIPLE_RECORDS
-  DESTROY_SINGLE_RECORD
-  DESTROY_MULTIPLE_RECORDS
+  DELETE_RECORDS
+  RESTORE_RECORDS
+  DESTROY_RECORDS
   ADD_TO_FAVORITES
   REMOVE_FROM_FAVORITES
   EXPORT_NOTE_TO_PDF
-  EXPORT_FROM_RECORD_INDEX
-  EXPORT_FROM_RECORD_SHOW
+  EXPORT_RECORDS
   UPDATE_MULTIPLE_RECORDS
   MERGE_MULTIPLE_RECORDS
-  EXPORT_MULTIPLE_RECORDS
   IMPORT_RECORDS
   EXPORT_VIEW
   SEE_DELETED_RECORDS
@@ -2623,6 +2632,15 @@ enum EngineComponentKey {
   VIEW_PREVIOUS_AI_CHATS
   TRIGGER_WORKFLOW_VERSION
   FRONT_COMPONENT_RENDERER
+  DELETE_SINGLE_RECORD
+  DELETE_MULTIPLE_RECORDS
+  RESTORE_SINGLE_RECORD
+  RESTORE_MULTIPLE_RECORDS
+  DESTROY_SINGLE_RECORD
+  DESTROY_MULTIPLE_RECORDS
+  EXPORT_FROM_RECORD_INDEX
+  EXPORT_FROM_RECORD_SHOW
+  EXPORT_MULTIPLE_RECORDS
 }
 
 enum CommandMenuItemAvailabilityType {
@@ -2636,6 +2654,7 @@ type ToolIndexEntry {
   description: String!
   category: String!
   objectName: String
+  icon: String
   inputSchema: JSON
 }
 
@@ -3091,6 +3110,8 @@ type Query {
   getView(id: String!): View
   getViewSorts(viewId: String): [ViewSort!]!
   getViewSort(id: String!): ViewSort
+  getViewFields(viewId: String!): [ViewField!]!
+  getViewField(id: String!): ViewField
   getViewFieldGroups(viewId: String!): [ViewFieldGroup!]!
   getViewFieldGroup(id: String!): ViewFieldGroup
   apiKeys: [ApiKey!]!
@@ -3129,8 +3150,6 @@ type Query {
     """Specify to filter the records returned."""
     filter: ObjectFilter! = {}
   ): ObjectConnection!
-  getViewFields(viewId: String!): [ViewField!]!
-  getViewField(id: String!): ViewField
   index(
     """The id of the record to find."""
     id: UUID!
@@ -3221,6 +3240,7 @@ type Query {
   getModelsDevProviders: [ModelsDevProviderSuggestion!]!
   getModelsDevSuggestions(providerType: String!): [ModelsDevModelSuggestion!]!
   getAdminAiUsageByWorkspace(periodStart: DateTime, periodEnd: DateTime): [UsageBreakdownItem!]!
+  getMaintenanceMode: MaintenanceMode
   getUsageAnalytics(input: UsageAnalyticsInput): UsageAnalytics!
   getPostgresCredentials: PostgresCredentials
   findManyPublicDomains: [PublicDomain!]!
@@ -3382,6 +3402,11 @@ type Mutation {
   updateViewSort(input: UpdateViewSortInput!): ViewSort!
   deleteViewSort(input: DeleteViewSortInput!): Boolean!
   destroyViewSort(input: DestroyViewSortInput!): Boolean!
+  updateViewField(input: UpdateViewFieldInput!): ViewField!
+  createViewField(input: CreateViewFieldInput!): ViewField!
+  createManyViewFields(inputs: [CreateViewFieldInput!]!): [ViewField!]!
+  deleteViewField(input: DeleteViewFieldInput!): ViewField!
+  destroyViewField(input: DestroyViewFieldInput!): ViewField!
   updateViewFieldGroup(input: UpdateViewFieldGroupInput!): ViewFieldGroup!
   createViewFieldGroup(input: CreateViewFieldGroupInput!): ViewFieldGroup!
   createManyViewFieldGroups(inputs: [CreateViewFieldGroupInput!]!): [ViewFieldGroup!]!
@@ -3435,11 +3460,6 @@ type Mutation {
   createOneObject(input: CreateOneObjectInput!): Object!
   deleteOneObject(input: DeleteOneObjectInput!): Object!
   updateOneObject(input: UpdateOneObjectInput!): Object!
-  updateViewField(input: UpdateViewFieldInput!): ViewField!
-  createViewField(input: CreateViewFieldInput!): ViewField!
-  createManyViewFields(inputs: [CreateViewFieldInput!]!): [ViewField!]!
-  deleteViewField(input: DeleteViewFieldInput!): ViewField!
-  destroyViewField(input: DestroyViewFieldInput!): ViewField!
   createOneAgent(input: CreateAgentInput!): Agent!
   updateOneAgent(input: UpdateAgentInput!): Agent!
   deleteOneAgent(input: AgentIdInput!): Agent!
@@ -3541,6 +3561,8 @@ type Mutation {
   removeAiProvider(providerName: String!): Boolean!
   addModelToProvider(providerName: String!, modelConfig: JSON!): Boolean!
   removeModelFromProvider(providerName: String!, modelName: String!): Boolean!
+  setMaintenanceMode(startAt: DateTime!, endAt: DateTime!, link: String): Boolean!
+  clearMaintenanceMode: Boolean!
   enablePostgresProxy: PostgresCredentials!
   disablePostgresProxy: PostgresCredentials!
   createPublicDomain(domain: String!): PublicDomain!
@@ -3728,6 +3750,43 @@ input DeleteViewSortInput {
 
 input DestroyViewSortInput {
   """The id of the view sort to destroy."""
+  id: UUID!
+}
+
+input UpdateViewFieldInput {
+  """The id of the view field to update"""
+  id: UUID!
+
+  """The view field to update"""
+  update: UpdateViewFieldInputUpdates!
+}
+
+input UpdateViewFieldInputUpdates {
+  isVisible: Boolean
+  size: Float
+  position: Float
+  aggregateOperation: AggregateOperations
+  viewFieldGroupId: UUID
+}
+
+input CreateViewFieldInput {
+  id: UUID
+  fieldMetadataId: UUID!
+  viewId: UUID!
+  isVisible: Boolean = true
+  size: Float = 0
+  position: Float = 0
+  aggregateOperation: AggregateOperations
+  viewFieldGroupId: UUID
+}
+
+input DeleteViewFieldInput {
+  """The id of the view field to delete."""
+  id: UUID!
+}
+
+input DestroyViewFieldInput {
+  """The id of the view field to destroy."""
   id: UUID!
 }
 
@@ -4059,43 +4118,6 @@ input UpdateObjectPayload {
   imageIdentifierFieldMetadataId: UUID
   isLabelSyncedWithName: Boolean
   isSearchable: Boolean
-}
-
-input UpdateViewFieldInput {
-  """The id of the view field to update"""
-  id: UUID!
-
-  """The view field to update"""
-  update: UpdateViewFieldInputUpdates!
-}
-
-input UpdateViewFieldInputUpdates {
-  isVisible: Boolean
-  size: Float
-  position: Float
-  aggregateOperation: AggregateOperations
-  viewFieldGroupId: UUID
-}
-
-input CreateViewFieldInput {
-  id: UUID
-  fieldMetadataId: UUID!
-  viewId: UUID!
-  isVisible: Boolean = true
-  size: Float = 0
-  position: Float = 0
-  aggregateOperation: AggregateOperations
-  viewFieldGroupId: UUID
-}
-
-input DeleteViewFieldInput {
-  """The id of the view field to delete."""
-  id: UUID!
-}
-
-input DestroyViewFieldInput {
-  """The id of the view field to destroy."""
-  id: UUID!
 }
 
 input CreateAgentInput {
