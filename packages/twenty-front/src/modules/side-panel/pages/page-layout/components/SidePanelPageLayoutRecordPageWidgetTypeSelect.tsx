@@ -127,47 +127,40 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     return undefined;
   }, [existingWidget]);
 
-  const removeExistingWidgetIfReplacing = useCallback(
-    (newWidgetType: WidgetType) => {
-      if (
-        !isReplaceMode ||
-        !isDefined(pageLayoutEditingWidgetId) ||
-        !isDefined(tabId)
-      ) {
-        return;
-      }
+  const removeExistingWidgetIfReplacing = useCallback(() => {
+    if (
+      !isReplaceMode ||
+      !isDefined(pageLayoutEditingWidgetId) ||
+      !isDefined(tabId)
+    ) {
+      return;
+    }
 
-      if (existingWidget?.type === newWidgetType) {
-        return;
-      }
+    if (
+      existingWidget?.type === WidgetType.RECORD_TABLE &&
+      'viewId' in (existingWidget.configuration ?? {}) &&
+      isDefined(
+        (existingWidget.configuration as { viewId: string | null }).viewId,
+      )
+    ) {
+      deleteViewForRecordTableWidget(
+        (existingWidget.configuration as { viewId: string }).viewId,
+      );
+    }
 
-      if (
-        existingWidget?.type === WidgetType.RECORD_TABLE &&
-        'viewId' in (existingWidget.configuration ?? {}) &&
-        isDefined(
-          (existingWidget.configuration as { viewId: string | null }).viewId,
-        )
-      ) {
-        deleteViewForRecordTableWidget(
-          (existingWidget.configuration as { viewId: string }).viewId,
-        );
-      }
-
-      store.set(pageLayoutDraftState, (prev) => ({
-        ...prev,
-        tabs: removeWidgetFromTab(prev.tabs, tabId, pageLayoutEditingWidgetId),
-      }));
-    },
-    [
-      deleteViewForRecordTableWidget,
-      existingWidget,
-      isReplaceMode,
-      pageLayoutDraftState,
-      pageLayoutEditingWidgetId,
-      store,
-      tabId,
-    ],
-  );
+    store.set(pageLayoutDraftState, (prev) => ({
+      ...prev,
+      tabs: removeWidgetFromTab(prev.tabs, tabId, pageLayoutEditingWidgetId),
+    }));
+  }, [
+    deleteViewForRecordTableWidget,
+    existingWidget,
+    isReplaceMode,
+    pageLayoutDraftState,
+    pageLayoutEditingWidgetId,
+    store,
+    tabId,
+  ]);
 
   const { data: frontComponentsData } = useQuery<{
     frontComponents: FrontComponent[];
@@ -188,7 +181,7 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     }
 
     const replacePositionIndex = getExistingWidgetPositionIndex();
-    removeExistingWidgetIfReplacing(WidgetType.FIELDS);
+    removeExistingWidgetIfReplacing();
 
     const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
     const positionIndex =
@@ -256,7 +249,7 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     }
 
     const replacePositionIndex = getExistingWidgetPositionIndex();
-    removeExistingWidgetIfReplacing(WidgetType.FIELD);
+    removeExistingWidgetIfReplacing();
 
     const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
     const existingWidgets = activeTab?.widgets ?? [];
@@ -331,7 +324,7 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       }
 
       const replacePositionIndex = getExistingWidgetPositionIndex();
-      removeExistingWidgetIfReplacing(WidgetType.FRONT_COMPONENT);
+      removeExistingWidgetIfReplacing();
 
       const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
       const positionIndex =
