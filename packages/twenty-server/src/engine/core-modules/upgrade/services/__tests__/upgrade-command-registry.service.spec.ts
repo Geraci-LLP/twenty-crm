@@ -6,8 +6,8 @@ import { DiscoveryService } from '@nestjs/core';
 import { type MigrationInterface } from 'typeorm';
 
 import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
-import { RegisteredInstanceCommand } from 'src/database/commands/decorators/registered-instance-command.decorator';
-import { RegisteredWorkspaceCommand } from 'src/database/commands/decorators/registered-workspace-command.decorator';
+import { RegisteredInstanceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-instance-command.decorator';
+import { RegisteredWorkspaceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
 
 @RegisteredInstanceCommand('1.21.0', 1770000000000)
 class MigrationA1770000000000 implements MigrationInterface {

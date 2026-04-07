@@ -12,7 +12,7 @@ import {
 import { getDataSourceToken } from '@nestjs/typeorm';
 
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
-import { RegisteredInstanceCommand } from 'src/database/commands/decorators/registered-instance-command.decorator';
+import { RegisteredInstanceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-instance-command.decorator';
 import {
   UpgradeCommand,
   UpgradeCommandOptions,

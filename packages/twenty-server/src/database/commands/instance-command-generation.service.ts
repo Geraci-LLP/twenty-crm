@@ -97,7 +97,7 @@ export class InstanceCommandGenerationService {
   }): string {
     return `import { MigrationInterface, QueryRunner } from 'typeorm';
 
-import { RegisteredInstanceCommand } from 'src/database/commands/decorators/registered-instance-command.decorator';
+import { RegisteredInstanceCommand } from 'src/engine/core-modules/upgrade/decorators/registered-instance-command.decorator';
 
 @RegisteredInstanceCommand('${version}', ${timestamp})
 export class ${className} implements MigrationInterface {

@@ -5,8 +5,8 @@ import { type MigrationInterface } from 'typeorm';
 
 import { type ActiveOrSuspendedWorkspaceCommandRunner } from 'src/database/commands/command-runners/active-or-suspended-workspace.command-runner';
 import { type WorkspaceCommandRunner } from 'src/database/commands/command-runners/workspace.command-runner';
-import { getRegisteredWorkspaceCommandMetadata } from 'src/database/commands/decorators/registered-workspace-command.decorator';
-import { getRegisteredInstanceCommandMetadata } from 'src/database/commands/decorators/registered-instance-command.decorator';
+import { getRegisteredWorkspaceCommandMetadata } from 'src/engine/core-modules/upgrade/decorators/registered-workspace-command.decorator';
+import { getRegisteredInstanceCommandMetadata } from 'src/engine/core-modules/upgrade/decorators/registered-instance-command.decorator';
 import {
   UPGRADE_COMMAND_SUPPORTED_VERSIONS,
   type UpgradeCommandVersion,
