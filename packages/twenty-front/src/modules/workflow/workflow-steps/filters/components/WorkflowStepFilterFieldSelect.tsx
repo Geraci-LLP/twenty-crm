@@ -1,4 +1,5 @@
 import { useFieldMetadataItemById } from '@/object-metadata/hooks/useFieldMetadataItemById';
+import { getSelectOptionIconFromObjectMetadataItem } from '@/object-metadata/utils/getSelectOptionIconFromObjectMetadataItem';
 import { SelectControl } from '@/ui/input/components/SelectControl';
 import { Dropdown } from '@/ui/layout/dropdown/components/Dropdown';
 import { useCloseDropdown } from '@/ui/layout/dropdown/hooks/useCloseDropdown';
@@ -89,7 +90,9 @@ export const WorkflowStepFilterFieldSelect = ({
     : variableLabel;
 
   const icon = stepFilter.isFullRecord
-    ? getIcon(filterObjectMetadataItem?.icon)
+    ? isDefined(filterObjectMetadataItem)
+      ? getSelectOptionIconFromObjectMetadataItem(filterObjectMetadataItem)
+      : undefined
     : filterFieldMetadataItem?.icon
       ? getIcon(filterFieldMetadataItem.icon)
       : undefined;

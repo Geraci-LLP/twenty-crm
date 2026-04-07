@@ -5,6 +5,7 @@ import { DropdownMenuSeparator } from '@/ui/layout/dropdown/components/DropdownM
 
 import { useGetFieldMetadataItemByIdOrThrow } from '@/object-metadata/hooks/useGetFieldMetadataItemById';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
+import { getSelectOptionIconFromObjectMetadataItem } from '@/object-metadata/utils/getSelectOptionIconFromObjectMetadataItem';
 import { useGetInitialFilterValue } from '@/object-record/object-filter-dropdown/hooks/useGetInitialFilterValue';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
 import { DropdownMenuHeaderLeftComponent } from '@/ui/layout/dropdown/components/DropdownMenuHeader/internal/DropdownMenuHeaderLeftComponent';
@@ -232,8 +233,10 @@ export const WorkflowDropdownStepOutputItems = ({
             text={objectLabel || ''}
             hasSubMenu={false}
             LeftIcon={
-              subStepObjectMetadataItem?.icon
-                ? getIcon(subStepObjectMetadataItem.icon)
+              isDefined(subStepObjectMetadataItem)
+                ? getSelectOptionIconFromObjectMetadataItem(
+                    subStepObjectMetadataItem,
+                  )
                 : undefined
             }
             contextualText={t`Pick a ${objectLabel} record`}

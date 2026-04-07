@@ -1,12 +1,10 @@
-import { isDefined } from 'twenty-shared/utils';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableRow } from '@/ui/layout/table/components/TableRow';
-import { Checkbox } from 'twenty-ui/input';
-import { useIcons } from 'twenty-ui/display';
 import { styled } from '@linaria/react';
-import { useContext } from 'react';
-import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
+import { Checkbox } from 'twenty-ui/input';
+import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 export const AVAILABLE_STANDARD_OBJECTS_GRID_TEMPLATE_COLUMNS =
   '28px 148px 256px 80px';
@@ -28,10 +26,6 @@ export const SettingsAvailableStandardObjectItemTableRow = ({
   objectItem,
   onClick,
 }: SettingsAvailableStandardObjectItemTableRowProps) => {
-  const { theme } = useContext(ThemeContext);
-  const { getIcon } = useIcons();
-  const Icon = getIcon(objectItem.icon);
-
   return (
     <TableRow
       gridTemplateColumns={AVAILABLE_STANDARD_OBJECTS_GRID_TEMPLATE_COLUMNS}
@@ -49,7 +43,7 @@ export const SettingsAvailableStandardObjectItemTableRow = ({
         color={themeCssVariables.font.color.primary}
         gap={themeCssVariables.spacing[2]}
       >
-        {isDefined(Icon) && <Icon size={theme.icon.size.md} />}
+        <ObjectMetadataIcon objectMetadataItem={objectItem} />
         {objectItem.labelPlural}
       </TableCell>
       <TableCell>

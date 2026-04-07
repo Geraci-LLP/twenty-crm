@@ -1,4 +1,5 @@
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
+import { getSelectOptionIconFromObjectMetadataItem } from '@/object-metadata/utils/getSelectOptionIconFromObjectMetadataItem';
 import { Dropdown } from '@/ui/layout/dropdown/components/Dropdown';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
 import { DropdownMenuItemsContainer } from '@/ui/layout/dropdown/components/DropdownMenuItemsContainer';
@@ -11,9 +12,9 @@ import { SelectableList } from '@/ui/layout/selectable-list/components/Selectabl
 import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
 import { selectedItemIdComponentState } from '@/ui/layout/selectable-list/states/selectedItemIdComponentState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
-import { useContext, useState } from 'react';
 import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';
+import { useContext, useState } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 import {
   IconBox,
@@ -23,7 +24,6 @@ import {
   IconNorthStar,
   IconSettings,
   IconTable,
-  useIcons,
 } from 'twenty-ui/display';
 import { MenuItemSelect } from 'twenty-ui/navigation';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
@@ -87,7 +87,6 @@ export const WebhookEntitySelect = ({
   const { theme } = useContext(ThemeContext);
   const [searchInput, setSearchInput] = useState('');
   const { objectMetadataItems } = useObjectMetadataItems();
-  const { getIcon } = useIcons();
   const { closeDropdown } = useCloseDropdown();
 
   const selectedItemId = useAtomComponentStateValue(
@@ -110,7 +109,7 @@ export const WebhookEntitySelect = ({
     ...objectMetadataItems.map((item) => ({
       label: item.labelPlural,
       value: item.nameSingular,
-      Icon: getIcon(item.icon),
+      Icon: getSelectOptionIconFromObjectMetadataItem(item),
     })),
   ];
 

@@ -4,9 +4,11 @@ import { DropdownMenuSearchInput } from '@/ui/layout/dropdown/components/Dropdow
 import { DropdownMenuSeparator } from '@/ui/layout/dropdown/components/DropdownMenuSeparator';
 
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
+import { getSelectOptionIconFromObjectMetadataItem } from '@/object-metadata/utils/getSelectOptionIconFromObjectMetadataItem';
 import { DropdownContent } from '@/ui/layout/dropdown/components/DropdownContent';
 import { DropdownMenuHeaderLeftComponent } from '@/ui/layout/dropdown/components/DropdownMenuHeader/internal/DropdownMenuHeaderLeftComponent';
 import { GenericDropdownContentWidth } from '@/ui/layout/dropdown/constants/GenericDropdownContentWidth';
+import { useVariableDropdown } from '@/workflow/workflow-variables/hooks/useVariableDropdown';
 import { isRecordOutputSchemaV2 } from '@/workflow/workflow-variables/types/guards/isRecordOutputSchemaV2';
 import { type StepOutputSchemaV2 } from '@/workflow/workflow-variables/types/StepOutputSchemaV2';
 import { getCurrentSubStepFromPath } from '@/workflow/workflow-variables/utils/getCurrentSubStepFromPath';
@@ -21,7 +23,6 @@ import {
   useIcons,
 } from 'twenty-ui/display';
 import { MenuItemSelect } from 'twenty-ui/navigation';
-import { useVariableDropdown } from '@/workflow/workflow-variables/hooks/useVariableDropdown';
 
 type WorkflowVariablesDropdownStepItemsProps = {
   step: StepOutputSchemaV2;
@@ -126,8 +127,10 @@ export const WorkflowVariablesDropdownStepItems = ({
             text={objectLabel || ''}
             hasSubMenu={false}
             LeftIcon={
-              displayedSubStepObjectMetadata?.icon
-                ? getIcon(displayedSubStepObjectMetadata.icon)
+              isDefined(displayedSubStepObjectMetadata)
+                ? getSelectOptionIconFromObjectMetadataItem(
+                    displayedSubStepObjectMetadata,
+                  )
                 : undefined
             }
             contextualText={t`Pick a ${objectLabel} record`}
