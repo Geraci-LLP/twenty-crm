@@ -1,4 +1,9 @@
-import { Body, Heading, LazyEmbed, LinkButton } from '@/design-system/components';
+import {
+  Body,
+  Heading,
+  LazyEmbed,
+  LinkButton,
+} from '@/design-system/components';
 import { CheckIcon } from '@/icons/informative/Check';
 import type { PlanCardType } from '@/sections/Plans/types';
 import { theme } from '@/theme';
@@ -9,6 +14,7 @@ const FIXED_ROWS = 4;
 
 const StyledCard = styled.div`
   background-color: ${theme.colors.primary.background[100]};
+  border: 1px solid transparent;
   border-radius: ${theme.radius(1)};
   display: grid;
   grid-template-columns: 1fr;
@@ -19,19 +25,8 @@ const StyledCard = styled.div`
   padding-right: ${theme.spacing(4)};
   padding-top: ${theme.spacing(4)};
   row-gap: ${theme.spacing(4)};
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   z-index: 1;
-
-  &:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
-    z-index: 10;
-  }
-
-  &[data-highlighted='true'] {
-    border: 1px solid ${theme.colors.highlight[100]};
-  }
 `;
 
 const CardHeader = styled.div`
@@ -129,10 +124,7 @@ export function Card({ card, highlighted = false, maxBullets }: CardProps) {
   const totalRows = FIXED_ROWS + maxBullets;
 
   return (
-    <StyledCard
-      data-highlighted={highlighted}
-      style={{ gridRow: `span ${totalRows}` }}
-    >
+    <StyledCard style={{ gridRow: `span ${totalRows}` }}>
       <CardHeader>
         <CardHeaderInfo>
           <Heading
@@ -170,7 +162,7 @@ export function Card({ card, highlighted = false, maxBullets }: CardProps) {
         href="https://app.twenty.com/welcome"
         label="Start for free"
         type="anchor"
-        variant="contained"
+        variant={highlighted ? 'contained' : 'outlined'}
       />
 
       <CardRule />
