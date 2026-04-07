@@ -8,8 +8,8 @@ import {
   MessageFolderDriver,
 } from 'src/modules/messaging/message-folder-manager/interfaces/message-folder-driver.interface';
 
-import { MessageChannelEntity } from 'src/engine/metadata-modules/message-channel/entities/message-channel.entity';
 import { type ConnectedAccountEntity } from 'src/engine/metadata-modules/connected-account/entities/connected-account.entity';
+import { MessageChannelEntity } from 'src/engine/metadata-modules/message-channel/entities/message-channel.entity';
 import { shouldCreateFolderByDefault } from 'src/modules/messaging/message-folder-manager/utils/should-create-folder-by-default.util';
 import { shouldSyncFolderByDefault } from 'src/modules/messaging/message-folder-manager/utils/should-sync-folder-by-default.util';
 import { ImapClientProvider } from 'src/modules/messaging/message-import-manager/drivers/imap/providers/imap-client.provider';
@@ -66,12 +66,16 @@ export class ImapGetAllFoldersService implements MessageFolderDriver {
     const sentFolder =
       await this.imapFindSentFolderService.findSentFolder(client);
 
-    if (isDefined(sentFolder)) {
-      const sentMailbox = mailboxList.find((m) => m.path === sentFolder.path);
-      const uidValidity =
-        sentMailbox && !sentMailbox.flags?.has('\\Noselect')
-          ? await this.getUidValidity(client, sentMailbox)
-          : null;
+    const sentMailbox = isDefined(sentFolder)
+      ? mailboxList.find((mailbox) => mailbox.path === sentFolder.path)
+      : undefined;
+
+    if (
+      isDefined(sentFolder) &&
+      isDefined(sentMailbox) &&
+      this.isMailboxSelectable(sentMailbox)
+    ) {
+      const uidValidity = await this.getUidValidity(client, sentMailbox);
 
       const externalId = uidValidity
         ? `${sentFolder.path}:${uidValidity.toString()}`
@@ -133,11 +137,15 @@ export class ImapGetAllFoldersService implements MessageFolderDriver {
     return folders;
   }
 
+  private isMailboxSelectable(mailbox: ListResponse): boolean {
+    return !mailbox.flags?.has('\\Noselect');
+  }
+
   private isValidMailbox(
     mailbox: ListResponse,
     existingFolders: DiscoveredMessageFolder[],
   ): boolean {
-    if (mailbox.flags?.has('\\Noselect')) {
+    if (!this.isMailboxSelectable(mailbox)) {
       return false;
     }
 

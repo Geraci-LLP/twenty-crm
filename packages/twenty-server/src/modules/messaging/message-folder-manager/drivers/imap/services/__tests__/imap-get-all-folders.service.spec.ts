@@ -160,7 +160,7 @@ describe('ImapGetAllFoldersService', () => {
       }
     });
 
-    it('should not issue STATUS when sent folder has \\Noselect flag', async () => {
+    it('should exclude \\Noselect sent folder from results and skip STATUS', async () => {
       const mailboxList = [
         createMockMailbox({ path: 'INBOX' }),
         createMockMailbox({
@@ -179,12 +179,16 @@ describe('ImapGetAllFoldersService', () => {
         name: 'Sent',
       });
 
-      await service.getAllMessageFolders(CONNECTED_ACCOUNT, MESSAGE_CHANNEL);
+      const result = await service.getAllMessageFolders(
+        CONNECTED_ACCOUNT,
+        MESSAGE_CHANNEL,
+      );
 
       expect(mockImapClient.status).not.toHaveBeenCalledWith(
         'Sent',
         expect.anything(),
       );
+      expect(result.find((f) => f.isSentFolder)).toBeUndefined();
     });
   });
 });
