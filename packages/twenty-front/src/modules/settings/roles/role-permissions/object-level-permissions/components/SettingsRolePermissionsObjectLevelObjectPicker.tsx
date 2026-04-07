@@ -6,12 +6,12 @@ import { useObjectMetadataItemsThatCanHavePermission } from '@/settings/roles/ro
 import { SettingsTextInput } from '@/ui/input/components/SettingsTextInput';
 import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SettingsPath } from 'twenty-shared/types';
 import { H2Title, IconSearch } from 'twenty-ui/display';
 import { Section } from 'twenty-ui/layout';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 import { useNavigateSettings } from '~/hooks/useNavigateSettings';
 
 const StyledTypeSelectContainer = styled.div`
@@ -52,6 +52,7 @@ export const SettingsRolePermissionsObjectLevelObjectPicker = ({
 }: {
   roleId: string;
 }) => {
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigateSettings();
   const [searchParams] = useSearchParams();
   const fromAgentId = searchParams.get('fromAgent');
@@ -134,6 +135,8 @@ export const SettingsRolePermissionsObjectLevelObjectPicker = ({
                   Icon={
                     <ObjectMetadataIcon
                       objectMetadataItem={objectMetadataItem}
+                      size={theme.icon.size.lg}
+                      stroke={theme.icon.stroke.sm}
                     />
                   }
                   title={objectMetadataItem.labelPlural}
@@ -158,6 +161,8 @@ export const SettingsRolePermissionsObjectLevelObjectPicker = ({
                   Icon={
                     <ObjectMetadataIcon
                       objectMetadataItem={objectMetadataItem}
+                      size={theme.icon.size.lg}
+                      stroke={theme.icon.stroke.sm}
                     />
                   }
                   title={objectMetadataItem.labelPlural}

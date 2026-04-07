@@ -3,8 +3,9 @@ import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/Enriche
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableRow } from '@/ui/layout/table/components/TableRow';
 import { styled } from '@linaria/react';
+import { useContext } from 'react';
 import { Checkbox } from 'twenty-ui/input';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 export const AVAILABLE_STANDARD_OBJECTS_GRID_TEMPLATE_COLUMNS =
   '28px 148px 256px 80px';
@@ -26,6 +27,8 @@ export const SettingsAvailableStandardObjectItemTableRow = ({
   objectItem,
   onClick,
 }: SettingsAvailableStandardObjectItemTableRowProps) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <TableRow
       gridTemplateColumns={AVAILABLE_STANDARD_OBJECTS_GRID_TEMPLATE_COLUMNS}
@@ -43,7 +46,10 @@ export const SettingsAvailableStandardObjectItemTableRow = ({
         color={themeCssVariables.font.color.primary}
         gap={themeCssVariables.spacing[2]}
       >
-        <ObjectMetadataIcon objectMetadataItem={objectItem} />
+        <ObjectMetadataIcon
+          objectMetadataItem={objectItem}
+          size={theme.icon.size.md}
+        />
         {objectItem.labelPlural}
       </TableCell>
       <TableCell>

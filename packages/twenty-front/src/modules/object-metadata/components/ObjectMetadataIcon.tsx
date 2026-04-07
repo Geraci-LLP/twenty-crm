@@ -11,10 +11,14 @@ export type ObjectMetadataIconProps = {
       >
     | null
     | undefined;
+  size?: number;
+  stroke?: number;
 };
 
 export const ObjectMetadataIcon = ({
   objectMetadataItem,
+  size,
+  stroke,
 }: ObjectMetadataIconProps) => {
   const { getIcon } = useIcons();
   const Icon = getIcon(objectMetadataItem?.icon);
@@ -23,6 +27,8 @@ export const ObjectMetadataIcon = ({
     <TintedIconTile
       Icon={Icon}
       color={getObjectColorWithFallback(objectMetadataItem)}
+      size={size}
+      stroke={stroke}
     />
   );
 };

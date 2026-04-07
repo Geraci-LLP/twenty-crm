@@ -8,10 +8,11 @@ import { OBJECT_LEVEL_PERMISSION_TABLE_GRID_AUTO_COLUMNS } from '@/settings/role
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableRow } from '@/ui/layout/table/components/TableRow';
 import { styled } from '@linaria/react';
+import { useContext } from 'react';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
 import { OverflowingTextWithTooltip } from 'twenty-ui/display';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledNameLabel = styled.div`
   overflow: hidden;
@@ -32,6 +33,7 @@ export const SettingsRolePermissionsObjectLevelTableRow = ({
   isEditable = true,
   fromAgentId,
 }: SettingsRolePermissionsObjectLevelTableRowProps) => {
+  const { theme } = useContext(ThemeContext);
   const objectLabelPlural = objectMetadataItem.labelPlural;
   const navigationPath = getSettingsPath(SettingsPath.RoleObjectLevel, {
     roleId: roleId,
@@ -51,7 +53,11 @@ export const SettingsRolePermissionsObjectLevelTableRow = ({
         color={themeCssVariables.font.color.primary}
         gap={themeCssVariables.spacing[1]}
       >
-        <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
+        <ObjectMetadataIcon
+          objectMetadataItem={objectMetadataItem}
+          size={theme.icon.size.md}
+          stroke={theme.icon.stroke.sm}
+        />
         <StyledNameLabel title={objectLabelPlural}>
           <OverflowingTextWithTooltip text={objectLabelPlural} />
         </StyledNameLabel>

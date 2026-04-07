@@ -1,6 +1,6 @@
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
-import { type ReactNode } from 'react';
+import { type ReactNode, useContext } from 'react';
 
 import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
@@ -14,7 +14,7 @@ import {
 } from '@/settings/data-model/object-details/components/SettingsObjectItemTableRowStyledComponents';
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableRow } from '@/ui/layout/table/components/TableRow';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 export type SettingsObjectMetadataItemTableRowProps = {
   action: ReactNode;
@@ -59,6 +59,7 @@ export const SettingsObjectMetadataItemTableRow = ({
   totalObjectCount,
 }: SettingsObjectMetadataItemTableRowProps) => {
   const { t } = useLingui();
+  const { theme } = useContext(ThemeContext);
 
   return (
     <TableRow
@@ -68,7 +69,11 @@ export const SettingsObjectMetadataItemTableRow = ({
     >
       <StyledStickyFirstCell>
         <StyledNameTableCell>
-          <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
+          <ObjectMetadataIcon
+            objectMetadataItem={objectMetadataItem}
+            size={theme.icon.size.md}
+            stroke={theme.icon.stroke.sm}
+          />
           <StyledNameContainer>
             <StyledNameLabel title={objectMetadataItem.labelPlural}>
               {objectMetadataItem.labelPlural}

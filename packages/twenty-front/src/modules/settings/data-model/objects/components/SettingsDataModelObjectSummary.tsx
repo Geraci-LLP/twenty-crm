@@ -78,13 +78,19 @@ const SettingsDataModelObjectPreviewItem = ({
   pluralizeLabel = true,
   index,
 }: SettingsDataModelObjectPreviewItemProps) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <>
       {index > 0 && <StyledSeparator />}
       <StyledObjectPreview key={`${objectMetadataItem.labelSingular}-${index}`}>
         <StyledObjectName>
           <StyledIconContainer>
-            <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
+            <ObjectMetadataIcon
+              objectMetadataItem={objectMetadataItem}
+              size={theme.icon.size.sm}
+              stroke={theme.icon.stroke.md}
+            />
           </StyledIconContainer>
           <OverflowingTextWithTooltip
             text={

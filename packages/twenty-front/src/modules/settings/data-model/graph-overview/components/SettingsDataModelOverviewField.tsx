@@ -4,8 +4,9 @@ import { type FieldMetadataItem } from '@/object-metadata/types/FieldMetadataIte
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import { styled } from '@linaria/react';
 import { Handle, Position } from '@xyflow/react';
+import { useContext } from 'react';
 import { isDefined } from 'twenty-shared/utils';
-import { themeCssVariables } from 'twenty-ui/theme-constants';
+import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 import { RelationType } from '~/generated-metadata/graphql';
 
 type ObjectFieldRowProps = {
@@ -26,6 +27,7 @@ const StyledFieldName = styled.div`
 `;
 
 export const ObjectFieldRow = ({ field }: ObjectFieldRowProps) => {
+  const { theme } = useContext(ThemeContext);
   const objectMetadataItems = useAtomStateValue(objectMetadataItemsSelector);
 
   const relatedObjectId = field.relation?.targetObjectMetadata.id;
@@ -37,7 +39,10 @@ export const ObjectFieldRow = ({ field }: ObjectFieldRowProps) => {
   return (
     <StyledRow>
       {isDefined(relatedObject) && (
-        <ObjectMetadataIcon objectMetadataItem={relatedObject} />
+        <ObjectMetadataIcon
+          objectMetadataItem={relatedObject}
+          size={theme.icon.size.md}
+        />
       )}
       <StyledFieldName>{relatedObject?.labelPlural ?? ''}</StyledFieldName>
       <Handle

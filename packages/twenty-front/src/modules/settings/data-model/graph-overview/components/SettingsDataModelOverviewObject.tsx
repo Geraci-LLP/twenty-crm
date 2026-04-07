@@ -132,7 +132,10 @@ export const SettingsDataModelOverviewObject = ({
                 objectNamePlural: objectMetadataItem.namePlural,
               })}
             >
-              <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
+              <ObjectMetadataIcon
+                objectMetadataItem={objectMetadataItem}
+                size={theme.icon.size.md}
+              />
               {objectMetadataItem.labelPlural}
             </Link>
           </StyledObjectLinkContainer>
