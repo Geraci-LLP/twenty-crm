@@ -72,7 +72,7 @@ const retroFragmentShader = /* glsl */ `
       (vLocalPosition.xy - uDigitCenterXY) / max(uDigitRadiusXY, vec2(0.0001));
     float inDigitXY = 1.0 - smoothstep(0.88, 1.42, length(delta));
     float inDigitZ = smoothstep(uDigitZMin - 2.5, uDigitZMin + 1.2, vLocalPosition.z);
-    
+
     float digitMask = clamp(inDigitXY * mix(0.55, 1.0, inDigitZ), 0.0, 1.0);
 
     if (digitMask > 0.62) {
@@ -83,7 +83,7 @@ const retroFragmentShader = /* glsl */ `
     float xGrad = smoothstep(-1.2, 1.2, vWorldPosition.x);
 
     // Horizontal stripes based on world Y
-    float y = vWorldPosition.y * uStripeScale; 
+    float y = vWorldPosition.y * uStripeScale;
     float cell = fract(y);
 
     float lineWidth = mix(0.85, 0.0, xGrad);
@@ -93,15 +93,15 @@ const retroFragmentShader = /* glsl */ `
     // Dash effect increases from left to right
     float dashPhase = vWorldPosition.x * 25.0 + vWorldPosition.y * 12.0;
     float dash = fract(dashPhase);
-    
+
     float dashStrength = smoothstep(0.1, 0.9, xGrad);
-    
+
     float dashMask = mix(
       1.0,
       smoothstep(0.1, 0.3, dash) * (1.0 - smoothstep(0.4, 0.9, dash)),
       dashStrength
     );
-    
+
     // Add speckle noise for the retro feel
     float speckle = fract(sin(dot(vWorldPosition.xy, vec2(12.9898, 78.233))) * 43758.5453);
     float speckleMask = mix(1.0, step(0.3, speckle), dashStrength * 0.8);
@@ -248,7 +248,6 @@ export function Visual({ illustration }: VisualProps) {
     container.appendChild(canvas);
 
     const clock = new THREE.Clock();
-    const cameraWorldPosition = new THREE.Vector3();
 
     const pivot = new THREE.Group();
     scene.add(pivot);
