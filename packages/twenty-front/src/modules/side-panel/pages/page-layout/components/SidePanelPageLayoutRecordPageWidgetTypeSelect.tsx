@@ -204,7 +204,8 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
 
     removeExistingWidgetIfReplacing();
 
-    const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
+    const updatedPageLayout = store.get(pageLayoutDraftState);
+    const activeTab = updatedPageLayout.tabs.find((tab) => tab.id === tabId);
     const positionIndex =
       replacePositionIndex ?? activeTab?.widgets.length ?? 0;
     const widgetId = uuidv4();
@@ -237,7 +238,6 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     navigatePageLayoutSidePanel,
     objectMetadataItem.id,
     objectMetadataItem.labelSingular,
-    pageLayoutDraft.tabs,
     pageLayoutDraftState,
     removeExistingWidgetIfReplacing,
     setPageLayoutEditingWidgetId,
@@ -253,7 +253,8 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     const replacePositionIndex = getExistingWidgetPositionIndex();
     removeExistingWidgetIfReplacing();
 
-    const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
+    const updatedPageLayout = store.get(pageLayoutDraftState);
+    const activeTab = updatedPageLayout.tabs.find((tab) => tab.id === tabId);
     const existingWidgets = activeTab?.widgets ?? [];
     const positionIndex = replacePositionIndex ?? existingWidgets.length;
     const widgetId = uuidv4();
@@ -311,7 +312,6 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
     insertCreatedWidgetAtContext,
     navigatePageLayoutSidePanel,
     objectMetadataItem.id,
-    pageLayoutDraft.tabs,
     pageLayoutDraftState,
     removeExistingWidgetIfReplacing,
     setPageLayoutEditingWidgetId,
@@ -328,7 +328,8 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       const replacePositionIndex = getExistingWidgetPositionIndex();
       removeExistingWidgetIfReplacing();
 
-      const activeTab = pageLayoutDraft.tabs.find((tab) => tab.id === tabId);
+      const updatedPageLayout = store.get(pageLayoutDraftState);
+      const activeTab = updatedPageLayout.tabs.find((tab) => tab.id === tabId);
       const positionIndex =
         replacePositionIndex ?? activeTab?.widgets.length ?? 0;
       const widgetId = uuidv4();
@@ -377,7 +378,6 @@ export const SidePanelPageLayoutRecordPageWidgetTypeSelect = () => {
       closeSidePanelMenu,
       getExistingWidgetPositionIndex,
       insertCreatedWidgetAtContext,
-      pageLayoutDraft.tabs,
       pageLayoutDraftState,
       removeExistingWidgetIfReplacing,
       setPageLayoutEditingWidgetId,
