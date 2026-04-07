@@ -13,6 +13,7 @@ import { MigrateAiAgentTextToJsonResponseFormatCommand } from 'src/database/comm
 import { UpdateEditLayoutCommandMenuItemLabelCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-1775500009000-update-edit-layout-command-menu-item-label.command';
 import { DropWorkspaceMessagingFksCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-1775500010000-drop-workspace-messaging-fks.command';
 import { MigrateMessageFolderParentIdToExternalIdCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-1775500011000-migrate-message-folder-parent-id-to-external-id.command';
+import { MigrateMessagingInfrastructureToMetadataCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-1775500012000-migrate-messaging-infrastructure-to-metadata.command';
 import { ApplicationModule } from 'src/engine/core-modules/application/application.module';
 import { FeatureFlagModule } from 'src/engine/core-modules/feature-flag/feature-flag.module';
 import { UserWorkspaceEntity } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
@@ -60,6 +61,7 @@ import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace
     UpdateEditLayoutCommandMenuItemLabelCommand,
     DropWorkspaceMessagingFksCommand,
     MigrateMessageFolderParentIdToExternalIdCommand,
+    MigrateMessagingInfrastructureToMetadataCommand,
   ],
 })
 export class V1_21_UpgradeVersionCommandModule {}
