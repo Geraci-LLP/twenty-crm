@@ -1,6 +1,7 @@
 import { PageLayoutComponentInstanceContext } from '@/page-layout/states/contexts/PageLayoutComponentInstanceContext';
 import { pageLayoutDraftComponentState } from '@/page-layout/states/pageLayoutDraftComponentState';
 import { isVerticalListPosition } from '@/page-layout/utils/isVerticalListPosition';
+import { sortWidgetsByVerticalListPosition } from '@/page-layout/utils/sortWidgetsByVerticalListPosition';
 import { useAvailableComponentInstanceIdOrThrow } from '@/ui/utilities/state/component-state/hooks/useAvailableComponentInstanceIdOrThrow';
 import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateCallbackState';
 import { useStore } from 'jotai';
@@ -66,7 +67,9 @@ export const useMoveWidgetToTab = (pageLayoutIdFromProps?: string) => {
           ...prev,
           tabs: prev.tabs.map((currentTab) => {
             if (currentTab.id === sourceTab.id) {
-              const remainingWidgets = currentTab.widgets
+              const remainingWidgets = sortWidgetsByVerticalListPosition(
+                currentTab.widgets,
+              )
                 .filter((tabWidget) => tabWidget.id !== widgetId)
                 .map((tabWidget, widgetIndex) => ({
                   ...tabWidget,
