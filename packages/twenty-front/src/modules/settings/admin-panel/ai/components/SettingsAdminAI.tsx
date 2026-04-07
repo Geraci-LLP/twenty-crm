@@ -19,8 +19,8 @@ import { GET_ADMIN_AI_MODELS } from '@/settings/admin-panel/ai/graphql/queries/g
 import { GET_ADMIN_AI_USAGE_BY_WORKSPACE } from '@/settings/admin-panel/ai/graphql/queries/getAdminAiUsageByWorkspace';
 import { GET_AI_PROVIDERS } from '@/settings/admin-panel/ai/graphql/queries/getAiProviders';
 import { type GetAiProvidersResult } from '@/settings/admin-panel/ai/types/GetAiProvidersResult';
-import { getModelIcon } from '@/settings/admin-panel/ai/utils/getModelIcon';
 import { parseProviderItems } from '@/settings/admin-panel/ai/utils/parseProviderItems';
+import { getModelIcon } from '@/settings/ai/utils/getModelIcon';
 import { SettingsAdminTabSkeletonLoader } from '@/settings/admin-panel/components/SettingsAdminTabSkeletonLoader';
 import { SettingsEnterpriseFeatureGateCard } from '@/settings/components/SettingsEnterpriseFeatureGateCard';
 import { SettingsOptionCardContentSelect } from '@/settings/components/SettingsOptions/SettingsOptionCardContentSelect';
