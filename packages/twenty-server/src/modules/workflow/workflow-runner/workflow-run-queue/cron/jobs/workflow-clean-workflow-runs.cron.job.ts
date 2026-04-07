@@ -26,7 +26,6 @@ import {
   WorkflowCleanWorkflowRunsJob,
   WorkflowCleanWorkflowRunsJobData,
 } from 'src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-clean-workflow-runs.job';
-import { getAndIncrementPartition } from 'src/modules/workflow/workflow-runner/workflow-run-queue/utils/get-and-increment-partition.util';
 import { getRunsToCleanFindOptions } from 'src/modules/workflow/workflow-runner/workflow-run-queue/utils/get-runs-to-clean-find-options.util';
 
 export const CLEAN_WORKFLOW_RUN_CRON_PATTERN = '0 */3 * * *';
@@ -66,11 +65,7 @@ export class WorkflowCleanWorkflowRunsCronJob {
       order: { id: 'ASC' },
     });
 
-    const partition = await getAndIncrementPartition(
-      this.cacheStorageService,
-      LAST_PARTITION_CACHE_KEY,
-      NUMBER_OF_PARTITIONS,
-    );
+    const partition = await this.getAndIncrementPartition();
     const workspacesForThisRun = allActiveWorkspaces.filter(
       (_, index) => index % NUMBER_OF_PARTITIONS === partition,
     );
@@ -122,6 +117,21 @@ export class WorkflowCleanWorkflowRunsCronJob {
     }
 
     return false;
+  }
+
+  private async getAndIncrementPartition(): Promise<number> {
+    const lastPartition = await this.cacheStorageService.get<number>(
+      LAST_PARTITION_CACHE_KEY,
+    );
+
+    const partition =
+      lastPartition !== undefined
+        ? (lastPartition + 1) % NUMBER_OF_PARTITIONS
+        : 0;
+
+    await this.cacheStorageService.set(LAST_PARTITION_CACHE_KEY, partition);
+
+    return partition;
   }
 
   private async hasRunsToClean(workspaceId: string): Promise<boolean> {

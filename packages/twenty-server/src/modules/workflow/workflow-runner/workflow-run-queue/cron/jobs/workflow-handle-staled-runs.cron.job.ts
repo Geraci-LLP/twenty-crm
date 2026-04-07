@@ -22,8 +22,6 @@ import {
   WorkflowHandleStaledRunsJob,
   WorkflowHandleStaledRunsJobData,
 } from 'src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-handle-staled-runs.job';
-import { getAndIncrementPartition } from 'src/modules/workflow/workflow-runner/workflow-run-queue/utils/get-and-increment-partition.util';
-
 export const WORKFLOW_HANDLE_STALED_RUNS_CRON_PATTERN = '*/10 * * * *';
 
 const LAST_PARTITION_CACHE_KEY = 'workflow-handle-staled-runs:last-partition';
@@ -62,11 +60,7 @@ export class WorkflowHandleStaledRunsCronJob {
       order: { id: 'ASC' },
     });
 
-    const partition = await getAndIncrementPartition(
-      this.cacheStorageService,
-      LAST_PARTITION_CACHE_KEY,
-      NUMBER_OF_PARTITIONS,
-    );
+    const partition = await this.getAndIncrementPartition();
     const workspacesForThisRun = allActiveWorkspaces.filter(
       (_, index) => index % NUMBER_OF_PARTITIONS === partition,
     );
@@ -118,6 +112,21 @@ export class WorkflowHandleStaledRunsCronJob {
     }
 
     return false;
+  }
+
+  private async getAndIncrementPartition(): Promise<number> {
+    const lastPartition = await this.cacheStorageService.get<number>(
+      LAST_PARTITION_CACHE_KEY,
+    );
+
+    const partition =
+      lastPartition !== undefined
+        ? (lastPartition + 1) % NUMBER_OF_PARTITIONS
+        : 0;
+
+    await this.cacheStorageService.set(LAST_PARTITION_CACHE_KEY, partition);
+
+    return partition;
   }
 
   private async hasStaledRuns(workspaceId: string): Promise<boolean> {
