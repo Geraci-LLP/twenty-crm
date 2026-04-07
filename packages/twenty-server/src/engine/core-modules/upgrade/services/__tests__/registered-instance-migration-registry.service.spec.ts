@@ -130,7 +130,6 @@ describe('RegisteredInstanceMigrationService', () => {
   it('should return empty array for version with no migrations', async () => {
     const service = await buildRegistryService([]);
 
-    expect(service.getInstanceCommandsForVersion('1.19.0')).toStrictEqual([]);
     expect(service.getInstanceCommandsForVersion('1.20.0')).toStrictEqual([]);
     expect(service.getInstanceCommandsForVersion('1.21.0')).toStrictEqual([]);
   });

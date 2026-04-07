@@ -12,6 +12,7 @@ import { type UpgradeCommandVersion } from 'src/engine/constants/upgrade-command
 import { CoreEngineVersionService } from 'src/engine/core-engine-version/services/core-engine-version.service';
 import { InstanceUpgradeService } from 'src/engine/core-modules/upgrade/services/instance-upgrade.service';
 import { RegisteredInstanceMigrationService } from 'src/engine/core-modules/upgrade/services/registered-instance-migration-registry.service';
+import { RegisteredWorkspaceCommandService } from 'src/engine/core-modules/upgrade/services/registered-workspace-command-registry.service';
 import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
 import { WorkspaceVersionService } from 'src/engine/workspace-manager/workspace-version/services/workspace-version.service';
 
@@ -19,7 +20,6 @@ export type VersionCommands = (
   | WorkspaceCommandRunner
   | ActiveOrSuspendedWorkspaceCommandRunner
 )[];
-export type AllCommands = Record<UpgradeCommandVersion, VersionCommands>;
 
 export type UpgradeCommandOptions = {
   workspaceId?: Set<string>;
@@ -40,12 +40,11 @@ type VersionContext = {
 export abstract class UpgradeCommandRunner extends CommandRunner {
   protected logger: CommandLogger;
 
-  public abstract allCommands: AllCommands;
-
   constructor(
     protected readonly coreEngineVersionService: CoreEngineVersionService,
     protected readonly workspaceVersionService: WorkspaceVersionService,
     protected readonly registeredInstanceMigrationService: RegisteredInstanceMigrationService,
+    protected readonly registeredWorkspaceCommandService: RegisteredWorkspaceCommandService,
     protected readonly instanceUpgradeService: InstanceUpgradeService,
     protected readonly workspaceIteratorService: WorkspaceIteratorService,
     protected readonly workspaceUpgradeService: WorkspaceUpgradeService,
@@ -263,13 +262,11 @@ Please roll back to that version and run the upgrade command again.`,
     const currentAppVersion = this.coreEngineVersionService.getCurrentVersion();
     const currentVersionMajorMinor =
       `${currentAppVersion.major}.${currentAppVersion.minor}.0` as UpgradeCommandVersion;
-    const workspaceCommands = this.allCommands[currentVersionMajorMinor];
 
-    if (!isDefined(workspaceCommands)) {
-      throw new Error(
-        `No command found for version ${currentAppVersion}. Please check the commands record.`,
+    const workspaceCommands =
+      this.registeredWorkspaceCommandService.getWorkspaceCommandsForVersion(
+        currentVersionMajorMinor,
       );
-    }
 
     const fromWorkspaceVersion =
       this.coreEngineVersionService.getPreviousVersion();

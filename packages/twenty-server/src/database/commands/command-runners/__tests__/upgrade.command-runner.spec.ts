@@ -14,10 +14,10 @@ import { getDataSourceToken } from '@nestjs/typeorm';
 import {
   UpgradeCommandOptions,
   UpgradeCommandRunner,
-  type AllCommands,
 } from 'src/database/commands/command-runners/upgrade.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { RegisteredInstanceMigrationService } from 'src/engine/core-modules/upgrade/services/registered-instance-migration-registry.service';
+import { RegisteredWorkspaceCommandService } from 'src/engine/core-modules/upgrade/services/registered-workspace-command-registry.service';
 import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
 import { RegisteredInstanceMigration } from 'src/database/typeorm/core/decorators/registered-instance-migration.decorator';
 import { UPGRADE_COMMAND_SUPPORTED_VERSIONS } from 'src/engine/constants/upgrade-command-supported-versions.constant';
@@ -38,11 +38,7 @@ const PREVIOUS_VERSION =
     UPGRADE_COMMAND_SUPPORTED_VERSIONS.length - 2
   ];
 
-class BasicUpgradeCommandRunner extends UpgradeCommandRunner {
-  allCommands = Object.fromEntries(
-    UPGRADE_COMMAND_SUPPORTED_VERSIONS.map((version) => [version, []]),
-  ) as unknown as AllCommands;
-}
+class BasicUpgradeCommandRunner extends UpgradeCommandRunner {}
 
 type CommandRunnerValues = typeof BasicUpgradeCommandRunner;
 
@@ -117,6 +113,7 @@ const buildUpgradeCommandModule = async ({
           coreEngineVersionService: CoreEngineVersionService,
           workspaceVersionService: WorkspaceVersionService,
           registeredInstanceMigrationService: RegisteredInstanceMigrationService,
+          registeredWorkspaceCommandService: RegisteredWorkspaceCommandService,
           instanceUpgradeService: InstanceUpgradeService,
           workspaceIteratorService: WorkspaceIteratorService,
           workspaceUpgradeService: WorkspaceUpgradeService,
@@ -126,6 +123,7 @@ const buildUpgradeCommandModule = async ({
             coreEngineVersionService,
             workspaceVersionService,
             registeredInstanceMigrationService,
+            registeredWorkspaceCommandService,
             instanceUpgradeService,
             workspaceIteratorService,
             workspaceUpgradeService,
@@ -136,6 +134,7 @@ const buildUpgradeCommandModule = async ({
           CoreEngineVersionService,
           WorkspaceVersionService,
           RegisteredInstanceMigrationService,
+          RegisteredWorkspaceCommandService,
           InstanceUpgradeService,
           WorkspaceIteratorService,
           WorkspaceUpgradeService,
@@ -199,6 +198,12 @@ const buildUpgradeCommandModule = async ({
         provide: WorkspaceUpgradeService,
         useValue: {
           upgradeWorkspace: jest.fn().mockResolvedValue(undefined),
+        },
+      },
+      {
+        provide: RegisteredWorkspaceCommandService,
+        useValue: {
+          getWorkspaceCommandsForVersion: jest.fn().mockReturnValue([]),
         },
       },
       registryProvider,
@@ -544,16 +549,6 @@ describe('UpgradeCommandRunner', () => {
           },
           expectedErrorMessage:
             'APP_VERSION is not defined, please double check your env variables',
-        },
-      },
-      {
-        title: 'when current version commands are not found',
-        context: {
-          input: {
-            appVersion: '42.0.0',
-          },
-          expectedErrorMessage:
-            'No command found for version 42.0.0. Please check the commands record.',
         },
       },
       {
