@@ -1636,10 +1636,15 @@ type ClientAIModelConfig {
   sdkPackage: String
   inputCostPerMillionTokensInCredits: Float!
   outputCostPerMillionTokensInCredits: Float!
+  inputCostPerMillionTokens: Float
+  outputCostPerMillionTokens: Float
   nativeCapabilities: NativeModelCapabilities
   isDeprecated: Boolean
   isRecommended: Boolean
   providerName: String
+  providerLabel: String
+  contextWindowTokens: Float
+  maxOutputTokens: Float
   dataResidency: String
 }
 

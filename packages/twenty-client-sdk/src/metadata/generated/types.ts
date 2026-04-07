@@ -3305,6 +3305,12 @@ export default {
             "outputCostPerMillionTokensInCredits": [
                 11
             ],
+            "inputCostPerMillionTokens": [
+                11
+            ],
+            "outputCostPerMillionTokens": [
+                11
+            ],
             "nativeCapabilities": [
                 165
             ],
@@ -3316,6 +3322,15 @@ export default {
             ],
             "providerName": [
                 1
+            ],
+            "providerLabel": [
+                1
+            ],
+            "contextWindowTokens": [
+                11
+            ],
+            "maxOutputTokens": [
+                11
             ],
             "dataResidency": [
                 1
