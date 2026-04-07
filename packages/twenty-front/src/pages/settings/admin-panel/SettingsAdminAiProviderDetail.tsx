@@ -372,12 +372,13 @@ export const SettingsAdminAiProviderDetail = () => {
                       }),
                     ),
                   );
-                  await refetchModels();
-                  await refetchClientConfig();
                 } catch {
                   enqueueErrorSnackBar({
                     message: t`Failed to update model availability`,
                   });
+                } finally {
+                  await refetchModels();
+                  await refetchClientConfig();
                 }
               }}
               anchorPrefix="provider-model-row"

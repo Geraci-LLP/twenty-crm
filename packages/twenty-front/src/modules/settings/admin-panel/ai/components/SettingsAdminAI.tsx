@@ -270,12 +270,13 @@ export const SettingsAdminAI = () => {
                     }),
                   ),
                 );
-                await refetchModels();
-                await refetchClientConfig();
               } catch {
                 enqueueErrorSnackBar({
                   message: t`Failed to update model recommendations`,
                 });
+              } finally {
+                await refetchModels();
+                await refetchClientConfig();
               }
             }}
             anchorPrefix="recommended-model-row"
