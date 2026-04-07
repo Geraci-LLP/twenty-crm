@@ -247,10 +247,22 @@ describe('UpgradeCommandRegistryService', () => {
     const allCommands = service.getAllInstanceCommands();
 
     expect(allCommands).toStrictEqual([
-      { version: '1.20.0', migration: expect.objectContaining({ name: 'MigrationD1769000000000' }) },
-      { version: '1.21.0', migration: expect.objectContaining({ name: 'MigrationA1770000000000' }) },
-      { version: '1.21.0', migration: expect.objectContaining({ name: 'MigrationB1771000000000' }) },
-      { version: '1.21.0', migration: expect.objectContaining({ name: 'MigrationC1772000000000' }) },
+      {
+        version: '1.20.0',
+        migration: expect.objectContaining({ name: 'MigrationD1769000000000' }),
+      },
+      {
+        version: '1.21.0',
+        migration: expect.objectContaining({ name: 'MigrationA1770000000000' }),
+      },
+      {
+        version: '1.21.0',
+        migration: expect.objectContaining({ name: 'MigrationB1771000000000' }),
+      },
+      {
+        version: '1.21.0',
+        migration: expect.objectContaining({ name: 'MigrationC1772000000000' }),
+      },
     ]);
   });
 
