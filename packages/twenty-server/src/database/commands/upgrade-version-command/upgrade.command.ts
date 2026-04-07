@@ -31,7 +31,6 @@ import { BackfillMessageThreadSubjectCommand } from 'src/database/commands/upgra
 import { BackfillPageLayoutsAndFieldsWidgetViewFieldsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-backfill-page-layouts-and-fields-widget-view-fields.command';
 import { DeduplicateEngineCommandsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-deduplicate-engine-commands.command';
 import { DropWorkspaceMessagingFksCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-drop-workspace-messaging-fks.command';
-import { FixStaleAiModelDefaultsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-fix-stale-ai-model-defaults.command';
 import { FixSelectAllCommandMenuItemsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-fix-select-all-command-menu-items.command';
 import { MigrateAiAgentTextToJsonResponseFormatCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-migrate-ai-agent-text-to-json-response-format.command';
 import { MigrateMessageFolderParentIdToExternalIdCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-workspace-command-migrate-message-folder-parent-id-to-external-id.command';
@@ -83,7 +82,6 @@ export class UpgradeCommand extends UpgradeCommandRunner {
     private readonly backfillMessageThreadSubjectCommand: BackfillMessageThreadSubjectCommand,
     private readonly backfillPageLayoutsAndFieldsWidgetViewFieldsCommand: BackfillPageLayoutsAndFieldsWidgetViewFieldsCommand,
     private readonly deduplicateEngineCommandsCommand: DeduplicateEngineCommandsCommand,
-    private readonly fixStaleAiModelDefaultsCommand: FixStaleAiModelDefaultsCommand,
     private readonly fixSelectAllCommandMenuItemsCommand: FixSelectAllCommandMenuItemsCommand,
     private readonly migrateAiAgentTextToJsonResponseFormatCommand: MigrateAiAgentTextToJsonResponseFormatCommand,
     private readonly updateEditLayoutCommandMenuItemLabelCommand: UpdateEditLayoutCommandMenuItemLabelCommand,
@@ -128,7 +126,6 @@ export class UpgradeCommand extends UpgradeCommandRunner {
       this.backfillMessageThreadSubjectCommand,
       this.backfillPageLayoutsAndFieldsWidgetViewFieldsCommand,
       this.deduplicateEngineCommandsCommand,
-      this.fixStaleAiModelDefaultsCommand,
       this.fixSelectAllCommandMenuItemsCommand,
       this.migrateAiAgentTextToJsonResponseFormatCommand,
       this.updateEditLayoutCommandMenuItemLabelCommand,
