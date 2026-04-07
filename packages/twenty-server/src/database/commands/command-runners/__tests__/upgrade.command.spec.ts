@@ -11,19 +11,19 @@ import {
 
 import { getDataSourceToken } from '@nestjs/typeorm';
 
-import {
-  UpgradeCommandOptions,
-  UpgradeCommand,
-} from 'src/database/commands/command-runners/upgrade.command';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
-import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
-import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
 import { RegisteredInstanceCommand } from 'src/database/commands/decorators/registered-instance-command.decorator';
+import {
+  UpgradeCommand,
+  UpgradeCommandOptions,
+} from 'src/database/commands/upgrade-version-command/upgrade.command';
 import { UPGRADE_COMMAND_SUPPORTED_VERSIONS } from 'src/engine/constants/upgrade-command-supported-versions.constant';
 import { CoreEngineVersionService } from 'src/engine/core-engine-version/services/core-engine-version.service';
 import { type ConfigVariables } from 'src/engine/core-modules/twenty-config/config-variables';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { InstanceUpgradeService } from 'src/engine/core-modules/upgrade/services/instance-upgrade.service';
+import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
+import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { WorkspaceVersionService } from 'src/engine/workspace-manager/workspace-version/services/workspace-version.service';
 import { compareVersionMajorAndMinor } from 'src/utils/version/compare-version-minor-and-major';
