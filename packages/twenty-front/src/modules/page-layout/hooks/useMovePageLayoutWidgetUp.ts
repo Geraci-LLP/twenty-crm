@@ -1,6 +1,7 @@
 import { PageLayoutComponentInstanceContext } from '@/page-layout/states/contexts/PageLayoutComponentInstanceContext';
 import { pageLayoutDraftComponentState } from '@/page-layout/states/pageLayoutDraftComponentState';
 import { isVerticalListPosition } from '@/page-layout/utils/isVerticalListPosition';
+import { sortWidgetsByVerticalListPosition } from '@/page-layout/utils/sortWidgetsByVerticalListPosition';
 import { useAvailableComponentInstanceIdOrThrow } from '@/ui/utilities/state/component-state/hooks/useAvailableComponentInstanceIdOrThrow';
 import { useAtomComponentStateCallbackState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateCallbackState';
 import { useStore } from 'jotai';
@@ -32,19 +33,7 @@ export const useMovePageLayoutWidgetUp = (pageLayoutIdFromProps?: string) => {
           return prev;
         }
 
-        const sortedWidgets = [...tab.widgets].sort((widgetA, widgetB) => {
-          const indexA =
-            isDefined(widgetA.position) &&
-            isVerticalListPosition(widgetA.position)
-              ? widgetA.position.index
-              : 0;
-          const indexB =
-            isDefined(widgetB.position) &&
-            isVerticalListPosition(widgetB.position)
-              ? widgetB.position.index
-              : 0;
-          return indexA - indexB;
-        });
+        const sortedWidgets = sortWidgetsByVerticalListPosition(tab.widgets);
 
         const currentIndex = sortedWidgets.findIndex(
           (widget) => widget.id === widgetId,
