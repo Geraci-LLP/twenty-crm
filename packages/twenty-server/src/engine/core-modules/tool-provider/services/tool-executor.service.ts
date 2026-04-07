@@ -1,6 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import {
+  type AggregateOperations,
+  type ObjectRecordGroupByDateGranularity,
+} from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { Repository } from 'typeorm';
 
@@ -19,6 +23,7 @@ import { CreateManyRecordsService } from 'src/engine/core-modules/record-crud/se
 import { CreateRecordService } from 'src/engine/core-modules/record-crud/services/create-record.service';
 import { DeleteRecordService } from 'src/engine/core-modules/record-crud/services/delete-record.service';
 import { FindRecordsService } from 'src/engine/core-modules/record-crud/services/find-records.service';
+import { GroupByRecordsService } from 'src/engine/core-modules/record-crud/services/group-by-records.service';
 import { type FindRecordsParams } from 'src/engine/core-modules/record-crud/types/find-records-params.type';
 import { UpdateManyRecordsService } from 'src/engine/core-modules/record-crud/services/update-many-records.service';
 import { UpdateRecordService } from 'src/engine/core-modules/record-crud/services/update-record.service';
@@ -48,6 +53,7 @@ export class ToolExecutorService {
 
   constructor(
     private readonly findRecordsService: FindRecordsService,
+    private readonly groupByRecordsService: GroupByRecordsService,
     private readonly createRecordService: CreateRecordService,
     private readonly createManyRecordsService: CreateManyRecordsService,
     private readonly updateRecordService: UpdateRecordService,
@@ -181,6 +187,37 @@ export class ToolExecutorService {
           rolePermissionConfig: context.rolePermissionConfig,
           soft: true,
         });
+
+      case 'group_by': {
+        const {
+          groupBy,
+          dateGranularity,
+          timeZone,
+          aggregateOperation,
+          aggregateFieldName,
+          limit: groupByLimit,
+          orderBy: groupByOrderBy,
+          ...groupByFilter
+        } = args;
+
+        return this.groupByRecordsService.execute({
+          objectName: ref.objectNameSingular,
+          groupBy: groupBy as string[],
+          dateGranularity: dateGranularity as
+            | ObjectRecordGroupByDateGranularity
+            | undefined,
+          timeZone: timeZone as string | undefined,
+          aggregateOperation: aggregateOperation as
+            | keyof typeof AggregateOperations
+            | undefined,
+          aggregateFieldName: aggregateFieldName as string | undefined,
+          limit: groupByLimit as number | undefined,
+          orderBy: groupByOrderBy as 'ASC' | 'DESC' | undefined,
+          filter: groupByFilter,
+          authContext,
+          rolePermissionConfig: context.rolePermissionConfig,
+        });
+      }
     }
   }
 
