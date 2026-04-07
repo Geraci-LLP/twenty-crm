@@ -10,7 +10,7 @@ import { themeCssVariables } from 'twenty-ui/theme-constants';
 import { currentWorkspaceState } from '@/auth/states/currentWorkspaceState';
 import { billingState } from '@/client-config/states/billingState';
 import { useClientConfig } from '@/client-config/hooks/useClientConfig';
-import { SettingsAdminAiModelsTable } from '@/settings/admin-panel/ai/components/SettingsAdminAiModelsTable';
+import { SettingsAiModelsTable } from '@/settings/ai/components/SettingsAiModelsTable';
 import { SettingsAdminAiProviderListCard } from '@/settings/admin-panel/ai/components/SettingsAdminAiProviderListCard';
 import { AI_PROVIDER_SOURCE } from '@/settings/admin-panel/ai/constants/AiProviderSource';
 import { SET_ADMIN_AI_MODEL_RECOMMENDED } from '@/settings/admin-panel/ai/graphql/mutations/setAdminAiModelRecommended';
@@ -244,10 +244,20 @@ export const SettingsAdminAI = () => {
             description={t`Select which models appear as recommended in the workspace model picker`}
           />
 
-          <SettingsAdminAiModelsTable
+          <SettingsAiModelsTable
             models={enabledModels}
+            isChecked={(model) => model.isRecommended === true}
             onToggle={handleRecommendedToggle}
-            checkedField="isRecommended"
+            onToggleAll={async (shouldCheckAll) => {
+              for (const model of enabledModels) {
+                if ((model.isRecommended === true) !== shouldCheckAll) {
+                  await handleRecommendedToggle(
+                    model.modelId,
+                    !shouldCheckAll,
+                  );
+                }
+              }
+            }}
             anchorPrefix="recommended-model-row"
           />
         </Section>

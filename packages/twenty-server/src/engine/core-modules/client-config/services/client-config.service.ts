@@ -69,6 +69,13 @@ export class ClientConfigService {
       this.aiModelRegistryService.getAdminFilteredModels();
     const recommendedModelIds =
       this.aiModelRegistryService.getRecommendedModelIds();
+    const resolvedProviders =
+      this.aiModelRegistryService.getResolvedProvidersForAdmin();
+
+    const getProviderLabel = (providerName?: string | null) =>
+      providerName
+        ? (resolvedProviders[providerName]?.label ?? providerName)
+        : undefined;
 
     const aiModels: ClientAIModelConfig[] = availableModels.map(
       (registeredModel) => {
@@ -77,6 +84,7 @@ export class ClientConfigService {
         );
 
         const modelFamily = modelConfig?.modelFamily;
+        const providerName = registeredModel.providerName;
 
         return {
           modelId: registeredModel.modelId,
@@ -86,10 +94,13 @@ export class ClientConfigService {
             ? MODEL_FAMILY_LABELS[modelFamily]
             : undefined,
           sdkPackage: registeredModel.sdkPackage,
-          providerName: registeredModel.providerName,
+          providerName,
+          providerLabel: getProviderLabel(providerName),
           nativeCapabilities: this.deriveNativeCapabilities(
             registeredModel.sdkPackage,
           ),
+          inputCostPerMillionTokens: modelConfig?.inputCostPerMillionTokens,
+          outputCostPerMillionTokens: modelConfig?.outputCostPerMillionTokens,
           inputCostPerMillionTokensInCredits: modelConfig
             ? convertDollarsToBillingCredits(
                 modelConfig.inputCostPerMillionTokens,
@@ -100,6 +111,8 @@ export class ClientConfigService {
                 modelConfig.outputCostPerMillionTokens,
               )
             : 0,
+          contextWindowTokens: modelConfig?.contextWindowTokens,
+          maxOutputTokens: modelConfig?.maxOutputTokens,
           isDeprecated: modelConfig?.isDeprecated,
           isRecommended: recommendedModelIds.has(registeredModel.modelId),
           dataResidency: modelConfig?.dataResidency,
@@ -129,9 +142,19 @@ export class ClientConfigService {
             'Default',
           modelFamily: defaultPerformanceModelConfig?.modelFamily,
           providerName: defaultPerformanceModel?.providerName,
+          providerLabel: getProviderLabel(
+            defaultPerformanceModel?.providerName,
+          ),
           sdkPackage: defaultPerformanceModel?.sdkPackage ?? null,
+          inputCostPerMillionTokens:
+            defaultPerformanceModelConfig?.inputCostPerMillionTokens,
+          outputCostPerMillionTokens:
+            defaultPerformanceModelConfig?.outputCostPerMillionTokens,
           inputCostPerMillionTokensInCredits: 0,
           outputCostPerMillionTokensInCredits: 0,
+          contextWindowTokens:
+            defaultPerformanceModelConfig?.contextWindowTokens,
+          maxOutputTokens: defaultPerformanceModelConfig?.maxOutputTokens,
         },
         {
           modelId: AUTO_SELECT_FAST_MODEL_ID,
@@ -141,9 +164,16 @@ export class ClientConfigService {
             'Default',
           modelFamily: defaultSpeedModelConfig?.modelFamily,
           providerName: defaultSpeedModel?.providerName,
+          providerLabel: getProviderLabel(defaultSpeedModel?.providerName),
           sdkPackage: defaultSpeedModel?.sdkPackage ?? null,
+          inputCostPerMillionTokens:
+            defaultSpeedModelConfig?.inputCostPerMillionTokens,
+          outputCostPerMillionTokens:
+            defaultSpeedModelConfig?.outputCostPerMillionTokens,
           inputCostPerMillionTokensInCredits: 0,
           outputCostPerMillionTokensInCredits: 0,
+          contextWindowTokens: defaultSpeedModelConfig?.contextWindowTokens,
+          maxOutputTokens: defaultSpeedModelConfig?.maxOutputTokens,
         },
       );
     }

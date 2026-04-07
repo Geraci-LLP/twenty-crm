@@ -63,6 +63,8 @@ import { SettingsPermissionGuard } from 'src/engine/guards/settings-permission.g
 import { UserAuthGuard } from 'src/engine/guards/user-auth.guard';
 import { WorkspaceAuthGuard } from 'src/engine/guards/workspace-auth.guard';
 import { PermissionsGraphqlApiExceptionFilter } from 'src/engine/metadata-modules/permissions/utils/permissions-graphql-api-exception.filter';
+import { AiModelRegistryService } from 'src/engine/metadata-modules/ai/ai-models/services/ai-model-registry.service';
+import { isModelAllowedByWorkspace } from 'src/engine/metadata-modules/ai/ai-models/utils/is-model-allowed.util';
 import { RoleDTO } from 'src/engine/metadata-modules/role/dtos/role.dto';
 import { RoleService } from 'src/engine/metadata-modules/role/role.service';
 import { fromRoleEntityToRoleDto } from 'src/engine/metadata-modules/role/utils/fromRoleEntityToRoleDto.util';
@@ -99,6 +101,7 @@ export class WorkspaceResolver {
     private readonly customDomainManagerService: CustomDomainManagerService,
     private readonly applicationService: ApplicationService,
     private readonly enterprisePlanService: EnterprisePlanService,
+    private readonly aiModelRegistryService: AiModelRegistryService,
   ) {}
 
   @Query(() => WorkspaceEntity)
@@ -233,6 +236,24 @@ export class WorkspaceResolver {
     @Parent() workspace: WorkspaceEntity,
   ): Promise<boolean> {
     return workspace.useRecommendedModels;
+  }
+
+  @ResolveField(() => [String])
+  accessibleModelIds(@Parent() workspace: WorkspaceEntity): string[] {
+    const adminFilteredModels =
+      this.aiModelRegistryService.getAdminFilteredModels();
+    const recommendedModelIds =
+      this.aiModelRegistryService.getRecommendedModelIds();
+
+    return adminFilteredModels
+      .filter((model) =>
+        isModelAllowedByWorkspace(
+          model.modelId,
+          workspace,
+          recommendedModelIds,
+        ),
+      )
+      .map((model) => model.modelId);
   }
 
   @ResolveField(() => ApplicationDTO, { nullable: true })

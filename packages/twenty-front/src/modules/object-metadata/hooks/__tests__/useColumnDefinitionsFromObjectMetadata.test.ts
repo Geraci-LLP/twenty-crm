@@ -74,6 +74,7 @@ describe('useColumnDefinitionsFromObjectMetadata', () => {
       smartModel: AUTO_SELECT_SMART_MODEL_ID,
       enabledAiModelIds: [],
       useRecommendedModels: true,
+      accessibleModelIds: [],
     });
 
     const companyObjectMetadata = getTestEnrichedObjectMetadataItemsMock().find(

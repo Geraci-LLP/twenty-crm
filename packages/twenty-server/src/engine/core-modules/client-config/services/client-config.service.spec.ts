@@ -15,6 +15,7 @@ describe('ClientConfigService', () => {
   let service: ClientConfigService;
   let twentyConfigService: TwentyConfigService;
   let domainServerConfigService: DomainServerConfigService;
+  let aiModelRegistryService: AiModelRegistryService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +39,9 @@ describe('ClientConfigService', () => {
             getAdminFilteredModels: jest.fn().mockReturnValue([]),
             getRecommendedModelIds: jest.fn().mockReturnValue(new Set()),
             getModelConfig: jest.fn().mockReturnValue(undefined),
+            getResolvedProvidersForAdmin: jest.fn().mockReturnValue({}),
+            getDefaultSpeedModel: jest.fn().mockReturnValue(undefined),
+            getDefaultPerformanceModel: jest.fn().mockReturnValue(undefined),
           },
         },
         {
@@ -53,6 +57,9 @@ describe('ClientConfigService', () => {
     twentyConfigService = module.get<TwentyConfigService>(TwentyConfigService);
     domainServerConfigService = module.get<DomainServerConfigService>(
       DomainServerConfigService,
+    );
+    aiModelRegistryService = module.get<AiModelRegistryService>(
+      AiModelRegistryService,
     );
   });
 
@@ -236,6 +243,66 @@ describe('ClientConfigService', () => {
       const result = await service.getClientConfig();
 
       expect(result.canManageFeatureFlags).toBe(true);
+    });
+
+    it('should expose model metadata used by workspace model hover cards', async () => {
+      const modelId = 'openai/gpt-4o';
+      const registeredModel = {
+        modelId,
+        sdkPackage: '@ai-sdk/openai',
+        providerName: 'openai',
+      };
+
+      jest
+        .spyOn(aiModelRegistryService, 'getAdminFilteredModels')
+        .mockReturnValue([registeredModel] as any);
+      jest
+        .spyOn(aiModelRegistryService, 'getRecommendedModelIds')
+        .mockReturnValue(new Set([modelId]));
+      jest
+        .spyOn(aiModelRegistryService, 'getResolvedProvidersForAdmin')
+        .mockReturnValue({
+          openai: { label: 'OpenAI' },
+        } as any);
+      jest
+        .spyOn(aiModelRegistryService, 'getModelConfig')
+        .mockImplementation((id: string) =>
+          id === modelId
+            ? ({
+                modelId,
+                label: 'GPT-4o',
+                description: 'GPT-4o',
+                sdkPackage: '@ai-sdk/openai',
+                inputCostPerMillionTokens: 2.5,
+                outputCostPerMillionTokens: 10,
+                contextWindowTokens: 128000,
+                maxOutputTokens: 16384,
+                dataResidency: 'US',
+              } as any)
+            : undefined,
+        );
+      jest
+        .spyOn(aiModelRegistryService, 'getDefaultSpeedModel')
+        .mockReturnValue(registeredModel as any);
+      jest
+        .spyOn(aiModelRegistryService, 'getDefaultPerformanceModel')
+        .mockReturnValue(registeredModel as any);
+
+      const result = await service.getClientConfig();
+      const model = result.aiModels.find((item) => item.modelId === modelId);
+
+      expect(model).toMatchObject({
+        providerName: 'openai',
+        providerLabel: 'OpenAI',
+        inputCostPerMillionTokens: 2.5,
+        outputCostPerMillionTokens: 10,
+        inputCostPerMillionTokensInCredits: 2500000,
+        outputCostPerMillionTokensInCredits: 10000000,
+        contextWindowTokens: 128000,
+        maxOutputTokens: 16384,
+        isRecommended: true,
+        dataResidency: 'US',
+      });
     });
   });
 });

@@ -26,14 +26,14 @@ import { RoundedLink, UndecoratedLink } from 'twenty-ui/navigation';
 
 import { useClientConfig } from '@/client-config/hooks/useClientConfig';
 import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLoader';
-import { SettingsAdminAiModelsTable } from '@/settings/admin-panel/ai/components/SettingsAdminAiModelsTable';
+import { SettingsAiModelsTable } from '@/settings/ai/components/SettingsAiModelsTable';
 import { REMOVE_AI_PROVIDER } from '@/settings/admin-panel/ai/graphql/mutations/removeAiProvider';
 import { REMOVE_MODEL_FROM_PROVIDER } from '@/settings/admin-panel/ai/graphql/mutations/removeModelFromProvider';
 import { GET_ADMIN_AI_MODELS } from '@/settings/admin-panel/ai/graphql/queries/getAdminAiModels';
 import { GET_AI_PROVIDERS } from '@/settings/admin-panel/ai/graphql/queries/getAiProviders';
 import { type GetAiProvidersResult } from '@/settings/admin-panel/ai/types/GetAiProvidersResult';
 import { getDataResidencyDisplay } from '@/settings/admin-panel/ai/utils/getDataResidencyDisplay';
-import { SettingsAdminTableCard } from '@/settings/admin-panel/components/SettingsAdminTableCard';
+import { SettingsTableCard } from '@/settings/components/SettingsTableCard';
 import { SettingsPageContainer } from '@/settings/components/SettingsPageContainer';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { ConfirmationModal } from '@/ui/layout/modal/components/ConfirmationModal';
@@ -312,7 +312,7 @@ export const SettingsAdminAiProviderDetail = () => {
           />
 
           {provider && (
-            <SettingsAdminTableCard
+            <SettingsTableCard
               rounded
               items={providerInfoItems}
               gridAutoColumns="120px 1fr"
@@ -339,14 +339,29 @@ export const SettingsAdminAiProviderDetail = () => {
           )}
 
           {filteredModels.length > 0 && (
-            <SettingsAdminAiModelsTable
+            <SettingsAiModelsTable
               models={filteredModels}
+              isChecked={(model) => model.isAdminEnabled}
+              isDisabled={(model) =>
+                !model.isAvailable || model.isDeprecated === true
+              }
               onToggle={handleModelToggle}
-              checkedField="isAdminEnabled"
+              showProviderColumn={false}
+              onToggleAll={async (shouldCheckAll) => {
+                for (const model of filteredModels) {
+                  if (
+                    model.isAvailable &&
+                    model.isDeprecated !== true &&
+                    model.isAdminEnabled !== shouldCheckAll
+                  ) {
+                    await handleModelToggle(model.modelId, !shouldCheckAll);
+                  }
+                }
+              }}
               anchorPrefix="provider-model-row"
-              showDisabledState
-              secondaryColumn="cost"
-              onRemove={isCustomProvider ? handleModelRemoveClick : undefined}
+              onRemove={
+                isCustomProvider ? handleModelRemoveClick : undefined
+              }
             />
           )}
 

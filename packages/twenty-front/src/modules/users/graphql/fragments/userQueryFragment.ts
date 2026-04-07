@@ -94,6 +94,7 @@ export const USER_QUERY_FRAGMENT = gql`
       aiAdditionalInstructions
       enabledAiModelIds
       useRecommendedModels
+      accessibleModelIds
       isTwoFactorAuthenticationEnforced
       trashRetentionDays
       eventLogRetentionDays
