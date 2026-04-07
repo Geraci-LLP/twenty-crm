@@ -7,8 +7,7 @@ import { UpgradeCommandRunner } from 'src/database/commands/command-runners/upgr
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { CoreEngineVersionService } from 'src/engine/core-engine-version/services/core-engine-version.service';
 import { InstanceUpgradeService } from 'src/engine/core-modules/upgrade/services/instance-upgrade.service';
-import { RegisteredInstanceMigrationService } from 'src/engine/core-modules/upgrade/services/registered-instance-migration-registry.service';
-import { RegisteredWorkspaceCommandService } from 'src/engine/core-modules/upgrade/services/registered-workspace-command-registry.service';
+import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
 import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
 import { WorkspaceVersionService } from 'src/engine/workspace-manager/workspace-version/services/workspace-version.service';
 
@@ -20,8 +19,7 @@ export class UpgradeCommand extends UpgradeCommandRunner {
   constructor(
     protected readonly coreEngineVersionService: CoreEngineVersionService,
     protected readonly workspaceVersionService: WorkspaceVersionService,
-    protected readonly registeredInstanceMigrationService: RegisteredInstanceMigrationService,
-    protected readonly registeredWorkspaceCommandService: RegisteredWorkspaceCommandService,
+    protected readonly upgradeCommandRegistryService: UpgradeCommandRegistryService,
     protected readonly instanceUpgradeService: InstanceUpgradeService,
     protected readonly workspaceIteratorService: WorkspaceIteratorService,
     protected readonly workspaceUpgradeService: WorkspaceUpgradeService,
@@ -31,8 +29,7 @@ export class UpgradeCommand extends UpgradeCommandRunner {
     super(
       coreEngineVersionService,
       workspaceVersionService,
-      registeredInstanceMigrationService,
-      registeredWorkspaceCommandService,
+      upgradeCommandRegistryService,
       instanceUpgradeService,
       workspaceIteratorService,
       workspaceUpgradeService,

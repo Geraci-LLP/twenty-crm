@@ -16,8 +16,7 @@ import {
   UpgradeCommandRunner,
 } from 'src/database/commands/command-runners/upgrade.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
-import { RegisteredInstanceMigrationService } from 'src/engine/core-modules/upgrade/services/registered-instance-migration-registry.service';
-import { RegisteredWorkspaceCommandService } from 'src/engine/core-modules/upgrade/services/registered-workspace-command-registry.service';
+import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
 import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
 import { RegisteredInstanceMigration } from 'src/database/typeorm/core/decorators/registered-instance-migration.decorator';
 import { UPGRADE_COMMAND_SUPPORTED_VERSIONS } from 'src/engine/constants/upgrade-command-supported-versions.constant';
@@ -74,7 +73,7 @@ const buildUpgradeCommandModule = async ({
 }: BuildUpgradeCommandModuleArgs) => {
   const registryProvider = migrations
     ? {
-        provide: RegisteredInstanceMigrationService,
+        provide: UpgradeCommandRegistryService,
         useFactory: () => {
           const fakeDiscoveryService = {
             getProviders: () =>
@@ -83,7 +82,7 @@ const buildUpgradeCommandModule = async ({
                 metatype: migration.constructor,
               })),
           } as unknown as import('@nestjs/core').DiscoveryService;
-          const registry = new RegisteredInstanceMigrationService(
+          const registry = new UpgradeCommandRegistryService(
             fakeDiscoveryService,
           );
 
@@ -93,9 +92,10 @@ const buildUpgradeCommandModule = async ({
         },
       }
     : {
-        provide: RegisteredInstanceMigrationService,
+        provide: UpgradeCommandRegistryService,
         useValue: {
           getInstanceCommandsForVersion: jest.fn().mockReturnValue([]),
+          getWorkspaceCommandsForVersion: jest.fn().mockReturnValue([]),
         },
       };
 
@@ -112,8 +112,7 @@ const buildUpgradeCommandModule = async ({
         useFactory: (
           coreEngineVersionService: CoreEngineVersionService,
           workspaceVersionService: WorkspaceVersionService,
-          registeredInstanceMigrationService: RegisteredInstanceMigrationService,
-          registeredWorkspaceCommandService: RegisteredWorkspaceCommandService,
+          upgradeCommandRegistryService: UpgradeCommandRegistryService,
           instanceUpgradeService: InstanceUpgradeService,
           workspaceIteratorService: WorkspaceIteratorService,
           workspaceUpgradeService: WorkspaceUpgradeService,
@@ -122,8 +121,7 @@ const buildUpgradeCommandModule = async ({
           return new commandRunner(
             coreEngineVersionService,
             workspaceVersionService,
-            registeredInstanceMigrationService,
-            registeredWorkspaceCommandService,
+            upgradeCommandRegistryService,
             instanceUpgradeService,
             workspaceIteratorService,
             workspaceUpgradeService,
@@ -133,8 +131,7 @@ const buildUpgradeCommandModule = async ({
         inject: [
           CoreEngineVersionService,
           WorkspaceVersionService,
-          RegisteredInstanceMigrationService,
-          RegisteredWorkspaceCommandService,
+          UpgradeCommandRegistryService,
           InstanceUpgradeService,
           WorkspaceIteratorService,
           WorkspaceUpgradeService,
@@ -198,12 +195,6 @@ const buildUpgradeCommandModule = async ({
         provide: WorkspaceUpgradeService,
         useValue: {
           upgradeWorkspace: jest.fn().mockResolvedValue(undefined),
-        },
-      },
-      {
-        provide: RegisteredWorkspaceCommandService,
-        useValue: {
-          getWorkspaceCommandsForVersion: jest.fn().mockReturnValue([]),
         },
       },
       registryProvider,
