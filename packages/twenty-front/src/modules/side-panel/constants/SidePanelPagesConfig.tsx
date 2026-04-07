@@ -5,8 +5,8 @@ import { SidePanelNewSidebarItemPage } from '@/navigation-menu-item/edit/side-pa
 import { SidePanelAIChatThreadsPage } from '@/side-panel/pages/ai-chat-threads/components/SidePanelAIChatThreadsPage';
 import { SidePanelAskAIPage } from '@/side-panel/pages/ask-ai/components/SidePanelAskAIPage';
 import { SidePanelCalendarEventPage } from '@/side-panel/pages/calendar-event/components/SidePanelCalendarEventPage';
+import { SidePanelComposeEmailPage } from '@/side-panel/pages/compose-email/components/SidePanelComposeEmailPage';
 import { SidePanelFrontComponentPage } from '@/side-panel/pages/front-component/components/SidePanelFrontComponentPage';
-import { SidePanelMessageThreadPage } from '@/side-panel/pages/message-thread/components/SidePanelMessageThreadPage';
 import { SidePanelDashboardChartSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardChartSettings';
 import { SidePanelDashboardFieldSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardFieldSettings';
 import { SidePanelDashboardFieldsSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardFieldsSettings';
@@ -42,7 +42,6 @@ export const SIDE_PANEL_PAGES_CONFIG = new Map<SidePanelPages, React.ReactNode>(
     [SidePanelPages.ViewRecord, <SidePanelRecordPage />],
     [SidePanelPages.MergeRecords, <SidePanelMergeRecordPage />],
     [SidePanelPages.UpdateRecords, <SidePanelUpdateMultipleRecords />],
-    [SidePanelPages.ViewEmailThread, <SidePanelMessageThreadPage />],
     [SidePanelPages.ViewCalendarEvent, <SidePanelCalendarEventPage />],
     [SidePanelPages.EditRichText, <SidePanelEditRichTextPage />],
     [
@@ -113,5 +112,6 @@ export const SIDE_PANEL_PAGES_CONFIG = new Map<SidePanelPages, React.ReactNode>(
     ],
     [SidePanelPages.NavigationMenuAddItem, <SidePanelNewSidebarItemPage />],
     [SidePanelPages.CommandMenuEdit, <SidePanelCommandMenuItemEditPage />],
+    [SidePanelPages.ComposeEmail, <SidePanelComposeEmailPage />],
   ],
 );

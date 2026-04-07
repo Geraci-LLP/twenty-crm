@@ -9,7 +9,8 @@ import {
   type VersionCommands,
 } from 'src/database/commands/command-runners/upgrade.command-runner';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
-import { CoreMigrationRunnerService } from 'src/database/commands/core-migration-runner/services/core-migration-runner.service';
+import { CoreMigrationRunnerService } from 'src/database/commands/core-migration/services/core-migration-runner.service';
+import { RegisteredCoreMigrationService } from 'src/database/commands/core-migration/services/registered-core-migration-registry.service';
 import { BackfillCommandMenuItemsCommand } from 'src/database/commands/upgrade-version-command/1-20/1-20-backfill-command-menu-items.command';
 import { BackfillNavigationMenuItemTypeCommand } from 'src/database/commands/upgrade-version-command/1-20/1-20-backfill-navigation-menu-item-type.command';
 import { BackfillSelectFieldOptionIdsCommand } from 'src/database/commands/upgrade-version-command/1-20/1-20-backfill-select-field-option-ids.command';
@@ -25,8 +26,10 @@ import { MigrateMessagingInfrastructureToMetadataCommand } from 'src/database/co
 import { MigrateRichTextToTextCommand } from 'src/database/commands/upgrade-version-command/1-20/1-20-migrate-rich-text-to-text.command';
 import { SeedCliApplicationRegistrationCommand } from 'src/database/commands/upgrade-version-command/1-20/1-20-seed-cli-application-registration.command';
 import { UpdateStandardIndexViewNamesCommand } from 'src/database/commands/upgrade-version-command/1-20/1-20-update-standard-index-view-names.command';
+import { AddComposeEmailCommandMenuItemCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-add-compose-email-command-menu-item.command';
 import { AddGlobalKeyValuePairUniqueIndexCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-add-global-key-value-pair-unique-index.command';
 import { BackfillDatasourceToWorkspaceCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-backfill-datasource-to-workspace.command';
+import { BackfillMessageThreadSubjectCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-backfill-message-thread-subject.command';
 import { BackfillPageLayoutsAndFieldsWidgetViewFieldsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-backfill-page-layouts-and-fields-widget-view-fields.command';
 import { DeduplicateEngineCommandsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-deduplicate-engine-commands.command';
 import { FixSelectAllCommandMenuItemsCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-fix-select-all-command-menu-items.command';
@@ -36,6 +39,7 @@ import { CoreEngineVersionService } from 'src/engine/core-engine-version/service
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { WorkspaceVersionService } from 'src/engine/workspace-manager/workspace-version/services/workspace-version.service';
 import { DropWorkspaceMessagingFksCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-drop-workspace-messaging-fks.command';
+import { MigrateMessageFolderParentIdToExternalIdCommand } from 'src/database/commands/upgrade-version-command/1-21/1-21-migrate-message-folder-parent-id-to-external-id.command';
 
 @Command({
   name: 'upgrade',
@@ -50,6 +54,7 @@ export class UpgradeCommand extends UpgradeCommandRunner {
     protected readonly coreEngineVersionService: CoreEngineVersionService,
     protected readonly workspaceVersionService: WorkspaceVersionService,
     protected readonly coreMigrationRunnerService: CoreMigrationRunnerService,
+    protected readonly versionedMigrationRegistryService: RegisteredCoreMigrationService,
     protected readonly workspaceIteratorService: WorkspaceIteratorService,
 
     // 1.20 Commands
@@ -70,20 +75,24 @@ export class UpgradeCommand extends UpgradeCommandRunner {
     private readonly makeWorkflowSearchableCommand: MakeWorkflowSearchableCommand,
 
     // 1.21 Commands
+    private readonly addComposeEmailCommandMenuItemCommand: AddComposeEmailCommandMenuItemCommand,
     private readonly addGlobalKeyValuePairUniqueIndexCommand: AddGlobalKeyValuePairUniqueIndexCommand,
     private readonly backfillDatasourceToWorkspaceCommand: BackfillDatasourceToWorkspaceCommand,
+    private readonly backfillMessageThreadSubjectCommand: BackfillMessageThreadSubjectCommand,
     private readonly backfillPageLayoutsAndFieldsWidgetViewFieldsCommand: BackfillPageLayoutsAndFieldsWidgetViewFieldsCommand,
     private readonly deduplicateEngineCommandsCommand: DeduplicateEngineCommandsCommand,
     private readonly fixSelectAllCommandMenuItemsCommand: FixSelectAllCommandMenuItemsCommand,
     private readonly migrateAiAgentTextToJsonResponseFormatCommand: MigrateAiAgentTextToJsonResponseFormatCommand,
     private readonly updateEditLayoutCommandMenuItemLabelCommand: UpdateEditLayoutCommandMenuItemLabelCommand,
     private readonly dropWorkspaceMessagingFksCommand: DropWorkspaceMessagingFksCommand,
+    private readonly migrateMessageFolderParentIdToExternalIdCommand: MigrateMessageFolderParentIdToExternalIdCommand,
   ) {
     super(
       workspaceRepository,
       coreEngineVersionService,
       workspaceVersionService,
       coreMigrationRunnerService,
+      versionedMigrationRegistryService,
       workspaceIteratorService,
     );
 
@@ -109,14 +118,17 @@ export class UpgradeCommand extends UpgradeCommandRunner {
     ];
 
     const commands_1210: VersionCommands = [
+      this.addComposeEmailCommandMenuItemCommand,
       this.addGlobalKeyValuePairUniqueIndexCommand,
       this.backfillDatasourceToWorkspaceCommand,
+      this.backfillMessageThreadSubjectCommand,
       this.backfillPageLayoutsAndFieldsWidgetViewFieldsCommand,
       this.deduplicateEngineCommandsCommand,
       this.fixSelectAllCommandMenuItemsCommand,
       this.migrateAiAgentTextToJsonResponseFormatCommand,
       this.updateEditLayoutCommandMenuItemLabelCommand,
       this.dropWorkspaceMessagingFksCommand,
+      this.migrateMessageFolderParentIdToExternalIdCommand,
     ];
 
     this.allCommands = {
