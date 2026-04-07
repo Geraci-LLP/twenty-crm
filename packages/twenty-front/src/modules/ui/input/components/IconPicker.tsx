@@ -186,15 +186,13 @@ const IconPickerIcon = ({
           isFocused={iconKey === focusedIconKey}
           Icon={(iconProps) => (
             <Icon
-              className={iconProps.className}
+              // oxlint-disable-next-line react/jsx-props-no-spreading
+              {...iconProps}
               color={
                 isDefined(iconTintColor)
                   ? theme.color[iconTintColor]
                   : iconProps.color
               }
-              size={iconProps.size}
-              stroke={iconProps.stroke}
-              style={iconProps.style}
             />
           )}
           onClick={onSelect}
