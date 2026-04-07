@@ -63,7 +63,7 @@ export const SettingsAdminAiProviderDetail = () => {
   const { data: providersData, loading: isLoadingProviders } =
     useQuery<GetAiProvidersResult>(GET_AI_PROVIDERS);
 
-  const { data: modelsData, loading: isLoadingModels } = useQuery<{
+  const { data: modelsData, loading: isLoadingModels, refetch: refetchModels } = useQuery<{
     getAdminAiModels: {
       models: AdminAiModelConfig[];
     };
@@ -348,14 +348,32 @@ export const SettingsAdminAiProviderDetail = () => {
               onToggle={handleModelToggle}
               showProviderColumn={false}
               onToggleAll={async (shouldCheckAll) => {
-                for (const model of filteredModels) {
-                  if (
+                const modelsToToggle = filteredModels.filter(
+                  (model) =>
                     model.isAvailable &&
                     model.isDeprecated !== true &&
-                    model.isAdminEnabled !== shouldCheckAll
-                  ) {
-                    await handleModelToggle(model.modelId, !shouldCheckAll);
-                  }
+                    model.isAdminEnabled !== shouldCheckAll,
+                );
+
+                if (modelsToToggle.length === 0) return;
+
+                try {
+                  await Promise.all(
+                    modelsToToggle.map((model) =>
+                      setModelEnabled({
+                        variables: {
+                          modelId: model.modelId,
+                          enabled: shouldCheckAll,
+                        },
+                      }),
+                    ),
+                  );
+                  await refetchModels();
+                  await refetchClientConfig();
+                } catch {
+                  enqueueErrorSnackBar({
+                    message: t`Failed to update model availability`,
+                  });
                 }
               }}
               anchorPrefix="provider-model-row"

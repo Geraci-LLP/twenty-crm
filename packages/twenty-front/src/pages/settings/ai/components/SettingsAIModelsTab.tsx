@@ -316,6 +316,10 @@ export const SettingsAIModelsTab = () => {
                     variables: { input: { enabledAiModelIds: newEnabledIds } },
                   });
                 } catch {
+                  setCurrentWorkspace({
+                    ...currentWorkspace!,
+                    enabledAiModelIds: previousIds,
+                  });
                   enqueueErrorSnackBar({
                     message: t`Failed to update model availability`,
                   });

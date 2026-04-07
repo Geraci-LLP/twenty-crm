@@ -62,7 +62,7 @@ export const SettingsAdminAI = () => {
   const periodOptions = getPeriodOptions();
   const usageDates = getPeriodDates(usagePeriod);
 
-  const { data, loading: isLoadingModels } = useQuery<{
+  const { data, loading: isLoadingModels, refetch: refetchModels } = useQuery<{
     getAdminAiModels: {
       defaultSmartModelId?: string | null;
       defaultFastModelId?: string | null;
@@ -249,13 +249,30 @@ export const SettingsAdminAI = () => {
             isChecked={(model) => model.isRecommended === true}
             onToggle={handleRecommendedToggle}
             onToggleAll={async (shouldCheckAll) => {
-              for (const model of enabledModels) {
-                if ((model.isRecommended === true) !== shouldCheckAll) {
-                  await handleRecommendedToggle(
-                    model.modelId,
-                    !shouldCheckAll,
-                  );
-                }
+              const modelsToToggle = enabledModels.filter(
+                (model) =>
+                  (model.isRecommended === true) !== shouldCheckAll,
+              );
+
+              if (modelsToToggle.length === 0) return;
+
+              try {
+                await Promise.all(
+                  modelsToToggle.map((model) =>
+                    setModelRecommended({
+                      variables: {
+                        modelId: model.modelId,
+                        recommended: shouldCheckAll,
+                      },
+                    }),
+                  ),
+                );
+                await refetchModels();
+                await refetchClientConfig();
+              } catch {
+                enqueueErrorSnackBar({
+                  message: t`Failed to update model recommendations`,
+                });
               }
             }}
             anchorPrefix="recommended-model-row"
