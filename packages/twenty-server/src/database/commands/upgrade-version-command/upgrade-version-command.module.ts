@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { WorkspaceIteratorModule } from 'src/database/commands/command-runners/workspace-iterator.module';
 import { V1_21_UpgradeVersionCommandModule } from 'src/database/commands/upgrade-version-command/1-21/1-21-upgrade-version-command.module';
-import { UpgradeCommand } from 'src/database/commands/upgrade-version-command/upgrade.command';
+import { UpgradeCommand } from 'src/database/commands/command-runners/upgrade.command';
 import { CoreEngineVersionModule } from 'src/engine/core-engine-version/core-engine-version.module';
 import { UpgradeModule } from 'src/engine/core-modules/upgrade/upgrade.module';
 import { DataSourceModule } from 'src/engine/metadata-modules/data-source/data-source.module';

@@ -13,8 +13,8 @@ import { getDataSourceToken } from '@nestjs/typeorm';
 
 import {
   UpgradeCommandOptions,
-  UpgradeCommandRunner,
-} from 'src/database/commands/command-runners/upgrade.command-runner';
+  UpgradeCommand,
+} from 'src/database/commands/command-runners/upgrade.command';
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
 import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
@@ -37,9 +37,7 @@ const PREVIOUS_VERSION =
     UPGRADE_COMMAND_SUPPORTED_VERSIONS.length - 2
   ];
 
-class BasicUpgradeCommandRunner extends UpgradeCommandRunner {}
-
-type CommandRunnerValues = typeof BasicUpgradeCommandRunner;
+type CommandRunnerValues = typeof UpgradeCommand;
 
 const generateMockWorkspace = (overrides?: Partial<WorkspaceEntity>) =>
   ({
@@ -236,7 +234,7 @@ const buildUpgradeCommandModule = async ({
 };
 
 describe('UpgradeCommandRunner', () => {
-  let upgradeCommandRunner: BasicUpgradeCommandRunner;
+  let upgradeCommandRunner: UpgradeCommand;
 
   type BuildModuleAndSetupSpiesArgs = {
     numberOfWorkspace?: number;
@@ -250,7 +248,7 @@ describe('UpgradeCommandRunner', () => {
     numberOfWorkspace = 1,
     workspaceOverride,
     workspaces,
-    commandRunner = BasicUpgradeCommandRunner,
+    commandRunner = UpgradeCommand,
     appVersion = CURRENT_VERSION,
     migrations,
   }: BuildModuleAndSetupSpiesArgs) => {

@@ -1,5 +1,7 @@
+import { InjectDataSource } from '@nestjs/typeorm';
+
 import chalk from 'chalk';
-import { CommandRunner, Option } from 'nest-commander';
+import { Command, CommandRunner, Option } from 'nest-commander';
 import { SemVer } from 'semver';
 import { assertUnreachable, isDefined } from 'twenty-shared/utils';
 import { DataSource, MigrationInterface } from 'typeorm';
@@ -36,7 +38,11 @@ type VersionContext = {
   workspaceCommands: VersionCommands;
 };
 
-export abstract class UpgradeCommandRunner extends CommandRunner {
+@Command({
+  name: 'upgrade',
+  description: 'Upgrade workspaces to the latest version',
+})
+export class UpgradeCommand extends CommandRunner {
   protected logger: CommandLogger;
 
   constructor(
@@ -46,6 +52,7 @@ export abstract class UpgradeCommandRunner extends CommandRunner {
     protected readonly instanceUpgradeService: InstanceUpgradeService,
     protected readonly workspaceIteratorService: WorkspaceIteratorService,
     protected readonly workspaceUpgradeService: WorkspaceUpgradeService,
+    @InjectDataSource()
     protected readonly dataSource: DataSource,
   ) {
     super();

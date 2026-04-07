@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import {
   type UpgradeCommandOptions,
   type VersionCommands,
-} from 'src/database/commands/command-runners/upgrade.command-runner';
+} from 'src/database/commands/command-runners/upgrade.command';
 import { type WorkspaceIteratorContext } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { UpgradeMigrationService } from 'src/engine/core-modules/upgrade/services/upgrade-migration.service';
