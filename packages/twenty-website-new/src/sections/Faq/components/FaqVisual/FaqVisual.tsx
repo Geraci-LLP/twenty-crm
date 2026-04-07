@@ -241,6 +241,9 @@ export function FaqVisual({ src, title }: FaqVisualProps) {
 
       const nextWidth = mountReference.current.clientWidth;
       const nextHeight = mountReference.current.clientHeight;
+      if (nextWidth < 1 || nextHeight < 1) {
+        return;
+      }
       camera.aspect = nextWidth / nextHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(nextWidth, nextHeight);
