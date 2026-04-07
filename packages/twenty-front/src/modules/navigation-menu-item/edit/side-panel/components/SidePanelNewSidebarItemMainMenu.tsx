@@ -86,9 +86,7 @@ export const SidePanelNewSidebarItemMainMenu = ({
                 onEnter={onSelectView}
               >
                 <CommandMenuItem
-                  Icon={() => (
-                    <TintedIconTile Icon={IconTable} color="gray" />
-                  )}
+                  Icon={() => <TintedIconTile Icon={IconTable} color="gray" />}
                   label={t`View`}
                   id={NavigationMenuItemType.VIEW}
                   hasSubMenu={true}
