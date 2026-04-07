@@ -85,7 +85,6 @@ const mockWorkspace = {
   routerModel: 'auto',
   enabledAiModelIds: [],
   useRecommendedModels: true,
-  accessibleModelIds: [],
   workspaceCustomApplication: CUSTOM_WORKSPACE_APPLICATION_MOCK,
   workspaceCustomApplicationId: CUSTOM_WORKSPACE_APPLICATION_MOCK.id,
 };
