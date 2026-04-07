@@ -36,12 +36,10 @@ const CONNECTED_ACCOUNT: Pick<
   handle: 'test@example.com',
 };
 
-const MESSAGE_CHANNEL: Pick<
-  MessageChannelEntity,
-  'messageFolderImportPolicy'
-> = {
-  messageFolderImportPolicy: MessageFolderImportPolicy.ALL_FOLDERS,
-};
+const MESSAGE_CHANNEL: Pick<MessageChannelEntity, 'messageFolderImportPolicy'> =
+  {
+    messageFolderImportPolicy: MessageFolderImportPolicy.ALL_FOLDERS,
+  };
 
 describe('ImapGetAllFoldersService', () => {
   let service: ImapGetAllFoldersService;
@@ -95,7 +93,7 @@ describe('ImapGetAllFoldersService', () => {
       mockImapClient.list.mockResolvedValue(mailboxList);
       mockImapClient.status.mockImplementation(async (path: string) => {
         const uidMap: Record<string, bigint> = {
-          'INBOX': 1n,
+          INBOX: 1n,
           'INBOX.Others.Sub1': 2n,
         };
 
