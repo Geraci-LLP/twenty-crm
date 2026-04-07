@@ -25,9 +25,10 @@ import {
 } from 'src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-clean-workflow-runs.job';
 import { getRunsToCleanFindOptions } from 'src/modules/workflow/workflow-runner/workflow-run-queue/utils/get-runs-to-clean-find-options.util';
 
-export const CLEAN_WORKFLOW_RUN_CRON_PATTERN = '0 0 * * *';
+export const CLEAN_WORKFLOW_RUN_CRON_PATTERN = '*/10 * * * *';
 
-const WORKSPACE_BATCH_SIZE = 50;
+const NUMBER_OF_PARTITIONS = 10;
+const WORKSPACE_BATCH_SIZE = 10;
 
 @Processor(MessageQueue.cronQueue)
 export class WorkflowCleanWorkflowRunsCronJob {
@@ -50,21 +51,27 @@ export class WorkflowCleanWorkflowRunsCronJob {
   async handle() {
     this.logger.log('Starting WorkflowCleanWorkflowRunsCronJob cron');
 
-    const activeWorkspaces = await this.workspaceRepository.find({
+    const allActiveWorkspaces = await this.workspaceRepository.find({
       where: {
         activationStatus: WorkspaceActivationStatus.ACTIVE,
       },
       select: ['id'],
+      order: { id: 'ASC' },
     });
+
+    const partition = new Date().getMinutes() % NUMBER_OF_PARTITIONS;
+    const workspacesForThisRun = allActiveWorkspaces.filter(
+      (_, index) => index % NUMBER_OF_PARTITIONS === partition,
+    );
 
     let enqueuedCount = 0;
 
     for (
       let workspaceIndex = 0;
-      workspaceIndex < activeWorkspaces.length;
+      workspaceIndex < workspacesForThisRun.length;
       workspaceIndex += WORKSPACE_BATCH_SIZE
     ) {
-      const batch = activeWorkspaces.slice(
+      const batch = workspacesForThisRun.slice(
         workspaceIndex,
         workspaceIndex + WORKSPACE_BATCH_SIZE,
       );
@@ -87,7 +94,7 @@ export class WorkflowCleanWorkflowRunsCronJob {
     }
 
     this.logger.log(
-      `Completed WorkflowCleanWorkflowRunsCronJob cron, enqueued ${enqueuedCount} jobs`,
+      `Completed WorkflowCleanWorkflowRunsCronJob cron (partition ${partition}/${NUMBER_OF_PARTITIONS}), enqueued ${enqueuedCount} jobs`,
     );
   }
 

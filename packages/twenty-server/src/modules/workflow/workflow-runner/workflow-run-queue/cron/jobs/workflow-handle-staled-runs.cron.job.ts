@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 
 import { WorkspaceActivationStatus } from 'twenty-shared/workspace';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { SentryCronMonitor } from 'src/engine/core-modules/cron/sentry-cron-monitor.decorator';
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
@@ -12,17 +12,17 @@ import { Processor } from 'src/engine/core-modules/message-queue/decorators/proc
 import { MessageQueue } from 'src/engine/core-modules/message-queue/message-queue.constants';
 import { MessageQueueService } from 'src/engine/core-modules/message-queue/services/message-queue.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
-import { GlobalWorkspaceOrmManager } from 'src/engine/twenty-orm/global-workspace-datasource/global-workspace-orm.manager';
-import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system-auth-context.util';
-import { WorkflowRunWorkspaceEntity } from 'src/modules/workflow/common/standard-objects/workflow-run.workspace-entity';
+import { getWorkspaceSchemaName } from 'src/engine/workspace-datasource/utils/get-workspace-schema-name.util';
+import { WorkflowRunStatus } from 'src/modules/workflow/common/standard-objects/workflow-run.workspace-entity';
+import { STALED_RUNS_THRESHOLD_MS } from 'src/modules/workflow/workflow-runner/workflow-run-queue/constants/staled-runs-threshold';
 import {
   WorkflowHandleStaledRunsJob,
   WorkflowHandleStaledRunsJobData,
 } from 'src/modules/workflow/workflow-runner/workflow-run-queue/jobs/workflow-handle-staled-runs.job';
-import { getStaledRunsFindOptions } from 'src/modules/workflow/workflow-runner/workflow-run-queue/utils/get-staled-runs-find-options.util';
 
-export const WORKFLOW_HANDLE_STALED_RUNS_CRON_PATTERN = '0 * * * *';
+export const WORKFLOW_HANDLE_STALED_RUNS_CRON_PATTERN = '*/10 * * * *';
 
+const NUMBER_OF_PARTITIONS = 10;
 const WORKSPACE_BATCH_SIZE = 50;
 
 @Processor(MessageQueue.cronQueue)
@@ -30,11 +30,12 @@ export class WorkflowHandleStaledRunsCronJob {
   private readonly logger = new Logger(WorkflowHandleStaledRunsCronJob.name);
 
   constructor(
+    @InjectDataSource()
+    private readonly coreDataSource: DataSource,
     @InjectRepository(WorkspaceEntity)
     private readonly workspaceRepository: Repository<WorkspaceEntity>,
     @InjectMessageQueue(MessageQueue.workflowQueue)
     private readonly messageQueueService: MessageQueueService,
-    private readonly globalWorkspaceOrmManager: GlobalWorkspaceOrmManager,
     private readonly exceptionHandlerService: ExceptionHandlerService,
   ) {}
 
@@ -46,21 +47,27 @@ export class WorkflowHandleStaledRunsCronJob {
   async handle() {
     this.logger.log('Starting WorkflowHandleStaledRunsCronJob cron');
 
-    const activeWorkspaces = await this.workspaceRepository.find({
+    const allActiveWorkspaces = await this.workspaceRepository.find({
       where: {
         activationStatus: WorkspaceActivationStatus.ACTIVE,
       },
       select: ['id'],
+      order: { id: 'ASC' },
     });
+
+    const partition = new Date().getMinutes() % NUMBER_OF_PARTITIONS;
+    const workspacesForThisRun = allActiveWorkspaces.filter(
+      (_, index) => index % NUMBER_OF_PARTITIONS === partition,
+    );
 
     let enqueuedCount = 0;
 
     for (
       let workspaceIndex = 0;
-      workspaceIndex < activeWorkspaces.length;
+      workspaceIndex < workspacesForThisRun.length;
       workspaceIndex += WORKSPACE_BATCH_SIZE
     ) {
-      const batch = activeWorkspaces.slice(
+      const batch = workspacesForThisRun.slice(
         workspaceIndex,
         workspaceIndex + WORKSPACE_BATCH_SIZE,
       );
@@ -83,7 +90,7 @@ export class WorkflowHandleStaledRunsCronJob {
     }
 
     this.logger.log(
-      `Completed WorkflowHandleStaledRunsCronJob cron, enqueued ${enqueuedCount} jobs`,
+      `Completed WorkflowHandleStaledRunsCronJob cron (partition ${partition}/${NUMBER_OF_PARTITIONS}), enqueued ${enqueuedCount} jobs`,
     );
   }
 
@@ -103,23 +110,14 @@ export class WorkflowHandleStaledRunsCronJob {
   }
 
   private async hasStaledRuns(workspaceId: string): Promise<boolean> {
-    const authContext = buildSystemAuthContext(workspaceId);
+    const schemaName = getWorkspaceSchemaName(workspaceId);
+    const thresholdDate = new Date(Date.now() - STALED_RUNS_THRESHOLD_MS);
 
-    return this.globalWorkspaceOrmManager.executeInWorkspaceContext(
-      async () => {
-        const workflowRunRepository =
-          await this.globalWorkspaceOrmManager.getRepository(
-            workspaceId,
-            WorkflowRunWorkspaceEntity,
-            { shouldBypassPermissionChecks: true },
-          );
-
-        return workflowRunRepository.exists({
-          where: getStaledRunsFindOptions(),
-        });
-      },
-      authContext,
-      { lite: true },
+    const result = await this.coreDataSource.query(
+      `SELECT 1 FROM ${schemaName}."workflowRun" WHERE "status" = $1 AND ("enqueuedAt" < $2 OR "enqueuedAt" IS NULL) LIMIT 1`,
+      [WorkflowRunStatus.ENQUEUED, thresholdDate],
     );
+
+    return result.length > 0;
   }
 }
