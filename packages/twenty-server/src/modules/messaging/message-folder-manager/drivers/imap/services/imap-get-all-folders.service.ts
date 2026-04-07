@@ -68,9 +68,10 @@ export class ImapGetAllFoldersService implements MessageFolderDriver {
 
     if (isDefined(sentFolder)) {
       const sentMailbox = mailboxList.find((m) => m.path === sentFolder.path);
-      const uidValidity = sentMailbox
-        ? await this.getUidValidity(client, sentMailbox)
-        : null;
+      const uidValidity =
+        sentMailbox && !sentMailbox.flags?.has('\\Noselect')
+          ? await this.getUidValidity(client, sentMailbox)
+          : null;
 
       const externalId = uidValidity
         ? `${sentFolder.path}:${uidValidity.toString()}`
@@ -88,6 +89,13 @@ export class ImapGetAllFoldersService implements MessageFolderDriver {
     }
 
     for (const mailbox of mailboxList) {
+      if (!this.isValidMailbox(mailbox, folders)) {
+        if (!pathToExternalIdMap.has(mailbox.path)) {
+          pathToExternalIdMap.set(mailbox.path, mailbox.path);
+        }
+        continue;
+      }
+
       const uidValidity = await this.getUidValidity(client, mailbox);
       const externalId = uidValidity
         ? `${mailbox.path}:${uidValidity}`
@@ -95,25 +103,23 @@ export class ImapGetAllFoldersService implements MessageFolderDriver {
 
       pathToExternalIdMap.set(mailbox.path, externalId);
 
-      if (this.isValidMailbox(mailbox, folders)) {
-        const standardFolder = getStandardFolderByRegex(mailbox.name);
+      const standardFolder = getStandardFolderByRegex(mailbox.name);
 
-        if (!shouldCreateFolderByDefault(standardFolder)) {
-          continue;
-        }
-
-        const isSynced = shouldSyncFolderByDefault(
-          messageChannel.messageFolderImportPolicy,
-        );
-
-        folders.push({
-          externalId,
-          name: mailbox.name,
-          isSynced,
-          isSentFolder: false,
-          parentFolderId: mailbox.parentPath || null,
-        });
+      if (!shouldCreateFolderByDefault(standardFolder)) {
+        continue;
       }
+
+      const isSynced = shouldSyncFolderByDefault(
+        messageChannel.messageFolderImportPolicy,
+      );
+
+      folders.push({
+        externalId,
+        name: mailbox.name,
+        isSynced,
+        isSentFolder: false,
+        parentFolderId: mailbox.parentPath || null,
+      });
     }
 
     for (const folder of folders) {
