@@ -41,10 +41,12 @@ export const useOpenWidgetSettingsInSidePanel = (
       widgetType: WidgetType;
     }) => {
       if (widgetType === WidgetType.IFRAME) {
+        if (!isDashboardPageLayout) {
+          return;
+        }
+
         navigatePageLayoutSidePanel({
-          sidePanelPage: isDashboardPageLayout
-            ? SidePanelPages.DashboardIframeSettings
-            : SidePanelPages.RecordPageIframeSettings,
+          sidePanelPage: SidePanelPages.DashboardIframeSettings,
           pageTitle: t`Edit iFrame`,
           resetNavigationStack: true,
         });
@@ -53,10 +55,12 @@ export const useOpenWidgetSettingsInSidePanel = (
       }
 
       if (widgetType === WidgetType.GRAPH) {
+        if (!isDashboardPageLayout) {
+          return;
+        }
+
         navigatePageLayoutSidePanel({
-          sidePanelPage: isDashboardPageLayout
-            ? SidePanelPages.DashboardChartSettings
-            : SidePanelPages.RecordPageChartSettings,
+          sidePanelPage: SidePanelPages.DashboardChartSettings,
           pageTitle: t`Edit Graph`,
           resetNavigationStack: true,
         });
@@ -65,34 +69,36 @@ export const useOpenWidgetSettingsInSidePanel = (
       }
 
       if (widgetType === WidgetType.FIELDS) {
-        navigatePageLayoutSidePanel({
-          sidePanelPage: isDashboardPageLayout
-            ? SidePanelPages.DashboardFieldsSettings
-            : SidePanelPages.RecordPageFieldsSettings,
-          pageTitle: t`Edit Fields`,
-          resetNavigationStack: true,
-        });
-        setPageLayoutEditingWidgetId(widgetId);
+        if (!isDashboardPageLayout) {
+          navigatePageLayoutSidePanel({
+            sidePanelPage: SidePanelPages.RecordPageFieldsSettings,
+            pageTitle: t`Edit Fields`,
+            resetNavigationStack: true,
+          });
+          setPageLayoutEditingWidgetId(widgetId);
+        }
         return;
       }
 
       if (widgetType === WidgetType.FIELD) {
-        navigatePageLayoutSidePanel({
-          sidePanelPage: isDashboardPageLayout
-            ? SidePanelPages.DashboardFieldSettings
-            : SidePanelPages.RecordPageFieldSettings,
-          pageTitle: t`Field widget`,
-          resetNavigationStack: true,
-        });
-        setPageLayoutEditingWidgetId(widgetId);
+        if (!isDashboardPageLayout) {
+          navigatePageLayoutSidePanel({
+            sidePanelPage: SidePanelPages.RecordPageFieldSettings,
+            pageTitle: t`Field widget`,
+            resetNavigationStack: true,
+          });
+          setPageLayoutEditingWidgetId(widgetId);
+        }
         return;
       }
 
       if (widgetType === WidgetType.RECORD_TABLE) {
+        if (!isDashboardPageLayout) {
+          return;
+        }
+
         navigatePageLayoutSidePanel({
-          sidePanelPage: isDashboardPageLayout
-            ? SidePanelPages.DashboardRecordTableSettings
-            : SidePanelPages.RecordPageRecordTableSettings,
+          sidePanelPage: SidePanelPages.DashboardRecordTableSettings,
           pageTitle: t`Edit Record Table`,
           resetNavigationStack: true,
         });

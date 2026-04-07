@@ -7,14 +7,9 @@ describe('isPageLayoutSidePanelPage', () => {
     SidePanelPages.PageLayoutTabSettings,
     SidePanelPages.DashboardChartSettings,
     SidePanelPages.DashboardIframeSettings,
-    SidePanelPages.DashboardFieldsSettings,
-    SidePanelPages.DashboardFieldSettings,
     SidePanelPages.DashboardRecordTableSettings,
-    SidePanelPages.RecordPageChartSettings,
-    SidePanelPages.RecordPageIframeSettings,
     SidePanelPages.RecordPageFieldsSettings,
     SidePanelPages.RecordPageFieldSettings,
-    SidePanelPages.RecordPageRecordTableSettings,
     SidePanelPages.PageLayoutRecordPageWidgetTypeSelect,
   ];
 
@@ -26,7 +21,7 @@ describe('isPageLayoutSidePanelPage', () => {
   );
 
   const nonPageLayoutPages: SidePanelPages[] = [
-    SidePanelPages.Record,
+    SidePanelPages.ViewRecord,
     SidePanelPages.AskAI,
     SidePanelPages.ComposeEmail,
     SidePanelPages.SearchRecords,

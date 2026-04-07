@@ -15,21 +15,16 @@ export const getPageLayoutIcon = (page: PageLayoutSidePanelPage) => {
     case SidePanelPages.PageLayoutDashboardWidgetTypeSelect:
       return IconAppWindow;
     case SidePanelPages.DashboardChartSettings:
-    case SidePanelPages.RecordPageChartSettings:
       return IconChartPie;
     case SidePanelPages.DashboardIframeSettings:
-    case SidePanelPages.RecordPageIframeSettings:
       return IconFrame;
     case SidePanelPages.PageLayoutTabSettings:
       return IconAppWindow;
-    case SidePanelPages.DashboardFieldsSettings:
     case SidePanelPages.RecordPageFieldsSettings:
       return IconList;
-    case SidePanelPages.DashboardFieldSettings:
     case SidePanelPages.RecordPageFieldSettings:
       return IconList;
     case SidePanelPages.DashboardRecordTableSettings:
-    case SidePanelPages.RecordPageRecordTableSettings:
       return IconTable;
     case SidePanelPages.PageLayoutRecordPageWidgetTypeSelect:
       return IconPlus;

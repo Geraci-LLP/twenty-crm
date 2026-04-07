@@ -8,15 +8,10 @@ import { SidePanelCalendarEventPage } from '@/side-panel/pages/calendar-event/co
 import { SidePanelComposeEmailPage } from '@/side-panel/pages/compose-email/components/SidePanelComposeEmailPage';
 import { SidePanelFrontComponentPage } from '@/side-panel/pages/front-component/components/SidePanelFrontComponentPage';
 import { SidePanelDashboardChartSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardChartSettings';
-import { SidePanelDashboardFieldSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardFieldSettings';
-import { SidePanelDashboardFieldsSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardFieldsSettings';
 import { SidePanelDashboardIframeSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardIframeSettings';
 import { SidePanelDashboardRecordTableSettings } from '@/side-panel/pages/page-layout/components/dashboard/SidePanelDashboardRecordTableSettings';
-import { SidePanelRecordPageChartSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageChartSettings';
 import { SidePanelRecordPageFieldSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageFieldSettings';
 import { SidePanelRecordPageFieldsSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageFieldsSettings';
-import { SidePanelRecordPageIframeSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageIframeSettings';
-import { SidePanelRecordPageRecordTableSettings } from '@/side-panel/pages/page-layout/components/record-page/SidePanelRecordPageRecordTableSettings';
 import { SidePanelPageLayoutDashboardWidgetTypeSelect } from '@/side-panel/pages/page-layout/components/SidePanelPageLayoutDashboardWidgetTypeSelect';
 import { SidePanelPageLayoutRecordPageWidgetTypeSelect } from '@/side-panel/pages/page-layout/components/SidePanelPageLayoutRecordPageWidgetTypeSelect';
 import { SidePanelPageLayoutTabSettings } from '@/side-panel/pages/page-layout/components/SidePanelPageLayoutTabSettings';
@@ -70,24 +65,8 @@ export const SIDE_PANEL_PAGES_CONFIG = new Map<SidePanelPages, React.ReactNode>(
     ],
     [SidePanelPages.PageLayoutTabSettings, <SidePanelPageLayoutTabSettings />],
     [
-      SidePanelPages.DashboardFieldsSettings,
-      <SidePanelDashboardFieldsSettings />,
-    ],
-    [
-      SidePanelPages.DashboardFieldSettings,
-      <SidePanelDashboardFieldSettings />,
-    ],
-    [
       SidePanelPages.DashboardRecordTableSettings,
       <SidePanelDashboardRecordTableSettings />,
-    ],
-    [
-      SidePanelPages.RecordPageChartSettings,
-      <SidePanelRecordPageChartSettings />,
-    ],
-    [
-      SidePanelPages.RecordPageIframeSettings,
-      <SidePanelRecordPageIframeSettings />,
     ],
     [
       SidePanelPages.RecordPageFieldsSettings,
@@ -96,10 +75,6 @@ export const SIDE_PANEL_PAGES_CONFIG = new Map<SidePanelPages, React.ReactNode>(
     [
       SidePanelPages.RecordPageFieldSettings,
       <SidePanelRecordPageFieldSettings />,
-    ],
-    [
-      SidePanelPages.RecordPageRecordTableSettings,
-      <SidePanelRecordPageRecordTableSettings />,
     ],
     [SidePanelPages.ViewFrontComponent, <SidePanelFrontComponentPage />],
     [

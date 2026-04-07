@@ -71,6 +71,7 @@ export const SidePanelRecordPageFieldSettings = () => {
   const selectableItemIds = [
     'field',
     'layout',
+    WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.RESET_TO_DEFAULT,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.REPLACE_WIDGET,
     WIDGET_SETTINGS_SELECTABLE_ITEM_IDS.DELETE_WIDGET,
     ...placementSelectableItemIds,
