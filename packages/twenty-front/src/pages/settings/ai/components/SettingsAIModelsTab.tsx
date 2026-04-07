@@ -46,9 +46,7 @@ export const SettingsAIModelsTab = () => {
   const { enabledModels, useRecommendedModels, realModels } =
     useWorkspaceAiModelAvailability();
 
-  const enabledModelIdSet = new Set(
-    currentWorkspace?.enabledAiModelIds ?? [],
-  );
+  const enabledModelIdSet = new Set(currentWorkspace?.enabledAiModelIds ?? []);
 
   const currentSmartModel = currentWorkspace?.smartModel;
   const currentFastModel = currentWorkspace?.fastModel;
@@ -293,19 +291,14 @@ export const SettingsAIModelsTab = () => {
               isChecked={(model) => enabledModelIdSet.has(model.modelId)}
               onToggle={handleModelToggle}
               onToggleAll={async (shouldCheckAll) => {
-                const previousIds =
-                  currentWorkspace?.enabledAiModelIds ?? [];
+                const previousIds = currentWorkspace?.enabledAiModelIds ?? [];
                 const visibleModelIds = new Set(
                   filteredModels.map((m) => m.modelId),
                 );
 
                 const newEnabledIds = shouldCheckAll
-                  ? [
-                      ...new Set([...previousIds, ...visibleModelIds]),
-                    ]
-                  : previousIds.filter(
-                      (id) => !visibleModelIds.has(id),
-                    );
+                  ? [...new Set([...previousIds, ...visibleModelIds])]
+                  : previousIds.filter((id) => !visibleModelIds.has(id));
 
                 try {
                   setCurrentWorkspace({

@@ -9,9 +9,7 @@ export const useWorkspaceAiModelAvailability = () => {
   const currentWorkspace = useAtomStateValue(currentWorkspaceState);
 
   const useRecommendedModels = currentWorkspace?.useRecommendedModels ?? true;
-  const enabledAiModelIds = new Set(
-    currentWorkspace?.enabledAiModelIds ?? [],
-  );
+  const enabledAiModelIds = new Set(currentWorkspace?.enabledAiModelIds ?? []);
 
   const realModels = aiModels.filter(
     (model) => !isAutoSelectModelId(model.modelId) && !model.isDeprecated,

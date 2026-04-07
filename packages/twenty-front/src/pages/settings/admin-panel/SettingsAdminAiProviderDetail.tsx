@@ -63,7 +63,11 @@ export const SettingsAdminAiProviderDetail = () => {
   const { data: providersData, loading: isLoadingProviders } =
     useQuery<GetAiProvidersResult>(GET_AI_PROVIDERS);
 
-  const { data: modelsData, loading: isLoadingModels, refetch: refetchModels } = useQuery<{
+  const {
+    data: modelsData,
+    loading: isLoadingModels,
+    refetch: refetchModels,
+  } = useQuery<{
     getAdminAiModels: {
       models: AdminAiModelConfig[];
     };
@@ -377,9 +381,7 @@ export const SettingsAdminAiProviderDetail = () => {
                 }
               }}
               anchorPrefix="provider-model-row"
-              onRemove={
-                isCustomProvider ? handleModelRemoveClick : undefined
-              }
+              onRemove={isCustomProvider ? handleModelRemoveClick : undefined}
             />
           )}
 

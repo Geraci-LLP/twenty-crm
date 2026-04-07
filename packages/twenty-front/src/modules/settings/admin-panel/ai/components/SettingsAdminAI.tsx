@@ -62,7 +62,11 @@ export const SettingsAdminAI = () => {
   const periodOptions = getPeriodOptions();
   const usageDates = getPeriodDates(usagePeriod);
 
-  const { data, loading: isLoadingModels, refetch: refetchModels } = useQuery<{
+  const {
+    data,
+    loading: isLoadingModels,
+    refetch: refetchModels,
+  } = useQuery<{
     getAdminAiModels: {
       defaultSmartModelId?: string | null;
       defaultFastModelId?: string | null;
@@ -250,8 +254,7 @@ export const SettingsAdminAI = () => {
             onToggle={handleRecommendedToggle}
             onToggleAll={async (shouldCheckAll) => {
               const modelsToToggle = enabledModels.filter(
-                (model) =>
-                  (model.isRecommended === true) !== shouldCheckAll,
+                (model) => (model.isRecommended === true) !== shouldCheckAll,
               );
 
               if (modelsToToggle.length === 0) return;
