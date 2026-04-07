@@ -1,7 +1,6 @@
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { filterReadableActiveObjectMetadataItems } from '@/object-metadata/utils/filterReadableActiveObjectMetadataItems';
-import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { useObjectPermissions } from '@/object-record/hooks/useObjectPermissions';
 import { usePageLayoutIdFromContextStore } from '@/side-panel/pages/page-layout/hooks/usePageLayoutIdFromContextStore';
 import { useResetChartDraftFiltersSettings } from '@/side-panel/pages/page-layout/hooks/useResetChartDraftFiltersSettings';
@@ -23,7 +22,7 @@ import { t } from '@lingui/core/macro';
 import { Trans } from '@lingui/react/macro';
 import { useState } from 'react';
 import { isDefined } from 'twenty-shared/utils';
-import { IconChevronLeft, IconSettings, useIcons } from 'twenty-ui/display';
+import { IconChevronLeft, IconSettings } from 'twenty-ui/display';
 import { MenuItem, MenuItemSelect } from 'twenty-ui/navigation';
 import { filterBySearchQuery } from '~/utils/filterBySearchQuery';
 
@@ -75,8 +74,6 @@ export const ChartDataSourceDropdownContent = () => {
     useUpdateCurrentWidgetConfig(pageLayoutId);
 
   const { closeDropdown } = useCloseDropdown();
-
-  const { getIcon } = useIcons();
 
   const { resetChartDraftFiltersSettings } =
     useResetChartDraftFiltersSettings();
@@ -165,10 +162,7 @@ export const ChartDataSourceDropdownContent = () => {
                 selected={currentObjectMetadataItemId === objectMetadataItem.id}
                 focused={selectedItemId === objectMetadataItem.id}
                 LeftIcon={() => (
-                  <NavigationMenuItemStyleIcon
-                    Icon={getIcon(objectMetadataItem.icon)}
-                    color={getObjectColorWithFallback(objectMetadataItem)}
-                  />
+                  <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
                 )}
                 onClick={() => {
                   handleSelectSource(objectMetadataItem.id);

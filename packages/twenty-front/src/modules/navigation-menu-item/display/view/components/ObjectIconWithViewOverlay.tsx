@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import type { IconComponent } from 'twenty-ui/display';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
-import { getNavigationMenuItemIconStyleFromColor } from '@/navigation-menu-item/common/utils/getNavigationMenuItemIconStyleFromColor';
+import { getTintedIconTileStyleFromColor } from '@/ui/display/utils/getTintedIconTileStyleFromColor';
 
 const StyledCompositeContainer = styled.div`
   align-items: center;
@@ -58,7 +58,7 @@ export const ObjectIconWithViewOverlay = ({
   objectColor,
 }: ObjectIconWithViewOverlayProps) => {
   const { theme } = useContext(ThemeContext);
-  const objectStyle = getNavigationMenuItemIconStyleFromColor(objectColor);
+  const objectStyle = getTintedIconTileStyleFromColor(objectColor);
 
   return (
     <StyledCompositeContainer>

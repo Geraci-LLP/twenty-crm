@@ -2,15 +2,10 @@ import { styled } from '@linaria/react';
 import { t } from '@lingui/core/macro';
 import { useContext } from 'react';
 
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { SettingsItemTypeTag } from '@/settings/components/SettingsItemTypeTag';
-import {
-  IconBox,
-  OverflowingTextWithTooltip,
-  useIcons,
-} from 'twenty-ui/display';
+import { IconBox, OverflowingTextWithTooltip } from 'twenty-ui/display';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 export type SettingsDataModelObjectPreviewProps = {
@@ -83,18 +78,13 @@ const SettingsDataModelObjectPreviewItem = ({
   pluralizeLabel = true,
   index,
 }: SettingsDataModelObjectPreviewItemProps) => {
-  const { getIcon } = useIcons();
-
   return (
     <>
       {index > 0 && <StyledSeparator />}
       <StyledObjectPreview key={`${objectMetadataItem.labelSingular}-${index}`}>
         <StyledObjectName>
           <StyledIconContainer>
-            <NavigationMenuItemStyleIcon
-              Icon={getIcon(objectMetadataItem.icon)}
-              color={getObjectColorWithFallback(objectMetadataItem)}
-            />
+            <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
           </StyledIconContainer>
           <OverflowingTextWithTooltip
             text={

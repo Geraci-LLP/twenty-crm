@@ -3,9 +3,8 @@ import { type Node, type NodeProps } from '@xyflow/react';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { isHiddenSystemField } from '@/object-metadata/utils/isHiddenSystemField';
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { ObjectFieldRow } from '@/settings/data-model/graph-overview/components/SettingsDataModelOverviewField';
@@ -16,7 +15,7 @@ import { ObjectFieldRowWithoutRelation } from '@/settings/data-model/graph-overv
 import '@xyflow/react/dist/style.css';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
-import { IconChevronDown, IconChevronUp, useIcons } from 'twenty-ui/display';
+import { IconChevronDown, IconChevronUp } from 'twenty-ui/display';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 type SettingsDataModelOverviewObjectNode = Node<
@@ -109,7 +108,6 @@ export const SettingsDataModelOverviewObject = ({
   data: objectMetadataItem,
 }: SettingsDataModelOverviewObjectProps) => {
   const { theme } = useContext(ThemeContext);
-  const { getIcon } = useIcons();
   const [otherFieldsExpanded, setOtherFieldsExpanded] = useState(false);
 
   const { totalCount } = useFindManyRecords({
@@ -134,10 +132,7 @@ export const SettingsDataModelOverviewObject = ({
                 objectNamePlural: objectMetadataItem.namePlural,
               })}
             >
-              <NavigationMenuItemStyleIcon
-                Icon={getIcon(objectMetadataItem.icon)}
-                color={getObjectColorWithFallback(objectMetadataItem)}
-              />
+              <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
               {objectMetadataItem.labelPlural}
             </Link>
           </StyledObjectLinkContainer>

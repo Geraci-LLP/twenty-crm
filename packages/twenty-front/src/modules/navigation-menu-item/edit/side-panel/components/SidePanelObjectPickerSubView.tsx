@@ -2,14 +2,14 @@ import { useLingui } from '@lingui/react/macro';
 import { IconSettings } from 'twenty-ui/display';
 
 import { CommandMenuItem } from '@/command-menu/components/CommandMenuItem';
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { SidePanelObjectPickerItem } from '@/navigation-menu-item/edit/side-panel/components/SidePanelObjectPickerItem';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
 import { SidePanelAddToNavigationDroppable } from '@/side-panel/components/SidePanelAddToNavigationDroppable';
 import { SidePanelGroup } from '@/side-panel/components/SidePanelGroup';
 import { SidePanelList } from '@/side-panel/components/SidePanelList';
 import { SidePanelSubViewWithSearch } from '@/side-panel/components/SidePanelSubViewWithSearch';
 import { useSidePanelFilteredPickerItems } from '@/side-panel/hooks/useSidePanelFilteredPickerItems';
-import { SidePanelObjectPickerItem } from '@/navigation-menu-item/edit/side-panel/components/SidePanelObjectPickerItem';
+import { TintedIconTile } from '@/ui/display/components/TintedIconTile';
 import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
 
 type SidePanelObjectPickerSubViewProps = {
@@ -70,7 +70,7 @@ export const SidePanelObjectPickerSubView = ({
       ))}
       <SelectableListItem itemId="system" onEnter={onOpenSystemPicker}>
         <CommandMenuItem
-          Icon={() => <NavigationMenuItemStyleIcon Icon={IconSettings} />}
+          Icon={() => <TintedIconTile Icon={IconSettings} />}
           label={t`System objects`}
           id="system"
           hasSubMenu

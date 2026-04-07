@@ -4,7 +4,7 @@ import { isDefined } from 'twenty-shared/utils';
 import { IconGripVertical, type IconComponent } from 'twenty-ui/display';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { TintedIconTile } from '@/ui/display/components/TintedIconTile';
 import { NavigationMenuItemType } from 'twenty-shared/types';
 import type { AddToNavigationDragPayload } from '@/navigation-menu-item/common/types/add-to-navigation-drag-payload';
 import { getNavigationMenuItemColor } from '@/navigation-menu-item/common/utils/getNavigationMenuItemColor';
@@ -110,7 +110,7 @@ export const AddToNavigationDragHandle = ({
       ) : showCustomContentWithoutWrapper ? (
         customIconContent
       ) : hasBackgroundColor && icon ? (
-        <NavigationMenuItemStyleIcon Icon={icon} color={effectiveColor} />
+        <TintedIconTile Icon={icon} color={effectiveColor} />
       ) : (
         <AddToNavigationDragHandleIcon
           icon={icon}

@@ -1,7 +1,5 @@
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
-import { useIcons } from 'twenty-ui/display';
 import { MenuItem } from 'twenty-ui/navigation';
 
 type WorkflowAiAgentPermissionsObjectRowProps = {
@@ -18,16 +16,9 @@ export const WorkflowAiAgentPermissionsObjectRow = ({
   onClick,
   readonly,
 }: WorkflowAiAgentPermissionsObjectRowProps) => {
-  const { getIcon } = useIcons();
-
   return (
     <MenuItem
-      LeftComponent={
-        <NavigationMenuItemStyleIcon
-          Icon={getIcon(objectMetadata.icon)}
-          color={getObjectColorWithFallback(objectMetadata)}
-        />
-      }
+      LeftComponent={<ObjectMetadataIcon objectMetadataItem={objectMetadata} />}
       text={objectMetadata.labelPlural}
       hasSubMenu={!readonly}
       onClick={!readonly ? onClick : undefined}

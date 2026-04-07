@@ -1,7 +1,7 @@
 import { styled } from '@linaria/react';
 import { useContext } from 'react';
 
-import { getNavigationMenuItemIconStyleFromColor } from '@/navigation-menu-item/common/utils/getNavigationMenuItemIconStyleFromColor';
+import { getTintedIconTileStyleFromColor } from '@/ui/display/utils/getTintedIconTileStyleFromColor';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { isDefined } from 'twenty-shared/utils';
@@ -134,7 +134,7 @@ export const SettingsToolIcon = ({
     : undefined;
 
   const objectStyle = isDefined(objectMetadata)
-    ? getNavigationMenuItemIconStyleFromColor(
+    ? getTintedIconTileStyleFromColor(
         getObjectColorWithFallback(objectMetadata),
       )
     : null;

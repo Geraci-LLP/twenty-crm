@@ -6,7 +6,7 @@ import { useSelectedNavigationMenuItemEditItem } from '@/navigation-menu-item/ed
 import { NavigationMenuItemType } from 'twenty-shared/types';
 
 import { selectedNavigationMenuItemIdInEditModeState } from '@/navigation-menu-item/common/states/selectedNavigationMenuItemIdInEditModeState';
-import { parseThemeColor } from '@/navigation-menu-item/common/utils/parseThemeColor';
+import { parseThemeColor } from '@/ui/display/utils/parseThemeColor';
 import { useSelectedNavigationMenuItemEditItemLabel } from '@/navigation-menu-item/edit/hooks/useSelectedNavigationMenuItemEditItemLabel';
 import { useUpdateLinkInDraft } from '@/navigation-menu-item/edit/link/hooks/useUpdateLinkInDraft';
 import { SidePanelEditColorOption } from '@/navigation-menu-item/edit/side-panel/components/SidePanelEditColorOption';

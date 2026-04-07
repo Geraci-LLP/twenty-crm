@@ -5,11 +5,11 @@ import { themeCssVariables } from 'twenty-ui/theme-constants';
 import { type NavigationMenuItem } from '~/generated-metadata/graphql';
 
 import { LinkIconWithLinkOverlay } from '@/navigation-menu-item/display/link/components/LinkIconWithLinkOverlay';
-import { StyledNavigationMenuItemIconContainer } from '@/navigation-menu-item/display/components/NavigationMenuItemIconContainer';
+import { StyledTintedIconTileContainer } from '@/ui/display/components/StyledTintedIconTileContainer';
 import { ObjectIconWithViewOverlay } from '@/navigation-menu-item/display/view/components/ObjectIconWithViewOverlay';
 import { getNavigationMenuItemColor } from '@/navigation-menu-item/common/utils/getNavigationMenuItemColor';
 import { getNavigationMenuItemComputedLink } from '@/navigation-menu-item/display/utils/getNavigationMenuItemComputedLink';
-import { getNavigationMenuItemIconStyleFromColor } from '@/navigation-menu-item/common/utils/getNavigationMenuItemIconStyleFromColor';
+import { getTintedIconTileStyleFromColor } from '@/ui/display/utils/getTintedIconTileStyleFromColor';
 import { getNavigationMenuItemLabel } from '@/navigation-menu-item/display/utils/getNavigationMenuItemLabel';
 import { getNavigationMenuItemObjectNameSingular } from '@/navigation-menu-item/display/object/utils/getNavigationMenuItemObjectNameSingular';
 import { recordIdentifierToObjectRecordIdentifier } from '@/navigation-menu-item/common/utils/recordIdentifierToObjectRecordIdentifier';
@@ -98,7 +98,7 @@ export const NavigationMenuItemIcon = ({
   );
   const useStyledIcon = !isRecord;
   const iconStyle = useStyledIcon
-    ? getNavigationMenuItemIconStyleFromColor(effectiveColor)
+    ? getTintedIconTileStyleFromColor(effectiveColor)
     : null;
 
   const iconColorToUse = iconStyle
@@ -140,11 +140,11 @@ export const NavigationMenuItemIcon = ({
   }
 
   return (
-    <StyledNavigationMenuItemIconContainer
+    <StyledTintedIconTileContainer
       $backgroundColor={iconStyle.backgroundColor}
       $borderColor={iconStyle.borderColor}
     >
       {avatar}
-    </StyledNavigationMenuItemIconContainer>
+    </StyledTintedIconTileContainer>
   );
 };

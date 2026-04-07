@@ -1,7 +1,6 @@
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { filterReadableActiveObjectMetadataItems } from '@/object-metadata/utils/filterReadableActiveObjectMetadataItems';
-import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { useObjectPermissions } from '@/object-record/hooks/useObjectPermissions';
 import { useUpdatePageLayoutWidget } from '@/page-layout/hooks/useUpdatePageLayoutWidget';
 import { useCreateViewForRecordTableWidget } from '@/page-layout/widgets/record-table/hooks/useCreateViewForRecordTableWidget';
@@ -22,7 +21,6 @@ import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/use
 import { t } from '@lingui/core/macro';
 import { useState } from 'react';
 import { isDefined } from 'twenty-shared/utils';
-import { useIcons } from 'twenty-ui/display';
 import { MenuItemSelect } from 'twenty-ui/navigation';
 import { filterBySearchQuery } from '~/utils/filterBySearchQuery';
 
@@ -58,7 +56,6 @@ export const RecordTableDataSourceDropdownContent = () => {
   const { updatePageLayoutWidget } = useUpdatePageLayoutWidget(pageLayoutId);
 
   const { closeDropdown } = useCloseDropdown();
-  const { getIcon } = useIcons();
 
   const readableActiveObjectMetadataItems =
     filterReadableActiveObjectMetadataItems(
@@ -151,10 +148,7 @@ export const RecordTableDataSourceDropdownContent = () => {
                 selected={currentObjectMetadataItemId === objectMetadataItem.id}
                 focused={selectedItemId === objectMetadataItem.id}
                 LeftIcon={() => (
-                  <NavigationMenuItemStyleIcon
-                    Icon={getIcon(objectMetadataItem.icon)}
-                    color={getObjectColorWithFallback(objectMetadataItem)}
-                  />
+                  <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
                 )}
                 onClick={() => {
                   handleSelectSource(objectMetadataItem.id);

@@ -1,4 +1,5 @@
 import { useLingui } from '@lingui/react/macro';
+import { NavigationMenuItemType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import {
   Avatar,
@@ -10,8 +11,6 @@ import {
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 import { CommandMenuItem } from '@/command-menu/components/CommandMenuItem';
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
-import { NavigationMenuItemType } from 'twenty-shared/types';
 import { pendingInsertionNavigationMenuItemState } from '@/navigation-menu-item/common/states/pendingInsertionNavigationMenuItemState';
 import { SidePanelAddToNavigationDroppable } from '@/side-panel/components/SidePanelAddToNavigationDroppable';
 import { SidePanelGroup } from '@/side-panel/components/SidePanelGroup';
@@ -19,6 +18,7 @@ import { SidePanelItemWithAddToNavigationDrag } from '@/side-panel/components/Si
 import { SidePanelList } from '@/side-panel/components/SidePanelList';
 import { useAddFolderToNavigationMenu } from '@/navigation-menu-item/edit/side-panel/hooks/useAddFolderToNavigationMenu';
 import { useAddLinkToNavigationMenu } from '@/navigation-menu-item/edit/side-panel/hooks/useAddLinkToNavigationMenu';
+import { TintedIconTile } from '@/ui/display/components/TintedIconTile';
 import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 
@@ -70,7 +70,7 @@ export const SidePanelNewSidebarItemMainMenu = ({
               >
                 <CommandMenuItem
                   Icon={() => (
-                    <NavigationMenuItemStyleIcon
+                    <TintedIconTile
                       Icon={IconBuildingSkyscraper}
                       color="blue"
                     />
@@ -87,10 +87,7 @@ export const SidePanelNewSidebarItemMainMenu = ({
               >
                 <CommandMenuItem
                   Icon={() => (
-                    <NavigationMenuItemStyleIcon
-                      Icon={IconTable}
-                      color="gray"
-                    />
+                    <TintedIconTile Icon={IconTable} color="gray" />
                   )}
                   label={t`View`}
                   id={NavigationMenuItemType.VIEW}

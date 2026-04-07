@@ -1,6 +1,5 @@
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { SettingsRolePermissionsObjectLevelOverrideCellContainer } from '@/settings/roles/role-permissions/object-level-permissions/components/SettingsRolePermissionsObjectLevelOverrideCellContainer';
 import { SettingsRolePermissionsObjectLevelSeeFieldsValueForObject } from '@/settings/roles/role-permissions/object-level-permissions/components/SettingsRolePermissionsObjectLevelSeeFieldsValueForObject';
 import { SettingsRolePermissionsObjectLevelTableRowOptionsDropdown } from '@/settings/roles/role-permissions/object-level-permissions/components/SettingsRolePermissionsObjectLevelTableRowOptionsDropdown';
@@ -11,7 +10,7 @@ import { TableRow } from '@/ui/layout/table/components/TableRow';
 import { styled } from '@linaria/react';
 import { SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
-import { OverflowingTextWithTooltip, useIcons } from 'twenty-ui/display';
+import { OverflowingTextWithTooltip } from 'twenty-ui/display';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledNameLabel = styled.div`
@@ -33,8 +32,6 @@ export const SettingsRolePermissionsObjectLevelTableRow = ({
   isEditable = true,
   fromAgentId,
 }: SettingsRolePermissionsObjectLevelTableRowProps) => {
-  const { getIcon } = useIcons();
-
   const objectLabelPlural = objectMetadataItem.labelPlural;
   const navigationPath = getSettingsPath(SettingsPath.RoleObjectLevel, {
     roleId: roleId,
@@ -54,10 +51,7 @@ export const SettingsRolePermissionsObjectLevelTableRow = ({
         color={themeCssVariables.font.color.primary}
         gap={themeCssVariables.spacing[1]}
       >
-        <NavigationMenuItemStyleIcon
-          Icon={getIcon(objectMetadataItem.icon)}
-          color={getObjectColorWithFallback(objectMetadataItem)}
-        />
+        <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
         <StyledNameLabel title={objectLabelPlural}>
           <OverflowingTextWithTooltip text={objectLabelPlural} />
         </StyledNameLabel>

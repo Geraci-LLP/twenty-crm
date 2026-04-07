@@ -2,9 +2,8 @@ import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
 import { type ReactNode } from 'react';
 
-import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
+import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
-import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { isHiddenSystemField } from '@/object-metadata/utils/isHiddenSystemField';
 import { SettingsItemTypeTag } from '@/settings/components/SettingsItemTypeTag';
 import {
@@ -15,7 +14,6 @@ import {
 } from '@/settings/data-model/object-details/components/SettingsObjectItemTableRowStyledComponents';
 import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableRow } from '@/ui/layout/table/components/TableRow';
-import { useIcons } from 'twenty-ui/display';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 export type SettingsObjectMetadataItemTableRowProps = {
@@ -62,8 +60,6 @@ export const SettingsObjectMetadataItemTableRow = ({
 }: SettingsObjectMetadataItemTableRowProps) => {
   const { t } = useLingui();
 
-  const { getIcon } = useIcons();
-
   return (
     <TableRow
       gridTemplateColumns={SETTINGS_OBJECT_TABLE_ROW_GRID_TEMPLATE_COLUMNS}
@@ -72,10 +68,7 @@ export const SettingsObjectMetadataItemTableRow = ({
     >
       <StyledStickyFirstCell>
         <StyledNameTableCell>
-          <NavigationMenuItemStyleIcon
-            Icon={getIcon(objectMetadataItem.icon)}
-            color={getObjectColorWithFallback(objectMetadataItem)}
-          />
+          <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
           <StyledNameContainer>
             <StyledNameLabel title={objectMetadataItem.labelPlural}>
               {objectMetadataItem.labelPlural}
