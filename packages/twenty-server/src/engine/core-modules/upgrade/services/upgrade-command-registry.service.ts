@@ -6,7 +6,7 @@ import { type MigrationInterface } from 'typeorm';
 import { type ActiveOrSuspendedWorkspaceCommandRunner } from 'src/database/commands/command-runners/active-or-suspended-workspace.command-runner';
 import { type WorkspaceCommandRunner } from 'src/database/commands/command-runners/workspace.command-runner';
 import { getRegisteredWorkspaceCommandMetadata } from 'src/database/commands/decorators/registered-workspace-command.decorator';
-import { getRegisteredInstanceMigrationMetadata } from 'src/database/typeorm/core/decorators/registered-instance-migration.decorator';
+import { getRegisteredInstanceCommandMetadata } from 'src/database/commands/decorators/registered-instance-command.decorator';
 import {
   UPGRADE_COMMAND_SUPPORTED_VERSIONS,
   type UpgradeCommandVersion,
@@ -62,23 +62,23 @@ export class UpgradeCommandRegistryService implements OnModuleInit {
         continue;
       }
 
-      const instanceMigrationMetadata =
-        getRegisteredInstanceMigrationMetadata(metatype);
+      const instanceCommandMetadata =
+        getRegisteredInstanceCommandMetadata(metatype);
 
-      if (isDefined(instanceMigrationMetadata)) {
+      if (isDefined(instanceCommandMetadata)) {
         const bucket = this.bucketsByVersion.get(
-          instanceMigrationMetadata.version,
+          instanceCommandMetadata.version,
         );
 
         if (isDefined(bucket)) {
           bucket.instanceCommands.push({
             name: this.computeCommandName(
-              instanceMigrationMetadata.version,
+              instanceCommandMetadata.version,
               (instance as MigrationInterface).constructor.name,
-              instanceMigrationMetadata.timestamp,
+              instanceCommandMetadata.timestamp,
             ),
             command: instance as MigrationInterface,
-            timestamp: instanceMigrationMetadata.timestamp,
+            timestamp: instanceCommandMetadata.timestamp,
           });
         }
 

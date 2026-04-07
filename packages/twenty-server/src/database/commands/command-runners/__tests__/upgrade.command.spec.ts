@@ -18,7 +18,7 @@ import {
 import { WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
 import { WorkspaceUpgradeService } from 'src/engine/core-modules/upgrade/services/workspace-upgrade.service';
-import { RegisteredInstanceMigration } from 'src/database/typeorm/core/decorators/registered-instance-migration.decorator';
+import { RegisteredInstanceCommand } from 'src/database/commands/decorators/registered-instance-command.decorator';
 import { UPGRADE_COMMAND_SUPPORTED_VERSIONS } from 'src/engine/constants/upgrade-command-supported-versions.constant';
 import { CoreEngineVersionService } from 'src/engine/core-engine-version/services/core-engine-version.service';
 import { type ConfigVariables } from 'src/engine/core-modules/twenty-config/config-variables';
@@ -366,19 +366,19 @@ describe('UpgradeCommandRunner', () => {
   });
 
   it('should call runSingleMigration for each current-version instance command', async () => {
-    @RegisteredInstanceMigration(CURRENT_VERSION, 1770000000000)
+    @RegisteredInstanceCommand(CURRENT_VERSION, 1770000000000)
     class AddIndexToUsers1770000000000 implements MigrationInterface {
       async up(_queryRunner: QueryRunner) {}
       async down(_queryRunner: QueryRunner) {}
     }
 
-    @RegisteredInstanceMigration(CURRENT_VERSION, 1771000000000)
+    @RegisteredInstanceCommand(CURRENT_VERSION, 1771000000000)
     class AddColumnToAccounts1771000000000 implements MigrationInterface {
       async up(_queryRunner: QueryRunner) {}
       async down(_queryRunner: QueryRunner) {}
     }
 
-    @RegisteredInstanceMigration(PREVIOUS_VERSION, 1769000000000)
+    @RegisteredInstanceCommand(PREVIOUS_VERSION, 1769000000000)
     class DropLegacyTable1769000000000 implements MigrationInterface {
       async up(_queryRunner: QueryRunner) {}
       async down(_queryRunner: QueryRunner) {}
@@ -417,7 +417,7 @@ describe('UpgradeCommandRunner', () => {
   });
 
   it('should skip already-executed instance commands', async () => {
-    @RegisteredInstanceMigration(CURRENT_VERSION, 1770000000000)
+    @RegisteredInstanceCommand(CURRENT_VERSION, 1770000000000)
     class AlreadyRunMigration1770000000000 implements MigrationInterface {
       async up(_queryRunner: QueryRunner) {}
       async down(_queryRunner: QueryRunner) {}
@@ -446,7 +446,7 @@ describe('UpgradeCommandRunner', () => {
   });
 
   it('should throw when a migration fails', async () => {
-    @RegisteredInstanceMigration(CURRENT_VERSION, 1770000000000)
+    @RegisteredInstanceCommand(CURRENT_VERSION, 1770000000000)
     class FailingMigration1770000000000 implements MigrationInterface {
       async up(_queryRunner: QueryRunner) {}
       async down(_queryRunner: QueryRunner) {}
@@ -474,7 +474,7 @@ describe('UpgradeCommandRunner', () => {
   });
 
   it('should log success when a migration succeeds', async () => {
-    @RegisteredInstanceMigration(CURRENT_VERSION, 1770000000000)
+    @RegisteredInstanceCommand(CURRENT_VERSION, 1770000000000)
     class SuccessMigration1770000000000 implements MigrationInterface {
       async up(_queryRunner: QueryRunner) {}
       async down(_queryRunner: QueryRunner) {}

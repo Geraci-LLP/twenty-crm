@@ -97,9 +97,9 @@ export class InstanceCommandGenerationService {
   }): string {
     return `import { MigrationInterface, QueryRunner } from 'typeorm';
 
-import { RegisteredInstanceMigration } from 'src/database/typeorm/core/decorators/registered-instance-migration.decorator';
+import { RegisteredInstanceCommand } from 'src/database/commands/decorators/registered-instance-command.decorator';
 
-@RegisteredInstanceMigration('${version}', ${timestamp})
+@RegisteredInstanceCommand('${version}', ${timestamp})
 export class ${className} implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
 ${upStatements.join('\n')}

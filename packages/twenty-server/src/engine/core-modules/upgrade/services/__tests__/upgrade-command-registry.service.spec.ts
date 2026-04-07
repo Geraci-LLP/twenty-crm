@@ -6,10 +6,10 @@ import { DiscoveryService } from '@nestjs/core';
 import { type MigrationInterface } from 'typeorm';
 
 import { UpgradeCommandRegistryService } from 'src/engine/core-modules/upgrade/services/upgrade-command-registry.service';
-import { RegisteredInstanceMigration } from 'src/database/typeorm/core/decorators/registered-instance-migration.decorator';
+import { RegisteredInstanceCommand } from 'src/database/commands/decorators/registered-instance-command.decorator';
 import { RegisteredWorkspaceCommand } from 'src/database/commands/decorators/registered-workspace-command.decorator';
 
-@RegisteredInstanceMigration('1.21.0', 1770000000000)
+@RegisteredInstanceCommand('1.21.0', 1770000000000)
 class MigrationA1770000000000 implements MigrationInterface {
   name = 'MigrationA1770000000000';
 
@@ -17,7 +17,7 @@ class MigrationA1770000000000 implements MigrationInterface {
   async down(): Promise<void> {}
 }
 
-@RegisteredInstanceMigration('1.21.0', 1771000000000)
+@RegisteredInstanceCommand('1.21.0', 1771000000000)
 class MigrationB1771000000000 implements MigrationInterface {
   name = 'MigrationB1771000000000';
 
@@ -25,7 +25,7 @@ class MigrationB1771000000000 implements MigrationInterface {
   async down(): Promise<void> {}
 }
 
-@RegisteredInstanceMigration('1.21.0', 1772000000000)
+@RegisteredInstanceCommand('1.21.0', 1772000000000)
 class MigrationC1772000000000 implements MigrationInterface {
   name = 'MigrationC1772000000000';
 
@@ -33,7 +33,7 @@ class MigrationC1772000000000 implements MigrationInterface {
   async down(): Promise<void> {}
 }
 
-@RegisteredInstanceMigration('1.20.0', 1769000000000)
+@RegisteredInstanceCommand('1.20.0', 1769000000000)
 class MigrationD1769000000000 implements MigrationInterface {
   name = 'MigrationD1769000000000';
 
@@ -200,7 +200,7 @@ describe('UpgradeCommandRegistryService', () => {
   });
 
   it('should throw on duplicate timestamps within the same kind', async () => {
-    @RegisteredInstanceMigration('1.21.0', 1770000000000)
+    @RegisteredInstanceCommand('1.21.0', 1770000000000)
     class DuplicateInstanceTimestamp implements MigrationInterface {
       name = 'DuplicateInstanceTimestamp';
 
@@ -234,6 +234,30 @@ describe('UpgradeCommandRegistryService', () => {
     ).rejects.toThrow(
       'Duplicate upgrade command name "1.21.0_MigrationA1770000000000_1770000000000"',
     );
+  });
+
+  it('should return all instance commands across versions sorted by timestamp', async () => {
+    const service = await buildRegistryService([
+      new MigrationC1772000000000(),
+      new MigrationD1769000000000(),
+      new MigrationA1770000000000(),
+      new MigrationB1771000000000(),
+    ]);
+
+    const allCommands = service.getAllInstanceCommands();
+
+    expect(allCommands).toStrictEqual([
+      { version: '1.20.0', migration: expect.objectContaining({ name: 'MigrationD1769000000000' }) },
+      { version: '1.21.0', migration: expect.objectContaining({ name: 'MigrationA1770000000000' }) },
+      { version: '1.21.0', migration: expect.objectContaining({ name: 'MigrationB1771000000000' }) },
+      { version: '1.21.0', migration: expect.objectContaining({ name: 'MigrationC1772000000000' }) },
+    ]);
+  });
+
+  it('should return empty array from getAllInstanceCommands when no commands registered', async () => {
+    const service = await buildRegistryService([]);
+
+    expect(service.getAllInstanceCommands()).toStrictEqual([]);
   });
 
   it('should allow same class name with different timestamps across kinds', async () => {
