@@ -2,6 +2,7 @@ import { Body, Heading, LazyEmbed, LinkButton } from '@/design-system/components
 import { CheckIcon } from '@/icons/informative/Check';
 import type { PlanCardType } from '@/sections/Plans/types';
 import { theme } from '@/theme';
+import { css } from '@linaria/core';
 import { styled } from '@linaria/react';
 
 const FIXED_ROWS = 4;
@@ -34,27 +35,46 @@ const StyledCard = styled.div`
 `;
 
 const CardHeader = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-content: space-between;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
 
   @media (min-width: ${theme.breakpoints.md}px) {
-    grid-template-columns: 1fr auto;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
   }
 `;
 
 const CardHeaderInfo = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  row-gap: ${theme.spacing(4)};
+  gap: ${theme.spacing(4)};
+`;
+
+const cardPlanTitleClassName = css`
+  &[data-size='xs'] {
+    line-height: ${theme.lineHeight(5)};
+  }
+
+  @media (min-width: ${theme.breakpoints.md}px) {
+    &[data-size='xs'] {
+      line-height: ${theme.lineHeight(6)};
+    }
+  }
+`;
+
+const priceBodyClassName = css`
+  color: ${theme.colors.primary.text[60]};
 `;
 
 const PriceLine = styled.div`
   align-items: baseline;
   display: flex;
+  gap: ${theme.spacing(1)};
   white-space: nowrap;
 `;
 
@@ -63,12 +83,14 @@ const CardIllustration = styled(LazyEmbed)`
   border: none;
   display: none;
   flex-shrink: 0;
-  height: 112px;
+  height: 80px;
   overflow: hidden;
   width: 197px;
 
   @media (min-width: ${theme.breakpoints.md}px) {
     display: block;
+    margin-left: auto;
+    transform: translateX(${theme.spacing(4)});
   }
 `;
 
@@ -115,8 +137,9 @@ export function Card({ card, highlighted = false, maxBullets }: CardProps) {
         <CardHeaderInfo>
           <Heading
             as="h3"
+            className={cardPlanTitleClassName}
             segments={card.heading}
-            size="md"
+            size="xs"
             weight="light"
           />
           <PriceLine>
@@ -129,6 +152,7 @@ export function Card({ card, highlighted = false, maxBullets }: CardProps) {
             <Body
               as="span"
               body={card.price.body}
+              className={priceBodyClassName}
               size="sm"
             />
           </PriceLine>
