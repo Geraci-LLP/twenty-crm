@@ -1,4 +1,6 @@
+import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
+import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { SettingsRolePermissionsObjectLevelOverrideCellContainer } from '@/settings/roles/role-permissions/object-level-permissions/components/SettingsRolePermissionsObjectLevelOverrideCellContainer';
 import { SettingsRolePermissionsObjectLevelSeeFieldsValueForObject } from '@/settings/roles/role-permissions/object-level-permissions/components/SettingsRolePermissionsObjectLevelSeeFieldsValueForObject';
 import { SettingsRolePermissionsObjectLevelTableRowOptionsDropdown } from '@/settings/roles/role-permissions/object-level-permissions/components/SettingsRolePermissionsObjectLevelTableRowOptionsDropdown';
@@ -8,10 +10,9 @@ import { TableCell } from '@/ui/layout/table/components/TableCell';
 import { TableRow } from '@/ui/layout/table/components/TableRow';
 import { styled } from '@linaria/react';
 import { SettingsPath } from 'twenty-shared/types';
-import { isDefined, getSettingsPath } from 'twenty-shared/utils';
+import { getSettingsPath } from 'twenty-shared/utils';
 import { OverflowingTextWithTooltip, useIcons } from 'twenty-ui/display';
-import { useContext } from 'react';
-import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
+import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledNameLabel = styled.div`
   overflow: hidden;
@@ -32,10 +33,7 @@ export const SettingsRolePermissionsObjectLevelTableRow = ({
   isEditable = true,
   fromAgentId,
 }: SettingsRolePermissionsObjectLevelTableRowProps) => {
-  const { theme } = useContext(ThemeContext);
   const { getIcon } = useIcons();
-
-  const Icon = getIcon(objectMetadataItem.icon);
 
   const objectLabelPlural = objectMetadataItem.labelPlural;
   const navigationPath = getSettingsPath(SettingsPath.RoleObjectLevel, {
@@ -56,15 +54,10 @@ export const SettingsRolePermissionsObjectLevelTableRow = ({
         color={themeCssVariables.font.color.primary}
         gap={themeCssVariables.spacing[1]}
       >
-        {isDefined(Icon) && (
-          <Icon
-            style={{
-              minWidth: theme.icon.size.md,
-            }}
-            size={theme.icon.size.md}
-            stroke={theme.icon.stroke.sm}
-          />
-        )}
+        <NavigationMenuItemStyleIcon
+          Icon={getIcon(objectMetadataItem.icon)}
+          color={getObjectColorWithFallback(objectMetadataItem)}
+        />
         <StyledNameLabel title={objectLabelPlural}>
           <OverflowingTextWithTooltip text={objectLabelPlural} />
         </StyledNameLabel>

@@ -1,5 +1,7 @@
 import { type TimelineActivity } from '@/activities/timeline-activities/types/TimelineActivity';
+import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
+import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import {
   IconCirclePlus,
   IconEditCircle,
@@ -33,5 +35,14 @@ export const EventIconDynamicComponent = ({
 
   const IconComponent = getIcon(linkedObjectMetadataItem?.icon);
 
-  return <IconComponent />;
+  return (
+    <NavigationMenuItemStyleIcon
+      Icon={IconComponent}
+      color={
+        linkedObjectMetadataItem
+          ? getObjectColorWithFallback(linkedObjectMetadataItem)
+          : 'gray'
+      }
+    />
+  );
 };

@@ -1,12 +1,12 @@
-import { isDefined } from 'twenty-shared/utils';
-import { type ReactNode, useContext } from 'react';
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
+import { type ReactNode } from 'react';
 
+import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
+import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { isHiddenSystemField } from '@/object-metadata/utils/isHiddenSystemField';
 import { SettingsItemTypeTag } from '@/settings/components/SettingsItemTypeTag';
-import { TableRow } from '@/ui/layout/table/components/TableRow';
 import {
   SETTINGS_OBJECT_TABLE_ROW_GRID_TEMPLATE_COLUMNS,
   StyledActionTableCell,
@@ -14,8 +14,9 @@ import {
   StyledStickyFirstCell,
 } from '@/settings/data-model/object-details/components/SettingsObjectItemTableRowStyledComponents';
 import { TableCell } from '@/ui/layout/table/components/TableCell';
+import { TableRow } from '@/ui/layout/table/components/TableRow';
 import { useIcons } from 'twenty-ui/display';
-import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
+import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 export type SettingsObjectMetadataItemTableRowProps = {
   action: ReactNode;
@@ -59,11 +60,9 @@ export const SettingsObjectMetadataItemTableRow = ({
   link,
   totalObjectCount,
 }: SettingsObjectMetadataItemTableRowProps) => {
-  const { theme } = useContext(ThemeContext);
   const { t } = useLingui();
 
   const { getIcon } = useIcons();
-  const Icon = getIcon(objectMetadataItem.icon);
 
   return (
     <TableRow
@@ -73,15 +72,10 @@ export const SettingsObjectMetadataItemTableRow = ({
     >
       <StyledStickyFirstCell>
         <StyledNameTableCell>
-          {isDefined(Icon) && (
-            <Icon
-              style={{
-                minWidth: theme.icon.size.md,
-              }}
-              size={theme.icon.size.md}
-              stroke={theme.icon.stroke.sm}
-            />
-          )}
+          <NavigationMenuItemStyleIcon
+            Icon={getIcon(objectMetadataItem.icon)}
+            color={getObjectColorWithFallback(objectMetadataItem)}
+          />
           <StyledNameContainer>
             <StyledNameLabel title={objectMetadataItem.labelPlural}>
               {objectMetadataItem.labelPlural}

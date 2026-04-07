@@ -1,20 +1,22 @@
-import { useContext, useState } from 'react';
 import { styled } from '@linaria/react';
 import { type Node, type NodeProps } from '@xyflow/react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
+import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
 import { isHiddenSystemField } from '@/object-metadata/utils/isHiddenSystemField';
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { ObjectFieldRow } from '@/settings/data-model/graph-overview/components/SettingsDataModelOverviewField';
 import { FieldMetadataType } from '~/generated-metadata/graphql';
 
+import { SettingsItemTypeTag } from '@/settings/components/SettingsItemTypeTag';
 import { ObjectFieldRowWithoutRelation } from '@/settings/data-model/graph-overview/components/SettingsDataModelOverviewFieldWithoutRelation';
 import '@xyflow/react/dist/style.css';
 import { SettingsPath } from 'twenty-shared/types';
-import { isDefined, getSettingsPath } from 'twenty-shared/utils';
+import { getSettingsPath } from 'twenty-shared/utils';
 import { IconChevronDown, IconChevronUp, useIcons } from 'twenty-ui/display';
-import { SettingsItemTypeTag } from '@/settings/components/SettingsItemTypeTag';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 type SettingsDataModelOverviewObjectNode = Node<
@@ -122,8 +124,6 @@ export const SettingsDataModelOverviewObject = ({
     (x) => x.type !== FieldMetadataType.RELATION,
   ).length;
 
-  const Icon = getIcon(objectMetadataItem.icon);
-
   return (
     <StyledNode>
       <StyledHeader>
@@ -134,7 +134,10 @@ export const SettingsDataModelOverviewObject = ({
                 objectNamePlural: objectMetadataItem.namePlural,
               })}
             >
-              {isDefined(Icon) && <Icon size={theme.icon.size.md} />}
+              <NavigationMenuItemStyleIcon
+                Icon={getIcon(objectMetadataItem.icon)}
+                color={getObjectColorWithFallback(objectMetadataItem)}
+              />
               {objectMetadataItem.labelPlural}
             </Link>
           </StyledObjectLinkContainer>

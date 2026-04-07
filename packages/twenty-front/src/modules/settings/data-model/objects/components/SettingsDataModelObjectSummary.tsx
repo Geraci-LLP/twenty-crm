@@ -1,21 +1,30 @@
-import { t } from '@lingui/core/macro';
 import { styled } from '@linaria/react';
+import { t } from '@lingui/core/macro';
 import { useContext } from 'react';
 
+import { NavigationMenuItemStyleIcon } from '@/navigation-menu-item/display/components/NavigationMenuItemStyleIcon';
 import { type EnrichedObjectMetadataItem } from '@/object-metadata/types/EnrichedObjectMetadataItem';
+import { getObjectColorWithFallback } from '@/object-metadata/utils/getObjectColorWithFallback';
+import { SettingsItemTypeTag } from '@/settings/components/SettingsItemTypeTag';
 import {
   IconBox,
   OverflowingTextWithTooltip,
   useIcons,
 } from 'twenty-ui/display';
-import { SettingsItemTypeTag } from '@/settings/components/SettingsItemTypeTag';
 import { ThemeContext, themeCssVariables } from 'twenty-ui/theme-constants';
 
 export type SettingsDataModelObjectPreviewProps = {
   className?: string;
   objectMetadataItems: Pick<
     EnrichedObjectMetadataItem,
-    'icon' | 'labelSingular' | 'labelPlural' | 'isCustom' | 'isRemote'
+    | 'icon'
+    | 'labelSingular'
+    | 'labelPlural'
+    | 'isCustom'
+    | 'isRemote'
+    | 'nameSingular'
+    | 'color'
+    | 'isSystem'
   >[];
   pluralizeLabel?: boolean;
 };
@@ -56,7 +65,14 @@ const StyledSeparator = styled.div`
 type SettingsDataModelObjectPreviewItemProps = {
   objectMetadataItem: Pick<
     EnrichedObjectMetadataItem,
-    'icon' | 'labelSingular' | 'labelPlural' | 'isCustom' | 'isRemote'
+    | 'icon'
+    | 'labelSingular'
+    | 'labelPlural'
+    | 'isCustom'
+    | 'isRemote'
+    | 'nameSingular'
+    | 'color'
+    | 'isSystem'
   >;
   pluralizeLabel: boolean;
   index: number;
@@ -67,9 +83,7 @@ const SettingsDataModelObjectPreviewItem = ({
   pluralizeLabel = true,
   index,
 }: SettingsDataModelObjectPreviewItemProps) => {
-  const { theme } = useContext(ThemeContext);
   const { getIcon } = useIcons();
-  const ObjectIcon = getIcon(objectMetadataItem.icon);
 
   return (
     <>
@@ -77,9 +91,9 @@ const SettingsDataModelObjectPreviewItem = ({
       <StyledObjectPreview key={`${objectMetadataItem.labelSingular}-${index}`}>
         <StyledObjectName>
           <StyledIconContainer>
-            <ObjectIcon
-              size={theme.icon.size.sm}
-              stroke={theme.icon.stroke.md}
+            <NavigationMenuItemStyleIcon
+              Icon={getIcon(objectMetadataItem.icon)}
+              color={getObjectColorWithFallback(objectMetadataItem)}
             />
           </StyledIconContainer>
           <OverflowingTextWithTooltip
