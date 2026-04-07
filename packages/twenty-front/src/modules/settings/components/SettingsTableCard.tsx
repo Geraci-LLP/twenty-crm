@@ -55,7 +55,7 @@ export const SettingsTableCard = ({
             <TableRow
               key={index + item.label}
               gridAutoColumns={gridAutoColumns}
-              height="24px"
+              height={`${themeCssVariables.spacing[7]}px`}
             >
               <TableCell
                 align={labelAlign}

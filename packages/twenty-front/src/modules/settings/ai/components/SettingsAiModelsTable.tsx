@@ -40,7 +40,8 @@ const StyledDeprecatedSuffix = styled.span`
 `;
 
 const hoverCardTooltipClass = css`
-  border-radius: ${themeCssVariables.border.radius.md} !important;
+  border-radius: ${themeCssVariables.border.radius.rounded} !important;
+
   padding: 0 !important;
 `;
 
