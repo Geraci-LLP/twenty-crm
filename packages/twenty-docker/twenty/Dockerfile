@@ -218,9 +218,9 @@ ENV PG_DATABASE_URL=postgres://twenty:twenty@localhost:5432/default \
     SIGN_IN_PREFILLED=true
 
 EXPOSE 2020
-VOLUME ["/data/postgres", "/app/packages/twenty-server/.local-storage"]
+# VOLUME removed for Railway compatibility (use Railway Volumes instead)
 
-LABEL org.opencontainers.image.source=https://github.com/twentyhq/twenty
-LABEL org.opencontainers.image.description="All-in-one Twenty image for local development and SDK usage. Includes PostgreSQL, Redis, server, and worker."
+LABEL org.opencontainers.image.source=https://github.com/Geraci-LLP/twenty-crm
+LABEL org.opencontainers.image.description="Geraci LLP CRM - Custom Twenty CRM fork"
 
 ENTRYPOINT ["/init"]
