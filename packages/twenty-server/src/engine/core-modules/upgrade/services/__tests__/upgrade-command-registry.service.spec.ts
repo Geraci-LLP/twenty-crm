@@ -216,26 +216,42 @@ describe('UpgradeCommandRegistryService', () => {
     ).rejects.toThrow('Duplicate instance command timestamp 1770000000000');
   });
 
-  it('should throw on duplicate class names across kinds within the same version', async () => {
-    @RegisteredInstanceMigration('1.21.0', 1790000000000)
-    class MigrationA1770000000000_Dup implements MigrationInterface {
-      name = 'MigrationA1770000000000_Dup';
-
-      async up(): Promise<void> {}
-      async down(): Promise<void> {}
+  it('should throw on duplicate computed names across kinds', async () => {
+    @RegisteredWorkspaceCommand('1.21.0', 1770000000000)
+    class MigrationA1770000000000_WS {
+      async runOnWorkspace(): Promise<void> {}
     }
 
-    Object.defineProperty(MigrationA1770000000000_Dup, 'name', {
+    Object.defineProperty(MigrationA1770000000000_WS, 'name', {
       value: 'MigrationA1770000000000',
     });
 
-    expect(() =>
+    await expect(
       buildRegistryService([
         new MigrationA1770000000000(),
-        new MigrationA1770000000000_Dup(),
+        new MigrationA1770000000000_WS(),
       ]),
     ).rejects.toThrow(
-      'Duplicate upgrade command class name "MigrationA1770000000000"',
+      'Duplicate upgrade command name "1.21.0_MigrationA1770000000000_1770000000000"',
     );
+  });
+
+  it('should allow same class name with different timestamps across kinds', async () => {
+    @RegisteredWorkspaceCommand('1.21.0', 1790000000000)
+    class MigrationA1770000000000_WS {
+      async runOnWorkspace(): Promise<void> {}
+    }
+
+    Object.defineProperty(MigrationA1770000000000_WS, 'name', {
+      value: 'MigrationA1770000000000',
+    });
+
+    const service = await buildRegistryService([
+      new MigrationA1770000000000(),
+      new MigrationA1770000000000_WS(),
+    ]);
+
+    expect(service.getInstanceCommandsForVersion('1.21.0')).toHaveLength(1);
+    expect(service.getWorkspaceCommandsForVersion('1.21.0')).toHaveLength(1);
   });
 });

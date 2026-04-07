@@ -11,24 +11,27 @@ import {
   UPGRADE_COMMAND_SUPPORTED_VERSIONS,
   type UpgradeCommandVersion,
 } from 'src/engine/constants/upgrade-command-supported-versions.constant';
+import { isDefined } from 'twenty-shared/utils';
 
 type WorkspaceCommand =
   | WorkspaceCommandRunner
   | ActiveOrSuspendedWorkspaceCommandRunner;
 
-type TimestampedInstanceCommand = {
+type RegisteredInstanceCommand = {
+  name: string;
   command: MigrationInterface;
   timestamp: number;
 };
 
-type TimestampedWorkspaceCommand = {
+type RegisteredWorkspaceCommand = {
+  name: string;
   command: WorkspaceCommand;
   timestamp: number;
 };
 
 type VersionBucket = {
-  instanceCommands: TimestampedInstanceCommand[];
-  workspaceCommands: TimestampedWorkspaceCommand[];
+  instanceCommands: RegisteredInstanceCommand[];
+  workspaceCommands: RegisteredWorkspaceCommand[];
 };
 
 @Injectable()
@@ -62,13 +65,18 @@ export class UpgradeCommandRegistryService implements OnModuleInit {
       const instanceMigrationMetadata =
         getRegisteredInstanceMigrationMetadata(metatype);
 
-      if (instanceMigrationMetadata !== undefined) {
+      if (isDefined(instanceMigrationMetadata)) {
         const bucket = this.bucketsByVersion.get(
           instanceMigrationMetadata.version,
         );
 
-        if (bucket) {
+        if (isDefined(bucket)) {
           bucket.instanceCommands.push({
+            name: this.computeCommandName(
+              instanceMigrationMetadata.version,
+              (instance as MigrationInterface).constructor.name,
+              instanceMigrationMetadata.timestamp,
+            ),
             command: instance as MigrationInterface,
             timestamp: instanceMigrationMetadata.timestamp,
           });
@@ -80,13 +88,18 @@ export class UpgradeCommandRegistryService implements OnModuleInit {
       const workspaceCommandMetadata =
         getRegisteredWorkspaceCommandMetadata(metatype);
 
-      if (workspaceCommandMetadata !== undefined) {
+      if (isDefined(workspaceCommandMetadata)) {
         const bucket = this.bucketsByVersion.get(
           workspaceCommandMetadata.version,
         );
 
-        if (bucket) {
+        if (isDefined(bucket)) {
           bucket.workspaceCommands.push({
+            name: this.computeCommandName(
+              workspaceCommandMetadata.version,
+              (instance as WorkspaceCommand).constructor.name,
+              workspaceCommandMetadata.timestamp,
+            ),
             command: instance as WorkspaceCommand,
             timestamp: workspaceCommandMetadata.timestamp,
           });
@@ -103,7 +116,7 @@ export class UpgradeCommandRegistryService implements OnModuleInit {
       );
     }
 
-    this.validateNoClassnameAndTimestampDuplicates();
+    this.validateNoDuplicates();
 
     for (const [version, bucket] of this.bucketsByVersion) {
       const totalCount =
@@ -155,7 +168,15 @@ export class UpgradeCommandRegistryService implements OnModuleInit {
     return result;
   }
 
-  private validateNoClassnameAndTimestampDuplicates(): void {
+  private computeCommandName(
+    version: UpgradeCommandVersion,
+    className: string,
+    timestamp: number,
+  ): string {
+    return `${version}_${className}_${timestamp}`;
+  }
+
+  private validateNoDuplicates(): void {
     for (const [version, bucket] of this.bucketsByVersion) {
       this.validateNoTimestampDuplicatesWithinKind(
         version,
@@ -168,25 +189,21 @@ export class UpgradeCommandRegistryService implements OnModuleInit {
         bucket.workspaceCommands,
       );
 
-      const seenClassNames = new Set<string>();
+      const seenNames = new Set<string>();
 
-      const allClassNames = [
-        ...bucket.instanceCommands.map(
-          (entry) => entry.command.constructor.name,
-        ),
-        ...bucket.workspaceCommands.map(
-          (entry) => entry.command.constructor.name,
-        ),
+      const allNames = [
+        ...bucket.instanceCommands.map((entry) => entry.name),
+        ...bucket.workspaceCommands.map((entry) => entry.name),
       ];
 
-      for (const className of allClassNames) {
-        if (seenClassNames.has(className)) {
+      for (const name of allNames) {
+        if (seenNames.has(name)) {
           throw new Error(
-            `Duplicate upgrade command class name "${className}" in version ${version}`,
+            `Duplicate upgrade command name "${name}" in version ${version}`,
           );
         }
 
-        seenClassNames.add(className);
+        seenNames.add(name);
       }
     }
   }
@@ -194,17 +211,14 @@ export class UpgradeCommandRegistryService implements OnModuleInit {
   private validateNoTimestampDuplicatesWithinKind(
     version: UpgradeCommandVersion,
     kind: 'instance' | 'workspace',
-    entries: {
-      command: { constructor: { name: string } };
-      timestamp: number;
-    }[],
+    entries: RegisteredInstanceCommand[] | RegisteredWorkspaceCommand[],
   ): void {
     const seenTimestamps = new Set<number>();
 
     for (const entry of entries) {
       if (seenTimestamps.has(entry.timestamp)) {
         throw new Error(
-          `Duplicate ${kind} command timestamp ${entry.timestamp} in version ${version} (class: ${entry.command.constructor.name})`,
+          `Duplicate ${kind} command timestamp ${entry.timestamp} in version ${version} (command: ${entry.name})`,
         );
       }
 
