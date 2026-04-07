@@ -29,6 +29,12 @@ const StyledEditableTitlePrefix = styled.div`
   gap: ${themeCssVariables.spacing[1]};
 `;
 
+const StyledBreadcrumbPrefixObjectIcon = styled.div`
+  display: flex;
+  flex-shrink: 0;
+  opacity: 0.64;
+`;
+
 const StyledTitle = styled.div`
   max-width: 100%;
   overflow: hidden;
@@ -86,7 +92,9 @@ export const ObjectRecordShowPageBreadcrumb = ({
           navigateToIndexView();
         }}
       >
-        <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
+        <StyledBreadcrumbPrefixObjectIcon>
+          <ObjectMetadataIcon objectMetadataItem={objectMetadataItem} />
+        </StyledBreadcrumbPrefixObjectIcon>
         {objectLabel}
         <span>{' / '}</span>
       </StyledEditableTitlePrefix>
