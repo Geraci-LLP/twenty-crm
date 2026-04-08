@@ -192,9 +192,7 @@ export const CampaignEditor = ({
           type="text"
           placeholder="Email subject line"
           value={value.subject}
-          onChange={(event) =>
-            handleFieldChange('subject', event.target.value)
-          }
+          onChange={(event) => handleFieldChange('subject', event.target.value)}
           readOnly={readOnly}
         />
       </StyledFieldGroup>
@@ -216,16 +214,14 @@ export const CampaignEditor = ({
                 }
               }}
             >
-              {CAMPAIGN_PERSONALIZATION_TOKENS.map(
-                (personalizationToken) => (
-                  <option
-                    key={personalizationToken.value}
-                    value={personalizationToken.value}
-                  >
-                    {personalizationToken.label}
-                  </option>
-                ),
-              )}
+              {CAMPAIGN_PERSONALIZATION_TOKENS.map((personalizationToken) => (
+                <option
+                  key={personalizationToken.value}
+                  value={personalizationToken.value}
+                >
+                  {personalizationToken.label}
+                </option>
+              ))}
             </StyledTokenSelect>
             <StyledInsertButton onClick={handleInsertToken}>
               Insert Token
