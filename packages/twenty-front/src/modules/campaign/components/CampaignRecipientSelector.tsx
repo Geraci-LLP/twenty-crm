@@ -50,7 +50,9 @@ const StyledModeButton = styled.button<{ isActive: boolean }>`
         : themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.sm};
   color: ${({ isActive }) =>
-    isActive ? '#ffffff' : themeCssVariables.font.color.primary};
+    isActive
+      ? themeCssVariables.font.color.inverted
+      : themeCssVariables.font.color.primary};
   cursor: pointer;
   font-family: ${themeCssVariables.font.family};
   font-size: ${themeCssVariables.font.size.sm};

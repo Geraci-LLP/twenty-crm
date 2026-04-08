@@ -139,9 +139,10 @@ export class SendGridDriverService implements EmailDriverInterface {
     return [{ email: String(recipients) }];
   }
 
-  private normalizeFrom(
-    from: SendMailOptions['from'],
-  ): { email: string; name?: string } {
+  private normalizeFrom(from: SendMailOptions['from']): {
+    email: string;
+    name?: string;
+  } {
     if (!from) {
       return { email: '' };
     }

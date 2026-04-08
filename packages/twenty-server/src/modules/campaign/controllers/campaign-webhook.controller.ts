@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Logger,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 
 import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 import { PublicEndpointGuard } from 'src/engine/guards/public-endpoint.guard';
@@ -49,9 +43,7 @@ export class CampaignWebhookController {
       try {
         await this.processEvent(event);
       } catch (error) {
-        this.logger.error(
-          `Failed to process SendGrid event: ${error}`,
-        );
+        this.logger.error(`Failed to process SendGrid event: ${error}`);
       }
     }
 

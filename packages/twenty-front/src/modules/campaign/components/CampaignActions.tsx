@@ -30,7 +30,7 @@ const StyledActionButton = styled.button<{
   border-radius: ${themeCssVariables.border.radius.sm};
   color: ${({ variant }) =>
     variant === 'primary' || variant === 'danger'
-      ? '#ffffff'
+      ? themeCssVariables.font.color.inverted
       : themeCssVariables.font.color.primary};
   cursor: pointer;
   font-family: ${themeCssVariables.font.family};
@@ -52,7 +52,7 @@ const StyledActionButton = styled.button<{
 `;
 
 const StyledOverlay = styled.div`
-  background: rgba(0, 0, 0, 0.4);
+  background: ${themeCssVariables.background.overlaySecondary};
   bottom: 0;
   left: 0;
   position: fixed;
@@ -225,10 +225,7 @@ export const CampaignActions = ({
               >
                 Cancel
               </StyledActionButton>
-              <StyledActionButton
-                variant="danger"
-                onClick={handleConfirmSend}
-              >
+              <StyledActionButton variant="danger" onClick={handleConfirmSend}>
                 Confirm Send
               </StyledActionButton>
             </StyledModalActions>
