@@ -11,6 +11,11 @@ const isExternal = (id: string): boolean => {
     return false;
   }
 
+  // Absolute paths (e.g. Windows: C:\..., Unix: /...)
+  if (path.isAbsolute(id)) {
+    return false;
+  }
+
   return true;
 };
 
