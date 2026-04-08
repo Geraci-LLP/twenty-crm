@@ -3,9 +3,9 @@
 
 FROM ghcr.io/geraci-llp/twenty-crm:latest AS base
 
-FROM node:24-slim
+FROM node:24-alpine
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl jq postgresql-client && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl jq postgresql-client
 
 WORKDIR /app/packages/twenty-server
 
