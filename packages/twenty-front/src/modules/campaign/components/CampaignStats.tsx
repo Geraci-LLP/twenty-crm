@@ -102,9 +102,7 @@ export const CampaignStats = ({ stats }: CampaignStatsProps) => {
         {metricCards.map((metric) => (
           <StyledCard key={metric.label}>
             <StyledCardLabel>{metric.label}</StyledCardLabel>
-            <StyledCardValue>
-              {metric.value.toLocaleString()}
-            </StyledCardValue>
+            <StyledCardValue>{metric.value.toLocaleString()}</StyledCardValue>
           </StyledCard>
         ))}
       </StyledCardsGrid>
