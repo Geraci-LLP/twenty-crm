@@ -7,6 +7,7 @@ import { type FlatViewField } from 'src/engine/metadata-modules/flat-view-field/
 import { type AllStandardObjectName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-name.type';
 import { computeStandardAttachmentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-attachment-view-fields.util';
 import { computeStandardBlocklistViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-blocklist-view-fields.util';
+import { computeStandardCampaignViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-campaign-view-fields.util';
 import { computeStandardCalendarChannelEventAssociationViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-channel-event-association-view-fields.util';
 import { computeStandardCalendarChannelViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-channel-view-fields.util';
 import { computeStandardCalendarEventParticipantViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-event-participant-view-fields.util';
@@ -44,6 +45,7 @@ type StandardViewFieldBuilder<P extends AllStandardObjectName> = (
 const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   attachment: computeStandardAttachmentViewFields,
   blocklist: computeStandardBlocklistViewFields,
+  campaign: computeStandardCampaignViewFields,
   calendarChannel: computeStandardCalendarChannelViewFields,
   calendarChannelEventAssociation:
     computeStandardCalendarChannelEventAssociationViewFields,

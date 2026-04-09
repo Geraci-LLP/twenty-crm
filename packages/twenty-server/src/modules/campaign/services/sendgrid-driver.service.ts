@@ -8,14 +8,14 @@ import { type EmailDriverInterface } from 'src/engine/core-modules/email/drivers
 export type SendGridPersonalization = {
   to: string;
   substitutions?: Record<string, string>;
+  customArgs?: Record<string, string>;
 };
 
 export type SendGridBatchOptions = {
   subject: string;
   htmlContent: string;
   from: { email: string; name: string };
-  recipientIds: string[];
-  personalizations?: SendGridPersonalization[];
+  personalizations: SendGridPersonalization[];
 };
 
 @Injectable()
@@ -57,17 +57,19 @@ export class SendGridDriverService implements EmailDriverInterface {
 
   // Batch sending with personalizations (up to 1000 per API call)
   async sendBatch(options: SendGridBatchOptions): Promise<void> {
-    const personalizations =
-      options.personalizations?.map((personalization) => ({
-        to: [{ email: personalization.to }],
-        substitutions: personalization.substitutions,
-      })) ?? [];
-
-    if (personalizations.length === 0) {
+    if (options.personalizations.length === 0) {
       this.logger.warn('No personalizations provided for batch send');
 
       return;
     }
+
+    const personalizations = options.personalizations.map(
+      (personalization) => ({
+        to: [{ email: personalization.to }],
+        substitutions: personalization.substitutions,
+        custom_args: personalization.customArgs,
+      }),
+    );
 
     const payload = {
       personalizations,

@@ -5,6 +5,9 @@ import { type FlatIndexMetadata } from 'src/engine/metadata-modules/flat-index-m
 import { type AllStandardObjectName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-name.type';
 import { buildAttachmentStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-attachment-standard-flat-index-metadata.util';
 import { buildBlocklistStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-blocklist-standard-flat-index-metadata.util';
+import { buildCampaignStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-campaign-standard-flat-index-metadata.util';
+import { buildCampaignRecipientStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-campaign-recipient-standard-flat-index-metadata.util';
+import { buildCampaignTemplateStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-campaign-template-standard-flat-index-metadata.util';
 import { buildCalendarChannelEventAssociationStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-calendar-channel-event-association-standard-flat-index-metadata.util';
 import { buildCalendarChannelStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-calendar-channel-standard-flat-index-metadata.util';
 import { buildCalendarEventParticipantStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-calendar-event-participant-standard-flat-index-metadata.util';
@@ -39,6 +42,9 @@ type StandardIndexBuilder<P extends AllStandardObjectName> = (
 const STANDARD_FLAT_INDEX_METADATA_BUILDERS_BY_OBJECT_NAME = {
   attachment: buildAttachmentStandardFlatIndexMetadatas,
   blocklist: buildBlocklistStandardFlatIndexMetadatas,
+  campaign: buildCampaignStandardFlatIndexMetadatas,
+  campaignRecipient: buildCampaignRecipientStandardFlatIndexMetadatas,
+  campaignTemplate: buildCampaignTemplateStandardFlatIndexMetadatas,
   calendarChannelEventAssociation:
     buildCalendarChannelEventAssociationStandardFlatIndexMetadatas,
   calendarChannel: buildCalendarChannelStandardFlatIndexMetadatas,

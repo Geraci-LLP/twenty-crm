@@ -1,0 +1,285 @@
+import { msg } from '@lingui/core/macro';
+import {
+  DateDisplayFormat,
+  FieldMetadataType,
+  RelationOnDeleteAction,
+  RelationType,
+} from 'twenty-shared/types';
+
+import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
+import { type AllStandardObjectFieldName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-field-name.type';
+import { i18nLabel } from 'src/engine/workspace-manager/twenty-standard-application/utils/i18n-label.util';
+import {
+  type CreateStandardFieldArgs,
+  createStandardFieldFlatMetadata,
+} from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
+import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
+
+export const buildCampaignRecipientStandardFlatFieldMetadatas = ({
+  now,
+  objectName,
+  workspaceId,
+  standardObjectMetadataRelatedEntityIds,
+  dependencyFlatEntityMaps,
+  twentyStandardApplicationId,
+}: Omit<
+  CreateStandardFieldArgs<'campaignRecipient', FieldMetadataType>,
+  'context'
+>): Record<
+  AllStandardObjectFieldName<'campaignRecipient'>,
+  FlatFieldMetadata
+> => ({
+  // Base fields
+  id: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'id',
+      type: FieldMetadataType.UUID,
+      label: i18nLabel(msg`Id`),
+      description: i18nLabel(msg`Id`),
+      icon: 'Icon123',
+      isSystem: true,
+      isNullable: false,
+      isUIReadOnly: true,
+      defaultValue: 'uuid',
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  createdAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'createdAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Creation date`),
+      description: i18nLabel(msg`Creation date`),
+      icon: 'IconCalendar',
+      isSystem: true,
+      isNullable: false,
+      isUIReadOnly: true,
+      defaultValue: 'now',
+      settings: {
+        displayFormat: DateDisplayFormat.RELATIVE,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  updatedAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'updatedAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Last update`),
+      description: i18nLabel(msg`Last time the record was changed`),
+      icon: 'IconCalendarClock',
+      isSystem: true,
+      isNullable: false,
+      isUIReadOnly: true,
+      defaultValue: 'now',
+      settings: {
+        displayFormat: DateDisplayFormat.RELATIVE,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  deletedAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'deletedAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Deleted at`),
+      description: i18nLabel(msg`Date when the record was deleted`),
+      icon: 'IconCalendarMinus',
+      isSystem: true,
+      isNullable: true,
+      isUIReadOnly: true,
+      settings: {
+        displayFormat: DateDisplayFormat.RELATIVE,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  // CampaignRecipient-specific fields
+  status: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'status',
+      type: FieldMetadataType.SELECT,
+      label: i18nLabel(msg`Status`),
+      description: i18nLabel(msg`Recipient delivery status`),
+      icon: 'IconStatusChange',
+      isNullable: false,
+      defaultValue: "'PENDING'",
+      options: [
+        {
+          id: 'bc1a0001-0001-0001-0001-000000000001',
+          value: 'PENDING',
+          label: i18nLabel(msg`Pending`),
+          position: 0,
+          color: 'sky',
+        },
+        {
+          id: 'bc1a0001-0001-0001-0001-000000000002',
+          value: 'SENT',
+          label: i18nLabel(msg`Sent`),
+          position: 1,
+          color: 'blue',
+        },
+        {
+          id: 'bc1a0001-0001-0001-0001-000000000003',
+          value: 'DELIVERED',
+          label: i18nLabel(msg`Delivered`),
+          position: 2,
+          color: 'green',
+        },
+        {
+          id: 'bc1a0001-0001-0001-0001-000000000004',
+          value: 'OPENED',
+          label: i18nLabel(msg`Opened`),
+          position: 3,
+          color: 'turquoise',
+        },
+        {
+          id: 'bc1a0001-0001-0001-0001-000000000005',
+          value: 'CLICKED',
+          label: i18nLabel(msg`Clicked`),
+          position: 4,
+          color: 'purple',
+        },
+        {
+          id: 'bc1a0001-0001-0001-0001-000000000006',
+          value: 'BOUNCED',
+          label: i18nLabel(msg`Bounced`),
+          position: 5,
+          color: 'red',
+        },
+        {
+          id: 'bc1a0001-0001-0001-0001-000000000007',
+          value: 'UNSUBSCRIBED',
+          label: i18nLabel(msg`Unsubscribed`),
+          position: 6,
+          color: 'gray',
+        },
+      ],
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  sentAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'sentAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Sent At`),
+      description: i18nLabel(msg`When the email was sent`),
+      icon: 'IconSend',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  openedAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'openedAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Opened At`),
+      description: i18nLabel(msg`When the email was first opened`),
+      icon: 'IconEye',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  clickedAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'clickedAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Clicked At`),
+      description: i18nLabel(msg`When a link was first clicked`),
+      icon: 'IconClick',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  // Relation fields
+  campaign: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'campaign',
+      label: i18nLabel(msg`Campaign`),
+      description: i18nLabel(msg`Related campaign`),
+      icon: 'IconMail',
+      isNullable: false,
+      targetObjectName: 'campaign',
+      targetFieldName: 'campaignRecipients',
+      settings: {
+        relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.CASCADE,
+        joinColumnName: 'campaignId',
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  person: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'person',
+      label: i18nLabel(msg`Person`),
+      description: i18nLabel(msg`Related person`),
+      icon: 'IconUser',
+      isNullable: true,
+      targetObjectName: 'person',
+      targetFieldName: 'campaignRecipients',
+      settings: {
+        relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.SET_NULL,
+        joinColumnName: 'personId',
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+});

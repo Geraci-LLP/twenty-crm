@@ -7,6 +7,9 @@ import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-m
 import { type AllStandardObjectName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-name.type';
 import { buildAttachmentStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util';
 import { buildBlocklistStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util';
+import { buildCampaignStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util';
+import { buildCampaignRecipientStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util';
+import { buildCampaignTemplateStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util';
 import { buildCalendarChannelEventAssociationStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util';
 import { buildCalendarChannelStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util';
 import { buildCalendarEventParticipantStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util';
@@ -44,6 +47,9 @@ type StandardFieldBuilder<P extends AllStandardObjectName> = (
 const STANDARD_FLAT_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   attachment: buildAttachmentStandardFlatFieldMetadatas,
   blocklist: buildBlocklistStandardFlatFieldMetadatas,
+  campaign: buildCampaignStandardFlatFieldMetadatas,
+  campaignRecipient: buildCampaignRecipientStandardFlatFieldMetadatas,
+  campaignTemplate: buildCampaignTemplateStandardFlatFieldMetadatas,
   calendarChannel: buildCalendarChannelStandardFlatFieldMetadatas,
   calendarChannelEventAssociation:
     buildCalendarChannelEventAssociationStandardFlatFieldMetadatas,

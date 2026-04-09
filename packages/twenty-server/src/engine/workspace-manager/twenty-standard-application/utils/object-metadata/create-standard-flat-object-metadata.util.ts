@@ -36,6 +36,92 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  campaign: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'campaign'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'campaign',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.campaign.universalIdentifier,
+        nameSingular: 'campaign',
+        namePlural: 'campaigns',
+        labelSingular: i18nLabel(msg`Campaign`),
+        labelPlural: i18nLabel(msg`Campaigns`),
+        description: i18nLabel(msg`An email campaign`),
+        icon: 'IconMail',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  campaignRecipient: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'campaignRecipient'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'campaignRecipient',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.campaignRecipient.universalIdentifier,
+        nameSingular: 'campaignRecipient',
+        namePlural: 'campaignRecipients',
+        labelSingular: i18nLabel(msg`Campaign Recipient`),
+        labelPlural: i18nLabel(msg`Campaign Recipients`),
+        description: i18nLabel(msg`A campaign recipient`),
+        icon: 'IconUserCircle',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'id',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  campaignTemplate: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'campaignTemplate'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'campaignTemplate',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.campaignTemplate.universalIdentifier,
+        nameSingular: 'campaignTemplate',
+        namePlural: 'campaignTemplates',
+        labelSingular: i18nLabel(msg`Campaign Template`),
+        labelPlural: i18nLabel(msg`Campaign Templates`),
+        description: i18nLabel(msg`An email campaign template`),
+        icon: 'IconTemplate',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   blocklist: ({
     now,
     workspaceId,

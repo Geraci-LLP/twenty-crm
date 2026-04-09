@@ -544,6 +544,28 @@ export const buildPersonStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  campaignRecipients: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'campaignRecipients',
+      label: i18nLabel(msg`Campaign Recipients`),
+      description: i18nLabel(msg`Campaign recipients linked to the person`),
+      icon: 'IconMail',
+      isNullable: true,
+      targetObjectName: 'campaignRecipient',
+      targetFieldName: 'person',
+      settings: {
+        relationType: RelationType.ONE_TO_MANY,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   searchVector: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
