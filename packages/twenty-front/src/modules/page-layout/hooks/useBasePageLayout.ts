@@ -1,3 +1,7 @@
+import { DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultCampaignRecordPageLayout';
+import { DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCampaignRecordPageLayoutId';
+import { DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultCampaignTemplateRecordPageLayout';
+import { DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCampaignTemplateRecordPageLayoutId';
 import { DEFAULT_COMPANY_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultCompanyRecordPageLayout';
 import { DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCompanyRecordPageLayoutId';
 import { DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultMessageThreadRecordPageLayout';
@@ -28,6 +32,10 @@ import { FindOnePageLayoutDocument } from '~/generated-metadata/graphql';
 
 const getDefaultLayoutById = (layoutId: string): PageLayout => {
   switch (layoutId) {
+    case DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID:
+      return DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT;
+    case DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID:
+      return DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT;
     case DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID:
       return DEFAULT_COMPANY_RECORD_PAGE_LAYOUT;
     case DEFAULT_PERSON_RECORD_PAGE_LAYOUT_ID:
@@ -54,6 +62,8 @@ const getDefaultLayoutById = (layoutId: string): PageLayout => {
 
 const isDefaultLayoutId = (layoutId: string): boolean =>
   layoutId === DEFAULT_RECORD_PAGE_LAYOUT_ID ||
+  layoutId === DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID ||
+  layoutId === DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_PERSON_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_OPPORTUNITY_RECORD_PAGE_LAYOUT_ID ||
