@@ -7,6 +7,8 @@ import {
 } from 'twenty-shared/types';
 
 import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-metadata/types/flat-field-metadata.type';
+import { getTsVectorColumnExpressionFromFields } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
+import { SEARCH_FIELDS_FOR_CAMPAIGN_RECIPIENT } from 'src/modules/campaign/standard-objects/campaign-recipient.workspace-entity';
 import { type AllStandardObjectFieldName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-field-name.type';
 import { i18nLabel } from 'src/engine/workspace-manager/twenty-standard-application/utils/i18n-label.util';
 import {
@@ -115,6 +117,74 @@ export const buildCampaignRecipientStandardFlatFieldMetadatas = ({
     now,
   }),
 
+  // System fields
+  position: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'position',
+      type: FieldMetadataType.POSITION,
+      label: i18nLabel(msg`Position`),
+      description: i18nLabel(msg`Campaign recipient record position`),
+      icon: 'IconHierarchy2',
+      isSystem: true,
+      isNullable: false,
+      defaultValue: 0,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  createdBy: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'createdBy',
+      type: FieldMetadataType.ACTOR,
+      label: i18nLabel(msg`Created by`),
+      description: i18nLabel(msg`The creator of the record`),
+      icon: 'IconCreativeCommonsSa',
+      isSystem: true,
+      isUIReadOnly: true,
+      isNullable: false,
+      defaultValue: {
+        source: "'MANUAL'",
+        name: "'System'",
+        workspaceMemberId: null,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  updatedBy: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'updatedBy',
+      type: FieldMetadataType.ACTOR,
+      label: i18nLabel(msg`Updated by`),
+      description: i18nLabel(
+        msg`The workspace member who last updated the record`,
+      ),
+      icon: 'IconUserCircle',
+      isSystem: true,
+      isUIReadOnly: true,
+      isNullable: false,
+      defaultValue: {
+        source: "'MANUAL'",
+        name: "'System'",
+        workspaceMemberId: null,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
   // CampaignRecipient-specific fields
   status: createStandardFieldFlatMetadata({
     objectName,
@@ -129,49 +199,49 @@ export const buildCampaignRecipientStandardFlatFieldMetadatas = ({
       defaultValue: "'PENDING'",
       options: [
         {
-          id: 'bc1a0001-0001-0001-0001-000000000001',
+          id: 'd69e04af-217c-41e6-b070-f4c2d45027d1',
           value: 'PENDING',
           label: i18nLabel(msg`Pending`),
           position: 0,
           color: 'sky',
         },
         {
-          id: 'bc1a0001-0001-0001-0001-000000000002',
+          id: '53b7efc9-7be6-4818-af2d-44c538977d29',
           value: 'SENT',
           label: i18nLabel(msg`Sent`),
           position: 1,
           color: 'blue',
         },
         {
-          id: 'bc1a0001-0001-0001-0001-000000000003',
+          id: 'd071fbd6-4b6c-4e13-8d2b-e984c9e05e74',
           value: 'DELIVERED',
           label: i18nLabel(msg`Delivered`),
           position: 2,
           color: 'green',
         },
         {
-          id: 'bc1a0001-0001-0001-0001-000000000004',
+          id: 'dde9f1d3-dd5d-4b54-951f-739e1147cd84',
           value: 'OPENED',
           label: i18nLabel(msg`Opened`),
           position: 3,
           color: 'turquoise',
         },
         {
-          id: 'bc1a0001-0001-0001-0001-000000000005',
+          id: '706d43df-daf6-482c-b7f7-08ec630053aa',
           value: 'CLICKED',
           label: i18nLabel(msg`Clicked`),
           position: 4,
           color: 'purple',
         },
         {
-          id: 'bc1a0001-0001-0001-0001-000000000006',
+          id: '51917fd9-e7bf-4e72-8fbb-09fe1ba4036a',
           value: 'BOUNCED',
           label: i18nLabel(msg`Bounced`),
           position: 5,
           color: 'red',
         },
         {
-          id: 'bc1a0001-0001-0001-0001-000000000007',
+          id: '5e27bb13-e633-49fd-b930-dcc71c91161f',
           value: 'UNSUBSCRIBED',
           label: i18nLabel(msg`Unsubscribed`),
           position: 6,
@@ -226,6 +296,30 @@ export const buildCampaignRecipientStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`When a link was first clicked`),
       icon: 'IconClick',
       isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  searchVector: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'searchVector',
+      type: FieldMetadataType.TS_VECTOR,
+      label: i18nLabel(msg`Search vector`),
+      description: i18nLabel(msg`Field used for full-text search`),
+      icon: 'IconUser',
+      isSystem: true,
+      isNullable: true,
+      settings: {
+        generatedType: 'STORED',
+        asExpression: getTsVectorColumnExpressionFromFields(
+          SEARCH_FIELDS_FOR_CAMPAIGN_RECIPIENT,
+        ),
+      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

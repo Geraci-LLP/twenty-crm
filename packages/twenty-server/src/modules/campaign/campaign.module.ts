@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { CampaignScheduleSendCronCommand } from 'src/modules/campaign/crons/commands/campaign-schedule-send.cron.command';
 import { CampaignScheduleSendCronJob } from 'src/modules/campaign/crons/jobs/campaign-schedule-send.cron.job';
 import { CampaignWebhookController } from 'src/modules/campaign/controllers/campaign-webhook.controller';
@@ -11,6 +13,7 @@ import { CampaignTemplateService } from 'src/modules/campaign/services/campaign-
 import { SendGridDriverService } from 'src/modules/campaign/services/sendgrid-driver.service';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([WorkspaceEntity])],
   controllers: [CampaignWebhookController],
   providers: [
     CampaignExecutorService,

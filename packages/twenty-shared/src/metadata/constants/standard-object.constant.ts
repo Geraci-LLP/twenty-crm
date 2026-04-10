@@ -3526,6 +3526,15 @@ export const STANDARD_OBJECTS = {
       deletedAt: {
         universalIdentifier: '942d1151-a6df-41c1-b967-111b5a0e268f',
       },
+      position: {
+        universalIdentifier: 'f8689674-0666-4cb5-b53c-f7fe86241149',
+      },
+      createdBy: {
+        universalIdentifier: 'b3b21aea-e21a-4dad-b258-e5b0b5c9e9e5',
+      },
+      updatedBy: {
+        universalIdentifier: '337a27f2-a71a-4df4-accf-36569731ab25',
+      },
       name: { universalIdentifier: 'c65727b4-afb8-4e2f-8fe0-84e86eb46ffd' },
       subject: { universalIdentifier: 'e07e5f4a-c4b9-4539-967f-029157c7ab3d' },
       bodyHtml: { universalIdentifier: '90e1070d-1f59-4a14-bd45-0a25e913d47d' },
@@ -3615,6 +3624,15 @@ export const STANDARD_OBJECTS = {
       deletedAt: {
         universalIdentifier: '892a509f-ae42-490f-8119-5df5a905d9b7',
       },
+      position: {
+        universalIdentifier: '60600c01-b0f1-4cb9-9c88-ac98524dae69',
+      },
+      createdBy: {
+        universalIdentifier: '3bd76c41-98c8-4286-bc9d-816216749b94',
+      },
+      updatedBy: {
+        universalIdentifier: 'c456ee7b-3ad7-4444-ad9b-abfc6d351b10',
+      },
       status: { universalIdentifier: '553d9d48-e781-4968-90d5-fd8a0a749442' },
       sentAt: { universalIdentifier: 'e2e7257c-28ab-43de-a195-4f4623c78001' },
       openedAt: { universalIdentifier: 'b31ec792-ccff-4fc4-bf8d-eb0f76f4c051' },
@@ -3623,6 +3641,9 @@ export const STANDARD_OBJECTS = {
       },
       campaign: { universalIdentifier: '1e0ad613-93a3-4c3e-9250-217d9995ca7d' },
       person: { universalIdentifier: '802d5fe5-0f01-407b-a041-cdfbb7d50e20' },
+      searchVector: {
+        universalIdentifier: '9efa037b-92f8-400d-b8f0-d4b894a14c2d',
+      },
     },
     indexes: {
       campaignIdIndex: {
@@ -3633,6 +3654,25 @@ export const STANDARD_OBJECTS = {
       },
       statusIndex: {
         universalIdentifier: '41636c1b-1ee6-4390-bac0-965725279e64',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'e1f26e80-238e-4a35-905f-191784d2e986',
+      },
+    },
+    views: {
+      campaignRecipientRecordPageFields: {
+        universalIdentifier: 'f4c3a120-8e4d-4b91-a6f7-3c8e5d9b2a01',
+        viewFields: {
+          status: {
+            universalIdentifier: 'b8d2e4f6-1a3c-5d7e-9f0b-2c4d6e8a0b1c',
+          },
+          person: {
+            universalIdentifier: 'c9e3f5a7-2b4d-6e8f-0a1c-3d5e7f9b1c2d',
+          },
+          sentAt: {
+            universalIdentifier: 'd0f4a6b8-3c5e-7f9a-1b2d-4e6f8a0c2d3e',
+          },
+        },
       },
     },
   },
@@ -3648,6 +3688,15 @@ export const STANDARD_OBJECTS = {
       },
       deletedAt: {
         universalIdentifier: '0fcbbdf6-2880-42c9-9804-3956d67c867d',
+      },
+      position: {
+        universalIdentifier: '9f2c0c1f-7e75-4f41-89f5-1fc8d15903fe',
+      },
+      createdBy: {
+        universalIdentifier: 'e0153c77-a9e3-4aca-97e0-b49dae7c539d',
+      },
+      updatedBy: {
+        universalIdentifier: '82a08fa1-3a57-4d76-a51d-b0f7ccdd01f6',
       },
       name: { universalIdentifier: 'ccd25c91-5fc0-4636-a402-c890293aa0f2' },
       subject: { universalIdentifier: 'dc533313-4b94-4494-bf08-cad55d871ca5' },

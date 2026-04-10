@@ -3,9 +3,9 @@ import { Args, Mutation } from '@nestjs/graphql';
 
 import { AuthGraphqlApiExceptionFilter } from 'src/engine/core-modules/auth/filters/auth-graphql-api-exception.filter';
 import { AuthWorkspace } from 'src/engine/decorators/auth/auth-workspace.decorator';
-import { MetadataResolver } from 'src/engine/metadata-modules/metadata-resolver.decorator';
-import { ResolverValidationPipe } from 'src/engine/metadata-modules/resolver-validation.pipe';
-import { type WorkspaceEntity } from 'src/engine/twenty-orm/workspace.entity';
+import { MetadataResolver } from 'src/engine/api/graphql/graphql-config/decorators/metadata-resolver.decorator';
+import { ResolverValidationPipe } from 'src/engine/core-modules/graphql/pipes/resolver-validation.pipe';
+import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 import { WorkspaceAuthGuard } from 'src/engine/guards/workspace-auth.guard';
 import { CampaignActionOutputDTO } from 'src/modules/campaign/dtos/campaign-action-output.dto';

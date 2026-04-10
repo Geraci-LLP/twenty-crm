@@ -2,6 +2,7 @@ export type CampaignStatus =
   | 'DRAFT'
   | 'SCHEDULED'
   | 'SENDING'
+  | 'PAUSED'
   | 'SENT'
   | 'FAILED';
 

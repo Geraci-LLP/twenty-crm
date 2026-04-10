@@ -56,12 +56,6 @@ export class CampaignExecutorService {
       where: { id: campaignId },
     });
 
-    // Mark campaign as sending
-    await campaignRepository.update(
-      { id: campaignId },
-      { status: CampaignStatus.SENDING },
-    );
-
     // Fetch pending recipients with their person relation to get email addresses
     const pendingRecipients = await recipientRepository.find({
       where: {
@@ -80,6 +74,19 @@ export class CampaignExecutorService {
 
     // Process recipients in batches
     for (let i = 0; i < pendingRecipients.length; i += BATCH_SIZE) {
+      // Check if campaign was paused between batches
+      const freshCampaign = await campaignRepository.findOne({
+        where: { id: campaignId },
+        select: ['status'],
+      });
+
+      if (freshCampaign?.status === CampaignStatus.PAUSED) {
+        this.logger.log(
+          `Campaign "${campaign.name}" paused after ${sentCount} sent`,
+        );
+        break;
+      }
+
       const batch = pendingRecipients.slice(i, i + BATCH_SIZE);
 
       // Build personalizations from recipient person data
@@ -149,18 +156,28 @@ export class CampaignExecutorService {
       }
     }
 
-    // Update campaign stats
+    // Re-check status before marking complete (may have been paused)
+    const finalCampaign = await campaignRepository.findOne({
+      where: { id: campaignId },
+      select: ['status'],
+    });
+
+    const finalStatus =
+      finalCampaign?.status === CampaignStatus.PAUSED
+        ? CampaignStatus.PAUSED
+        : CampaignStatus.SENT;
+
     await campaignRepository.update(
       { id: campaignId },
       {
-        status: CampaignStatus.SENT,
+        status: finalStatus,
         sentCount,
         recipientCount: pendingRecipients.length,
       },
     );
 
     this.logger.log(
-      `Campaign "${campaign.name}" completed: ${sentCount} sent, ${skippedCount} skipped (no email)`,
+      `Campaign "${campaign.name}" ${finalStatus === CampaignStatus.PAUSED ? 'paused' : 'completed'}: ${sentCount} sent, ${skippedCount} skipped (no email)`,
     );
   }
 }
