@@ -34,6 +34,7 @@ export const WorkflowDiagramStepNodeIcon = ({
         case 'CODE':
         case 'HTTP_REQUEST':
         case 'SEND_EMAIL':
+        case 'SEND_CAMPAIGN_EMAIL':
         case 'DRAFT_EMAIL': {
           return (
             <Icon

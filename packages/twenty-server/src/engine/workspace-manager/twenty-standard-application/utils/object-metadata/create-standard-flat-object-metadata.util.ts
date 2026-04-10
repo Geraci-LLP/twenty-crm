@@ -122,6 +122,65 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  dripCampaign: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'dripCampaign'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'dripCampaign',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.dripCampaign.universalIdentifier,
+        nameSingular: 'dripCampaign',
+        namePlural: 'dripCampaigns',
+        labelSingular: i18nLabel(msg`Drip Campaign`),
+        labelPlural: i18nLabel(msg`Drip Campaigns`),
+        description: i18nLabel(msg`An automated drip email campaign`),
+        icon: 'IconRepeat',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  dripEnrollment: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'dripEnrollment'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'dripEnrollment',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.dripEnrollment.universalIdentifier,
+        nameSingular: 'dripEnrollment',
+        namePlural: 'dripEnrollments',
+        labelSingular: i18nLabel(msg`Drip Enrollment`),
+        labelPlural: i18nLabel(msg`Drip Enrollments`),
+        description: i18nLabel(msg`A contact enrollment in a drip campaign`),
+        icon: 'IconUserCheck',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'id',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   blocklist: ({
     now,
     workspaceId,

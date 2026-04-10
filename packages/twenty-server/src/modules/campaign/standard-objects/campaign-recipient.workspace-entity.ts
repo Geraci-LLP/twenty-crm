@@ -1,4 +1,4 @@
-import { type ActorMetadata, FieldMetadataType } from 'twenty-shared/types';
+import { type ActorMetadata } from 'twenty-shared/types';
 
 import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity';
 import { type FieldTypeAndNameMetadata } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
@@ -27,6 +27,8 @@ export class CampaignRecipientWorkspaceEntity extends BaseWorkspaceEntity {
   sentAt: string | null;
   openedAt: string | null;
   clickedAt: string | null;
+  bouncedAt: string | null;
+  unsubscribedAt: string | null;
   campaign: EntityRelation<CampaignWorkspaceEntity>;
   campaignId: string;
   person: EntityRelation<PersonWorkspaceEntity> | null;

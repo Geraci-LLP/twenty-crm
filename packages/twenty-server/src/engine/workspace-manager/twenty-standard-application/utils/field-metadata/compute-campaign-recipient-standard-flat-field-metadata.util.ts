@@ -302,6 +302,38 @@ export const buildCampaignRecipientStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  bouncedAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'bouncedAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Bounced At`),
+      description: i18nLabel(msg`When the email bounced`),
+      icon: 'IconArrowBack',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  unsubscribedAt: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'unsubscribedAt',
+      type: FieldMetadataType.DATE_TIME,
+      label: i18nLabel(msg`Unsubscribed At`),
+      description: i18nLabel(msg`When the recipient unsubscribed`),
+      icon: 'IconUserMinus',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
 
   searchVector: createStandardFieldFlatMetadata({
     objectName,

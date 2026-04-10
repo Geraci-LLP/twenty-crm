@@ -36,3 +36,11 @@ export type CampaignEditorData = {
 export type CampaignSchedule = {
   scheduledAt: Date | null;
 };
+
+export type ResolveRecipientsResult = {
+  success: boolean;
+  created: number;
+  skipped: number;
+  total: number;
+  error?: string;
+};

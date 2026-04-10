@@ -111,6 +111,15 @@ const StyledInsertButton = styled.button`
   }
 `;
 
+const StyledWarningBanner = styled.div`
+  background: ${themeCssVariables.color.orange}15;
+  border: 1px solid ${themeCssVariables.color.orange};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
+`;
+
 type CampaignEditorProps = {
   value: CampaignEditorData;
   onChange: (data: CampaignEditorData) => void;
@@ -235,6 +244,13 @@ export const CampaignEditor = ({
           onChange={(event) => handleFieldChange('body', event.target.value)}
           readOnly={readOnly}
         />
+        {!value.body.includes('{{unsubscribe_link}}') && (
+          <StyledWarningBanner>
+            Your email does not include an unsubscribe link. An unsubscribe
+            footer will be automatically appended. Use the &quot;Unsubscribe
+            Link&quot; personalization token for a custom placement.
+          </StyledWarningBanner>
+        )}
       </StyledFieldGroup>
     </StyledContainer>
   );

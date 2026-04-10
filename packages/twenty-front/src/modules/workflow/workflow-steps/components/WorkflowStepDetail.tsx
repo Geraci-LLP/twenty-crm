@@ -135,6 +135,10 @@ export const WorkflowStepDetail = ({
             />
           );
         }
+        case 'SEND_CAMPAIGN_EMAIL': {
+          // Campaign emails are configured programmatically via drip campaigns, not the workflow UI
+          return null;
+        }
         case 'CREATE_RECORD': {
           return (
             <WorkflowEditActionCreateRecord

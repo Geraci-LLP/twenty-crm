@@ -46,6 +46,8 @@ export { workflowLogicFunctionActionSchema } from './schemas/logic-function-acti
 export { workflowLogicFunctionActionSettingsSchema } from './schemas/logic-function-action-settings-schema';
 export { workflowManualTriggerSchema } from './schemas/manual-trigger-schema';
 export { objectRecordSchema } from './schemas/object-record-schema';
+export { workflowSendCampaignEmailActionSchema } from './schemas/send-campaign-email-action-schema';
+export { workflowSendCampaignEmailActionSettingsSchema } from './schemas/send-campaign-email-action-settings-schema';
 export { workflowSendEmailActionSchema } from './schemas/send-email-action-schema';
 export { workflowSendEmailActionSettingsSchema } from './schemas/send-email-action-settings-schema';
 export { stepFilterGroupSchema } from './schemas/step-filter-group-schema';

@@ -566,6 +566,28 @@ export const buildPersonStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  dripEnrollments: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'dripEnrollments',
+      label: i18nLabel(msg`Drip Enrollments`),
+      description: i18nLabel(msg`Drip campaign enrollments for the person`),
+      icon: 'IconRepeat',
+      isNullable: true,
+      targetObjectName: 'dripEnrollment',
+      targetFieldName: 'person',
+      settings: {
+        relationType: RelationType.ONE_TO_MANY,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   searchVector: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,

@@ -14,8 +14,10 @@ export type SendGridPersonalization = {
 export type SendGridBatchOptions = {
   subject: string;
   htmlContent: string;
+  plainTextContent?: string;
   from: { email: string; name: string };
   personalizations: SendGridPersonalization[];
+  headers?: Record<string, string>;
 };
 
 @Injectable()
@@ -71,17 +73,24 @@ export class SendGridDriverService implements EmailDriverInterface {
       }),
     );
 
-    const payload = {
+    const content: Array<{ type: string; value: string }> = [];
+
+    if (options.plainTextContent) {
+      content.push({ type: 'text/plain', value: options.plainTextContent });
+    }
+
+    content.push({ type: 'text/html', value: options.htmlContent });
+
+    const payload: Record<string, unknown> = {
       personalizations,
       from: options.from,
       subject: options.subject,
-      content: [
-        {
-          type: 'text/html',
-          value: options.htmlContent,
-        },
-      ],
+      content,
     };
+
+    if (options.headers) {
+      payload.headers = options.headers;
+    }
 
     await this.callSendGridApi(payload);
   }

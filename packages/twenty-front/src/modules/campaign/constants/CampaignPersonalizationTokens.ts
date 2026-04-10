@@ -8,4 +8,5 @@ export const CAMPAIGN_PERSONALIZATION_TOKENS: CampaignPersonalizationToken[] = [
   { label: 'Company Name', value: '{{ contact.companyName }}' },
   { label: 'City', value: '{{ contact.city }}' },
   { label: 'Job Title', value: '{{ contact.jobTitle }}' },
+  { label: 'Unsubscribe Link', value: '{{unsubscribe_link}}' },
 ];
