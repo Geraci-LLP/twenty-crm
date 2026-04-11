@@ -211,28 +211,28 @@ export const buildDripCampaignStandardFlatFieldMetadatas = ({
       defaultValue: "'DRAFT'",
       options: [
         {
-          id: 'dc-opt-draft-001',
+          id: '6dffc144-2dc8-4c1e-a0f3-034dd50fe17b',
           value: 'DRAFT',
           label: i18nLabel(msg`Draft`),
           position: 0,
           color: 'sky',
         },
         {
-          id: 'dc-opt-active-002',
+          id: '824e71ed-8ef7-4755-b5d3-7d378b69e532',
           value: 'ACTIVE',
           label: i18nLabel(msg`Active`),
           position: 1,
           color: 'green',
         },
         {
-          id: 'dc-opt-paused-003',
+          id: 'c3d89d2a-3ace-49e3-a292-2702d8b819f9',
           value: 'PAUSED',
           label: i18nLabel(msg`Paused`),
           position: 2,
           color: 'gray',
         },
         {
-          id: 'dc-opt-completed-004',
+          id: 'fd9e842b-c5bc-4cac-a5c3-7a3c49a6ac5c',
           value: 'COMPLETED',
           label: i18nLabel(msg`Completed`),
           position: 3,

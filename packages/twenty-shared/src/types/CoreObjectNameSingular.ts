@@ -34,4 +34,6 @@ export enum CoreObjectNameSingular {
   Campaign = 'campaign',
   CampaignRecipient = 'campaignRecipient',
   CampaignTemplate = 'campaignTemplate',
+  DripCampaign = 'dripCampaign',
+  DripEnrollment = 'dripEnrollment',
 }

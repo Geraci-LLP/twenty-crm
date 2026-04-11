@@ -199,28 +199,28 @@ export const buildDripEnrollmentStandardFlatFieldMetadatas = ({
       defaultValue: "'ACTIVE'",
       options: [
         {
-          id: 'de-opt-active-001',
+          id: 'fee3ee6a-94b3-42b3-b42b-e23b0a47f041',
           value: 'ACTIVE',
           label: i18nLabel(msg`Active`),
           position: 0,
           color: 'green',
         },
         {
-          id: 'de-opt-completed-002',
+          id: '378dfd8c-4b75-4652-9f76-1fb962d7b67b',
           value: 'COMPLETED',
           label: i18nLabel(msg`Completed`),
           position: 1,
           color: 'blue',
         },
         {
-          id: 'de-opt-paused-003',
+          id: '76e333eb-dc68-4dbc-b13c-8a259c7fa951',
           value: 'PAUSED',
           label: i18nLabel(msg`Paused`),
           position: 2,
           color: 'gray',
         },
         {
-          id: 'de-opt-unsubscribed-004',
+          id: 'd311693e-d4f4-47aa-a065-b7ffd438e799',
           value: 'UNSUBSCRIBED',
           label: i18nLabel(msg`Unsubscribed`),
           position: 3,

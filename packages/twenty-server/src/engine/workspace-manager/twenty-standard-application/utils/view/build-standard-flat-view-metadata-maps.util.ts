@@ -18,6 +18,7 @@ import { computeStandardCompanyViews } from 'src/engine/workspace-manager/twenty
 import { computeStandardConnectedAccountViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-connected-account-views.util';
 import { computeStandardDashboardViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-dashboard-views.util';
 import { computeStandardDripCampaignViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-drip-campaign-views.util';
+import { computeStandardDripEnrollmentViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-drip-enrollment-views.util';
 import { computeStandardFavoriteFolderViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-favorite-folder-views.util';
 import { computeStandardFavoriteViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-favorite-views.util';
 import { computeStandardMessageChannelMessageAssociationMessageFolderViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-message-channel-message-association-message-folder-views.util';
@@ -60,6 +61,7 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   connectedAccount: computeStandardConnectedAccountViews,
   dashboard: computeStandardDashboardViews,
   dripCampaign: computeStandardDripCampaignViews,
+  dripEnrollment: computeStandardDripEnrollmentViews,
   favorite: computeStandardFavoriteViews,
   favoriteFolder: computeStandardFavoriteFolderViews,
   message: computeStandardMessageViews,
