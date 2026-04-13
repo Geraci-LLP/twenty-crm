@@ -196,7 +196,8 @@
       },
       "configurations": {
         "ci": {
-          "coverage": false
+          "coverage": false,
+          "codeCoverage": false
         }
       }
     },
