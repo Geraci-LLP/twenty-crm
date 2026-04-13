@@ -210,10 +210,13 @@ jobs:
       - name: Build twenty-shared
         run: npx nx build twenty-shared
       - name: Server / Run Tests
-        uses: ./.github/actions/nx-affected
-        with:
-          tag: scope:backend
-          tasks: test
+        working-directory: packages/twenty-server
+        run: |
+          set +e
+          npx jest --ci --maxWorkers=1 --forceExit --passWithNoTests
+          exit_code=$?
+          echo "Jest exit code: $exit_code"
+          exit $exit_code
 
   server-integration-test:
     timeout-minutes: 30
