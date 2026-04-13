@@ -190,7 +190,16 @@
         }
       }
     },
-    "test": {},
+    "test": {
+      "options": {
+        "forceExit": true
+      },
+      "configurations": {
+        "ci": {
+          "coverage": false
+        }
+      }
+    },
     "test:debug": {
       "executor": "nx:run-commands",
       "options": {
