@@ -194,6 +194,8 @@ jobs:
     needs: server-build
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: '--max-old-space-size=6144'
     steps:
       - name: Fetch custom Github Actions and base branch history
         uses: actions/checkout@v4
