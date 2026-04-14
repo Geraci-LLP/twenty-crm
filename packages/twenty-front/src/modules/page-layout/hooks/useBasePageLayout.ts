@@ -3,6 +3,8 @@ import { DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/
 import { DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultCampaignTemplateRecordPageLayout';
 import { DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCampaignTemplateRecordPageLayoutId';
 import { DEFAULT_COMPANY_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultCompanyRecordPageLayout';
+import { DEFAULT_FORM_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultFormRecordPageLayout';
+import { DEFAULT_FORM_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultFormRecordPageLayoutId';
 import { DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCompanyRecordPageLayoutId';
 import { DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultMessageThreadRecordPageLayout';
 import { DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultMessageThreadRecordPageLayoutId';
@@ -38,6 +40,8 @@ const getDefaultLayoutById = (layoutId: string): PageLayout => {
       return DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT;
     case DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID:
       return DEFAULT_COMPANY_RECORD_PAGE_LAYOUT;
+    case DEFAULT_FORM_RECORD_PAGE_LAYOUT_ID:
+      return DEFAULT_FORM_RECORD_PAGE_LAYOUT;
     case DEFAULT_PERSON_RECORD_PAGE_LAYOUT_ID:
       return DEFAULT_PERSON_RECORD_PAGE_LAYOUT;
     case DEFAULT_OPPORTUNITY_RECORD_PAGE_LAYOUT_ID:
@@ -65,6 +69,7 @@ const isDefaultLayoutId = (layoutId: string): boolean =>
   layoutId === DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID ||
+  layoutId === DEFAULT_FORM_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_PERSON_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_OPPORTUNITY_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_NOTE_RECORD_PAGE_LAYOUT_ID ||

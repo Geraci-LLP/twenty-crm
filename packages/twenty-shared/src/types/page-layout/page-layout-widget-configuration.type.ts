@@ -171,6 +171,10 @@ export type WorkflowRunConfiguration = {
   configurationType: 'WORKFLOW_RUN';
 };
 
+export type FormBuilderConfiguration = {
+  configurationType: 'FORM_BUILDER';
+};
+
 export type PageLayoutWidgetConfiguration =
   | AggregateChartConfiguration
   | GaugeChartConfiguration
@@ -194,4 +198,5 @@ export type PageLayoutWidgetConfiguration =
   | WorkflowConfiguration
   | WorkflowVersionConfiguration
   | WorkflowRunConfiguration
-  | EmailThreadConfiguration;
+  | EmailThreadConfiguration
+  | FormBuilderConfiguration;
