@@ -1,4 +1,5 @@
 import { FormBuilder } from '@/form/components/FormBuilder';
+import { FormEmbedSnippet } from '@/form/components/FormEmbedSnippet';
 import { FormPreview } from '@/form/components/FormPreview';
 import { FormPublicUrlDisplay } from '@/form/components/FormPublicUrlDisplay';
 import { FormSettings } from '@/form/components/FormSettings';
@@ -28,6 +29,9 @@ const StyledTabContent = styled.div`
 `;
 
 const StyledPublicUrlContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${themeCssVariables.spacing[3]};
   padding: ${themeCssVariables.spacing[4]};
   padding-bottom: 0;
 `;
@@ -85,6 +89,7 @@ export const FormBuilderWidget = () => {
         {formRecord.status === 'PUBLISHED' && (
           <StyledPublicUrlContainer>
             <FormPublicUrlDisplay formId={formRecord.id} />
+            <FormEmbedSnippet formId={formRecord.id} />
           </StyledPublicUrlContainer>
         )}
 

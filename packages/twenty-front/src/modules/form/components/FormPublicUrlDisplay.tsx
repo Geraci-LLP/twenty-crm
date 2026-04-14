@@ -7,7 +7,6 @@ import { isDefined } from 'twenty-shared/utils';
 import { IconCopy } from 'twenty-ui/display';
 import { ThemeContext } from 'twenty-ui/theme-constants';
 import { useDebouncedCallback } from 'use-debounce';
-import { REACT_APP_SERVER_BASE_URL } from '~/config';
 import { useCopyToClipboard } from '~/hooks/useCopyToClipboard';
 
 export type FormPublicUrlDisplayProps = {
@@ -19,7 +18,7 @@ export const FormPublicUrlDisplay = ({ formId }: FormPublicUrlDisplayProps) => {
   const { copyToClipboard } = useCopyToClipboard();
   const currentWorkspace = useAtomStateValue(currentWorkspaceState);
 
-  const publicUrl = `${REACT_APP_SERVER_BASE_URL}/forms/${currentWorkspace?.id}/${formId}/schema`;
+  const publicUrl = `${window.location.origin}/forms/${currentWorkspace?.id}/${formId}`;
   const displayUrl = publicUrl.replace(/^(https?:\/\/)?(www\.)?/, '');
 
   const copyToClipboardDebounced = useDebouncedCallback(
