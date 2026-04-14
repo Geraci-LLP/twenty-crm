@@ -241,7 +241,7 @@ export const buildFormStandardFlatFieldMetadatas = ({
           color: 'green',
         },
         {
-          id: 'c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f',
+          id: '41ecfe3d-1115-436d-97cb-49fc2f05d9a4',
           value: 'ARCHIVED',
           label: i18nLabel(msg`Archived`),
           position: 2,

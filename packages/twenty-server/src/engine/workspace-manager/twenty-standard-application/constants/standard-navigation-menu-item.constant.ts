@@ -60,7 +60,7 @@ export const STANDARD_NAVIGATION_MENU_ITEMS = {
     position: 7,
   },
   allLandingPages: {
-    universalIdentifier: '9a0b1c2d-3e4f-4a5b-6c7d-8e9f0a1b2c3d',
+    universalIdentifier: 'b574f32d-a8c4-4c0a-ad3d-086e2e1dc15e',
     type: NavigationMenuItemType.OBJECT,
     viewUniversalIdentifier:
       STANDARD_OBJECTS.landingPage.views.allLandingPages.universalIdentifier,

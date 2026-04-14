@@ -2,6 +2,7 @@ import { msg } from '@lingui/core/macro';
 import {
   DateDisplayFormat,
   FieldMetadataType,
+  RelationOnDeleteAction,
   RelationType,
 } from 'twenty-shared/types';
 
@@ -260,7 +261,7 @@ export const buildFormSubmissionStandardFlatFieldMetadatas = ({
           color: 'green',
         },
         {
-          id: 'f3a4b5c6-d7e8-4f9a-0b1c-2d3e4f5a6b7c',
+          id: 'e39b99aa-f322-4e75-97e0-bb89e17d12a8',
           value: 'EMBED',
           label: i18nLabel(msg`Embed`),
           position: 2,
@@ -313,6 +314,8 @@ export const buildFormSubmissionStandardFlatFieldMetadatas = ({
       targetFieldName: 'formSubmissions',
       settings: {
         relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.SET_NULL,
+        joinColumnName: 'formId',
       },
     },
     standardObjectMetadataRelatedEntityIds,

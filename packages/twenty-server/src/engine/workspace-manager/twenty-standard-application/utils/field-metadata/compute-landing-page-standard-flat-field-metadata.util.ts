@@ -236,7 +236,7 @@ export const buildLandingPageStandardFlatFieldMetadatas = ({
           color: 'green',
         },
         {
-          id: 'd3c4d5e6-a7b8-4c9d-0e1f-333333333333',
+          id: '9c60fb2b-7a77-4453-847c-662c5885a9ec',
           value: 'ARCHIVED',
           label: i18nLabel(msg`Archived`),
           position: 2,

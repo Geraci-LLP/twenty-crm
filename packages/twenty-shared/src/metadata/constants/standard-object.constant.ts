@@ -3934,10 +3934,10 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: '8e5f9a2b-3c4d-5e6f-a7b8-2c3d4e5f6a7b',
       },
       confirmationEmailSubject: {
-        universalIdentifier: '9f6a0b3c-4d5e-6f7a-b8c9-3d4e5f6a7b8c',
+        universalIdentifier: '3a3cf51d-014b-4a04-ab77-63a86206dc98',
       },
       confirmationEmailBody: {
-        universalIdentifier: 'a0b1c2d3-5e6f-7a8b-c9d0-4e5f6a7b8c9d',
+        universalIdentifier: '183bb2d0-deff-46c0-8b28-82a1a6a35ae0',
       },
       formSubmissions: {
         universalIdentifier: 'd4fc6edb-094e-457a-9050-091fd88fa25b',
@@ -4048,28 +4048,28 @@ export const STANDARD_OBJECTS = {
     fields: {
       id: { universalIdentifier: 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e' },
       createdAt: {
-        universalIdentifier: 'c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f',
+        universalIdentifier: '41ecfe3d-1115-436d-97cb-49fc2f05d9a4',
       },
       updatedAt: {
-        universalIdentifier: 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80',
+        universalIdentifier: 'c1e67cf6-60c5-4ff3-b248-a39282338a6c',
       },
       deletedAt: {
-        universalIdentifier: 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091',
+        universalIdentifier: 'c9037a51-8440-4aa4-acbd-ba2a5aa62364',
       },
       position: {
-        universalIdentifier: 'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8091a2',
+        universalIdentifier: 'b2415df0-6e5b-4912-9a59-91ed9ac9706a',
       },
       createdBy: {
-        universalIdentifier: 'a7b8c9d0-e1f2-4a3b-4c5d-6e7f8091a2b3',
+        universalIdentifier: '10ac2812-74c9-425d-a465-8549bdd80d8a',
       },
       updatedBy: {
-        universalIdentifier: 'b8c9d0e1-f2a3-4b4c-5d6e-7f8091a2b3c4',
+        universalIdentifier: '7d3de715-0638-41d6-903d-0268e3b7a46e',
       },
       title: {
-        universalIdentifier: 'c9d0e1f2-a3b4-4c5d-6e7f-8091a2b3c4d5',
+        universalIdentifier: '38b2b528-ea0b-4029-b69c-78f6bcaa97e3',
       },
       slug: {
-        universalIdentifier: 'd0e1f2a3-b4c5-4d6e-7f80-91a2b3c4d5e6',
+        universalIdentifier: '58670611-06ab-418d-91b4-f0f19865a594',
       },
       status: {
         universalIdentifier: 'e1f2a3b4-c5d6-4e7f-8091-a2b3c4d5e6f7',
@@ -4084,16 +4084,16 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: 'b4c5d6e7-f809-41a2-b3c4-d5e6f7a8b9c0',
       },
       headerConfig: {
-        universalIdentifier: 'c5d6e7f8-091a-42b3-c4d5-e6f7a8b9c0d1',
+        universalIdentifier: '9d47a710-6eb7-4063-beff-0ad626a45739',
       },
       footerConfig: {
-        universalIdentifier: 'd6e7f809-1a2b-43c4-d5e6-f7a8b9c0d1e2',
+        universalIdentifier: '7670ebe0-1ada-4406-8e9c-04dd92e872d3',
       },
       viewCount: {
-        universalIdentifier: 'e7f8091a-2b3c-44d5-e6f7-a8b9c0d1e2f3',
+        universalIdentifier: '25459ac5-755e-43cd-97a8-ecd957672c48',
       },
       searchVector: {
-        universalIdentifier: 'f8091a2b-3c4d-45e6-f7a8-b9c0d1e2f3a4',
+        universalIdentifier: '13dcfd26-6eec-4ba3-a5be-e4aa238e9286',
       },
     },
     indexes: {
@@ -4104,18 +4104,18 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: '1a2b3c4d-5e6f-47a8-b9c0-d1e2f3a4b5c6',
       },
       searchVectorGinIndex: {
-        universalIdentifier: '2b3c4d5e-6f7a-48b9-c0d1-e2f3a4b5c6d7',
+        universalIdentifier: 'b7e13ed6-a0ed-409d-98bb-f71cf4aa6262',
       },
     },
     views: {
       allLandingPages: {
-        universalIdentifier: '3c4d5e6f-7a8b-49c0-d1e2-f3a4b5c6d7e8',
+        universalIdentifier: '02e54dd8-d097-4c7f-9f57-5de091186396',
         viewFields: {
           title: {
-            universalIdentifier: '4d5e6f7a-8b9c-40d1-e2f3-a4b5c6d7e8f9',
+            universalIdentifier: '9a202704-69cb-4826-ac32-fa0722153c27',
           },
           slug: {
-            universalIdentifier: '5e6f7a8b-9c0d-41e2-f3a4-b5c6d7e8f90a',
+            universalIdentifier: '6cdc675a-2fb2-437f-85a2-e44f4875ab39',
           },
           status: {
             universalIdentifier: '6f7a8b9c-0d1e-42f3-a4b5-c6d7e8f90a1b',
@@ -4124,7 +4124,7 @@ export const STANDARD_OBJECTS = {
             universalIdentifier: '7a8b9c0d-1e2f-43a4-b5c6-d7e8f90a1b2c',
           },
           createdAt: {
-            universalIdentifier: '8b9c0d1e-2f3a-44b5-c6d7-e8f90a1b2c3d',
+            universalIdentifier: '364e4576-2259-4fcd-adde-2e458258a178',
           },
         },
       },
