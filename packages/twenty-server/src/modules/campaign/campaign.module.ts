@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
+import { FieldMetadataEntity } from 'src/engine/metadata-modules/field-metadata/field-metadata.entity';
+import { ViewFilterEntity } from 'src/engine/metadata-modules/view-filter/entities/view-filter.entity';
 import { CampaignScheduleSendCronCommand } from 'src/modules/campaign/crons/commands/campaign-schedule-send.cron.command';
 import { CampaignScheduleSendCronJob } from 'src/modules/campaign/crons/jobs/campaign-schedule-send.cron.job';
 import { CampaignWebhookController } from 'src/modules/campaign/controllers/campaign-webhook.controller';
@@ -18,7 +20,13 @@ import { DripCampaignService } from 'src/modules/campaign/services/drip-campaign
 import { SendGridDriverService } from 'src/modules/campaign/services/sendgrid-driver.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([WorkspaceEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      WorkspaceEntity,
+      ViewFilterEntity,
+      FieldMetadataEntity,
+    ]),
+  ],
   controllers: [CampaignWebhookController],
   providers: [
     CampaignExecutorService,

@@ -1,4 +1,5 @@
 import { AggregateChartConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/aggregate-chart-configuration.dto';
+import { CampaignEditorConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/campaign-editor-configuration.dto';
 import { EmailThreadConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/email-thread-configuration.dto';
 import { BarChartConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/bar-chart-configuration.dto';
 import { CalendarConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/calendar-configuration.dto';
@@ -29,6 +30,7 @@ import { type PageLayoutWidgetConfigurationBase } from 'src/engine/metadata-modu
 export const ALL_WIDGET_CONFIGURATION_TYPE_VALIDATOR_BY_WIDGET_CONFIGURATION_TYPE =
   {
     AGGREGATE_CHART: AggregateChartConfigurationDTO,
+    CAMPAIGN_EDITOR: CampaignEditorConfigurationDTO,
     STANDALONE_RICH_TEXT: StandaloneRichTextConfigurationDTO,
     PIE_CHART: PieChartConfigurationDTO,
     LINE_CHART: LineChartConfigurationDTO,

@@ -373,6 +373,7 @@ export const fromPageLayoutWidgetConfigurationToUniversalConfiguration = ({
     case WidgetConfigurationType.EMAILS:
     case WidgetConfigurationType.CALENDAR:
     case WidgetConfigurationType.FIELD_RICH_TEXT:
+    case WidgetConfigurationType.CAMPAIGN_EDITOR:
     case WidgetConfigurationType.FORM_BUILDER:
     case WidgetConfigurationType.LANDING_PAGE_BUILDER:
     case WidgetConfigurationType.WORKFLOW:

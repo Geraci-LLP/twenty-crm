@@ -171,6 +171,10 @@ export type WorkflowRunConfiguration = {
   configurationType: 'WORKFLOW_RUN';
 };
 
+export type CampaignEditorConfiguration = {
+  configurationType: 'CAMPAIGN_EDITOR';
+};
+
 export type FormBuilderConfiguration = {
   configurationType: 'FORM_BUILDER';
 };
@@ -203,5 +207,6 @@ export type PageLayoutWidgetConfiguration =
   | WorkflowVersionConfiguration
   | WorkflowRunConfiguration
   | EmailThreadConfiguration
+  | CampaignEditorConfiguration
   | FormBuilderConfiguration
   | LandingPageBuilderConfiguration;

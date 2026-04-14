@@ -33,10 +33,10 @@ export const DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT: PageLayout = {
       widgets: [
         {
           __typename: 'PageLayoutWidget',
-          id: 'campaign-widget-fields',
+          id: 'campaign-widget-editor',
           pageLayoutTabId: 'campaign-tab-fields',
-          title: 'Fields',
-          type: WidgetType.FIELDS,
+          title: 'Campaign Editor',
+          type: WidgetType.CAMPAIGN_EDITOR,
           objectMetadataId: null,
           gridPosition: {
             __typename: 'GridPosition',
@@ -47,7 +47,7 @@ export const DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT: PageLayout = {
           },
           configuration: {
             __typename: 'FieldsConfiguration',
-            configurationType: WidgetConfigurationType.FIELDS,
+            configurationType: WidgetConfigurationType.CAMPAIGN_EDITOR,
             viewId: null,
           },
           isOverridden: false,

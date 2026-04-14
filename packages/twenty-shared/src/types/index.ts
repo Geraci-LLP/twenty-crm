@@ -191,6 +191,7 @@ export type {
   WorkflowConfiguration,
   WorkflowVersionConfiguration,
   WorkflowRunConfiguration,
+  CampaignEditorConfiguration,
   FormBuilderConfiguration,
   LandingPageBuilderConfiguration,
   PageLayoutWidgetConfiguration,
