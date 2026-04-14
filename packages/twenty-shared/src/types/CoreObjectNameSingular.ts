@@ -36,4 +36,6 @@ export enum CoreObjectNameSingular {
   CampaignTemplate = 'campaignTemplate',
   DripCampaign = 'dripCampaign',
   DripEnrollment = 'dripEnrollment',
+  Form = 'form',
+  FormSubmission = 'formSubmission',
 }

@@ -16,6 +16,7 @@ const FLAT_NAVIGATION_MENU_ITEM_NAMES = [
   'allCampaigns',
   'allCompanies',
   'allDashboards',
+  'allForms',
   'allNotes',
   'allOpportunities',
   'allPeople',

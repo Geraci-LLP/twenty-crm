@@ -3885,6 +3885,152 @@ export const STANDARD_OBJECTS = {
       },
     },
   },
+  form: {
+    universalIdentifier: 'cd5a922c-d024-42cb-8985-ee987c37ed1b',
+    fields: {
+      id: { universalIdentifier: 'af749a8e-9f65-40b7-a325-1314e3807320' },
+      createdAt: {
+        universalIdentifier: 'bce69619-729a-4b86-a6fd-6630b3b0176d',
+      },
+      updatedAt: {
+        universalIdentifier: '285429dd-abf5-4d5d-b823-dd32d4ecdb66',
+      },
+      deletedAt: {
+        universalIdentifier: 'c79a0b30-ed42-4758-8c5e-0de92c9e2ff8',
+      },
+      position: {
+        universalIdentifier: '35887568-21c9-4246-817f-24ff8da90e45',
+      },
+      createdBy: {
+        universalIdentifier: 'b9dad1b7-18d8-4eec-9dcb-5fab03643763',
+      },
+      updatedBy: {
+        universalIdentifier: '1cf7b003-1511-4e48-82d3-cd280150b476',
+      },
+      name: { universalIdentifier: '46235b5c-00de-4cb3-9eee-91290bbb16fb' },
+      description: {
+        universalIdentifier: '8737d4f6-c76f-4b59-830c-919dd56b8dec',
+      },
+      status: { universalIdentifier: '74f2a0a6-22c0-47c7-9ef6-9919dc07dcfa' },
+      fieldsConfig: {
+        universalIdentifier: '85cdb09c-9e43-4d7a-8bf8-c86436a0ebba',
+      },
+      submissionCount: {
+        universalIdentifier: '3b53f50b-93c3-45bd-a739-26fee02dcd7d',
+      },
+      thankYouMessage: {
+        universalIdentifier: 'a4052977-1ea4-4d91-8726-ce11f5cd3957',
+      },
+      notifyOnSubmission: {
+        universalIdentifier: 'fe7ac387-588e-4ee5-91d3-8b473674e3e1',
+      },
+      notificationEmail: {
+        universalIdentifier: '3c62ae05-1eaa-4c14-bc49-2969e88c2713',
+      },
+      formSubmissions: {
+        universalIdentifier: 'd4fc6edb-094e-457a-9050-091fd88fa25b',
+      },
+      searchVector: {
+        universalIdentifier: 'dc07086f-6429-4e5c-944b-26c4ca6656f8',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: 'e7fbcf2c-a8c8-40e2-bf7c-db012c8da9b4',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'e12e20d1-a714-44d9-8323-50e8ab8037df',
+      },
+    },
+    views: {
+      allForms: {
+        universalIdentifier: '60e6f646-f80f-4cc5-b9be-937fd9274a2c',
+        viewFields: {
+          name: {
+            universalIdentifier: 'fcb045e2-3a4b-4d2f-be27-01343622d267',
+          },
+          status: {
+            universalIdentifier: 'b30cae56-ee34-4812-abb4-d4967873185a',
+          },
+          description: {
+            universalIdentifier: '98438104-c9fc-4428-bf83-15c0af5e4542',
+          },
+          submissionCount: {
+            universalIdentifier: '932a9c0b-23f6-41b7-97a2-adc5f5693926',
+          },
+          createdAt: {
+            universalIdentifier: 'ee562f40-ea98-45c7-bf35-84dfa58f6a22',
+          },
+        },
+      },
+    },
+  },
+  formSubmission: {
+    universalIdentifier: '27edc48c-6729-4e5e-b381-f55d0a47c6a6',
+    fields: {
+      id: { universalIdentifier: 'a92a155e-c2a4-48b0-bdb2-204d49c85486' },
+      createdAt: {
+        universalIdentifier: '7f62588c-56cb-4b06-be31-971cba4b200c',
+      },
+      updatedAt: {
+        universalIdentifier: 'eb8c1734-c486-40fb-ae71-32401111efb8',
+      },
+      deletedAt: {
+        universalIdentifier: '57b10d43-c4c4-4353-9a3a-b0e42e3408b6',
+      },
+      position: {
+        universalIdentifier: '7e65c5f4-3e89-4536-ad91-64671520d5d8',
+      },
+      createdBy: {
+        universalIdentifier: '142f0cf0-7947-44ef-9b37-251c1a2e8ab0',
+      },
+      updatedBy: {
+        universalIdentifier: '45afa911-6887-45f2-b895-b2424f54e3fc',
+      },
+      data: { universalIdentifier: 'fc79e781-f091-42c2-8c30-59c53998e4ea' },
+      submitterEmail: {
+        universalIdentifier: 'dc522ff0-8f25-419e-966e-e183ac4ea671',
+      },
+      submitterName: {
+        universalIdentifier: '299a3829-c7d9-4a3d-ac4e-34ea25e490ea',
+      },
+      source: { universalIdentifier: '5174f39c-3bd7-4214-b7b0-364d762306d6' },
+      form: { universalIdentifier: '00ae8240-3fc9-4b30-a9ff-dd7c875e7f45' },
+      searchVector: {
+        universalIdentifier: 'b950318b-1b20-4c8d-b2bf-e54a7dd61275',
+      },
+    },
+    indexes: {
+      formIdIndex: {
+        universalIdentifier: 'bf0959ec-bfa7-49cd-83ab-555511f162c3',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '1ccd7fa5-254f-454f-8aa6-c3a1ab91b25e',
+      },
+    },
+    views: {
+      allFormSubmissions: {
+        universalIdentifier: 'b61f44e0-7671-4c2f-adc5-d62f7d4a7f83',
+        viewFields: {
+          submitterEmail: {
+            universalIdentifier: '57977887-2632-43d0-9407-7ce6a5dde810',
+          },
+          submitterName: {
+            universalIdentifier: '45a28151-02f2-48a6-a17a-e19cf8e9b45d',
+          },
+          source: {
+            universalIdentifier: '5b4c3cd9-c7a6-4e53-9ba4-68aa8eb5809a',
+          },
+          form: {
+            universalIdentifier: '867a817a-a3db-4e27-bec8-02fc9b0456cb',
+          },
+          createdAt: {
+            universalIdentifier: 'a827ab7c-96b9-4e1c-8974-cbc35d7f561d',
+          },
+        },
+      },
+    },
+  },
 } as const satisfies Record<
   string,
   {
