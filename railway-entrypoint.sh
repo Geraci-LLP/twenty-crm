@@ -19,6 +19,9 @@ setup_and_migrate_db() {
     fi
 
     node dist/command/command cache:flush
+    echo "Syncing standard metadata (creates missing standard objects)..."
+    node dist/command/command workspace:sync-standard-metadata
+    node dist/command/command cache:flush
     node dist/command/command upgrade
     node dist/command/command cache:flush
 
