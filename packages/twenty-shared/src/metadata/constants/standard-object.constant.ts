@@ -2381,6 +2381,12 @@ export const STANDARD_OBJECTS = {
       timelineActivities: {
         universalIdentifier: '20202020-a43e-4873-9c23-e522de906ce5',
       },
+      campaignRecipients: {
+        universalIdentifier: 'a70976da-563f-41a2-b969-462dc3498775',
+      },
+      dripEnrollments: {
+        universalIdentifier: 'aafd96dd-4abb-47ce-b211-09fc9ef38ad6',
+      },
       searchVector: {
         universalIdentifier: '57d1d7ad-fa10-44fc-82f3-ad0959ec2534',
       },
@@ -3505,6 +3511,375 @@ export const STANDARD_OBJECTS = {
           },
           assignedTasks: {
             universalIdentifier: 'af16226e-6375-4676-8bd9-9d1a57076fc4',
+          },
+        },
+      },
+    },
+  },
+  campaign: {
+    universalIdentifier: 'e3cfc6a7-1db5-4edf-9739-23f776d78e24',
+    fields: {
+      id: { universalIdentifier: 'fe1c7ef7-c0b0-4b7b-acc2-c14a7f1f93fb' },
+      createdAt: {
+        universalIdentifier: '6562ccdb-b73a-49c8-aa7d-8bb68a028ee9',
+      },
+      updatedAt: {
+        universalIdentifier: 'b50c3151-0400-4e16-bae3-a6488a2b534b',
+      },
+      deletedAt: {
+        universalIdentifier: '942d1151-a6df-41c1-b967-111b5a0e268f',
+      },
+      position: {
+        universalIdentifier: 'f8689674-0666-4cb5-b53c-f7fe86241149',
+      },
+      createdBy: {
+        universalIdentifier: 'b3b21aea-e21a-4dad-b258-e5b0b5c9e9e5',
+      },
+      updatedBy: {
+        universalIdentifier: '337a27f2-a71a-4df4-accf-36569731ab25',
+      },
+      name: { universalIdentifier: 'c65727b4-afb8-4e2f-8fe0-84e86eb46ffd' },
+      subject: { universalIdentifier: 'e07e5f4a-c4b9-4539-967f-029157c7ab3d' },
+      bodyHtml: { universalIdentifier: '90e1070d-1f59-4a14-bd45-0a25e913d47d' },
+      status: { universalIdentifier: 'e5c78803-bd3d-437c-b01f-97d074b9b9d5' },
+      scheduledDate: {
+        universalIdentifier: 'de53af84-c962-4a4d-9574-3a2d3c3e90ca',
+      },
+      fromEmail: {
+        universalIdentifier: 'aee58564-a94e-4ae5-a567-6f2a1bee6163',
+      },
+      fromName: { universalIdentifier: 'ba674cfa-c0a4-4180-959e-0756cb78972d' },
+      recipientCount: {
+        universalIdentifier: '9bb6c004-81af-40ff-9988-77508404a56a',
+      },
+      sentCount: {
+        universalIdentifier: '46d7641d-6ab2-4207-95ad-eb42cf1cacc7',
+      },
+      openCount: {
+        universalIdentifier: '0dca2a45-d78c-415c-a2fc-4aef65e17dc6',
+      },
+      clickCount: {
+        universalIdentifier: 'b232621e-471e-4be2-aae3-2fea94601694',
+      },
+      bounceCount: {
+        universalIdentifier: '9f698e01-d3ed-40fa-8eed-c25211f462d6',
+      },
+      unsubscribeCount: {
+        universalIdentifier: '796607d2-1cfa-4866-b88d-4cbd7bc2c202',
+      },
+      campaignRecipients: {
+        universalIdentifier: '199c7d0d-20f8-4751-93c1-867f7deffa8c',
+      },
+      searchVector: {
+        universalIdentifier: '33423631-ff9c-4843-bf9c-212fa966387f',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: '92f599b2-3c93-4136-900f-11cafdedba56',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'baa8e7c4-63fb-4be2-b0cd-08dc62ce1133',
+      },
+    },
+    views: {
+      allCampaigns: {
+        universalIdentifier: 'f9de1771-f159-4a68-ba58-d5aac96b254f',
+        viewFields: {
+          name: {
+            universalIdentifier: '5ade71fd-b62b-4b82-8dc8-f97b865b3705',
+          },
+          status: {
+            universalIdentifier: '1e21bd27-b1ba-41da-bdb2-8e9b4f9a5087',
+          },
+          subject: {
+            universalIdentifier: 'e5d1b0f0-b248-4c48-9167-fd519ffcb89f',
+          },
+          recipientCount: {
+            universalIdentifier: '20b6df72-9ef3-4192-a5c7-0b55e5abc2ad',
+          },
+          sentCount: {
+            universalIdentifier: '06942830-9509-4469-a446-88fafb6ecf30',
+          },
+          openCount: {
+            universalIdentifier: '190ff9ee-e084-4a73-92d5-d5acaa75c1bb',
+          },
+          scheduledDate: {
+            universalIdentifier: '5d89896e-e3f5-4d4f-b5ac-808c63793f1a',
+          },
+          createdAt: {
+            universalIdentifier: 'c24649aa-94c4-4012-ab08-8dc7521c1b14',
+          },
+        },
+      },
+    },
+  },
+  campaignRecipient: {
+    universalIdentifier: 'bc1a80df-b333-40df-811d-830bcbe77e54',
+    fields: {
+      id: { universalIdentifier: '7b45577b-b0ef-49c8-8917-3ddcf45e05ec' },
+      createdAt: {
+        universalIdentifier: '88bc42dc-5a60-42c7-9a19-af5b15d7c505',
+      },
+      updatedAt: {
+        universalIdentifier: '64dd6925-ed88-4b41-8b00-31a6949c911e',
+      },
+      deletedAt: {
+        universalIdentifier: '892a509f-ae42-490f-8119-5df5a905d9b7',
+      },
+      position: {
+        universalIdentifier: '60600c01-b0f1-4cb9-9c88-ac98524dae69',
+      },
+      createdBy: {
+        universalIdentifier: '3bd76c41-98c8-4286-bc9d-816216749b94',
+      },
+      updatedBy: {
+        universalIdentifier: 'c456ee7b-3ad7-4444-ad9b-abfc6d351b10',
+      },
+      status: { universalIdentifier: '553d9d48-e781-4968-90d5-fd8a0a749442' },
+      sentAt: { universalIdentifier: 'e2e7257c-28ab-43de-a195-4f4623c78001' },
+      openedAt: { universalIdentifier: 'b31ec792-ccff-4fc4-bf8d-eb0f76f4c051' },
+      clickedAt: {
+        universalIdentifier: '91fb7875-a218-4f71-83c0-16d7fec1a1b1',
+      },
+      bouncedAt: {
+        universalIdentifier: 'a7c3d2e1-5f8b-4a9c-b6d0-e2f4a8c1d3b5',
+      },
+      unsubscribedAt: {
+        universalIdentifier: '2f1a96cb-4aea-460c-b97b-b400c7410849',
+      },
+      campaign: { universalIdentifier: '1e0ad613-93a3-4c3e-9250-217d9995ca7d' },
+      person: { universalIdentifier: '802d5fe5-0f01-407b-a041-cdfbb7d50e20' },
+      searchVector: {
+        universalIdentifier: '9efa037b-92f8-400d-b8f0-d4b894a14c2d',
+      },
+    },
+    indexes: {
+      campaignIdIndex: {
+        universalIdentifier: '5730beec-91ef-4290-ac19-0cdbfd2c6a3b',
+      },
+      personIdIndex: {
+        universalIdentifier: 'ba972b44-418f-4d02-b07e-8cec25f4b8dd',
+      },
+      statusIndex: {
+        universalIdentifier: '41636c1b-1ee6-4390-bac0-965725279e64',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'e1f26e80-238e-4a35-905f-191784d2e986',
+      },
+    },
+    views: {
+      campaignRecipientRecordPageFields: {
+        universalIdentifier: 'f4c3a120-8e4d-4b91-a6f7-3c8e5d9b2a01',
+        viewFields: {
+          status: {
+            universalIdentifier: 'b8d2e4f6-1a3c-5d7e-9f0b-2c4d6e8a0b1c',
+          },
+          person: {
+            universalIdentifier: '77c65290-c889-4b07-bf18-145a0d2ba4a4',
+          },
+          sentAt: {
+            universalIdentifier: 'aec67cc8-d85f-417d-9561-dc678df558ff',
+          },
+        },
+      },
+    },
+  },
+  campaignTemplate: {
+    universalIdentifier: '035a0ef3-9db0-4cb0-ab9d-5284eef6135a',
+    fields: {
+      id: { universalIdentifier: '9fb590e9-3026-43ed-a184-67a73c7ad72b' },
+      createdAt: {
+        universalIdentifier: '5e8a0652-58fb-4578-ba7e-643122a7cd98',
+      },
+      updatedAt: {
+        universalIdentifier: '270b14e9-b129-4cd9-a5b2-e54bb9ffcef6',
+      },
+      deletedAt: {
+        universalIdentifier: '0fcbbdf6-2880-42c9-9804-3956d67c867d',
+      },
+      position: {
+        universalIdentifier: '9f2c0c1f-7e75-4f41-89f5-1fc8d15903fe',
+      },
+      createdBy: {
+        universalIdentifier: 'e0153c77-a9e3-4aca-97e0-b49dae7c539d',
+      },
+      updatedBy: {
+        universalIdentifier: '82a08fa1-3a57-4d76-a51d-b0f7ccdd01f6',
+      },
+      name: { universalIdentifier: 'ccd25c91-5fc0-4636-a402-c890293aa0f2' },
+      subject: { universalIdentifier: 'dc533313-4b94-4494-bf08-cad55d871ca5' },
+      bodyHtml: { universalIdentifier: '0c7f444d-74b2-4920-a11a-ff8db5a67eca' },
+      category: { universalIdentifier: '35beb917-f001-4ac1-8514-a16bff0c5478' },
+      thumbnailUrl: {
+        universalIdentifier: '1a2d987e-e86c-4584-98ad-f1af52a0cccf',
+      },
+      searchVector: {
+        universalIdentifier: '72bef722-f37a-4f30-baa0-ae278ba6849e',
+      },
+    },
+    indexes: {
+      categoryIndex: {
+        universalIdentifier: 'd79cef23-da2d-4129-9ee8-12c9aece2b97',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '4691fbda-6816-467d-bab3-51b0cbb36078',
+      },
+    },
+    views: {
+      allCampaignTemplates: {
+        universalIdentifier: 'e7547264-5021-4030-861b-65c64951423d',
+        viewFields: {
+          name: {
+            universalIdentifier: 'a0abbf02-c89e-48d3-b9c3-b156de3138ec',
+          },
+        },
+      },
+    },
+  },
+  dripCampaign: {
+    universalIdentifier: '6035f470-bbcf-4213-8080-9de63ba54fee',
+    fields: {
+      id: { universalIdentifier: '4048907b-fc15-4043-a93c-e3609615dcc3' },
+      createdAt: {
+        universalIdentifier: 'b77cb761-5e0c-45ce-852c-01866e36848b',
+      },
+      updatedAt: {
+        universalIdentifier: '115a9ab9-7728-4d6f-ab86-11683f1bd6eb',
+      },
+      deletedAt: {
+        universalIdentifier: 'a9a5bc31-de3c-411e-8b28-f9e1871f1ed3',
+      },
+      position: {
+        universalIdentifier: '6c401a38-7582-488b-b395-06fa752e1e37',
+      },
+      createdBy: {
+        universalIdentifier: 'bef2f17a-c6e0-43d9-a51d-f91d566b5118',
+      },
+      updatedBy: {
+        universalIdentifier: '45e9b049-1fb5-4843-9515-a2e566aaa5ca',
+      },
+      name: { universalIdentifier: '4bae1a7c-75d2-4b27-935c-3b265afba262' },
+      status: {
+        universalIdentifier: '82caf219-ba71-45f4-b53c-571c4f0e7946',
+      },
+      workflowId: {
+        universalIdentifier: 'a497039c-827a-4fbc-a890-86383084daf0',
+      },
+      enrollmentCount: {
+        universalIdentifier: '3618098b-434a-4727-a1cf-21e58c6b52e1',
+      },
+      activeEnrollmentCount: {
+        universalIdentifier: '67546213-1696-4b5a-8a46-3c24be323e89',
+      },
+      completedCount: {
+        universalIdentifier: '0547f4e3-376b-41ce-9cdb-d63f06d612f6',
+      },
+      dripEnrollments: {
+        universalIdentifier: '4a6d8308-681f-46a1-8a27-f97e0808dda4',
+      },
+      searchVector: {
+        universalIdentifier: '6cdec635-20df-4827-b33c-7757356d4e10',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: '25d31570-0e59-4b0d-b5cf-6129848c4fbc',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '9833f491-14ee-4b97-9c39-6f2ca49a1809',
+      },
+    },
+    views: {
+      allDripCampaigns: {
+        universalIdentifier: 'db56bd3b-b53f-4bd0-aa16-40e6ed62c105',
+        viewFields: {
+          name: {
+            universalIdentifier: 'c8795cec-f630-456a-b531-5a82fe90d790',
+          },
+          status: {
+            universalIdentifier: 'c3918fd8-a076-4070-9c9e-9a97872e1193',
+          },
+          enrollmentCount: {
+            universalIdentifier: 'b2ce0ada-c90c-4090-82ae-6e9a25d0a966',
+          },
+          activeEnrollmentCount: {
+            universalIdentifier: 'a6ba5e9a-f431-45de-a62a-ece7f612af5c',
+          },
+          completedCount: {
+            universalIdentifier: '32ca15a4-baf6-4f58-81b1-50f70e4ed5ef',
+          },
+          createdAt: {
+            universalIdentifier: 'f06442d8-cb2f-4527-8710-f6de5487eb89',
+          },
+        },
+      },
+    },
+  },
+  dripEnrollment: {
+    universalIdentifier: '2453434e-fb4f-464f-814d-995d4ac5ca25',
+    fields: {
+      id: { universalIdentifier: '7df9fa61-693e-4089-be33-aa2230dea0cf' },
+      createdAt: {
+        universalIdentifier: '8f308c4c-344a-4a92-8387-966cd628e921',
+      },
+      updatedAt: {
+        universalIdentifier: '98e79460-0a66-4b12-81d6-cd2a24d14cb6',
+      },
+      deletedAt: {
+        universalIdentifier: 'e7f5df58-5edb-43bd-94b7-c5224303d94c',
+      },
+      position: {
+        universalIdentifier: 'fcc7b8de-fc81-483f-b969-d4dec5fd5c48',
+      },
+      createdBy: {
+        universalIdentifier: '45f92a56-56e0-41c7-90d6-f85460cd2ef3',
+      },
+      updatedBy: {
+        universalIdentifier: 'c142409e-0118-4c83-bd27-7f927e91e0fe',
+      },
+      status: {
+        universalIdentifier: '4b64e58b-c055-4555-b8c6-6e4287563f3a',
+      },
+      currentStepIndex: {
+        universalIdentifier: 'f49424a8-9174-4e8b-bf6a-979376f71473',
+      },
+      enrolledAt: {
+        universalIdentifier: 'd5a5bcb4-a2af-4b7a-a989-0491344bbfcc',
+      },
+      completedAt: {
+        universalIdentifier: '44af0f4a-c247-4c0e-9ba4-95811d675bb9',
+      },
+      workflowRunId: {
+        universalIdentifier: '19d9ebc5-dde1-4450-8557-dbbedc0954f6',
+      },
+      dripCampaign: {
+        universalIdentifier: '8fd3336a-6202-4445-b578-ea5996824696',
+      },
+      person: {
+        universalIdentifier: '3b2f4207-8cee-4f42-b3f8-ab3872047069',
+      },
+      searchVector: {
+        universalIdentifier: '92e8cec3-4104-4d13-a19e-23aab62fd08e',
+      },
+    },
+    indexes: {
+      searchVectorGinIndex: {
+        universalIdentifier: '430a768f-5efe-4a74-8964-c259d7d54175',
+      },
+    },
+    views: {
+      dripEnrollmentRecordPageFields: {
+        universalIdentifier: 'fd2fc93b-71e9-42ca-b53d-332eba838b8b',
+        viewFields: {
+          status: {
+            universalIdentifier: 'f726d104-e6c5-4a73-99a2-dacb0b0a788a',
+          },
+          dripCampaign: {
+            universalIdentifier: '1237012b-1463-451e-bf67-c26b3d1f730e',
+          },
+          enrolledAt: {
+            universalIdentifier: '17fc6057-ddb2-4669-a667-434f4016730a',
           },
         },
       },

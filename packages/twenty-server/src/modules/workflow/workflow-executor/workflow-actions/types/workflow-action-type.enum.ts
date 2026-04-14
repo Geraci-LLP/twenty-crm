@@ -16,4 +16,5 @@ export enum WorkflowActionType {
   ITERATOR = 'ITERATOR',
   EMPTY = 'EMPTY',
   DELAY = 'DELAY',
+  SEND_CAMPAIGN_EMAIL = 'SEND_CAMPAIGN_EMAIL',
 }

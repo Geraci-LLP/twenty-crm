@@ -9,6 +9,7 @@ import {
 import { AiAgentWorkflowAction } from 'src/modules/workflow/workflow-executor/workflow-actions/ai-agent/ai-agent.workflow-action';
 import { CodeWorkflowAction } from 'src/modules/workflow/workflow-executor/workflow-actions/code/code.workflow-action';
 import { DelayWorkflowAction } from 'src/modules/workflow/workflow-executor/workflow-actions/delay/delay.workflow-action';
+import { SendCampaignEmailWorkflowAction } from 'src/modules/workflow/workflow-executor/workflow-actions/send-campaign-email/send-campaign-email.workflow-action';
 import { EmptyWorkflowAction } from 'src/modules/workflow/workflow-executor/workflow-actions/empty/empty.workflow-action';
 import { FilterWorkflowAction } from 'src/modules/workflow/workflow-executor/workflow-actions/filter/filter.workflow-action';
 import { FormWorkflowAction } from 'src/modules/workflow/workflow-executor/workflow-actions/form/form.workflow-action';
@@ -41,6 +42,7 @@ export class WorkflowActionFactory {
     private readonly aiAgentWorkflowAction: AiAgentWorkflowAction,
     private readonly emptyWorkflowAction: EmptyWorkflowAction,
     private readonly delayWorkflowAction: DelayWorkflowAction,
+    private readonly sendCampaignEmailWorkflowAction: SendCampaignEmailWorkflowAction,
   ) {}
 
   get(stepType: WorkflowActionType): WorkflowAction {
@@ -79,6 +81,8 @@ export class WorkflowActionFactory {
         return this.emptyWorkflowAction;
       case WorkflowActionType.DELAY:
         return this.delayWorkflowAction;
+      case WorkflowActionType.SEND_CAMPAIGN_EMAIL:
+        return this.sendCampaignEmailWorkflowAction;
       default:
         throw new WorkflowStepExecutorException(
           `Workflow step executor not found for step type '${stepType}'`,

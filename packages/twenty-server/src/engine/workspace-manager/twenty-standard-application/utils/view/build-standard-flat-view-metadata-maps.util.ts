@@ -7,6 +7,9 @@ import { type FlatView } from 'src/engine/metadata-modules/flat-view/types/flat-
 import { type AllStandardObjectName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-name.type';
 import { computeStandardAttachmentViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-attachment-views.util';
 import { computeStandardBlocklistViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-blocklist-views.util';
+import { computeStandardCampaignViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-campaign-views.util';
+import { computeStandardCampaignRecipientViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-campaign-recipient-views.util';
+import { computeStandardCampaignTemplateViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-campaign-template-views.util';
 import { computeStandardCalendarChannelViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-calendar-channel-views.util';
 import { computeStandardCalendarChannelEventAssociationViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-calendar-channel-event-association-views.util';
 import { computeStandardCalendarEventParticipantViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-calendar-event-participant-views.util';
@@ -14,6 +17,8 @@ import { computeStandardCalendarEventViews } from 'src/engine/workspace-manager/
 import { computeStandardCompanyViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-company-views.util';
 import { computeStandardConnectedAccountViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-connected-account-views.util';
 import { computeStandardDashboardViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-dashboard-views.util';
+import { computeStandardDripCampaignViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-drip-campaign-views.util';
+import { computeStandardDripEnrollmentViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-drip-enrollment-views.util';
 import { computeStandardFavoriteFolderViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-favorite-folder-views.util';
 import { computeStandardFavoriteViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-favorite-views.util';
 import { computeStandardMessageChannelMessageAssociationMessageFolderViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-message-channel-message-association-message-folder-views.util';
@@ -44,6 +49,9 @@ type StandardViewBuilder<P extends AllStandardObjectName> = (
 const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   attachment: computeStandardAttachmentViews,
   blocklist: computeStandardBlocklistViews,
+  campaign: computeStandardCampaignViews,
+  campaignRecipient: computeStandardCampaignRecipientViews,
+  campaignTemplate: computeStandardCampaignTemplateViews,
   calendarChannel: computeStandardCalendarChannelViews,
   calendarChannelEventAssociation:
     computeStandardCalendarChannelEventAssociationViews,
@@ -52,6 +60,8 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   company: computeStandardCompanyViews,
   connectedAccount: computeStandardConnectedAccountViews,
   dashboard: computeStandardDashboardViews,
+  dripCampaign: computeStandardDripCampaignViews,
+  dripEnrollment: computeStandardDripEnrollmentViews,
   favorite: computeStandardFavoriteViews,
   favoriteFolder: computeStandardFavoriteFolderViews,
   message: computeStandardMessageViews,

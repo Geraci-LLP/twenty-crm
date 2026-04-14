@@ -192,6 +192,7 @@ export const computeStepOutputSchema = ({
     }
 
     case 'SEND_EMAIL':
+    case 'SEND_CAMPAIGN_EMAIL':
     case 'DRAFT_EMAIL': {
       return {
         success: {

@@ -2,6 +2,7 @@ export type CampaignStatus =
   | 'DRAFT'
   | 'SCHEDULED'
   | 'SENDING'
+  | 'PAUSED'
   | 'SENT'
   | 'FAILED';
 
@@ -34,4 +35,12 @@ export type CampaignEditorData = {
 
 export type CampaignSchedule = {
   scheduledAt: Date | null;
+};
+
+export type ResolveRecipientsResult = {
+  success: boolean;
+  created: number;
+  skipped: number;
+  total: number;
+  error?: string;
 };

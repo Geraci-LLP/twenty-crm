@@ -23,6 +23,7 @@ import {
   type workflowRunStateSchema,
   type workflowRunStatusSchema,
   type workflowRunStepStatusSchema,
+  type workflowSendCampaignEmailActionSchema,
   type workflowSendEmailActionSchema,
   type workflowTriggerSchema,
   type workflowUpdateRecordActionSchema,
@@ -68,6 +69,9 @@ export type WorkflowIteratorAction = z.infer<
 >;
 export type WorkflowAiAgentAction = z.infer<typeof workflowAiAgentActionSchema>;
 export type WorkflowEmptyAction = z.infer<typeof workflowEmptyActionSchema>;
+export type WorkflowSendCampaignEmailAction = z.infer<
+  typeof workflowSendCampaignEmailActionSchema
+>;
 
 export type WorkflowAction =
   | WorkflowCodeAction
@@ -86,7 +90,8 @@ export type WorkflowAction =
   | WorkflowAiAgentAction
   | WorkflowIteratorAction
   | WorkflowDelayAction
-  | WorkflowEmptyAction;
+  | WorkflowEmptyAction
+  | WorkflowSendCampaignEmailAction;
 
 export type WorkflowActionType = WorkflowAction['type'];
 export type WorkflowStep = WorkflowAction;

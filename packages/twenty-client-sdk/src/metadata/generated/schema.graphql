@@ -2695,6 +2695,37 @@ type AgentMessagePart {
   createdAt: DateTime!
 }
 
+type CampaignActionOutput {
+  success: Boolean!
+  error: String
+}
+
+type ResolveRecipientsOutput {
+  success: Boolean!
+  created: Int!
+  skipped: Int!
+  total: Int!
+  error: String
+}
+
+type DripCampaignActionOutputDTO {
+  success: Boolean!
+  error: String
+}
+
+type CreateDripCampaignOutputDTO {
+  success: Boolean!
+  dripCampaignId: ID
+  error: String
+}
+
+type EnrollContactsOutputDTO {
+  success: Boolean!
+  enrolled: Int!
+  skipped: Int!
+  error: String
+}
+
 type ChannelSyncSuccess {
   success: Boolean!
 }
@@ -3478,6 +3509,19 @@ type Mutation {
   createOneAgent(input: CreateAgentInput!): Agent!
   updateOneAgent(input: UpdateAgentInput!): Agent!
   deleteOneAgent(input: AgentIdInput!): Agent!
+  sendCampaign(input: SendCampaignInput!): CampaignActionOutput!
+  scheduleCampaign(input: ScheduleCampaignInput!): CampaignActionOutput!
+  pauseCampaign(input: PauseCampaignInput!): CampaignActionOutput!
+  resumeCampaign(input: ResumeCampaignInput!): CampaignActionOutput!
+  sendTestEmail(input: SendTestEmailInput!): CampaignActionOutput!
+  resolveRecipients(input: ResolveRecipientsInput!): ResolveRecipientsOutput!
+  saveAsTemplate(input: SaveAsTemplateInput!): CampaignActionOutput!
+  loadTemplate(input: LoadTemplateInput!): CampaignActionOutput!
+  createDripCampaign(input: CreateDripCampaignInput!): CreateDripCampaignOutputDTO!
+  activateDripCampaign(input: ActivateDripCampaignInput!): DripCampaignActionOutputDTO!
+  pauseDripCampaign(input: PauseDripCampaignInput!): DripCampaignActionOutputDTO!
+  enrollContacts(input: EnrollContactsInput!): EnrollContactsOutputDTO!
+  unenrollContact(input: UnenrollContactInput!): DripCampaignActionOutputDTO!
   updateWorkspaceMemberRole(workspaceMemberId: UUID!, roleId: UUID!): WorkspaceMember!
   createOneRole(createRoleInput: CreateRoleInput!): Role!
   updateOneRole(updateRoleInput: UpdateRoleInput!): Role!
@@ -4161,6 +4205,72 @@ input UpdateAgentInput {
   responseFormat: JSON
   modelConfiguration: JSON
   evaluationInputs: [String!]
+}
+
+input SendCampaignInput {
+  campaignId: String!
+}
+
+input ScheduleCampaignInput {
+  campaignId: String!
+  scheduledAt: DateTime!
+}
+
+input PauseCampaignInput {
+  campaignId: String!
+}
+
+input ResumeCampaignInput {
+  campaignId: String!
+}
+
+input SendTestEmailInput {
+  campaignId: String!
+  testEmailAddress: String!
+}
+
+input ResolveRecipientsInput {
+  campaignId: String!
+  mode: RecipientSelectionMode!
+  viewId: String
+  personIds: [String!]
+}
+
+enum RecipientSelectionMode {
+  SAVED_VIEW
+  MANUAL
+}
+
+input SaveAsTemplateInput {
+  campaignId: String!
+  templateName: String!
+  category: String
+}
+
+input LoadTemplateInput {
+  templateId: String!
+  campaignId: String!
+}
+
+input CreateDripCampaignInput {
+  name: String!
+}
+
+input ActivateDripCampaignInput {
+  dripCampaignId: ID!
+}
+
+input PauseDripCampaignInput {
+  dripCampaignId: ID!
+}
+
+input EnrollContactsInput {
+  dripCampaignId: ID!
+  personIds: [ID!]!
+}
+
+input UnenrollContactInput {
+  enrollmentId: ID!
 }
 
 input CreateRoleInput {

@@ -68,10 +68,19 @@ jobs:
           npx nx run twenty-server:database:reset
 
       - name: Server / Start
+        run: npx nx start:ci twenty-server &
+      - name: Waiting for server starting...
         run: |
-          npx nx start twenty-server &
-          echo "Waiting for server to be ready..."
-          timeout 60 bash -c 'until curl -s http://localhost:3000/health; do sleep 2; done'
+          for i in {1..30}; do
+            if curl -f http://localhost:3000/healthz; then
+              echo "Server ready!"
+              exit 0
+            fi
+            echo "Waiting..."
+            sleep 2
+          done
+          echo "Server did not become healthy in time" >&2
+          exit 1
 
       - name: Start worker
         run: |

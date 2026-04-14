@@ -31,4 +31,9 @@ export enum CoreObjectNameSingular {
   MessageChannelMessageAssociation = 'messageChannelMessageAssociation',
   WorkflowVersion = 'workflowVersion',
   WorkflowRun = 'workflowRun',
+  Campaign = 'campaign',
+  CampaignRecipient = 'campaignRecipient',
+  CampaignTemplate = 'campaignTemplate',
+  DripCampaign = 'dripCampaign',
+  DripEnrollment = 'dripEnrollment',
 }

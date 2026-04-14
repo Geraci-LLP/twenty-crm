@@ -1,4 +1,4 @@
-import { FieldMetadataType } from 'twenty-shared/types';
+import { type ActorMetadata, FieldMetadataType } from 'twenty-shared/types';
 
 import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity';
 import { type FieldTypeAndNameMetadata } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
@@ -20,6 +20,9 @@ export enum CampaignStatus {
 }
 
 export class CampaignWorkspaceEntity extends BaseWorkspaceEntity {
+  position: number;
+  createdBy: ActorMetadata;
+  updatedBy: ActorMetadata;
   name: string | null;
   subject: string | null;
   bodyHtml: string | null;

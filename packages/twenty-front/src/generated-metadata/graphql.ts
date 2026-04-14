@@ -32,6 +32,10 @@ export type AiSystemPromptSection = {
   title: Scalars['String'];
 };
 
+export type ActivateDripCampaignInput = {
+  dripCampaignId: Scalars['ID'];
+};
+
 export type ActivateWorkspaceInput = {
   displayName?: InputMaybe<Scalars['String']>;
 };
@@ -836,6 +840,12 @@ export type CalendarConfiguration = {
   configurationType: WidgetConfigurationType;
 };
 
+export type CampaignActionOutput = {
+  __typename?: 'CampaignActionOutput';
+  error?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+};
+
 export type Captcha = {
   __typename?: 'Captcha';
   provider?: Maybe<CaptchaDriverType>;
@@ -1121,6 +1131,17 @@ export type CreateCommandMenuItemInput = {
   position?: InputMaybe<Scalars['Float']>;
   shortLabel?: InputMaybe<Scalars['String']>;
   workflowVersionId?: InputMaybe<Scalars['UUID']>;
+};
+
+export type CreateDripCampaignInput = {
+  name: Scalars['String'];
+};
+
+export type CreateDripCampaignOutputDto = {
+  __typename?: 'CreateDripCampaignOutputDTO';
+  dripCampaignId?: Maybe<Scalars['ID']>;
+  error?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
 };
 
 export type CreateFieldInput = {
@@ -1501,6 +1522,12 @@ export type DomainValidRecords = {
   records: Array<DomainRecord>;
 };
 
+export type DripCampaignActionOutputDto = {
+  __typename?: 'DripCampaignActionOutputDTO';
+  error?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+};
+
 export type DuplicatedDashboard = {
   __typename?: 'DuplicatedDashboard';
   createdAt: Scalars['String'];
@@ -1637,6 +1664,19 @@ export enum EngineComponentKey {
   USE_AS_DRAFT_WORKFLOW_VERSION = 'USE_AS_DRAFT_WORKFLOW_VERSION',
   VIEW_PREVIOUS_AI_CHATS = 'VIEW_PREVIOUS_AI_CHATS'
 }
+
+export type EnrollContactsInput = {
+  dripCampaignId: Scalars['ID'];
+  personIds: Array<Scalars['ID']>;
+};
+
+export type EnrollContactsOutputDto = {
+  __typename?: 'EnrollContactsOutputDTO';
+  enrolled: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  skipped: Scalars['Int'];
+  success: Scalars['Boolean'];
+};
 
 export type EnterpriseLicenseInfoDto = {
   __typename?: 'EnterpriseLicenseInfoDTO';
@@ -2235,6 +2275,11 @@ export type LineChartSeries = {
   label: Scalars['String'];
 };
 
+export type LoadTemplateInput = {
+  campaignId: Scalars['String'];
+  templateId: Scalars['String'];
+};
+
 export type Location = {
   __typename?: 'Location';
   lat?: Maybe<Scalars['Float']>;
@@ -2506,6 +2551,7 @@ export type ModelsDevProviderSuggestion = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  activateDripCampaign: DripCampaignActionOutputDto;
   activateSkill: Skill;
   activateWorkspace: Workspace;
   addAiProvider: Scalars['Boolean'];
@@ -2529,6 +2575,7 @@ export type Mutation = {
   createCommandMenuItem: CommandMenuItem;
   createDatabaseConfigVariable: Scalars['Boolean'];
   createDevelopmentApplication: DevelopmentApplication;
+  createDripCampaign: CreateDripCampaignOutputDto;
   createEmailingDomain: EmailingDomain;
   createFrontComponent: FrontComponent;
   createManyNavigationMenuItems: Array<NavigationMenuItem>;
@@ -2608,6 +2655,7 @@ export type Mutation = {
   emailPasswordResetLink: EmailPasswordResetLink;
   enablePostgresProxy: PostgresCredentials;
   endSubscriptionTrialPeriod: BillingEndTrialPeriod;
+  enrollContacts: EnrollContactsOutputDto;
   evaluateAgentTurn: AgentTurnEvaluation;
   executeOneLogicFunction: LogicFunctionExecutionResult;
   generateApiKeyToken: ApiKeyToken;
@@ -2622,6 +2670,9 @@ export type Mutation = {
   initiateOTPProvisioningForAuthenticatedUser: InitiateTwoFactorAuthenticationProvisioning;
   installApplication: Scalars['Boolean'];
   installMarketplaceApp: Scalars['Boolean'];
+  loadTemplate: CampaignActionOutput;
+  pauseCampaign: CampaignActionOutput;
+  pauseDripCampaign: DripCampaignActionOutputDto;
   refreshEnterpriseValidityToken: Scalars['Boolean'];
   removeAiProvider: Scalars['Boolean'];
   removeModelFromProvider: Scalars['Boolean'];
@@ -2632,15 +2683,21 @@ export type Mutation = {
   resendEmailVerificationToken: ResendEmailVerificationToken;
   resendWorkspaceInvitation: SendInvitations;
   resetPageLayoutWidgetToDefault: PageLayoutWidget;
+  resolveRecipients: ResolveRecipientsOutput;
+  resumeCampaign: CampaignActionOutput;
   retryJobs: RetryJobsResponse;
   revokeApiKey?: Maybe<ApiKey>;
   rotateApplicationRegistrationClientSecret: RotateClientSecret;
   runEvaluationInput: AgentTurn;
   runWorkspaceMigration: Scalars['Boolean'];
+  saveAsTemplate: CampaignActionOutput;
   saveImapSmtpCaldavAccount: ImapSmtpCaldavConnectionSuccess;
+  scheduleCampaign: CampaignActionOutput;
+  sendCampaign: CampaignActionOutput;
   sendChatMessage: SendChatMessageResult;
   sendEmail: SendEmailOutput;
   sendInvitations: SendInvitations;
+  sendTestEmail: CampaignActionOutput;
   setAdminAiModelEnabled: Scalars['Boolean'];
   setAdminAiModelRecommended: Scalars['Boolean'];
   setAdminDefaultAiModel: Scalars['Boolean'];
@@ -2661,6 +2718,7 @@ export type Mutation = {
   syncMarketplaceCatalog: Scalars['Boolean'];
   trackAnalytics: Analytics;
   transferApplicationRegistrationOwnership: ApplicationRegistration;
+  unenrollContact: DripCampaignActionOutputDto;
   uninstallApplication: Scalars['Boolean'];
   updateApiKey?: Maybe<ApiKey>;
   updateApplicationRegistration: ApplicationRegistration;
@@ -2720,6 +2778,11 @@ export type Mutation = {
   verifyEmailAndGetWorkspaceAgnosticToken: AvailableWorkspacesAndAccessTokens;
   verifyEmailingDomain: EmailingDomain;
   verifyTwoFactorAuthenticationMethodForAuthenticatedUser: VerifyTwoFactorAuthenticationMethod;
+};
+
+
+export type MutationActivateDripCampaignArgs = {
+  input: ActivateDripCampaignInput;
 };
 
 
@@ -2818,6 +2881,11 @@ export type MutationCreateDatabaseConfigVariableArgs = {
 export type MutationCreateDevelopmentApplicationArgs = {
   name: Scalars['String'];
   universalIdentifier: Scalars['String'];
+};
+
+
+export type MutationCreateDripCampaignArgs = {
+  input: CreateDripCampaignInput;
 };
 
 
@@ -3197,6 +3265,11 @@ export type MutationEmailPasswordResetLinkArgs = {
 };
 
 
+export type MutationEnrollContactsArgs = {
+  input: EnrollContactsInput;
+};
+
+
 export type MutationEvaluateAgentTurnArgs = {
   turnId: Scalars['UUID'];
 };
@@ -3271,6 +3344,21 @@ export type MutationInstallMarketplaceAppArgs = {
 };
 
 
+export type MutationLoadTemplateArgs = {
+  input: LoadTemplateInput;
+};
+
+
+export type MutationPauseCampaignArgs = {
+  input: PauseCampaignInput;
+};
+
+
+export type MutationPauseDripCampaignArgs = {
+  input: PauseDripCampaignInput;
+};
+
+
 export type MutationRemoveAiProviderArgs = {
   providerName: Scalars['String'];
 };
@@ -3318,6 +3406,16 @@ export type MutationResetPageLayoutWidgetToDefaultArgs = {
 };
 
 
+export type MutationResolveRecipientsArgs = {
+  input: ResolveRecipientsInput;
+};
+
+
+export type MutationResumeCampaignArgs = {
+  input: ResumeCampaignInput;
+};
+
+
 export type MutationRetryJobsArgs = {
   jobIds: Array<Scalars['String']>;
   queueName: Scalars['String'];
@@ -3345,11 +3443,26 @@ export type MutationRunWorkspaceMigrationArgs = {
 };
 
 
+export type MutationSaveAsTemplateArgs = {
+  input: SaveAsTemplateInput;
+};
+
+
 export type MutationSaveImapSmtpCaldavAccountArgs = {
   accountOwnerId: Scalars['UUID'];
   connectionParameters: EmailAccountConnectionParameters;
   handle: Scalars['String'];
   id?: InputMaybe<Scalars['UUID']>;
+};
+
+
+export type MutationScheduleCampaignArgs = {
+  input: ScheduleCampaignInput;
+};
+
+
+export type MutationSendCampaignArgs = {
+  input: SendCampaignInput;
 };
 
 
@@ -3370,6 +3483,11 @@ export type MutationSendEmailArgs = {
 export type MutationSendInvitationsArgs = {
   emails: Array<Scalars['String']>;
   roleId?: InputMaybe<Scalars['UUID']>;
+};
+
+
+export type MutationSendTestEmailArgs = {
+  input: SendTestEmailInput;
 };
 
 
@@ -3464,6 +3582,11 @@ export type MutationTrackAnalyticsArgs = {
 export type MutationTransferApplicationRegistrationOwnershipArgs = {
   applicationRegistrationId: Scalars['String'];
   targetWorkspaceSubdomain: Scalars['String'];
+};
+
+
+export type MutationUnenrollContactArgs = {
+  input: UnenrollContactInput;
 };
 
 
@@ -4094,6 +4217,14 @@ export type PageLayoutWidgetVerticalListPosition = {
   __typename?: 'PageLayoutWidgetVerticalListPosition';
   index: Scalars['Int'];
   layoutMode: PageLayoutTabLayoutMode;
+};
+
+export type PauseCampaignInput = {
+  campaignId: Scalars['String'];
+};
+
+export type PauseDripCampaignInput = {
+  dripCampaignId: Scalars['ID'];
 };
 
 export type PermissionFlag = {
@@ -4808,6 +4939,11 @@ export type RatioAggregateConfig = {
   optionValue: Scalars['String'];
 };
 
+export enum RecipientSelectionMode {
+  MANUAL = 'MANUAL',
+  SAVED_VIEW = 'SAVED_VIEW'
+}
+
 export type RecordIdentifier = {
   __typename?: 'RecordIdentifier';
   id: Scalars['UUID'];
@@ -4844,6 +4980,26 @@ export type RemoveQueryFromEventStreamInput = {
 export type ResendEmailVerificationToken = {
   __typename?: 'ResendEmailVerificationToken';
   success: Scalars['Boolean'];
+};
+
+export type ResolveRecipientsInput = {
+  campaignId: Scalars['String'];
+  mode: RecipientSelectionMode;
+  personIds?: InputMaybe<Array<Scalars['String']>>;
+  viewId?: InputMaybe<Scalars['String']>;
+};
+
+export type ResolveRecipientsOutput = {
+  __typename?: 'ResolveRecipientsOutput';
+  created: Scalars['Int'];
+  error?: Maybe<Scalars['String']>;
+  skipped: Scalars['Int'];
+  success: Scalars['Boolean'];
+  total: Scalars['Int'];
+};
+
+export type ResumeCampaignInput = {
+  campaignId: Scalars['String'];
 };
 
 export type RetryJobsResponse = {
@@ -4987,6 +5143,21 @@ export enum SsoIdentityProviderStatus {
   Inactive = 'Inactive'
 }
 
+export type SaveAsTemplateInput = {
+  campaignId: Scalars['String'];
+  category?: InputMaybe<Scalars['String']>;
+  templateName: Scalars['String'];
+};
+
+export type ScheduleCampaignInput = {
+  campaignId: Scalars['String'];
+  scheduledAt: Scalars['DateTime'];
+};
+
+export type SendCampaignInput = {
+  campaignId: Scalars['String'];
+};
+
 export type SendChatMessageResult = {
   __typename?: 'SendChatMessageResult';
   messageId: Scalars['String'];
@@ -5016,6 +5187,11 @@ export type SendInvitations = {
   result: Array<WorkspaceInvitation>;
   /** Boolean that confirms query was dispatched */
   success: Scalars['Boolean'];
+};
+
+export type SendTestEmailInput = {
+  campaignId: Scalars['String'];
+  testEmailAddress: Scalars['String'];
 };
 
 export type Sentry = {
@@ -5205,6 +5381,10 @@ export type UuidFilterComparison = {
   notILike?: InputMaybe<Scalars['UUID']>;
   notIn?: InputMaybe<Array<Scalars['UUID']>>;
   notLike?: InputMaybe<Scalars['UUID']>;
+};
+
+export type UnenrollContactInput = {
+  enrollmentId: Scalars['ID'];
 };
 
 export type UpdateAgentInput = {

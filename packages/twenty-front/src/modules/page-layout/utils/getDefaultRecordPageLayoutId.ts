@@ -1,4 +1,6 @@
 import { CoreObjectNameSingular } from 'twenty-shared/types';
+import { DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCampaignRecordPageLayoutId';
+import { DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCampaignTemplateRecordPageLayoutId';
 import { DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCompanyRecordPageLayoutId';
 import { DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultMessageThreadRecordPageLayoutId';
 import { DEFAULT_NOTE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultNoteRecordPageLayoutId';
@@ -11,6 +13,9 @@ import { DEFAULT_WORKFLOW_RUN_PAGE_LAYOUT_ID } from '@/page-layout/constants/Def
 import { DEFAULT_WORKFLOW_VERSION_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultWorkflowVersionPageLayoutId';
 
 const OBJECT_NAME_TO_DEFAULT_LAYOUT_ID: Record<string, string> = {
+  [CoreObjectNameSingular.Campaign]: DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID,
+  [CoreObjectNameSingular.CampaignTemplate]:
+    DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID,
   [CoreObjectNameSingular.Company]: DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID,
   [CoreObjectNameSingular.Person]: DEFAULT_PERSON_RECORD_PAGE_LAYOUT_ID,
   [CoreObjectNameSingular.Opportunity]:

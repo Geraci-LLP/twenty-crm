@@ -7,6 +7,7 @@ import { type FlatViewField } from 'src/engine/metadata-modules/flat-view-field/
 import { type AllStandardObjectName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-name.type';
 import { computeStandardAttachmentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-attachment-view-fields.util';
 import { computeStandardBlocklistViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-blocklist-view-fields.util';
+import { computeStandardCampaignViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-campaign-view-fields.util';
 import { computeStandardCalendarChannelEventAssociationViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-channel-event-association-view-fields.util';
 import { computeStandardCalendarChannelViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-channel-view-fields.util';
 import { computeStandardCalendarEventParticipantViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-event-participant-view-fields.util';
@@ -14,6 +15,8 @@ import { computeStandardCalendarEventViewFields } from 'src/engine/workspace-man
 import { computeStandardCompanyViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-company-view-fields.util';
 import { computeStandardConnectedAccountViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-connected-account-view-fields.util';
 import { computeStandardDashboardViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-dashboard-view-fields.util';
+import { computeStandardDripCampaignViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-drip-campaign-view-fields.util';
+import { computeStandardDripEnrollmentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-drip-enrollment-view-fields.util';
 import { computeStandardFavoriteFolderViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-favorite-folder-view-fields.util';
 import { computeStandardFavoriteViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-favorite-view-fields.util';
 import { computeStandardMessageChannelMessageAssociationMessageFolderViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-channel-message-association-message-folder-view-fields.util';
@@ -44,6 +47,7 @@ type StandardViewFieldBuilder<P extends AllStandardObjectName> = (
 const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   attachment: computeStandardAttachmentViewFields,
   blocklist: computeStandardBlocklistViewFields,
+  campaign: computeStandardCampaignViewFields,
   calendarChannel: computeStandardCalendarChannelViewFields,
   calendarChannelEventAssociation:
     computeStandardCalendarChannelEventAssociationViewFields,
@@ -52,6 +56,8 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   company: computeStandardCompanyViewFields,
   connectedAccount: computeStandardConnectedAccountViewFields,
   dashboard: computeStandardDashboardViewFields,
+  dripCampaign: computeStandardDripCampaignViewFields,
+  dripEnrollment: computeStandardDripEnrollmentViewFields,
   favorite: computeStandardFavoriteViewFields,
   favoriteFolder: computeStandardFavoriteFolderViewFields,
   message: computeStandardMessageViewFields,

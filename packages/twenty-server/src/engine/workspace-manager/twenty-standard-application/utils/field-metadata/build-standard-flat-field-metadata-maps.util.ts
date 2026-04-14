@@ -7,6 +7,9 @@ import { type FlatFieldMetadata } from 'src/engine/metadata-modules/flat-field-m
 import { type AllStandardObjectName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-name.type';
 import { buildAttachmentStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util';
 import { buildBlocklistStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util';
+import { buildCampaignStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util';
+import { buildCampaignRecipientStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util';
+import { buildCampaignTemplateStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util';
 import { buildCalendarChannelEventAssociationStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util';
 import { buildCalendarChannelStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util';
 import { buildCalendarEventParticipantStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util';
@@ -14,6 +17,8 @@ import { buildCalendarEventStandardFlatFieldMetadatas } from 'src/engine/workspa
 import { buildCompanyStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util';
 import { buildConnectedAccountStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util';
 import { buildDashboardStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util';
+import { buildDripCampaignStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util';
+import { buildDripEnrollmentStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util';
 import { buildFavoriteFolderStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util';
 import { buildFavoriteStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-standard-flat-field-metadata.util';
 import { buildMessageChannelMessageAssociationMessageFolderStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util';
@@ -44,6 +49,9 @@ type StandardFieldBuilder<P extends AllStandardObjectName> = (
 const STANDARD_FLAT_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   attachment: buildAttachmentStandardFlatFieldMetadatas,
   blocklist: buildBlocklistStandardFlatFieldMetadatas,
+  campaign: buildCampaignStandardFlatFieldMetadatas,
+  campaignRecipient: buildCampaignRecipientStandardFlatFieldMetadatas,
+  campaignTemplate: buildCampaignTemplateStandardFlatFieldMetadatas,
   calendarChannel: buildCalendarChannelStandardFlatFieldMetadatas,
   calendarChannelEventAssociation:
     buildCalendarChannelEventAssociationStandardFlatFieldMetadatas,
@@ -53,6 +61,8 @@ const STANDARD_FLAT_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   company: buildCompanyStandardFlatFieldMetadatas,
   connectedAccount: buildConnectedAccountStandardFlatFieldMetadatas,
   dashboard: buildDashboardStandardFlatFieldMetadatas,
+  dripCampaign: buildDripCampaignStandardFlatFieldMetadatas,
+  dripEnrollment: buildDripEnrollmentStandardFlatFieldMetadatas,
   favorite: buildFavoriteStandardFlatFieldMetadatas,
   favoriteFolder: buildFavoriteFolderStandardFlatFieldMetadatas,
   message: buildMessageStandardFlatFieldMetadatas,

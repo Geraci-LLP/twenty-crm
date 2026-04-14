@@ -8,14 +8,16 @@ import { type EmailDriverInterface } from 'src/engine/core-modules/email/drivers
 export type SendGridPersonalization = {
   to: string;
   substitutions?: Record<string, string>;
+  customArgs?: Record<string, string>;
 };
 
 export type SendGridBatchOptions = {
   subject: string;
   htmlContent: string;
+  plainTextContent?: string;
   from: { email: string; name: string };
-  recipientIds: string[];
-  personalizations?: SendGridPersonalization[];
+  personalizations: SendGridPersonalization[];
+  headers?: Record<string, string>;
 };
 
 @Injectable()
@@ -57,29 +59,38 @@ export class SendGridDriverService implements EmailDriverInterface {
 
   // Batch sending with personalizations (up to 1000 per API call)
   async sendBatch(options: SendGridBatchOptions): Promise<void> {
-    const personalizations =
-      options.personalizations?.map((personalization) => ({
-        to: [{ email: personalization.to }],
-        substitutions: personalization.substitutions,
-      })) ?? [];
-
-    if (personalizations.length === 0) {
+    if (options.personalizations.length === 0) {
       this.logger.warn('No personalizations provided for batch send');
 
       return;
     }
 
-    const payload = {
+    const personalizations = options.personalizations.map(
+      (personalization) => ({
+        to: [{ email: personalization.to }],
+        substitutions: personalization.substitutions,
+        custom_args: personalization.customArgs,
+      }),
+    );
+
+    const content: Array<{ type: string; value: string }> = [];
+
+    if (options.plainTextContent) {
+      content.push({ type: 'text/plain', value: options.plainTextContent });
+    }
+
+    content.push({ type: 'text/html', value: options.htmlContent });
+
+    const payload: Record<string, unknown> = {
       personalizations,
       from: options.from,
       subject: options.subject,
-      content: [
-        {
-          type: 'text/html',
-          value: options.htmlContent,
-        },
-      ],
+      content,
     };
+
+    if (options.headers) {
+      payload.headers = options.headers;
+    }
 
     await this.callSendGridApi(payload);
   }

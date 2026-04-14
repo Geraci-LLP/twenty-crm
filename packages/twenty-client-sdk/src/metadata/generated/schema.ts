@@ -2339,6 +2339,42 @@ export interface AgentMessagePart {
     __typename: 'AgentMessagePart'
 }
 
+export interface CampaignActionOutput {
+    success: Scalars['Boolean']
+    error?: Scalars['String']
+    __typename: 'CampaignActionOutput'
+}
+
+export interface ResolveRecipientsOutput {
+    success: Scalars['Boolean']
+    created: Scalars['Int']
+    skipped: Scalars['Int']
+    total: Scalars['Int']
+    error?: Scalars['String']
+    __typename: 'ResolveRecipientsOutput'
+}
+
+export interface DripCampaignActionOutputDTO {
+    success: Scalars['Boolean']
+    error?: Scalars['String']
+    __typename: 'DripCampaignActionOutputDTO'
+}
+
+export interface CreateDripCampaignOutputDTO {
+    success: Scalars['Boolean']
+    dripCampaignId?: Scalars['ID']
+    error?: Scalars['String']
+    __typename: 'CreateDripCampaignOutputDTO'
+}
+
+export interface EnrollContactsOutputDTO {
+    success: Scalars['Boolean']
+    enrolled: Scalars['Int']
+    skipped: Scalars['Int']
+    error?: Scalars['String']
+    __typename: 'EnrollContactsOutputDTO'
+}
+
 export interface ChannelSyncSuccess {
     success: Scalars['Boolean']
     __typename: 'ChannelSyncSuccess'
@@ -2925,6 +2961,19 @@ export interface Mutation {
     createOneAgent: Agent
     updateOneAgent: Agent
     deleteOneAgent: Agent
+    sendCampaign: CampaignActionOutput
+    scheduleCampaign: CampaignActionOutput
+    pauseCampaign: CampaignActionOutput
+    resumeCampaign: CampaignActionOutput
+    sendTestEmail: CampaignActionOutput
+    resolveRecipients: ResolveRecipientsOutput
+    saveAsTemplate: CampaignActionOutput
+    loadTemplate: CampaignActionOutput
+    createDripCampaign: CreateDripCampaignOutputDTO
+    activateDripCampaign: DripCampaignActionOutputDTO
+    pauseDripCampaign: DripCampaignActionOutputDTO
+    enrollContacts: EnrollContactsOutputDTO
+    unenrollContact: DripCampaignActionOutputDTO
     updateWorkspaceMemberRole: WorkspaceMember
     createOneRole: Role
     updateOneRole: Role
@@ -3051,6 +3100,8 @@ export interface Mutation {
 }
 
 export type AnalyticsType = 'PAGEVIEW' | 'TRACK'
+
+export type RecipientSelectionMode = 'SAVED_VIEW' | 'MANUAL'
 
 export type AiModelRole = 'FAST' | 'SMART'
 
@@ -5537,6 +5588,47 @@ export interface AgentMessagePartGenqlSelection{
     __scalar?: boolean | number
 }
 
+export interface CampaignActionOutputGenqlSelection{
+    success?: boolean | number
+    error?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+export interface ResolveRecipientsOutputGenqlSelection{
+    success?: boolean | number
+    created?: boolean | number
+    skipped?: boolean | number
+    total?: boolean | number
+    error?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+export interface DripCampaignActionOutputDTOGenqlSelection{
+    success?: boolean | number
+    error?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+export interface CreateDripCampaignOutputDTOGenqlSelection{
+    success?: boolean | number
+    dripCampaignId?: boolean | number
+    error?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+export interface EnrollContactsOutputDTOGenqlSelection{
+    success?: boolean | number
+    enrolled?: boolean | number
+    skipped?: boolean | number
+    error?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
 export interface ChannelSyncSuccessGenqlSelection{
     success?: boolean | number
     __typename?: boolean | number
@@ -6174,6 +6266,19 @@ export interface MutationGenqlSelection{
     createOneAgent?: (AgentGenqlSelection & { __args: {input: CreateAgentInput} })
     updateOneAgent?: (AgentGenqlSelection & { __args: {input: UpdateAgentInput} })
     deleteOneAgent?: (AgentGenqlSelection & { __args: {input: AgentIdInput} })
+    sendCampaign?: (CampaignActionOutputGenqlSelection & { __args: {input: SendCampaignInput} })
+    scheduleCampaign?: (CampaignActionOutputGenqlSelection & { __args: {input: ScheduleCampaignInput} })
+    pauseCampaign?: (CampaignActionOutputGenqlSelection & { __args: {input: PauseCampaignInput} })
+    resumeCampaign?: (CampaignActionOutputGenqlSelection & { __args: {input: ResumeCampaignInput} })
+    sendTestEmail?: (CampaignActionOutputGenqlSelection & { __args: {input: SendTestEmailInput} })
+    resolveRecipients?: (ResolveRecipientsOutputGenqlSelection & { __args: {input: ResolveRecipientsInput} })
+    saveAsTemplate?: (CampaignActionOutputGenqlSelection & { __args: {input: SaveAsTemplateInput} })
+    loadTemplate?: (CampaignActionOutputGenqlSelection & { __args: {input: LoadTemplateInput} })
+    createDripCampaign?: (CreateDripCampaignOutputDTOGenqlSelection & { __args: {input: CreateDripCampaignInput} })
+    activateDripCampaign?: (DripCampaignActionOutputDTOGenqlSelection & { __args: {input: ActivateDripCampaignInput} })
+    pauseDripCampaign?: (DripCampaignActionOutputDTOGenqlSelection & { __args: {input: PauseDripCampaignInput} })
+    enrollContacts?: (EnrollContactsOutputDTOGenqlSelection & { __args: {input: EnrollContactsInput} })
+    unenrollContact?: (DripCampaignActionOutputDTOGenqlSelection & { __args: {input: UnenrollContactInput} })
     updateWorkspaceMemberRole?: (WorkspaceMemberGenqlSelection & { __args: {workspaceMemberId: Scalars['UUID'], roleId: Scalars['UUID']} })
     createOneRole?: (RoleGenqlSelection & { __args: {createRoleInput: CreateRoleInput} })
     updateOneRole?: (RoleGenqlSelection & { __args: {updateRoleInput: UpdateRoleInput} })
@@ -6491,6 +6596,32 @@ export interface UpdateObjectPayload {labelSingular?: (Scalars['String'] | null)
 export interface CreateAgentInput {name?: (Scalars['String'] | null),label: Scalars['String'],icon?: (Scalars['String'] | null),description?: (Scalars['String'] | null),prompt: Scalars['String'],modelId: Scalars['String'],roleId?: (Scalars['UUID'] | null),responseFormat?: (Scalars['JSON'] | null),modelConfiguration?: (Scalars['JSON'] | null),evaluationInputs?: (Scalars['String'][] | null)}
 
 export interface UpdateAgentInput {id: Scalars['UUID'],name?: (Scalars['String'] | null),label?: (Scalars['String'] | null),icon?: (Scalars['String'] | null),description?: (Scalars['String'] | null),prompt?: (Scalars['String'] | null),modelId?: (Scalars['String'] | null),roleId?: (Scalars['UUID'] | null),responseFormat?: (Scalars['JSON'] | null),modelConfiguration?: (Scalars['JSON'] | null),evaluationInputs?: (Scalars['String'][] | null)}
+
+export interface SendCampaignInput {campaignId: Scalars['String']}
+
+export interface ScheduleCampaignInput {campaignId: Scalars['String'],scheduledAt: Scalars['DateTime']}
+
+export interface PauseCampaignInput {campaignId: Scalars['String']}
+
+export interface ResumeCampaignInput {campaignId: Scalars['String']}
+
+export interface SendTestEmailInput {campaignId: Scalars['String'],testEmailAddress: Scalars['String']}
+
+export interface ResolveRecipientsInput {campaignId: Scalars['String'],mode: RecipientSelectionMode,viewId?: (Scalars['String'] | null),personIds?: (Scalars['String'][] | null)}
+
+export interface SaveAsTemplateInput {campaignId: Scalars['String'],templateName: Scalars['String'],category?: (Scalars['String'] | null)}
+
+export interface LoadTemplateInput {templateId: Scalars['String'],campaignId: Scalars['String']}
+
+export interface CreateDripCampaignInput {name: Scalars['String']}
+
+export interface ActivateDripCampaignInput {dripCampaignId: Scalars['ID']}
+
+export interface PauseDripCampaignInput {dripCampaignId: Scalars['ID']}
+
+export interface EnrollContactsInput {dripCampaignId: Scalars['ID'],personIds: Scalars['ID'][]}
+
+export interface UnenrollContactInput {enrollmentId: Scalars['ID']}
 
 export interface CreateRoleInput {id?: (Scalars['String'] | null),label: Scalars['String'],description?: (Scalars['String'] | null),icon?: (Scalars['String'] | null),canUpdateAllSettings?: (Scalars['Boolean'] | null),canAccessAllTools?: (Scalars['Boolean'] | null),canReadAllObjectRecords?: (Scalars['Boolean'] | null),canUpdateAllObjectRecords?: (Scalars['Boolean'] | null),canSoftDeleteAllObjectRecords?: (Scalars['Boolean'] | null),canDestroyAllObjectRecords?: (Scalars['Boolean'] | null),canBeAssignedToUsers?: (Scalars['Boolean'] | null),canBeAssignedToAgents?: (Scalars['Boolean'] | null),canBeAssignedToApiKeys?: (Scalars['Boolean'] | null)}
 
@@ -8443,6 +8574,46 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     
 
 
+    const CampaignActionOutput_possibleTypes: string[] = ['CampaignActionOutput']
+    export const isCampaignActionOutput = (obj?: { __typename?: any } | null): obj is CampaignActionOutput => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isCampaignActionOutput"')
+      return CampaignActionOutput_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const ResolveRecipientsOutput_possibleTypes: string[] = ['ResolveRecipientsOutput']
+    export const isResolveRecipientsOutput = (obj?: { __typename?: any } | null): obj is ResolveRecipientsOutput => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isResolveRecipientsOutput"')
+      return ResolveRecipientsOutput_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const DripCampaignActionOutputDTO_possibleTypes: string[] = ['DripCampaignActionOutputDTO']
+    export const isDripCampaignActionOutputDTO = (obj?: { __typename?: any } | null): obj is DripCampaignActionOutputDTO => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isDripCampaignActionOutputDTO"')
+      return DripCampaignActionOutputDTO_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const CreateDripCampaignOutputDTO_possibleTypes: string[] = ['CreateDripCampaignOutputDTO']
+    export const isCreateDripCampaignOutputDTO = (obj?: { __typename?: any } | null): obj is CreateDripCampaignOutputDTO => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isCreateDripCampaignOutputDTO"')
+      return CreateDripCampaignOutputDTO_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const EnrollContactsOutputDTO_possibleTypes: string[] = ['EnrollContactsOutputDTO']
+    export const isEnrollContactsOutputDTO = (obj?: { __typename?: any } | null): obj is EnrollContactsOutputDTO => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isEnrollContactsOutputDTO"')
+      return EnrollContactsOutputDTO_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const ChannelSyncSuccess_possibleTypes: string[] = ['ChannelSyncSuccess']
     export const isChannelSyncSuccess = (obj?: { __typename?: any } | null): obj is ChannelSyncSuccess => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isChannelSyncSuccess"')
@@ -9465,6 +9636,11 @@ export const enumUsageOperationType = {
 export const enumAnalyticsType = {
    PAGEVIEW: 'PAGEVIEW' as const,
    TRACK: 'TRACK' as const
+}
+
+export const enumRecipientSelectionMode = {
+   SAVED_VIEW: 'SAVED_VIEW' as const,
+   MANUAL: 'MANUAL' as const
 }
 
 export const enumAiModelRole = {
