@@ -14,6 +14,10 @@ type FormRecord = ObjectRecord & {
   thankYouMessage: string | null;
   notifyOnSubmission: boolean;
   notificationEmail: string | null;
+  redirectUrl: string | null;
+  sendConfirmationEmail: boolean;
+  confirmationEmailSubject: string | null;
+  confirmationEmailBody: string | null;
 };
 
 export const useFormRecord = ({ formId }: { formId: string }) => {
@@ -30,6 +34,10 @@ export const useFormRecord = ({ formId }: { formId: string }) => {
       thankYouMessage: true,
       notifyOnSubmission: true,
       notificationEmail: true,
+      redirectUrl: true,
+      sendConfirmationEmail: true,
+      confirmationEmailSubject: true,
+      confirmationEmailBody: true,
     },
   });
 

@@ -1,3 +1,4 @@
+import { type FormFieldValidation } from '@/workflow/workflow-steps/workflow-actions/form-action/types/FormFieldValidation';
 import { type WorkflowFormFieldType } from '@/workflow/workflow-steps/workflow-actions/form-action/types/WorkflowFormFieldType';
 
 export type WorkflowFormActionField = {
@@ -7,5 +8,6 @@ export type WorkflowFormActionField = {
   type: WorkflowFormFieldType;
   placeholder?: string;
   settings?: Record<string, any>;
+  validation?: FormFieldValidation;
   value?: any;
 };

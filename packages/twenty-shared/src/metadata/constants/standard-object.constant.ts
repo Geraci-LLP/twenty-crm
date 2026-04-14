@@ -3927,6 +3927,18 @@ export const STANDARD_OBJECTS = {
       notificationEmail: {
         universalIdentifier: '3c62ae05-1eaa-4c14-bc49-2969e88c2713',
       },
+      redirectUrl: {
+        universalIdentifier: '7d4e8f1a-2b3c-4d5e-9f6a-1b2c3d4e5f6a',
+      },
+      sendConfirmationEmail: {
+        universalIdentifier: '8e5f9a2b-3c4d-5e6f-a7b8-2c3d4e5f6a7b',
+      },
+      confirmationEmailSubject: {
+        universalIdentifier: '9f6a0b3c-4d5e-6f7a-b8c9-3d4e5f6a7b8c',
+      },
+      confirmationEmailBody: {
+        universalIdentifier: 'a0b1c2d3-5e6f-7a8b-c9d0-4e5f6a7b8c9d',
+      },
       formSubmissions: {
         universalIdentifier: 'd4fc6edb-094e-457a-9050-091fd88fa25b',
       },

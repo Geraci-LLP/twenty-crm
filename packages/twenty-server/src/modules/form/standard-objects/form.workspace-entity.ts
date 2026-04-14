@@ -29,6 +29,10 @@ export class FormWorkspaceEntity extends BaseWorkspaceEntity {
   thankYouMessage: string | null;
   notifyOnSubmission: boolean;
   notificationEmail: string | null;
+  redirectUrl: string | null;
+  sendConfirmationEmail: boolean;
+  confirmationEmailSubject: string | null;
+  confirmationEmailBody: string | null;
   formSubmissions: EntityRelation<FormSubmissionWorkspaceEntity[]>;
   searchVector: string;
 }

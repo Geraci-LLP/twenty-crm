@@ -21,6 +21,7 @@ import { GlobalWorkspaceOrmManager } from 'src/engine/twenty-orm/global-workspac
 import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system-auth-context.util';
 import { type FormWorkspaceEntity } from 'src/modules/form/standard-objects/form.workspace-entity';
 import { type FormSubmissionWorkspaceEntity } from 'src/modules/form/standard-objects/form-submission.workspace-entity';
+import { FormSubmissionService } from 'src/modules/form/services/form-submission.service';
 
 type SubmitFormBody = {
   fields: Record<string, unknown>;
@@ -36,6 +37,7 @@ export class FormPublicController {
     private readonly globalWorkspaceOrmManager: GlobalWorkspaceOrmManager,
     @InjectRepository(WorkspaceEntity)
     private readonly workspaceRepository: Repository<WorkspaceEntity>,
+    private readonly formSubmissionService: FormSubmissionService,
   ) {}
 
   @Get(':workspaceId/:formId/schema')
@@ -78,6 +80,7 @@ export class FormPublicController {
       description: form.description,
       fields: form.fieldsConfig,
       thankYouMessage: form.thankYouMessage,
+      redirectUrl: form.redirectUrl,
     };
   }
 
@@ -117,6 +120,26 @@ export class FormPublicController {
             );
           }
 
+          // Server-side field validation
+          const fieldsConfig = Array.isArray(form.fieldsConfig)
+            ? form.fieldsConfig
+            : [];
+
+          const validationErrors = this.formSubmissionService.validateFields(
+            fieldsConfig as unknown[],
+            body.fields ?? {},
+          );
+
+          if (validationErrors.length > 0) {
+            throw new HttpException(
+              {
+                message: 'Validation failed',
+                errors: validationErrors,
+              },
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
           const submissionRepository =
             await this.globalWorkspaceOrmManager.getRepository<FormSubmissionWorkspaceEntity>(
               workspaceId,
@@ -134,10 +157,23 @@ export class FormPublicController {
 
           await formRepository.increment({ id: formId }, 'submissionCount', 1);
 
+          // Send notification email (async, non-blocking)
+          this.formSubmissionService
+            .sendNotificationEmail(form, body.fields ?? {})
+            .catch(() => {});
+
+          // Send confirmation email to submitter (async, non-blocking)
+          if (isDefined(body.submitterEmail)) {
+            this.formSubmissionService
+              .sendConfirmationEmail(form, body.submitterEmail)
+              .catch(() => {});
+          }
+
           return {
             success: true,
             submissionId: submission.id,
             thankYouMessage: form.thankYouMessage,
+            redirectUrl: form.redirectUrl,
           };
         },
         authContext,

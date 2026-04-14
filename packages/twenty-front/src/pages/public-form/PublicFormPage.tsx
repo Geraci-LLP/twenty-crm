@@ -1,11 +1,12 @@
 import { FormFieldInput } from '@/object-record/record-field/ui/components/FormFieldInput';
 import { FormFieldInputContainer } from '@/object-record/record-field/ui/form-types/components/FormFieldInputContainer';
 import { type FieldMetadata } from '@/object-record/record-field/ui/types/FieldMetadata';
+import { validateAllFormFields } from '@/form/utils/validateFormField';
 import { type WorkflowFormActionField } from '@/workflow/workflow-steps/workflow-actions/form-action/types/WorkflowFormActionField';
 import { getDefaultFormFieldSettings } from '@/workflow/workflow-steps/workflow-actions/form-action/utils/getDefaultFormFieldSettings';
 import { styled } from '@linaria/react';
-import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { type FieldMetadataType } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
@@ -17,6 +18,7 @@ type FormSchema = {
   description: string | null;
   fields: WorkflowFormActionField[];
   thankYouMessage: string | null;
+  redirectUrl: string | null;
 };
 
 type FormState = 'loading' | 'ready' | 'submitting' | 'success' | 'error';
@@ -68,6 +70,17 @@ const StyledFieldsContainer = styled.div`
   margin-bottom: ${themeCssVariables.spacing[6]};
 `;
 
+const StyledFieldWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${themeCssVariables.spacing[1]};
+`;
+
+const StyledFieldError = styled.div`
+  color: ${themeCssVariables.font.color.danger};
+  font-size: ${themeCssVariables.font.size.xs};
+`;
+
 const StyledSubmitButton = styled.button`
   background: ${themeCssVariables.color.blue};
   border: none;
@@ -113,10 +126,20 @@ const StyledStatusMessage = styled.p`
   margin: 0;
 `;
 
-const StyledErrorMessage = styled.p`
+const StyledFormError = styled.p`
   color: ${themeCssVariables.font.color.danger};
   font-size: ${themeCssVariables.font.size.sm};
-  margin: 0;
+  margin: 0 0 ${themeCssVariables.spacing[3]} 0;
+`;
+
+// Honeypot field — hidden from real users, bots will fill it
+const StyledHoneypot = styled.div`
+  height: 0;
+  left: -9999px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  width: 0;
 `;
 
 export const PublicFormPage = () => {
@@ -124,12 +147,36 @@ export const PublicFormPage = () => {
     workspaceId: string;
     formId: string;
   }>();
+  const [searchParams] = useSearchParams();
 
   const [formSchema, setFormSchema] = useState<FormSchema | null>(null);
   const [formState, setFormState] = useState<FormState>('loading');
   const [fieldValues, setFieldValues] = useState<Record<string, unknown>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [thankYouMessage, setThankYouMessage] = useState<string | null>(null);
+  const [honeypotValue, setHoneypotValue] = useState('');
+
+  // Pre-fill field values from URL params once schema loads
+  useEffect(() => {
+    if (!isDefined(formSchema)) {
+      return;
+    }
+
+    const preFilled: Record<string, unknown> = {};
+
+    for (const field of formSchema.fields) {
+      const paramValue = searchParams.get(field.name);
+
+      if (isDefined(paramValue)) {
+        preFilled[field.name] = paramValue;
+      }
+    }
+
+    if (Object.keys(preFilled).length > 0) {
+      setFieldValues((prev) => ({ ...preFilled, ...prev }));
+    }
+  }, [formSchema, searchParams]);
 
   useEffect(() => {
     const fetchFormSchema = async () => {
@@ -169,10 +216,32 @@ export const PublicFormPage = () => {
       ...prev,
       [fieldName]: value,
     }));
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[fieldName];
+      return next;
+    });
   }, []);
 
   const onSubmit = useCallback(async () => {
     if (!isDefined(formSchema) || formState !== 'ready') {
+      return;
+    }
+
+    // Honeypot check — if filled, silently pretend success
+    if (honeypotValue.length > 0) {
+      setThankYouMessage(
+        formSchema.thankYouMessage ?? 'Thank you for your submission!',
+      );
+      setFormState('success');
+      return;
+    }
+
+    // Client-side validation
+    const errors = validateAllFormFields(formSchema.fields, fieldValues);
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       return;
     }
 
@@ -196,6 +265,12 @@ export const PublicFormPage = () => {
 
       const data = await response.json();
 
+      // Redirect if configured
+      if (isDefined(data.redirectUrl) && data.redirectUrl.length > 0) {
+        window.location.href = data.redirectUrl;
+        return;
+      }
+
       setThankYouMessage(
         data.thankYouMessage ?? 'Thank you for your submission!',
       );
@@ -208,7 +283,12 @@ export const PublicFormPage = () => {
       );
       setFormState('ready');
     }
-  }, [formSchema, formState, workspaceId, formId, fieldValues]);
+  }, [formSchema, formState, workspaceId, formId, fieldValues, honeypotValue]);
+
+  const displayFields = useMemo(
+    () => formSchema?.fields.filter((field) => field.type !== 'RECORD') ?? [],
+    [formSchema],
+  );
 
   if (formState === 'loading') {
     return (
@@ -256,10 +336,6 @@ export const PublicFormPage = () => {
     return null;
   }
 
-  const displayFields = formSchema.fields.filter(
-    (field) => field.type !== 'RECORD',
-  );
-
   return (
     <StyledPageContainer>
       <StyledFormCard>
@@ -276,26 +352,48 @@ export const PublicFormPage = () => {
 
         <StyledFieldsContainer>
           {displayFields.map((field) => (
-            <FormFieldInputContainer key={field.id}>
-              <FormFieldInput
-                field={{
-                  label: field.label,
-                  type: field.type as FieldMetadataType,
-                  metadata: {} as FieldMetadata,
-                }}
-                onChange={(value) => onFieldChange(field.name, value)}
-                defaultValue={field.value ?? null}
-                placeholder={
-                  field.placeholder ??
-                  getDefaultFormFieldSettings(field.type).placeholder
-                }
-              />
-            </FormFieldInputContainer>
+            <StyledFieldWrapper key={field.id}>
+              <FormFieldInputContainer>
+                <FormFieldInput
+                  field={{
+                    label:
+                      field.label + (field.validation?.required ? ' *' : ''),
+                    type: field.type as FieldMetadataType,
+                    metadata: {} as FieldMetadata,
+                  }}
+                  onChange={(value) => onFieldChange(field.name, value)}
+                  defaultValue={
+                    (fieldValues[field.name] as string) ?? field.value ?? null
+                  }
+                  placeholder={
+                    field.placeholder ??
+                    getDefaultFormFieldSettings(field.type).placeholder
+                  }
+                />
+              </FormFieldInputContainer>
+              {isDefined(fieldErrors[field.name]) && (
+                <StyledFieldError>{fieldErrors[field.name]}</StyledFieldError>
+              )}
+            </StyledFieldWrapper>
           ))}
         </StyledFieldsContainer>
 
+        {/* Honeypot — invisible to real users */}
+        <StyledHoneypot aria-hidden="true">
+          <label htmlFor="form-website">Website</label>
+          <input
+            type="text"
+            id="form-website"
+            name="website"
+            autoComplete="off"
+            tabIndex={-1}
+            value={honeypotValue}
+            onChange={(e) => setHoneypotValue(e.target.value)}
+          />
+        </StyledHoneypot>
+
         {isDefined(errorMessage) && (
-          <StyledErrorMessage>{errorMessage}</StyledErrorMessage>
+          <StyledFormError>{errorMessage}</StyledFormError>
         )}
 
         <StyledSubmitButton

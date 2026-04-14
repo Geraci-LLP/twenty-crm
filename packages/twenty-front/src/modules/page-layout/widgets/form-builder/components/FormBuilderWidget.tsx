@@ -111,6 +111,10 @@ export const FormBuilderWidget = () => {
               thankYouMessage: formRecord.thankYouMessage,
               notifyOnSubmission: formRecord.notifyOnSubmission,
               notificationEmail: formRecord.notificationEmail,
+              redirectUrl: formRecord.redirectUrl,
+              sendConfirmationEmail: formRecord.sendConfirmationEmail,
+              confirmationEmailSubject: formRecord.confirmationEmailSubject,
+              confirmationEmailBody: formRecord.confirmationEmailBody,
             }}
             onSettingsChange={(settings) => updateForm(settings)}
           />

@@ -10,6 +10,10 @@ export type FormSettingsData = {
   thankYouMessage: string | null;
   notifyOnSubmission: boolean;
   notificationEmail: string | null;
+  redirectUrl: string | null;
+  sendConfirmationEmail: boolean;
+  confirmationEmailSubject: string | null;
+  confirmationEmailBody: string | null;
 };
 
 export type FormSettingsProps = {
@@ -48,6 +52,18 @@ const StyledToggleTextContainer = styled.div`
   gap: ${themeCssVariables.spacing[0.5]};
 `;
 
+const StyledSectionDivider = styled.div`
+  border-top: 1px solid ${themeCssVariables.border.color.light};
+  margin: ${themeCssVariables.spacing[1]} 0;
+`;
+
+const StyledSectionLabel = styled.div`
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: ${themeCssVariables.font.size.xs};
+  font-weight: ${themeCssVariables.font.weight.medium};
+  text-transform: uppercase;
+`;
+
 export const FormSettings = ({
   settings,
   onSettingsChange,
@@ -55,6 +71,9 @@ export const FormSettings = ({
 }: FormSettingsProps) => {
   return (
     <StyledFormSettingsContainer>
+      {/* Submission behavior */}
+      <StyledSectionLabel>{t`After Submission`}</StyledSectionLabel>
+
       <FormFieldInputContainer>
         <InputLabel>{t`Thank You Message`}</InputLabel>
         <TextInput
@@ -70,6 +89,27 @@ export const FormSettings = ({
           fullWidth
         />
       </FormFieldInputContainer>
+
+      <FormFieldInputContainer>
+        <InputLabel>{t`Redirect URL`}</InputLabel>
+        <TextInput
+          value={settings.redirectUrl ?? ''}
+          onChange={(value) =>
+            onSettingsChange({
+              ...settings,
+              redirectUrl: value || null,
+            })
+          }
+          placeholder={t`https://example.com/thank-you`}
+          readOnly={readonly}
+          fullWidth
+        />
+      </FormFieldInputContainer>
+
+      <StyledSectionDivider />
+
+      {/* Notification emails */}
+      <StyledSectionLabel>{t`Notifications`}</StyledSectionLabel>
 
       <StyledToggleRow>
         <StyledToggleTextContainer>
@@ -107,6 +147,67 @@ export const FormSettings = ({
             fullWidth
           />
         </FormFieldInputContainer>
+      )}
+
+      <StyledSectionDivider />
+
+      {/* Confirmation emails */}
+      <StyledSectionLabel>{t`Confirmation Email`}</StyledSectionLabel>
+
+      <StyledToggleRow>
+        <StyledToggleTextContainer>
+          <StyledToggleLabel>{t`Send Confirmation Email`}</StyledToggleLabel>
+          <StyledToggleDescription>
+            {t`Send a confirmation email to the submitter`}
+          </StyledToggleDescription>
+        </StyledToggleTextContainer>
+        <Toggle
+          value={settings.sendConfirmationEmail}
+          onChange={(value) =>
+            onSettingsChange({
+              ...settings,
+              sendConfirmationEmail: value,
+            })
+          }
+          disabled={readonly}
+          toggleSize="small"
+        />
+      </StyledToggleRow>
+
+      {settings.sendConfirmationEmail && (
+        <>
+          <FormFieldInputContainer>
+            <InputLabel>{t`Subject`}</InputLabel>
+            <TextInput
+              value={settings.confirmationEmailSubject ?? ''}
+              onChange={(value) =>
+                onSettingsChange({
+                  ...settings,
+                  confirmationEmailSubject: value || null,
+                })
+              }
+              placeholder={t`Thank you for your submission`}
+              readOnly={readonly}
+              fullWidth
+            />
+          </FormFieldInputContainer>
+
+          <FormFieldInputContainer>
+            <InputLabel>{t`Body (HTML)`}</InputLabel>
+            <TextInput
+              value={settings.confirmationEmailBody ?? ''}
+              onChange={(value) =>
+                onSettingsChange({
+                  ...settings,
+                  confirmationEmailBody: value || null,
+                })
+              }
+              placeholder={t`<p>Thank you for contacting us. We'll be in touch shortly.</p>`}
+              readOnly={readonly}
+              fullWidth
+            />
+          </FormFieldInputContainer>
+        </>
       )}
     </StyledFormSettingsContainer>
   );
