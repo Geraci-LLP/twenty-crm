@@ -8,6 +8,7 @@ import { InstanceCommandGenerationService } from 'src/database/commands/instance
 import { ListOrphanedWorkspaceEntitiesCommand } from 'src/database/commands/list-and-delete-orphaned-workspace-entities.command';
 import { ConfirmationQuestion } from 'src/database/commands/questions/confirmation.question';
 import { RunInstanceCommandsCommand } from 'src/database/commands/run-instance-commands.command';
+import { SyncWorkspaceStandardMetadataCommand } from 'src/database/commands/sync-workspace-standard-metadata.command';
 import { InstanceCommandProviderModule } from 'src/database/commands/upgrade-version-command/instance-command-provider.module';
 import { UpgradeVersionCommandModule } from 'src/database/commands/upgrade-version-command/upgrade-version-command.module';
 import { WorkspaceExportModule } from 'src/database/commands/workspace-export/workspace-export.module';
@@ -36,6 +37,7 @@ import { WorkspaceCacheStorageModule } from 'src/engine/workspace-cache-storage/
 import { DevSeederModule } from 'src/engine/workspace-manager/dev-seeder/dev-seeder.module';
 import { WorkspaceCleanerModule } from 'src/engine/workspace-manager/workspace-cleaner/workspace-cleaner.module';
 import { WorkspaceManagerModule } from 'src/engine/workspace-manager/workspace-manager.module';
+import { TwentyStandardApplicationModule } from 'src/engine/workspace-manager/twenty-standard-application/twenty-standard-application.module';
 import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace-migration/workspace-migration.module';
 import { WorkspaceVersionModule } from 'src/engine/workspace-manager/workspace-version/workspace-version.module';
 import { CalendarEventImportManagerModule } from 'src/modules/calendar/calendar-event-import-manager/calendar-event-import-manager.module';
@@ -62,6 +64,7 @@ import { AutomatedTriggerModule } from 'src/modules/workflow/workflow-trigger/au
     ObjectMetadataModule,
     DevSeederModule,
     WorkspaceManagerModule,
+    TwentyStandardApplicationModule,
     DataSourceModule,
     WorkspaceCacheStorageModule,
     ApiKeyModule,
@@ -90,6 +93,7 @@ import { AutomatedTriggerModule } from 'src/modules/workflow/workflow-trigger/au
     ListOrphanedWorkspaceEntitiesCommand,
     EnterpriseKeyValidationCronCommand,
     GenerateApiKeyCommand,
+    SyncWorkspaceStandardMetadataCommand,
   ],
 })
 export class DatabaseCommandModule {}

@@ -18,6 +18,11 @@ setup_and_migrate_db() {
         node dist/command/command run-instance-commands --force
     fi
 
+    echo "Running TypeORM migrations and instance commands..."
+    node dist/command/command run-instance-commands --force
+    node dist/command/command cache:flush
+    echo "Syncing standard metadata (creates missing standard objects)..."
+    node dist/command/command workspace:sync-standard-metadata
     node dist/command/command cache:flush
     node dist/command/command upgrade
     node dist/command/command cache:flush
