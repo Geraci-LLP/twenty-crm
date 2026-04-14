@@ -153,6 +153,13 @@ msgstr ""
 msgid "{0} credits"
 msgstr ""
 
+#. js-lingui-id: DGgVm3
+#. placeholder {0}: data.created
+#. placeholder {1}: data.skipped
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+msgid "{0} recipients added ({1} skipped)"
+msgstr ""
+
 #. js-lingui-id: r4l/MK
 #. placeholder {0}: formatUsageValue(totalCredits)
 #: src/pages/settings/SettingsUsageUserDetail.tsx
@@ -2702,6 +2709,26 @@ msgstr ""
 msgid "Calling Code"
 msgstr ""
 
+#. js-lingui-id: PoVCSO
+#: src/modules/campaign/hooks/useSendCampaign.ts
+msgid "Campaign is being sent"
+msgstr ""
+
+#. js-lingui-id: Z+NJu1
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+msgid "Campaign paused"
+msgstr ""
+
+#. js-lingui-id: biVu9d
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+msgid "Campaign resumed"
+msgstr ""
+
+#. js-lingui-id: Ww/GVZ
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+msgid "Campaign scheduled successfully"
+msgstr ""
+
 #. js-lingui-id: msssZq
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectAboutForm.tsx
 msgid "Can't change API names for standard objects"
@@ -5044,6 +5071,21 @@ msgstr ""
 msgid "Drag to add to navbar"
 msgstr ""
 
+#. js-lingui-id: dMmPpt
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+msgid "Drip campaign activated"
+msgstr ""
+
+#. js-lingui-id: Xxl/+c
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+msgid "Drip campaign created"
+msgstr ""
+
+#. js-lingui-id: ioYwxX
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+msgid "Drip campaign paused"
+msgstr ""
+
 #. js-lingui-id: VIbDgE
 #: src/modules/page-layout/widgets/fields/components/FieldsConfigurationGroupEditor.tsx
 msgid "Drop fields here"
@@ -5573,6 +5615,11 @@ msgstr ""
 #. js-lingui-id: 6iUnle
 #: src/modules/settings/enterprise/components/EnterprisePlanModal.tsx
 msgid "Enjoy a 30-day free trial"
+msgstr ""
+
+#. js-lingui-id: sKNDB/
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+msgid "Enrolled {enrolled} contacts ({skipped} skipped)"
 msgstr ""
 
 #. js-lingui-id: T/N+2Z
@@ -6328,6 +6375,12 @@ msgstr ""
 msgid "Failed to {translatedOperationType} {translatedMetadataName}. Related {relatedEntityNames} validation failed. Please check your configuration and try again."
 msgstr ""
 
+#. js-lingui-id: rfe2U/
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+msgid "Failed to activate drip campaign"
+msgstr ""
+
 #. js-lingui-id: R1XJV1
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
 msgid "Failed to activate enterprise license. Please check your key or contact support."
@@ -6346,6 +6399,12 @@ msgstr ""
 #. js-lingui-id: gU+vGA
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
 msgid "Failed to add provider"
+msgstr ""
+
+#. js-lingui-id: pD5GhY
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+msgid "Failed to create drip campaign"
 msgstr ""
 
 #. js-lingui-id: WM7GKt
@@ -6378,6 +6437,12 @@ msgstr ""
 msgid "Failed to duplicate workflow"
 msgstr ""
 
+#. js-lingui-id: m1cPVI
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+msgid "Failed to enroll contacts"
+msgstr ""
+
 #. js-lingui-id: dqEkUR
 #: src/pages/settings/ai/components/SettingsAgentLogsTab.tsx
 msgid "Failed to evaluate turn"
@@ -6408,6 +6473,12 @@ msgstr ""
 msgid "Failed to load front component: {errorMessage}"
 msgstr ""
 
+#. js-lingui-id: Nln426
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+msgid "Failed to load template"
+msgstr ""
+
 #. js-lingui-id: nKkohy
 #: src/modules/settings/developers/hooks/useWebhookForm.ts
 msgid "Failed to load webhook"
@@ -6421,6 +6492,18 @@ msgstr ""
 #. js-lingui-id: PnVGrE
 #: src/modules/ai/components/RoutingDebugDisplay.tsx
 msgid "Failed to parse context: {contextValue}"
+msgstr ""
+
+#. js-lingui-id: bOoTIM
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+msgid "Failed to pause campaign"
+msgstr ""
+
+#. js-lingui-id: 3yogZA
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+msgid "Failed to pause drip campaign"
 msgstr ""
 
 #. js-lingui-id: 3YA1cX
@@ -6443,9 +6526,27 @@ msgstr ""
 msgid "Failed to remove provider"
 msgstr ""
 
+#. js-lingui-id: POpPbR
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+msgid "Failed to resolve recipients"
+msgstr ""
+
+#. js-lingui-id: nhnScg
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+msgid "Failed to resume campaign"
+msgstr ""
+
 #. js-lingui-id: SJEIIJ
 #: src/modules/settings/admin-panel/health-status/hooks/useRetryJobs.ts
 msgid "Failed to retry jobs. Please try again later."
+msgstr ""
+
+#. js-lingui-id: 3qAUvt
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+msgid "Failed to save as template"
 msgstr ""
 
 #. js-lingui-id: farFvy
@@ -6464,10 +6565,28 @@ msgstr ""
 msgid "Failed to save workspace instructions"
 msgstr ""
 
+#. js-lingui-id: +1isbF
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+msgid "Failed to schedule campaign"
+msgstr ""
+
+#. js-lingui-id: GpNLad
+#: src/modules/campaign/hooks/useSendCampaign.ts
+#: src/modules/campaign/hooks/useSendCampaign.ts
+msgid "Failed to send campaign"
+msgstr ""
+
 #. js-lingui-id: Lo/GQ5
 #: src/modules/activities/emails/hooks/useSendEmail.ts
 #: src/modules/activities/emails/hooks/useSendEmail.ts
 msgid "Failed to send email"
+msgstr ""
+
+#. js-lingui-id: aH/q8K
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+msgid "Failed to send test email"
 msgstr ""
 
 #. js-lingui-id: aj02T8
@@ -13795,6 +13914,16 @@ msgstr ""
 msgid "Tasks"
 msgstr ""
 
+#. js-lingui-id: fRKsLK
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+msgid "Template loaded into campaign"
+msgstr ""
+
+#. js-lingui-id: G04Zjt
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+msgid "Template saved successfully"
+msgstr ""
+
 #. js-lingui-id: lKXcJz
 #: src/pages/settings/emailing-domains/utils/getEmailingDomainStatusText.ts
 msgid "Temporary Failure"
@@ -13819,6 +13948,11 @@ msgstr ""
 #: src/modules/workflow/workflow-steps/workflow-actions/code-action/components/WorkflowEditActionCode.tsx
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionCodeEditorTab.tsx
 msgid "Test"
+msgstr ""
+
+#. js-lingui-id: hvjvkT
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+msgid "Test email sent to {testEmailAddress}"
 msgstr ""
 
 #. js-lingui-id: 3nWPN6
