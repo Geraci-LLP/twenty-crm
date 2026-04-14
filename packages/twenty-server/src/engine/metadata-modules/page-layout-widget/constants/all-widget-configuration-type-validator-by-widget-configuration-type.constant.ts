@@ -8,6 +8,7 @@ import { FieldRichTextConfigurationDTO } from 'src/engine/metadata-modules/page-
 import { FieldsConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/fields-configuration.dto';
 import { FilesConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/files-configuration.dto';
 import { FormBuilderConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/form-builder-configuration.dto';
+import { LandingPageBuilderConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/landing-page-builder-configuration.dto';
 import { FrontComponentConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/front-component-configuration.dto';
 import { GaugeChartConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/gauge-chart-configuration.dto';
 import { IframeConfigurationDTO } from 'src/engine/metadata-modules/page-layout-widget/dtos/iframe-configuration.dto';
@@ -43,6 +44,7 @@ export const ALL_WIDGET_CONFIGURATION_TYPE_VALIDATOR_BY_WIDGET_CONFIGURATION_TYP
     FIELDS: FieldsConfigurationDTO,
     FILES: FilesConfigurationDTO,
     FORM_BUILDER: FormBuilderConfigurationDTO,
+    LANDING_PAGE_BUILDER: LandingPageBuilderConfigurationDTO,
     NOTES: NotesConfigurationDTO,
     TASKS: TasksConfigurationDTO,
     TIMELINE: TimelineConfigurationDTO,

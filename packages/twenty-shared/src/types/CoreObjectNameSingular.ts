@@ -38,4 +38,5 @@ export enum CoreObjectNameSingular {
   DripEnrollment = 'dripEnrollment',
   Form = 'form',
   FormSubmission = 'formSubmission',
+  LandingPage = 'landingPage',
 }

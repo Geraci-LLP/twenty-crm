@@ -33,6 +33,7 @@ export enum AppPath {
 
   // Public pages (no auth required)
   PublicForm = '/forms/:workspaceId/:formId',
+  PublicLandingPage = '/lp/:workspaceId/:slug',
 
   // 404 page not found
   NotFoundWildcard = '*',

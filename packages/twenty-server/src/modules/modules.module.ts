@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { CalendarModule } from 'src/modules/calendar/calendar.module';
 import { CampaignModule } from 'src/modules/campaign/campaign.module';
 import { FormModule } from 'src/modules/form/form.module';
+import { LandingPageModule } from 'src/modules/landing-page/landing-page.module';
 import { ConnectedAccountModule } from 'src/modules/connected-account/connected-account.module';
 import { FavoriteFolderModule } from 'src/modules/favorite-folder/favorite-folder.module';
 import { FavoriteModule } from 'src/modules/favorite/favorite.module';
@@ -16,6 +17,7 @@ import { WorkspaceMemberModule } from 'src/modules/workspace-member/workspace-me
     CalendarModule,
     CampaignModule,
     FormModule,
+    LandingPageModule,
     ConnectedAccountModule,
     WorkflowModule,
     FavoriteFolderModule,

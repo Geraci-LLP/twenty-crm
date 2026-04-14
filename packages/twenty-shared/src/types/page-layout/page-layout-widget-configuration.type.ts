@@ -175,6 +175,10 @@ export type FormBuilderConfiguration = {
   configurationType: 'FORM_BUILDER';
 };
 
+export type LandingPageBuilderConfiguration = {
+  configurationType: 'LANDING_PAGE_BUILDER';
+};
+
 export type PageLayoutWidgetConfiguration =
   | AggregateChartConfiguration
   | GaugeChartConfiguration
@@ -199,4 +203,5 @@ export type PageLayoutWidgetConfiguration =
   | WorkflowVersionConfiguration
   | WorkflowRunConfiguration
   | EmailThreadConfiguration
-  | FormBuilderConfiguration;
+  | FormBuilderConfiguration
+  | LandingPageBuilderConfiguration;

@@ -357,6 +357,7 @@ export const fromUniversalConfigurationToFlatPageLayoutWidgetConfiguration = ({
     case WidgetConfigurationType.CALENDAR:
     case WidgetConfigurationType.FIELD_RICH_TEXT:
     case WidgetConfigurationType.FORM_BUILDER:
+    case WidgetConfigurationType.LANDING_PAGE_BUILDER:
     case WidgetConfigurationType.WORKFLOW:
     case WidgetConfigurationType.WORKFLOW_VERSION:
     case WidgetConfigurationType.WORKFLOW_RUN:

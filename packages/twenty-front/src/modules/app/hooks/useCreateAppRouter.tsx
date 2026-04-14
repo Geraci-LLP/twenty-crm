@@ -106,6 +106,12 @@ const PublicFormPage = lazy(() =>
   })),
 );
 
+const PublicLandingPage = lazy(() =>
+  import('~/pages/public-landing-page/PublicLandingPage').then((module) => ({
+    default: module.PublicLandingPage,
+  })),
+);
+
 export const useCreateAppRouter = (
   isFunctionSettingsEnabled?: boolean,
   isAdminPageEnabled?: boolean,
@@ -258,6 +264,14 @@ export const useCreateAppRouter = (
             element={
               <LazyRoute>
                 <PublicFormPage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PublicLandingPage}
+            element={
+              <LazyRoute>
+                <PublicLandingPage />
               </LazyRoute>
             }
           />

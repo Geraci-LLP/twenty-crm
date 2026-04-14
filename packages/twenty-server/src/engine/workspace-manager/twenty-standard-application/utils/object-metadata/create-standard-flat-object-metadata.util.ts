@@ -237,6 +237,32 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  landingPage: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'landingPage'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'landingPage',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.landingPage.universalIdentifier,
+        nameSingular: 'landingPage',
+        namePlural: 'landingPages',
+        labelSingular: i18nLabel(msg`Landing Page`),
+        labelPlural: i18nLabel(msg`Landing Pages`),
+        description: i18nLabel(msg`A landing page`),
+        icon: 'IconLayout',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'title',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   blocklist: ({
     now,
     workspaceId,

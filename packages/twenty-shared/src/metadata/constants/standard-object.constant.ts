@@ -4043,6 +4043,93 @@ export const STANDARD_OBJECTS = {
       },
     },
   },
+  landingPage: {
+    universalIdentifier: 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d',
+    fields: {
+      id: { universalIdentifier: 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e' },
+      createdAt: {
+        universalIdentifier: 'c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f',
+      },
+      updatedAt: {
+        universalIdentifier: 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80',
+      },
+      deletedAt: {
+        universalIdentifier: 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091',
+      },
+      position: {
+        universalIdentifier: 'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8091a2',
+      },
+      createdBy: {
+        universalIdentifier: 'a7b8c9d0-e1f2-4a3b-4c5d-6e7f8091a2b3',
+      },
+      updatedBy: {
+        universalIdentifier: 'b8c9d0e1-f2a3-4b4c-5d6e-7f8091a2b3c4',
+      },
+      title: {
+        universalIdentifier: 'c9d0e1f2-a3b4-4c5d-6e7f-8091a2b3c4d5',
+      },
+      slug: {
+        universalIdentifier: 'd0e1f2a3-b4c5-4d6e-7f80-91a2b3c4d5e6',
+      },
+      status: {
+        universalIdentifier: 'e1f2a3b4-c5d6-4e7f-8091-a2b3c4d5e6f7',
+      },
+      sectionsConfig: {
+        universalIdentifier: 'f2a3b4c5-d6e7-4f80-91a2-b3c4d5e6f7a8',
+      },
+      metaTitle: {
+        universalIdentifier: 'a3b4c5d6-e7f8-4091-a2b3-c4d5e6f7a8b9',
+      },
+      metaDescription: {
+        universalIdentifier: 'b4c5d6e7-f809-41a2-b3c4-d5e6f7a8b9c0',
+      },
+      headerConfig: {
+        universalIdentifier: 'c5d6e7f8-091a-42b3-c4d5-e6f7a8b9c0d1',
+      },
+      footerConfig: {
+        universalIdentifier: 'd6e7f809-1a2b-43c4-d5e6-f7a8b9c0d1e2',
+      },
+      viewCount: {
+        universalIdentifier: 'e7f8091a-2b3c-44d5-e6f7-a8b9c0d1e2f3',
+      },
+      searchVector: {
+        universalIdentifier: 'f8091a2b-3c4d-45e6-f7a8-b9c0d1e2f3a4',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: '091a2b3c-4d5e-46f7-a8b9-c0d1e2f3a4b5',
+      },
+      slugIndex: {
+        universalIdentifier: '1a2b3c4d-5e6f-47a8-b9c0-d1e2f3a4b5c6',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '2b3c4d5e-6f7a-48b9-c0d1-e2f3a4b5c6d7',
+      },
+    },
+    views: {
+      allLandingPages: {
+        universalIdentifier: '3c4d5e6f-7a8b-49c0-d1e2-f3a4b5c6d7e8',
+        viewFields: {
+          title: {
+            universalIdentifier: '4d5e6f7a-8b9c-40d1-e2f3-a4b5c6d7e8f9',
+          },
+          slug: {
+            universalIdentifier: '5e6f7a8b-9c0d-41e2-f3a4-b5c6d7e8f90a',
+          },
+          status: {
+            universalIdentifier: '6f7a8b9c-0d1e-42f3-a4b5-c6d7e8f90a1b',
+          },
+          viewCount: {
+            universalIdentifier: '7a8b9c0d-1e2f-43a4-b5c6-d7e8f90a1b2c',
+          },
+          createdAt: {
+            universalIdentifier: '8b9c0d1e-2f3a-44b5-c6d7-e8f90a1b2c3d',
+          },
+        },
+      },
+    },
+  },
 } as const satisfies Record<
   string,
   {

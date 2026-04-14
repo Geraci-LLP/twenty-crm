@@ -8,6 +8,7 @@ import { FieldsWidget } from '@/page-layout/widgets/fields/components/FieldsWidg
 import { FileWidget } from '@/page-layout/widgets/files/components/FileWidget';
 import { FormBuilderWidget } from '@/page-layout/widgets/form-builder/components/FormBuilderWidget';
 import { FrontComponentWidgetRenderer } from '@/page-layout/widgets/front-component/components/FrontComponentWidgetRenderer';
+import { LandingPageBuilderWidget } from '@/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget';
 import { GraphWidgetRenderer } from '@/page-layout/widgets/graph/components/GraphWidgetRenderer';
 import { IframeWidget } from '@/page-layout/widgets/iframe/components/IframeWidget';
 import { NoteWidget } from '@/page-layout/widgets/notes/components/NoteWidget';
@@ -75,6 +76,9 @@ export const WidgetContentRenderer = ({
 
     case WidgetType.FORM_BUILDER:
       return <FormBuilderWidget />;
+
+    case WidgetType.LANDING_PAGE_BUILDER:
+      return <LandingPageBuilderWidget />;
 
     case WidgetType.FRONT_COMPONENT:
       return <FrontComponentWidgetRenderer widget={widget} />;

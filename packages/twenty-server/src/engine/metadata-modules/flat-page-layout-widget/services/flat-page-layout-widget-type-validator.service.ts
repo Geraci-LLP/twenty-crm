@@ -61,6 +61,9 @@ export class FlatPageLayoutWidgetTypeValidatorService {
       FORM_BUILDER: validateSimpleRecordPageWidgetForCreation(
         WidgetConfigurationType.FORM_BUILDER,
       ),
+      LANDING_PAGE_BUILDER: validateSimpleRecordPageWidgetForCreation(
+        WidgetConfigurationType.LANDING_PAGE_BUILDER,
+      ),
       FRONT_COMPONENT: validateFrontComponentFlatPageLayoutWidgetForCreation,
       TIMELINE: validateSimpleRecordPageWidgetForCreation(
         WidgetConfigurationType.TIMELINE,
@@ -117,6 +120,9 @@ export class FlatPageLayoutWidgetTypeValidatorService {
         validateStandaloneRichTextFlatPageLayoutWidgetForUpdate,
       FORM_BUILDER: validateSimpleRecordPageWidgetForUpdate(
         WidgetConfigurationType.FORM_BUILDER,
+      ),
+      LANDING_PAGE_BUILDER: validateSimpleRecordPageWidgetForUpdate(
+        WidgetConfigurationType.LANDING_PAGE_BUILDER,
       ),
       FRONT_COMPONENT: validateFrontComponentFlatPageLayoutWidgetForUpdate,
       TIMELINE: validateSimpleRecordPageWidgetForUpdate(
