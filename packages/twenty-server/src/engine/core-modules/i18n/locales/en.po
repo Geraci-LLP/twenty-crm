@@ -54,6 +54,21 @@ msgstr "24HRS"
 msgid "A campaign recipient"
 msgstr "A campaign recipient"
 
+#. js-lingui-id: bzl7QP
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A chat conversation"
+msgstr "A chat conversation"
+
+#. js-lingui-id: 4UALN6
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A chat message"
+msgstr "A chat message"
+
+#. js-lingui-id: dm3R3U
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A chat widget configuration"
+msgstr "A chat widget configuration"
+
 #. js-lingui-id: kZR6+h
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
 msgid "A company"
@@ -63,6 +78,11 @@ msgstr "A company"
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
 msgid "A connected account"
 msgstr "A connected account"
+
+#. js-lingui-id: cDwRLA
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A contact enrolled in a sequence"
+msgstr "A contact enrolled in a sequence"
 
 #. js-lingui-id: ++zzcQ
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
@@ -78,6 +98,11 @@ msgstr "A dashboard"
 #: src/engine/core-modules/dns-manager/exceptions/dns-manager.exception.ts
 msgid "A DNS manager error occurred."
 msgstr "A DNS manager error occurred."
+
+#. js-lingui-id: 41tvjt
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A document view event"
+msgstr "A document view event"
 
 #. js-lingui-id: Hjj8vT
 #: src/engine/twenty-orm/exceptions/twenty-orm.exception.ts
@@ -123,6 +148,11 @@ msgstr "A landing page"
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
 msgid "A lead capture form"
 msgstr "A lead capture form"
+
+#. js-lingui-id: 0NbffO
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A meeting type for scheduling"
+msgstr "A meeting type for scheduling"
 
 #. js-lingui-id: Nh/ZZe
 #: src/engine/metadata-modules/object-metadata/object-metadata.exception.ts
@@ -180,6 +210,21 @@ msgstr "A required field is missing."
 msgid "A role with this label already exists."
 msgstr "A role with this label already exists."
 
+#. js-lingui-id: gW+1V0
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A sales sequence"
+msgstr "A sales sequence"
+
+#. js-lingui-id: MhURiO
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A scheduled booking"
+msgstr "A scheduled booking"
+
+#. js-lingui-id: ChWffv
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A sharing link for a tracked document"
+msgstr "A sharing link for a tracked document"
+
 #. js-lingui-id: HijTmf
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-skill-name-uniqueness.util.ts
 msgid "A skill with this name already exists"
@@ -189,6 +234,11 @@ msgstr "A skill with this name already exists"
 #: src/engine/metadata-modules/skill/skill.exception.ts
 msgid "A skill with this name already exists."
 msgstr "A skill with this name already exists."
+
+#. js-lingui-id: 6+kAc8
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A step in a sales sequence"
+msgstr "A step in a sales sequence"
 
 #. js-lingui-id: 73tqJw
 #: src/engine/metadata-modules/object-metadata/object-metadata.exception.ts
@@ -219,6 +269,11 @@ msgstr "A temporary error occurred. Please try again."
 #: src/modules/connected-account/refresh-tokens-manager/exceptions/connected-account-refresh-tokens.exception.ts
 msgid "A temporary network error occurred."
 msgstr "A temporary network error occurred."
+
+#. js-lingui-id: XDO+OE
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "A tracked document for sharing and analytics"
+msgstr "A tracked document for sharing and analytics"
 
 #. js-lingui-id: WBtp3/
 #: src/engine/core-modules/auth/auth.exception.ts
@@ -290,6 +345,11 @@ msgstr "A workflow version"
 msgid "A workspace member"
 msgstr "A workspace member"
 
+#. js-lingui-id: 1uJlG9
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Accent Color"
+msgstr "Accent Color"
+
 #. js-lingui-id: bzMKg7
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 msgid "Accepted"
@@ -345,17 +405,29 @@ msgstr "Action Needed to Set Password"
 #. js-lingui-id: F6pfE9
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-version-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 msgid "Active"
 msgstr "Active"
 
 #. js-lingui-id: zSUX0k
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 msgid "Active Enrollment Count"
 msgstr "Active Enrollment Count"
+
+#. js-lingui-id: LbbyTw
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Additional notes from the guest"
+msgstr "Additional notes from the guest"
 
 #. js-lingui-id: Du6bPw
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
@@ -371,6 +443,11 @@ msgstr "Address of the company"
 #: src/engine/metadata-modules/permissions/permissions.exception.ts
 msgid "Admin role not found."
 msgstr "Admin role not found."
+
+#. js-lingui-id: iEQQyu
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Agent"
+msgstr "Agent"
 
 #. js-lingui-id: kmAKx+
 #: src/engine/metadata-modules/ai/ai-agent/agent.exception.ts
@@ -554,6 +631,11 @@ msgstr "Announcement"
 msgid "Annual Recurring Revenue: The actual or estimated annual revenue of the company"
 msgstr "Annual Recurring Revenue: The actual or estimated annual revenue of the company"
 
+#. js-lingui-id: 2DeVOc
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Anonymous session identifier for the visitor"
+msgstr "Anonymous session identifier for the visitor"
+
 #. js-lingui-id: fRWsMD
 #: src/engine/metadata-modules/ai/ai-agent/agent.exception.ts
 msgid "API key is not configured."
@@ -647,6 +729,8 @@ msgstr "Archive"
 
 #. js-lingui-id: TdfEV7
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-version-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "Archived"
@@ -671,6 +755,11 @@ msgstr "As Participant"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 msgid "As Participant and Organizer"
 msgstr "As Participant and Organizer"
+
+#. js-lingui-id: lXGdbb
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Assigned"
+msgstr "Assigned"
 
 #. js-lingui-id: Ek7xGj
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
@@ -829,6 +918,26 @@ msgstr "Authentication is required."
 msgid "Authentication required."
 msgstr "Authentication required."
 
+#. js-lingui-id: fAb08H
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Auto Enroll Enabled"
+msgstr "Auto Enroll Enabled"
+
+#. js-lingui-id: q2Byx4
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Auto Response Delay"
+msgstr "Auto Response Delay"
+
+#. js-lingui-id: hAfJ8g
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Auto Response Enabled"
+msgstr "Auto Response Enabled"
+
+#. js-lingui-id: GNhVg3
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Auto Response Message"
+msgstr "Auto Response Message"
+
 #. js-lingui-id: cvSznK
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
 msgid "Automated Trigger Type"
@@ -848,6 +957,16 @@ msgstr "Automatically create People records when receiving or sending emails"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 msgid "Automatically create records for people you participated with in an event."
 msgstr "Automatically create records for people you participated with in an event."
+
+#. js-lingui-id: 3kG87V
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Availability Config"
+msgstr "Availability Config"
+
+#. js-lingui-id: caMeZ5
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Availability configuration for the meeting type"
+msgstr "Availability configuration for the meeting type"
 
 #. js-lingui-id: kfcRb0
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
@@ -940,10 +1059,12 @@ msgstr "Blocklists"
 #. js-lingui-id: bGQplw
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
 msgid "Body"
 msgstr "Body"
 
 #. js-lingui-id: QArBY4
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Body HTML"
@@ -969,12 +1090,60 @@ msgstr "Body must be an object"
 msgid "Body must be an object for widget \"{widgetTitle}\""
 msgstr "Body must be an object for widget \"{widgetTitle}\""
 
+#. js-lingui-id: xTu9Ic
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Booking"
+msgstr "Booking"
+
+#. js-lingui-id: So9rD+
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Booking Count"
+msgstr "Booking Count"
+
+#. js-lingui-id: GUe0aw
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Booking record position"
+msgstr "Booking record position"
+
+#. js-lingui-id: h5JgnK
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Booking status"
+msgstr "Booking status"
+
+#. js-lingui-id: CWTSki
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Bookings"
+msgstr "Bookings"
+
+#. js-lingui-id: nCFirf
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Bookings for this meeting type"
+msgstr "Bookings for this meeting type"
+
+#. js-lingui-id: ixkTse
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Bot"
+msgstr "Bot"
+
+#. js-lingui-id: g0zKZj
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Bottom Left"
+msgstr "Bottom Left"
+
+#. js-lingui-id: TMxOdP
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Bottom Right"
+msgstr "Bottom Right"
+
 #. js-lingui-id: z99gmj
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Bounce Count"
 msgstr "Bounce Count"
 
 #. js-lingui-id: 2DyxnB
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
 msgid "Bounced"
 msgstr "Bounced"
@@ -984,10 +1153,35 @@ msgstr "Bounced"
 msgid "Bounced At"
 msgstr "Bounced At"
 
+#. js-lingui-id: IkdoNP
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Buffer After (minutes)"
+msgstr "Buffer After (minutes)"
+
+#. js-lingui-id: xVL0Vx
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Buffer Before (minutes)"
+msgstr "Buffer Before (minutes)"
+
+#. js-lingui-id: whK+RT
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Buffer time after the meeting in minutes"
+msgstr "Buffer time after the meeting in minutes"
+
+#. js-lingui-id: gbgMoL
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Buffer time before the meeting in minutes"
+msgstr "Buffer time before the meeting in minutes"
+
 #. js-lingui-id: HOWEGX
 #: src/modules/blocklist/query-hooks/blocklist-update-many.pre-query.hook.ts
 msgid "Bulk update of blocklist entries is not allowed."
 msgstr "Bulk update of blocklist entries is not allowed."
+
+#. js-lingui-id: mALa0/
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Business Hours Config"
+msgstr "Business Hours Config"
 
 #. js-lingui-id: 8mVqF7
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
@@ -1130,6 +1324,11 @@ msgstr "Calendar provider is not supported."
 msgid "Calendar sync error."
 msgstr "Calendar sync error."
 
+#. js-lingui-id: hLJ3hB
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Call Task"
+msgstr "Call Task"
+
 #. js-lingui-id: D02dD9
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -1206,6 +1405,11 @@ msgstr "Can't connect to {connectFieldName}. No unique record found with conditi
 #: src/engine/guards/impersonate-permission.guard.ts
 msgid "Can't impersonate user via api key"
 msgstr "Can't impersonate user via api key"
+
+#. js-lingui-id: vv7kpg
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Cancelled"
+msgstr "Cancelled"
 
 #. js-lingui-id: vxbVwc
 #: src/modules/workflow/workflow-trigger/utils/assert-version-can-be-activated.util.ts
@@ -1408,6 +1612,74 @@ msgstr "Channel ID"
 msgid "Channel Type"
 msgstr "Channel Type"
 
+#. js-lingui-id: VkeInA
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Chat Conversation"
+msgstr "Chat Conversation"
+
+#. js-lingui-id: y2grCD
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Chat conversation record position"
+msgstr "Chat conversation record position"
+
+#. js-lingui-id: zVZ+gv
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Chat Conversations"
+msgstr "Chat Conversations"
+
+#. js-lingui-id: Opav9r
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Chat conversations associated with the person"
+msgstr "Chat conversations associated with the person"
+
+#. js-lingui-id: 0Zvppv
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Chat conversations for this widget"
+msgstr "Chat conversations for this widget"
+
+#. js-lingui-id: wW6cod
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Chat Message"
+msgstr "Chat Message"
+
+#. js-lingui-id: eBd9sE
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Chat message record position"
+msgstr "Chat message record position"
+
+#. js-lingui-id: nyIJou
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Chat Messages"
+msgstr "Chat Messages"
+
+#. js-lingui-id: vF3xbK
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Chat Widget"
+msgstr "Chat Widget"
+
+#. js-lingui-id: NWdC5g
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Chat widget name"
+msgstr "Chat widget name"
+
+#. js-lingui-id: ugaXeH
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Chat widget record position"
+msgstr "Chat widget record position"
+
+#. js-lingui-id: h0UbXJ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Chat widget status"
+msgstr "Chat widget status"
+
+#. js-lingui-id: wLhycT
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Chat Widgets"
+msgstr "Chat Widgets"
+
 #. js-lingui-id: NGL+Sl
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-navigation-menu-item-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-navigation-menu-item-validator.service.ts
@@ -1450,10 +1722,20 @@ msgstr "Clicked At"
 msgid "Close date"
 msgstr "Close date"
 
+#. js-lingui-id: D87pha
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Closed"
+msgstr "Closed"
+
 #. js-lingui-id: o21Tgt
 #: src/modules/workflow/common/exceptions/workflow-version-step.exception.ts
 msgid "Code step execution failed."
 msgstr "Code step execution failed."
+
+#. js-lingui-id: jZlrte
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Color"
+msgstr "Color"
 
 #. js-lingui-id: 96YB1a
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
@@ -1498,20 +1780,29 @@ msgstr "Company record position"
 
 #. js-lingui-id: qqWcBV
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 msgid "Completed"
 msgstr "Completed"
 
 #. js-lingui-id: KKlc8t
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 msgid "Completed At"
 msgstr "Completed At"
 
 #. js-lingui-id: RC01o5
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 msgid "Completed Count"
 msgstr "Completed Count"
+
+#. js-lingui-id: HXyt4p
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Completion %"
+msgstr "Completion %"
 
 #. js-lingui-id: L1uQuF
 #: src/engine/metadata-modules/permissions/permissions.exception.ts
@@ -1629,6 +1920,16 @@ msgstr "Confirmation Email Body"
 msgid "Confirmation Email Subject"
 msgstr "Confirmation Email Subject"
 
+#. js-lingui-id: mg3VPY
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Confirmation Message"
+msgstr "Confirmation Message"
+
+#. js-lingui-id: KNBs+p
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Confirmed"
+msgstr "Confirmed"
+
 #. js-lingui-id: WtMHh6
 #: src/engine/core-modules/record-transformer/record-transformer.exception.ts
 msgid "Conflicting phone calling code and country code."
@@ -1702,6 +2003,21 @@ msgstr "Content contains a URL with a dangerous protocol."
 msgid "Contradicting field permissions have been detected on a relation field."
 msgstr "Contradicting field permissions have been detected on a relation field."
 
+#. js-lingui-id: KMCHiy
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Conversation status"
+msgstr "Conversation status"
+
+#. js-lingui-id: EnJuK0
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Conversations"
+msgstr "Conversations"
+
+#. js-lingui-id: T9qi6v
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Corner position of the chat widget on the page"
+msgstr "Corner position of the chat widget on the page"
+
 #. js-lingui-id: xuYXJX
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-view-sort-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-view-sort-validator.service.ts
@@ -1744,9 +2060,13 @@ msgstr "Could not found updated field metadata"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-version-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -1758,6 +2078,7 @@ msgstr "Could not found updated field metadata"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -1765,9 +2086,13 @@ msgstr "Could not found updated field metadata"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -1775,6 +2100,7 @@ msgstr "Could not found updated field metadata"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Created by"
@@ -1796,6 +2122,8 @@ msgstr "Created field metadata, parent object metadata not found"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
@@ -1804,6 +2132,12 @@ msgstr "Created field metadata, parent object metadata not found"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
@@ -1826,6 +2160,8 @@ msgstr "Created field metadata, parent object metadata not found"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
@@ -1840,12 +2176,22 @@ msgstr "Created field metadata, parent object metadata not found"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
@@ -1860,6 +2206,8 @@ msgstr "Created field metadata, parent object metadata not found"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
@@ -1884,6 +2232,7 @@ msgid "Cron pattern '{pattern}' is invalid"
 msgstr "Cron pattern '{pattern}' is invalid"
 
 #. js-lingui-id: cHdFqM
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 msgid "Current Step Index"
 msgstr "Current Step Index"
@@ -1969,6 +2318,16 @@ msgstr "Database configuration is disabled."
 msgid "Database Event"
 msgstr "Database Event"
 
+#. js-lingui-id: 1pzGFI
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Date and time the booking ends"
+msgstr "Date and time the booking ends"
+
+#. js-lingui-id: YaPk2S
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Date and time the booking starts"
+msgstr "Date and time the booking starts"
+
 #. js-lingui-id: Lhd0oQ
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
 msgid "Date format"
@@ -1985,9 +2344,13 @@ msgstr "Date when the campaign is scheduled to send"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -1999,6 +2362,7 @@ msgstr "Date when the campaign is scheduled to send"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -2006,9 +2370,14 @@ msgstr "Date when the campaign is scheduled to send"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -2016,6 +2385,7 @@ msgstr "Date when the campaign is scheduled to send"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Date when the record was deleted"
@@ -2075,15 +2445,29 @@ msgstr "Default value should be as quoted string"
 msgid "Default values must be unique"
 msgstr "Default values must be unique"
 
+#. js-lingui-id: MF7p9x
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Delay Days"
+msgstr "Delay Days"
+
+#. js-lingui-id: xXs72x
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Delay in seconds before sending the auto response"
+msgstr "Delay in seconds before sending the auto response"
+
 #. js-lingui-id: QN9ahV
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-version-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -2095,6 +2479,7 @@ msgstr "Default values must be unique"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -2102,9 +2487,14 @@ msgstr "Default values must be unique"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -2112,6 +2502,7 @@ msgstr "Default values must be unique"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Deleted at"
@@ -2123,6 +2514,8 @@ msgid "Delivered"
 msgstr "Delivered"
 
 #. js-lingui-id: Nu4oKW
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-standard-flat-field-metadata.util.ts
@@ -2140,6 +2533,11 @@ msgstr "Direct"
 msgid "Direction"
 msgstr "Direction"
 
+#. js-lingui-id: kMw2xR
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Display color for the meeting type"
+msgstr "Display color for the meeting type"
+
 #. js-lingui-id: 0gS7M5
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-participant-standard-flat-field-metadata.util.ts
@@ -2147,6 +2545,80 @@ msgstr "Direction"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 msgid "Display Name"
 msgstr "Display Name"
+
+#. js-lingui-id: 2WNn7V
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Display name of the message sender"
+msgstr "Display name of the message sender"
+
+#. js-lingui-id: cww/+j
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Document description"
+msgstr "Document description"
+
+#. js-lingui-id: ANm29X
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Document MIME type"
+msgstr "Document MIME type"
+
+#. js-lingui-id: XdSkpW
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Document name"
+msgstr "Document name"
+
+#. js-lingui-id: 2Y5A3v
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Document Sharing Link"
+msgstr "Document Sharing Link"
+
+#. js-lingui-id: oqNvtC
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Document sharing link record position"
+msgstr "Document sharing link record position"
+
+#. js-lingui-id: UHM3BD
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Document sharing links"
+msgstr "Document sharing links"
+
+#. js-lingui-id: iz3RhA
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Document Sharing Links"
+msgstr "Document Sharing Links"
+
+#. js-lingui-id: WK+elB
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Document sharing links associated with the person"
+msgstr "Document sharing links associated with the person"
+
+#. js-lingui-id: UkHClc
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Document status"
+msgstr "Document status"
+
+#. js-lingui-id: kJoRpG
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Document View"
+msgstr "Document View"
+
+#. js-lingui-id: KWA5kj
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Document view events"
+msgstr "Document view events"
+
+#. js-lingui-id: d6efET
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Document Views"
+msgstr "Document Views"
+
+#. js-lingui-id: 2WvXFy
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Document views by the person"
+msgstr "Document views by the person"
 
 #. js-lingui-id: IymH4t
 #: src/engine/core-modules/public-domain/public-domain.service.ts
@@ -2257,25 +2729,61 @@ msgstr "Duplicate root resolver found. Each root resolver can only be called onc
 msgid "Duplicated option {field}"
 msgstr "Duplicated option {field}"
 
+#. js-lingui-id: 4HSMTw
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Duration (minutes)"
+msgstr "Duration (minutes)"
+
+#. js-lingui-id: mRWiYM
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Duration (seconds)"
+msgstr "Duration (seconds)"
+
+#. js-lingui-id: Y8L5b6
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Duration of the meeting in minutes"
+msgstr "Duration of the meeting in minutes"
+
 #. js-lingui-id: n6jNyT
 #: src/engine/metadata-modules/command-menu-item/command-menu-item.exception.ts
 msgid "Either workflow version or front component is required."
 msgstr "Either workflow version or front component is required."
 
 #. js-lingui-id: O3oNi5
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 msgid "Email"
 msgstr "Email"
+
+#. js-lingui-id: e2qNU/
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Email address of the chat visitor"
+msgstr "Email address of the chat visitor"
 
 #. js-lingui-id: /QIpGI
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 msgid "Email address of the form submitter"
 msgstr "Email address of the form submitter"
 
+#. js-lingui-id: bi8Sb5
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Email address of the guest"
+msgstr "Email address of the guest"
+
+#. js-lingui-id: voRiW+
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Email address to notify on document views"
+msgstr "Email address to notify on document views"
+
 #. js-lingui-id: HJ9A7+
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "Email address to notify on new submissions"
 msgstr "Email address to notify on new submissions"
+
+#. js-lingui-id: rsfqp9
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Email address to notify when a booking is made"
+msgstr "Email address to notify when a booking is made"
 
 #. js-lingui-id: AcnTuz
 #: src/engine/core-modules/user/services/user.service.ts
@@ -2291,6 +2799,11 @@ msgstr "Email already verified."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Email body content in HTML"
 msgstr "Email body content in HTML"
+
+#. js-lingui-id: plHxFQ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Email body content in HTML for this step"
+msgstr "Email body content in HTML for this step"
 
 #. js-lingui-id: U4o9Jj
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
@@ -2347,10 +2860,25 @@ msgstr "Email is required. Please provide a valid email address."
 msgid "Email is unchanged."
 msgstr "Email is unchanged."
 
+#. js-lingui-id: gUfR3C
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Email of the document viewer"
+msgstr "Email of the document viewer"
+
+#. js-lingui-id: y80g4w
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Email of the intended recipient"
+msgstr "Email of the intended recipient"
+
 #. js-lingui-id: dX8qAK
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Email subject line"
 msgstr "Email subject line"
+
+#. js-lingui-id: +AjIBB
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Email subject line for this step"
+msgstr "Email subject line for this step"
 
 #. js-lingui-id: HynRnT
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
@@ -2393,11 +2921,21 @@ msgstr "Employees"
 msgid "Empty field permissions are not allowed."
 msgstr "Empty field permissions are not allowed."
 
+#. js-lingui-id: Legl9j
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Enable Download"
+msgstr "Enable Download"
+
 #. js-lingui-id: VFv2ZC
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-standard-flat-field-metadata.util.ts
 msgid "End Date"
 msgstr "End Date"
+
+#. js-lingui-id: NdvkfS
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Ends At"
+msgstr "Ends At"
 
 #. js-lingui-id: g2om8o
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-command-menu-item-validator.service.ts
@@ -2415,19 +2953,27 @@ msgid "Enqueued"
 msgstr "Enqueued"
 
 #. js-lingui-id: oRPXo6
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 msgid "Enrolled At"
 msgstr "Enrolled At"
 
 #. js-lingui-id: BilT0G
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 msgid "Enrollment Count"
 msgstr "Enrollment Count"
 
 #. js-lingui-id: mcMDEJ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 msgid "Enrollment status"
 msgstr "Enrollment status"
+
+#. js-lingui-id: TR8eKQ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Enrollments"
+msgstr "Enrollments"
 
 #. js-lingui-id: ArAFBo
 #: src/engine/core-modules/auth/auth.exception.ts
@@ -2547,6 +3093,11 @@ msgstr "Executed by"
 #: src/engine/twenty-orm/utils/compute-relation-connect-query-configs.util.ts
 msgid "Expected the same constraint fields to be used consistently across all operations for {connectFieldName}."
 msgstr "Expected the same constraint fields to be used consistently across all operations for {connectFieldName}."
+
+#. js-lingui-id: FYjp37
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Expires At"
+msgstr "Expires At"
 
 #. js-lingui-id: 5KfWxA
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-folder-standard-flat-field-metadata.util.ts
@@ -3023,9 +3574,11 @@ msgstr "Field type validation error."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -3037,6 +3590,7 @@ msgstr "Field type validation error."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -3044,9 +3598,11 @@ msgstr "Field type validation error."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -3372,6 +3928,11 @@ msgstr "Function not found."
 msgid "Google API authentication is disabled."
 msgstr "Google API authentication is disabled."
 
+#. js-lingui-id: LJnK0H
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Greeting Message"
+msgstr "Greeting Message"
+
 #. js-lingui-id: pXkgL2
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-page-layout-widget-validator.service.ts
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-page-layout-widget-validator.service.ts
@@ -3397,6 +3958,21 @@ msgstr "Group emails deletion"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 msgid "Group emails import"
 msgstr "Group emails import"
+
+#. js-lingui-id: fhS7r5
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Guest Email"
+msgstr "Guest Email"
+
+#. js-lingui-id: /XR3M9
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Guest Name"
+msgstr "Guest Name"
+
+#. js-lingui-id: Dg5tKj
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Guest Notes"
+msgstr "Guest Notes"
 
 #. js-lingui-id: TkE8dW
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
@@ -3470,12 +4046,20 @@ msgstr "ICP"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
@@ -3498,6 +4082,8 @@ msgstr "ICP"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
@@ -3512,12 +4098,22 @@ msgstr "ICP"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
@@ -3532,6 +4128,8 @@ msgstr "ICP"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
@@ -3565,6 +4163,12 @@ msgstr "Image"
 msgid "In progress"
 msgstr "In progress"
 
+#. js-lingui-id: NoNwIX
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Inactive"
+msgstr "Inactive"
+
 #. js-lingui-id: RAMaAx
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
@@ -3590,6 +4194,11 @@ msgstr "Index field references incorrect index metadata"
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-index-metadata-validator.service.ts
 msgid "Index must have at least one field"
 msgstr "Index must have at least one field"
+
+#. js-lingui-id: rpksod
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "Index of the current step in the sequence"
+msgstr "Index of the current step in the sequence"
 
 #. js-lingui-id: Hl6cv2
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-index-metadata-validator.service.ts
@@ -4448,6 +5057,11 @@ msgstr "Join table linking message channel message associations to message folde
 msgid "Join your team on Twenty"
 msgstr "Join your team on Twenty"
 
+#. js-lingui-id: ikSVPX
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "JSON configuration for business hours availability"
+msgstr "JSON configuration for business hours availability"
+
 #. js-lingui-id: MkBf/9
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 msgid "JSON configuration for the page footer"
@@ -4670,10 +5284,20 @@ msgstr "Language"
 msgid "Last credentials refreshed at"
 msgstr "Last credentials refreshed at"
 
+#. js-lingui-id: VsXYEp
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Last Message At"
+msgstr "Last Message At"
+
 #. js-lingui-id: WvYp6o
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 msgid "Last published Version Id"
 msgstr "Last published Version Id"
+
+#. js-lingui-id: xGo2wY
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "Last Step At"
+msgstr "Last Step At"
 
 #. js-lingui-id: Y60/DC
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
@@ -4701,9 +5325,13 @@ msgstr "Last sync history ID"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -4715,6 +5343,7 @@ msgstr "Last sync history ID"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -4722,9 +5351,14 @@ msgstr "Last sync history ID"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -4732,6 +5366,7 @@ msgstr "Last sync history ID"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Last time the record was changed"
@@ -4743,9 +5378,13 @@ msgstr "Last time the record was changed"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -4757,6 +5396,7 @@ msgstr "Last time the record was changed"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -4764,9 +5404,14 @@ msgstr "Last time the record was changed"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -4774,6 +5419,7 @@ msgstr "Last time the record was changed"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Last update"
@@ -4818,16 +5464,27 @@ msgstr "Linked Record id"
 msgid "Linkedin"
 msgstr "Linkedin"
 
+#. js-lingui-id: xcUtO8
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "LinkedIn Task"
+msgstr "LinkedIn Task"
+
 #. js-lingui-id: LeFv/R
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 msgid "List of opportunities for which that person is the point of contact"
 msgstr "List of opportunities for which that person is the point of contact"
 
 #. js-lingui-id: wJijgU
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-standard-flat-field-metadata.util.ts
 msgid "Location"
 msgstr "Location"
+
+#. js-lingui-id: VDKO1g
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Location or video link for the meeting"
+msgstr "Location or video link for the meeting"
 
 #. js-lingui-id: V5AXjr
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-logic-function-validator.service.ts
@@ -4903,6 +5560,37 @@ msgstr "Meet Link"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 msgid "Meeting"
 msgstr "Meeting"
+
+#. js-lingui-id: /Wjk04
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Meeting bookings associated with the person"
+msgstr "Meeting bookings associated with the person"
+
+#. js-lingui-id: 36TZOj
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Meeting Type"
+msgstr "Meeting Type"
+
+#. js-lingui-id: z4ky8y
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Meeting type name"
+msgstr "Meeting type name"
+
+#. js-lingui-id: Oh3Fmg
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Meeting type record position"
+msgstr "Meeting type record position"
+
+#. js-lingui-id: Fxr7TQ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Meeting type status"
+msgstr "Meeting type status"
+
+#. js-lingui-id: A8nL7/
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Meeting Types"
+msgstr "Meeting Types"
 
 #. js-lingui-id: xDAtGP
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
@@ -4980,6 +5668,11 @@ msgstr "Message Channel record position"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 msgid "Message Channels"
 msgstr "Message Channels"
+
+#. js-lingui-id: J8ndts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Message Count"
+msgstr "Message Count"
 
 #. js-lingui-id: /4uGJc
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-standard-flat-field-metadata.util.ts
@@ -5070,10 +5763,25 @@ msgstr "Message Participants"
 msgid "Message record position"
 msgstr "Message record position"
 
+#. js-lingui-id: O5sL98
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Message sent to bookers upon confirmation"
+msgstr "Message sent to bookers upon confirmation"
+
 #. js-lingui-id: etajBm
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "Message shown after successful form submission"
 msgstr "Message shown after successful form submission"
+
+#. js-lingui-id: lAIRun
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Message shown when no agents are available"
+msgstr "Message shown when no agents are available"
+
+#. js-lingui-id: nMvTy0
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Message shown when the chat widget is opened"
+msgstr "Message shown when the chat widget is opened"
 
 #. js-lingui-id: IC5A8V
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
@@ -5104,9 +5812,15 @@ msgstr "Message Thread record position"
 msgid "Message Threads"
 msgstr "Message Threads"
 
+#. js-lingui-id: /VUzb+
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Message to send automatically when a conversation starts"
+msgstr "Message to send automatically when a conversation starts"
+
 #. js-lingui-id: t7TeQU
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-thread-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 msgid "Messages"
 msgstr "Messages"
 
@@ -5135,6 +5849,11 @@ msgstr "Messages import pending"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 msgid "Messages import scheduled"
 msgstr "Messages import scheduled"
+
+#. js-lingui-id: jZ8S7h
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Messages in this conversation"
+msgstr "Messages in this conversation"
 
 #. js-lingui-id: YsufJO
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
@@ -5196,6 +5915,11 @@ msgstr "Microsoft API authentication is disabled."
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-runner/exceptions/workspace-migration-runner.exception.ts
 msgid "Migration execution failed."
 msgstr "Migration execution failed."
+
+#. js-lingui-id: YZvF3y
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "MIME Type"
+msgstr "MIME Type"
 
 #. js-lingui-id: G6wJK8
 #: src/modules/workflow/workflow-trigger/utils/assert-version-can-be-activated.util.ts
@@ -5263,13 +5987,17 @@ msgstr "Multiple subscriptions found where one was expected."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-version-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
@@ -5322,6 +6050,16 @@ msgstr "Name is too short"
 msgid "Name must be in camelCase format."
 msgstr "Name must be in camelCase format."
 
+#. js-lingui-id: Ee09my
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Name of the chat visitor"
+msgstr "Name of the chat visitor"
+
+#. js-lingui-id: eiD1zM
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Name of the document viewer"
+msgstr "Name of the document viewer"
+
 #. js-lingui-id: EEVPOx
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 msgid "Name of the favorite folder"
@@ -5331,6 +6069,11 @@ msgstr "Name of the favorite folder"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 msgid "Name of the form submitter"
 msgstr "Name of the form submitter"
+
+#. js-lingui-id: PjTBfD
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Name of the guest"
+msgstr "Name of the guest"
 
 #. js-lingui-id: csMjko
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
@@ -5606,14 +6349,26 @@ msgid "NoteTarget target"
 msgstr "NoteTarget target"
 
 #. js-lingui-id: k2SOMs
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "Notification Email"
 msgstr "Notification Email"
+
+#. js-lingui-id: sy7bCK
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Notify on Booking"
+msgstr "Notify on Booking"
 
 #. js-lingui-id: 0UgIJq
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "Notify on Submission"
 msgstr "Notify on Submission"
+
+#. js-lingui-id: iY74VQ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Notify on View"
+msgstr "Notify on View"
 
 #. js-lingui-id: t9QlBd
 #: src/engine/api/graphql/graphql-query-runner/group-by/resolvers/utils/format-result-with-group-by-dimension-values.util.ts
@@ -5631,14 +6386,21 @@ msgid "Number of bounced emails"
 msgstr "Number of bounced emails"
 
 #. js-lingui-id: S+wqn3
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 msgid "Number of completed enrollments"
 msgstr "Number of completed enrollments"
 
 #. js-lingui-id: r3Hf1N
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 msgid "Number of currently active enrollments"
 msgstr "Number of currently active enrollments"
+
+#. js-lingui-id: lR6Zpc
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Number of days to wait before executing this step"
+msgstr "Number of days to wait before executing this step"
 
 #. js-lingui-id: ryU5Pm
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
@@ -5660,10 +6422,30 @@ msgstr "Number of employees in the company"
 msgid "Number of link clicks"
 msgstr "Number of link clicks"
 
+#. js-lingui-id: /kqzLw
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Number of pages in the document"
+msgstr "Number of pages in the document"
+
+#. js-lingui-id: biXs16
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Number of pages viewed"
+msgstr "Number of pages viewed"
+
+#. js-lingui-id: A4VtAU
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Number of unique viewers"
+msgstr "Number of unique viewers"
+
 #. js-lingui-id: a4Ju5Z
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Number of unsubscribes"
 msgstr "Number of unsubscribes"
+
+#. js-lingui-id: RBLHWF
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Number of views through this link"
+msgstr "Number of views through this link"
 
 #. js-lingui-id: 08qKzD
 #: src/engine/core-modules/auth/auth.exception.ts
@@ -5812,6 +6594,11 @@ msgstr "ObjectMetadataId is required to create a view."
 msgid "October"
 msgstr "October"
 
+#. js-lingui-id: vBORMO
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Offline Message"
+msgstr "Offline Message"
+
 #. js-lingui-id: Tp2ptT
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-morph-or-relation-flat-field-on-delete.util.ts
 msgid "On delete action is only supported for many to one relations"
@@ -5842,6 +6629,11 @@ msgstr "Ongoing"
 #: src/engine/metadata-modules/permissions/permissions.exception.ts
 msgid "Only field restrictions are allowed."
 msgstr "Only field restrictions are allowed."
+
+#. js-lingui-id: 1TNIig
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Open"
+msgstr "Open"
 
 #. js-lingui-id: f2iViQ
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
@@ -5989,6 +6781,11 @@ msgstr "Option value must be a string of at least one character"
 msgid "Options are required for enum fields"
 msgstr "Options are required for enum fields"
 
+#. js-lingui-id: /dPuvM
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Ordinal position of this step in the sequence"
+msgstr "Ordinal position of this step in the sequence"
+
 #. js-lingui-id: /IX/7x
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Other"
@@ -6009,6 +6806,11 @@ msgstr "Owned opportunities"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 msgid "Owner"
 msgstr "Owner"
+
+#. js-lingui-id: yTz0se
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Page Count"
+msgstr "Page Count"
 
 #. js-lingui-id: AODALE
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
@@ -6099,6 +6901,11 @@ msgstr "Page layout widget to update not found"
 msgid "Page layout widget with universal identifier {flatPageLayoutWidgetUniversalIdentifier} already exists"
 msgstr "Page layout widget with universal identifier {flatPageLayoutWidgetUniversalIdentifier} already exists"
 
+#. js-lingui-id: 6tXnLP
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Pages Viewed"
+msgstr "Pages Viewed"
+
 #. js-lingui-id: G1fWNt
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-folder-standard-flat-field-metadata.util.ts
@@ -6144,7 +6951,14 @@ msgstr "Password reset token has already been generated. Please wait for {timeTo
 msgid "Password too weak"
 msgstr "Password too weak"
 
+#. js-lingui-id: KfyjBI
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Pause on Reply"
+msgstr "Pause on Reply"
+
 #. js-lingui-id: URAE3q
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
@@ -6193,6 +7007,16 @@ msgstr "People"
 msgid "People linked to the company."
 msgstr "People linked to the company."
 
+#. js-lingui-id: hIfdUv
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Percentage of contacts who replied"
+msgstr "Percentage of contacts who replied"
+
+#. js-lingui-id: eFzCF3
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Percentage of the document viewed"
+msgstr "Percentage of the document viewed"
+
 #. js-lingui-id: fxC+On
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-permission-flag-validator.service.ts
 msgid "Permission flag already exists"
@@ -6233,13 +7057,18 @@ msgstr "Permission not found."
 
 #. js-lingui-id: OZdaTZ
 #: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 msgid "Person"
 msgstr "Person"
 
@@ -6316,9 +7145,13 @@ msgstr "Point of Contact"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -6330,6 +7163,7 @@ msgstr "Point of Contact"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -6337,9 +7171,13 @@ msgstr "Point of Contact"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -6347,6 +7185,7 @@ msgstr "Point of Contact"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Position"
@@ -6399,6 +7238,11 @@ msgstr "Primary axis group by field is required for line chart"
 #: src/engine/metadata-modules/flat-page-layout-widget/validators/utils/validate-line-chart-configuration.util.ts
 msgid "Primary axis group by field is required for line chart widget \"{widgetTitle}\""
 msgstr "Primary axis group by field is required for line chart widget \"{widgetTitle}\""
+
+#. js-lingui-id: bagwGd
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Primary color for the chat widget"
+msgstr "Primary color for the chat widget"
 
 #. js-lingui-id: t/0e9D
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-agent-required-properties.util.ts
@@ -6502,6 +7346,11 @@ msgstr "Recipient Count"
 msgid "Recipient delivery status"
 msgstr "Recipient delivery status"
 
+#. js-lingui-id: fgRgcC
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Recipient Email"
+msgstr "Recipient Email"
+
 #. js-lingui-id: yPrbsy
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Recipients"
@@ -6555,6 +7404,8 @@ msgstr "Related form"
 
 #. js-lingui-id: qH3S1U
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
 msgid "Related person"
 msgstr "Related person"
@@ -6563,6 +7414,12 @@ msgstr "Related person"
 #: src/engine/twenty-orm/exceptions/twenty-orm.exception.ts
 msgid "Related record not found."
 msgstr "Related record not found."
+
+#. js-lingui-id: UafEz6
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Related tracked document"
+msgstr "Related tracked document"
 
 #. js-lingui-id: 2LpFdR
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
@@ -6609,10 +7466,20 @@ msgstr "Remote objects are not production ready yet"
 msgid "Remote objects are not supported yet"
 msgstr "Remote objects are not supported yet"
 
+#. js-lingui-id: YuokqU
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Reply Rate"
+msgstr "Reply Rate"
+
 #. js-lingui-id: pCsIQQ
 #: src/engine/core-modules/email-verification/email-verification-exception-filter.util.ts
 msgid "Request has expired, please try again."
 msgstr "Request has expired, please try again."
+
+#. js-lingui-id: PR4Ro5
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Require Email"
+msgstr "Require Email"
 
 #. js-lingui-id: KPIUoa
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/utils/validate-agent-response-format.util.ts
@@ -6858,6 +7725,11 @@ msgstr "Running"
 msgid "Runs"
 msgstr "Runs"
 
+#. js-lingui-id: vEP2A7
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Sales sequence enrollments for the person"
+msgstr "Sales sequence enrollments for the person"
+
 #. js-lingui-id: +5kO8P
 #: src/engine/api/graphql/graphql-query-runner/group-by/resolvers/utils/format-result-with-group-by-dimension-values.util.ts
 msgid "Saturday"
@@ -6895,9 +7767,11 @@ msgstr "SDK client archive not found. The SDK client may not have been generated
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -6909,6 +7783,7 @@ msgstr "SDK client archive not found. The SDK client may not have been generated
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -6916,9 +7791,11 @@ msgstr "SDK client archive not found. The SDK client may not have been generated
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -6956,6 +7833,16 @@ msgstr "Sender display name"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Sender email address"
 msgstr "Sender email address"
+
+#. js-lingui-id: fXHEMx
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Sender Name"
+msgstr "Sender Name"
+
+#. js-lingui-id: b+5TdJ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Sender Type"
+msgstr "Sender Type"
 
 #. js-lingui-id: 9bG48P
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
@@ -6999,6 +7886,79 @@ msgstr "SEO meta title for the landing page"
 msgid "September"
 msgstr "September"
 
+#. js-lingui-id: ipQKNM
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "Sequence"
+msgstr "Sequence"
+
+#. js-lingui-id: urR1ek
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Sequence description"
+msgstr "Sequence description"
+
+#. js-lingui-id: Zxkud5
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Sequence Enrollment"
+msgstr "Sequence Enrollment"
+
+#. js-lingui-id: 1/gpls
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "Sequence enrollment record position"
+msgstr "Sequence enrollment record position"
+
+#. js-lingui-id: RZBHuC
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Sequence enrollments"
+msgstr "Sequence enrollments"
+
+#. js-lingui-id: G2vT/g
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
+msgid "Sequence Enrollments"
+msgstr "Sequence Enrollments"
+
+#. js-lingui-id: QpSYd1
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Sequence name"
+msgstr "Sequence name"
+
+#. js-lingui-id: pm4PIj
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Sequence record position"
+msgstr "Sequence record position"
+
+#. js-lingui-id: 6XPrOm
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Sequence status"
+msgstr "Sequence status"
+
+#. js-lingui-id: u42NMb
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Sequence Step"
+msgstr "Sequence Step"
+
+#. js-lingui-id: tySayu
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Sequence step record position"
+msgstr "Sequence step record position"
+
+#. js-lingui-id: ZLCASB
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Sequence steps"
+msgstr "Sequence steps"
+
+#. js-lingui-id: VrieHS
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Sequence Steps"
+msgstr "Sequence Steps"
+
+#. js-lingui-id: KA6jdg
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Sequences"
+msgstr "Sequences"
+
 #. js-lingui-id: Tz0i8g
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
 msgid "Settings"
@@ -7009,6 +7969,26 @@ msgstr "Settings"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 msgid "Share Everything"
 msgstr "Share Everything"
+
+#. js-lingui-id: KUWCge
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Sharing Link"
+msgstr "Sharing Link"
+
+#. js-lingui-id: q4oUe2
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Sharing link used for this view"
+msgstr "Sharing link used for this view"
+
+#. js-lingui-id: Myubcr
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Sharing Links"
+msgstr "Sharing Links"
+
+#. js-lingui-id: ucsu/L
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Short unique code for the sharing URL"
+msgstr "Short unique code for the sharing URL"
 
 #. js-lingui-id: e1k+No
 #: src/engine/core-modules/auth/auth.exception.ts
@@ -7039,7 +8019,9 @@ msgid "Skill with name \"{name}\" already exists"
 msgstr "Skill with name \"{name}\" already exists"
 
 #. js-lingui-id: L85WcV
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 msgid "Slug"
 msgstr "Slug"
 
@@ -7135,6 +8117,11 @@ msgstr "Start Date"
 msgid "Start of the week"
 msgstr "Start of the week"
 
+#. js-lingui-id: ksy5IX
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "Starts At"
+msgstr "Starts At"
+
 #. js-lingui-id: RS0o7b
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 msgid "State"
@@ -7146,13 +8133,20 @@ msgid "State of the workflow run"
 msgstr "State of the workflow run"
 
 #. js-lingui-id: uAQUqI
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 msgid "Status"
 msgstr "Status"
 
@@ -7166,10 +8160,25 @@ msgstr "Statuses"
 msgid "Statuses cannot be set manually."
 msgstr "Statuses cannot be set manually."
 
+#. js-lingui-id: c05Kjl
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Step Count"
+msgstr "Step Count"
+
 #. js-lingui-id: u+rv4L
 #: src/modules/workflow/workflow-runner/workspace-services/workflow-runner.workspace-service.ts
 msgid "Step is not a form"
 msgstr "Step is not a form"
+
+#. js-lingui-id: gOobb0
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Step Order"
+msgstr "Step Order"
+
+#. js-lingui-id: A9onc2
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Steps"
+msgstr "Steps"
 
 #. js-lingui-id: NnvXp5
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
@@ -7187,6 +8196,7 @@ msgid "Subdomain not found."
 msgstr "Subdomain not found."
 
 #. js-lingui-id: UJmAAK
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-thread-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-thread-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-standard-flat-field-metadata.util.ts
@@ -7589,6 +8599,11 @@ msgstr "The app source channel does not match the expected type."
 msgid "The application does not have a valid role assigned. Please check your application configuration."
 msgstr "The application does not have a valid role assigned. Please check your application configuration."
 
+#. js-lingui-id: 5mZgct
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "The chat widget this conversation belongs to"
+msgstr "The chat widget this conversation belongs to"
+
 #. js-lingui-id: qnNFrW
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
 msgid "The company Linkedin account"
@@ -7609,14 +8624,23 @@ msgstr "The company Twitter/X account"
 msgid "The company website URL. We use this url to fetch the company icon"
 msgstr "The company website URL. We use this url to fetch the company icon"
 
+#. js-lingui-id: yahgXP
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "The conversation this message belongs to"
+msgstr "The conversation this message belongs to"
+
 #. js-lingui-id: zGBDEH
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-version-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -7628,6 +8652,7 @@ msgstr "The company website URL. We use this url to fetch the company icon"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -7635,9 +8660,13 @@ msgstr "The company website URL. We use this url to fetch the company icon"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -7645,6 +8674,7 @@ msgstr "The company website URL. We use this url to fetch the company icon"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "The creator of the record"
@@ -7710,6 +8740,16 @@ msgstr "The folder this favorite belongs to"
 msgid "The initial version of a workflow can not be deleted"
 msgstr "The initial version of a workflow can not be deleted"
 
+#. js-lingui-id: hem+se
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "The meeting type for this booking"
+msgstr "The meeting type for this booking"
+
+#. js-lingui-id: FBzsT4
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "The message content"
+msgstr "The message content"
+
 #. js-lingui-id: hx2IZ4
 #: src/engine/metadata-modules/object-permission/object-permission.service.ts
 #: src/engine/metadata-modules/object-permission/field-permission/field-permission.service.ts
@@ -7720,6 +8760,21 @@ msgstr "The object you are trying to set permissions for could not be found. It 
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 msgid "The opportunity name"
 msgstr "The opportunity name"
+
+#. js-lingui-id: rzKAL4
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
+msgid "The person associated with this booking"
+msgstr "The person associated with this booking"
+
+#. js-lingui-id: EF7bz6
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "The person enrolled in the sequence"
+msgstr "The person enrolled in the sequence"
+
+#. js-lingui-id: v2pi8H
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "The person linked to this conversation"
+msgstr "The person linked to this conversation"
 
 #. js-lingui-id: tl8xOZ
 #: src/utils/get-domain-name-by-email.ts
@@ -7752,6 +8807,16 @@ msgstr "The role you are looking for could not be found. It may have been delete
 #: src/engine/metadata-modules/object-permission/object-permission.service.ts
 msgid "The role you are trying to modify could not be found."
 msgstr "The role you are trying to modify could not be found."
+
+#. js-lingui-id: F4CjYZ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "The sequence this enrollment belongs to"
+msgstr "The sequence this enrollment belongs to"
+
+#. js-lingui-id: US58QZ
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "The sequence this step belongs to"
+msgstr "The sequence this step belongs to"
 
 #. js-lingui-id: vD3FVp
 #: src/engine/core-modules/imap-smtp-caldav-connection/services/imap-smtp-caldav-connection-validator.service.ts
@@ -7804,9 +8869,13 @@ msgstr "The workflow version status"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -7818,6 +8887,7 @@ msgstr "The workflow version status"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -7825,9 +8895,13 @@ msgstr "The workflow version status"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -7835,6 +8909,7 @@ msgstr "The workflow version status"
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "The workspace member who last updated the record"
@@ -8120,6 +9195,11 @@ msgstr "Thursday"
 msgid "Time format"
 msgstr "Time format"
 
+#. js-lingui-id: igN3+5
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Time spent viewing the document in seconds"
+msgstr "Time spent viewing the document in seconds"
+
 #. js-lingui-id: Mz2JN2
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workspace-member-standard-flat-field-metadata.util.ts
 msgid "Time zone"
@@ -8193,6 +9273,16 @@ msgstr "Timeline Activity"
 msgid "Timeline activity record position"
 msgstr "Timeline activity record position"
 
+#. js-lingui-id: 40Gx0U
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Timezone"
+msgstr "Timezone"
+
+#. js-lingui-id: GJFMmt
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Timezone for the meeting type"
+msgstr "Timezone for the meeting type"
+
 #. js-lingui-id: MHrjPM
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-standard-flat-field-metadata.util.ts
@@ -8238,7 +9328,18 @@ msgstr "Too many requests. Please try again later."
 msgid "Too many workspace invitations sent. Please try again later."
 msgstr "Too many workspace invitations sent. Please try again later."
 
+#. js-lingui-id: TLyE4H
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Total number of bookings for this meeting type"
+msgstr "Total number of bookings for this meeting type"
+
+#. js-lingui-id: 613oz9
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Total number of document views"
+msgstr "Total number of document views"
+
 #. js-lingui-id: 2eTzM7
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
 msgid "Total number of enrolled contacts"
 msgstr "Total number of enrolled contacts"
@@ -8253,10 +9354,37 @@ msgstr "Total number of form submissions"
 msgid "Total number of landing page views"
 msgstr "Total number of landing page views"
 
+#. js-lingui-id: CBF1V9
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Total number of messages in the conversation"
+msgstr "Total number of messages in the conversation"
+
 #. js-lingui-id: QcpFry
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 msgid "Total number of recipients"
 msgstr "Total number of recipients"
+
+#. js-lingui-id: RWcTyO
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Total number of steps in the sequence"
+msgstr "Total number of steps in the sequence"
+
+#. js-lingui-id: FHqjlE
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Tracked Document"
+msgstr "Tracked Document"
+
+#. js-lingui-id: YB6ISo
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Tracked document record position"
+msgstr "Tracked document record position"
+
+#. js-lingui-id: x7BG7I
+#: src/engine/workspace-manager/twenty-standard-application/utils/object-metadata/create-standard-flat-object-metadata.util.ts
+msgid "Tracked Documents"
+msgstr "Tracked Documents"
 
 #. js-lingui-id: tEb/hR
 #: src/modules/dashboard/chart-data/exceptions/chart-data.exception.ts
@@ -8294,9 +9422,15 @@ msgid "Two-factor authentication verification is required."
 msgstr "Two-factor authentication verification is required."
 
 #. js-lingui-id: +zy2Nq
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 msgid "Type"
 msgstr "Type"
+
+#. js-lingui-id: BMUR16
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Type of sequence step"
+msgstr "Type of sequence step"
 
 #. js-lingui-id: Qx95XY
 #: src/engine/metadata-modules/flat-field-metadata/validators/utils/validate-morph-or-relation-flat-field-metadata.util.ts
@@ -8313,6 +9447,11 @@ msgstr "Unable to retrieve the application package."
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-index-metadata-validator.service.ts
 msgid "Unique index cannot be created for field {fieldName} of type {fieldType}"
 msgstr "Unique index cannot be created for field {fieldName} of type {fieldType}"
+
+#. js-lingui-id: JLQWVI
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Unique Viewers"
+msgstr "Unique Viewers"
 
 #. js-lingui-id: tEncxN
 #: src/engine/metadata-modules/permissions/permissions.exception.ts
@@ -8388,9 +9527,13 @@ msgstr "Update field restrictions only apply to updatable objects."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-run-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-workflow-automated-trigger-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-timeline-activity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-target-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-task-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-person-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-opportunity-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-note-target-standard-flat-field-metadata.util.ts
@@ -8402,6 +9545,7 @@ msgstr "Update field restrictions only apply to updatable objects."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
@@ -8409,9 +9553,13 @@ msgstr "Update field restrictions only apply to updatable objects."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-connected-account-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-company-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-template-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -8419,6 +9567,7 @@ msgstr "Update field restrictions only apply to updatable objects."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-event-participant-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-event-association-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-booking-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-blocklist-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-attachment-standard-flat-field-metadata.util.ts
 msgid "Updated by"
@@ -8443,6 +9592,11 @@ msgstr "URL must be a string for widget \"{widgetTitle}\""
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "URL to redirect to after successful form submission"
 msgstr "URL to redirect to after successful form submission"
+
+#. js-lingui-id: wwuDI8
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "URL-friendly identifier for the meeting type"
+msgstr "URL-friendly identifier for the meeting type"
 
 #. js-lingui-id: GkcfmO
 #: src/engine/core-modules/auth/services/sign-in-up.service.ts
@@ -8581,7 +9735,9 @@ msgid "View already exists."
 msgstr "View already exists."
 
 #. js-lingui-id: G32BAz
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util.ts
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
 msgid "View Count"
 msgstr "View Count"
 
@@ -8899,6 +10055,21 @@ msgstr "View to update not found"
 msgid "View with same universal identifier already exists"
 msgstr "View with same universal identifier already exists"
 
+#. js-lingui-id: 5CBFZS
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Viewed At"
+msgstr "Viewed At"
+
+#. js-lingui-id: X81rTN
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Viewer Email"
+msgstr "Viewer Email"
+
+#. js-lingui-id: yomJ4u
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "Viewer Name"
+msgstr "Viewer Name"
+
 #. js-lingui-id: aeqysn
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-standard-flat-field-metadata.util.ts
@@ -8936,6 +10107,11 @@ msgstr "ViewId is required to create a view group."
 msgid "ViewId is required to create a view sort."
 msgstr "ViewId is required to create a view sort."
 
+#. js-lingui-id: WWzomn
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Views through this sharing link"
+msgstr "Views through this sharing link"
+
 #. js-lingui-id: 2q/Q7x
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-standard-flat-field-metadata.util.ts
@@ -8943,6 +10119,31 @@ msgstr "ViewId is required to create a view sort."
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-calendar-channel-standard-flat-field-metadata.util.ts
 msgid "Visibility"
 msgstr "Visibility"
+
+#. js-lingui-id: CExVNP
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Visitor"
+msgstr "Visitor"
+
+#. js-lingui-id: PBw0qi
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Visitor Email"
+msgstr "Visitor Email"
+
+#. js-lingui-id: tRTqzg
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Visitor Name"
+msgstr "Visitor Name"
+
+#. js-lingui-id: Nvwlv2
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "Visitor Session Id"
+msgstr "Visitor Session Id"
+
+#. js-lingui-id: hQOBwU
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-step-standard-flat-field-metadata.util.ts
+msgid "Wait"
+msgstr "Wait"
 
 #. js-lingui-id: xvV2NJ
 #: src/engine/twenty-orm/error-handling/compute-twenty-orm-exception.ts
@@ -9007,6 +10208,21 @@ msgstr "When a link was first clicked"
 msgid "When the contact was enrolled"
 msgstr "When the contact was enrolled"
 
+#. js-lingui-id: kMzJ3l
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "When the contact was enrolled in the sequence"
+msgstr "When the contact was enrolled in the sequence"
+
+#. js-lingui-id: nWh7Om
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "When the document sharing expires"
+msgstr "When the document sharing expires"
+
+#. js-lingui-id: xNyJSW
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util.ts
+msgid "When the document was viewed"
+msgstr "When the document was viewed"
+
 #. js-lingui-id: VhwZkw
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
 msgid "When the email bounced"
@@ -9023,9 +10239,20 @@ msgid "When the email was sent"
 msgstr "When the email was sent"
 
 #. js-lingui-id: indH6j
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 msgid "When the enrollment completed"
 msgstr "When the enrollment completed"
+
+#. js-lingui-id: Xb0Wxg
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-conversation-standard-flat-field-metadata.util.ts
+msgid "When the last message was sent"
+msgstr "When the last message was sent"
+
+#. js-lingui-id: B7h0OG
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-enrollment-standard-flat-field-metadata.util.ts
+msgid "When the last step was executed"
+msgstr "When the last step was executed"
 
 #. js-lingui-id: noJeiX
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-campaign-recipient-standard-flat-field-metadata.util.ts
@@ -9037,20 +10264,65 @@ msgstr "When the recipient unsubscribed"
 msgid "Where the submission came from"
 msgstr "Where the submission came from"
 
+#. js-lingui-id: 2iHwK8
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Whether automatic enrollment is enabled"
+msgstr "Whether automatic enrollment is enabled"
+
+#. js-lingui-id: QnStTY
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util.ts
+msgid "Whether this sharing link is active"
+msgstr "Whether this sharing link is active"
+
+#. js-lingui-id: A3/f7s
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-sequence-standard-flat-field-metadata.util.ts
+msgid "Whether to pause the sequence when a contact replies"
+msgstr "Whether to pause the sequence when a contact replies"
+
 #. js-lingui-id: iWHOPn
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "Whether to send a confirmation email to the submitter"
 msgstr "Whether to send a confirmation email to the submitter"
+
+#. js-lingui-id: /AN2hT
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-meeting-type-standard-flat-field-metadata.util.ts
+msgid "Whether to send a notification when a booking is made"
+msgstr "Whether to send a notification when a booking is made"
+
+#. js-lingui-id: n70dKP
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Whether to send an automatic response to new conversations"
+msgstr "Whether to send an automatic response to new conversations"
 
 #. js-lingui-id: YNDbwt
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util.ts
 msgid "Whether to send email notification on new submission"
 msgstr "Whether to send email notification on new submission"
 
+#. js-lingui-id: KU5fjh
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Whether to send email notification when document is viewed"
+msgstr "Whether to send email notification when document is viewed"
+
+#. js-lingui-id: 7uOVgk
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Whether viewers can download the document"
+msgstr "Whether viewers can download the document"
+
+#. js-lingui-id: lHjU6M
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util.ts
+msgid "Whether viewers must provide their email to view"
+msgstr "Whether viewers must provide their email to view"
+
 #. js-lingui-id: nTDJgW
 #: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util.ts
 msgid "Which step the contact is on"
 msgstr "Which step the contact is on"
+
+#. js-lingui-id: Hqe7wt
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-message-standard-flat-field-metadata.util.ts
+msgid "Who sent this message"
+msgstr "Who sent this message"
 
 #. js-lingui-id: OHlJ1X
 #: src/engine/metadata-modules/page-layout-widget/utils/validate-widget-grid-position.util.ts
@@ -9080,6 +10352,11 @@ msgstr "Widget index must be an integer"
 #: src/modules/dashboard/chart-data/exceptions/chart-data.exception.ts
 msgid "Widget not found."
 msgstr "Widget not found."
+
+#. js-lingui-id: fWiuRI
+#: src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-chat-widget-standard-flat-field-metadata.util.ts
+msgid "Widget Position"
+msgstr "Widget Position"
 
 #. js-lingui-id: MPdWmx
 #: src/engine/workspace-manager/workspace-migration/workspace-migration-builder/validators/services/flat-page-layout-widget-validator.service.ts
