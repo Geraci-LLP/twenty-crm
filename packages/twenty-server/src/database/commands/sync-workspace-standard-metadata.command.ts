@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { WorkspaceActivationStatus } from 'twenty-shared/workspace';
 
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
+import { WorkspaceMigrationBuilderException } from 'src/engine/workspace-manager/workspace-migration/exceptions/workspace-migration-builder-exception';
 import { TwentyStandardApplicationService } from 'src/engine/workspace-manager/twenty-standard-application/services/twenty-standard-application.service';
 
 type SyncWorkspaceStandardMetadataOptions = {
@@ -87,6 +88,27 @@ export class SyncWorkspaceStandardMetadataCommand extends CommandRunner {
             `Failed to sync workspace ${workspace.id}: ${error.message}`,
           ),
         );
+
+        if (error instanceof WorkspaceMigrationBuilderException) {
+          const report = error.failedWorkspaceMigrationBuildResult.report;
+
+          for (const [metadataName, failures] of Object.entries(report)) {
+            if (!Array.isArray(failures) || failures.length === 0) {
+              continue;
+            }
+
+            for (const failure of failures) {
+              this.logger.error(
+                chalk.red(
+                  `  [${metadataName}] ${failure.type}: ` +
+                    `${JSON.stringify(failure.errors)} ` +
+                    `entity=${JSON.stringify(failure.flatEntityMinimalInformation)}`,
+                ),
+              );
+            }
+          }
+        }
+
         failed++;
       }
     }
