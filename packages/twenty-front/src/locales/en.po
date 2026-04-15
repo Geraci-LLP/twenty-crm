@@ -153,6 +153,13 @@ msgstr "{0, plural, one {You do not have permission to access the {fieldsList} f
 msgid "{0} credits"
 msgstr "{0} credits"
 
+#. js-lingui-id: DGgVm3
+#. placeholder {0}: data.created
+#. placeholder {1}: data.skipped
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+msgid "{0} recipients added ({1} skipped)"
+msgstr "{0} recipients added ({1} skipped)"
+
 #. js-lingui-id: r4l/MK
 #. placeholder {0}: formatUsageValue(totalCredits)
 #: src/pages/settings/SettingsUsageUserDetail.tsx
@@ -450,6 +457,11 @@ msgstr "{workspaceMemberName} will be unassigned from the following role:"
 #: src/modules/settings/accounts/components/SettingsAccountsConnectionForm.tsx
 msgid "••••••••"
 msgstr "••••••••"
+
+#. js-lingui-id: DHt5b0
+#: src/modules/form/components/FormSettings.tsx
+msgid "<p>Thank you for contacting us. We'll be in touch shortly.</p>"
+msgstr "<p>Thank you for contacting us. We'll be in touch shortly.</p>"
 
 #. js-lingui-id: SMgdEJ
 #. placeholder {0}: formatNumber(preview.estimatedTokenCount, { abbreviate: true, decimals: 1, })
@@ -907,8 +919,19 @@ msgstr "Add Emailing Domain"
 #. js-lingui-id: DpV70M
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
 #: src/modules/settings/data-model/object-details/components/tabs/ObjectFields.tsx
+#: src/modules/form/components/FormBuilder.tsx
 msgid "Add Field"
 msgstr "Add Field"
+
+#. js-lingui-id: X+DVWX
+#: src/modules/form/components/FormBuilder.tsx
+msgid "Add fields to your form"
+msgstr "Add fields to your form"
+
+#. js-lingui-id: j0BMyn
+#: src/modules/form/components/FormPreview.tsx
+msgid "Add fields to your form using the Builder tab to see a preview here."
+msgstr "Add fields to your form using the Builder tab to see a preview here."
 
 #. js-lingui-id: T7RGT6
 #: src/modules/activities/files/components/FilesCard.tsx
@@ -1245,6 +1268,11 @@ msgstr "After a set amount of time"
 msgid "After or equal"
 msgstr "After or equal"
 
+#. js-lingui-id: I5QfOc
+#: src/modules/form/components/FormSettings.tsx
+msgid "After Submission"
+msgstr "After Submission"
+
 #. js-lingui-id: fcYF58
 #: src/pages/settings/applications/SettingsAvailableApplicationDetails.tsx
 #: src/modules/metadata-error-handler/hooks/useMetadataErrorHandler.ts
@@ -1319,14 +1347,14 @@ msgstr "Aggregate Chart"
 #: src/pages/settings/logic-functions/SettingsLogicFunctionDetail.tsx
 #: src/pages/settings/ai/SettingsToolDetail.tsx
 #: src/pages/settings/ai/SettingsSkillForm.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
-#: src/pages/settings/ai/SettingsAgentForm.tsx
 #: src/pages/settings/ai/SettingsAIUsageUserDetail.tsx
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
 #: src/pages/settings/ai/SettingsAI.tsx
 #: src/pages/settings/ai/SettingsAI.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
+#: src/pages/settings/ai/SettingsAgentForm.tsx
 #: src/pages/settings/admin-panel/SettingsAdminAiProviderDetail.tsx
 #: src/modules/workflow/workflow-steps/workflow-actions/utils/getActionHeaderTypeOrThrow.ts
 #: src/modules/side-panel/pages/workflow/action/components/SidePanelWorkflowSelectAction.tsx
@@ -1644,6 +1672,11 @@ msgstr "alphabetical"
 #: src/modules/navigation-menu-item/edit/side-panel/components/SidePanelObjectMenuItem.tsx
 msgid "Already in navbar"
 msgstr "Already in navbar"
+
+#. js-lingui-id: TEAx2g
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Alt Text"
+msgstr "Alt Text"
 
 #. js-lingui-id: uprOiC
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
@@ -2495,6 +2528,11 @@ msgstr "Blue"
 msgid "Body"
 msgstr "Body"
 
+#. js-lingui-id: dRO5A2
+#: src/modules/form/components/FormSettings.tsx
+msgid "Body (HTML)"
+msgstr "Body (HTML)"
+
 #. js-lingui-id: khA6nE
 #: src/modules/workflow/workflow-steps/workflow-actions/http-request-action/components/BodyInput.tsx
 msgid "Body Input"
@@ -2556,6 +2594,12 @@ msgstr "Build a dashboard that shows: (1) total pipeline value by stage for the 
 msgid "Build many-to-many relations"
 msgstr "Build many-to-many relations"
 
+#. js-lingui-id: pxh+PI
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+#: src/modules/page-layout/widgets/form-builder/components/FormBuilderWidget.tsx
+msgid "Builder"
+msgstr "Builder"
+
 #. js-lingui-id: uvoIrk
 #: src/pages/settings/admin-panel/SettingsAdminAiProviderDetail.tsx
 msgid "Built-in models from this provider. Toggle to enable or disable."
@@ -2580,6 +2624,18 @@ msgstr "bullet"
 #: src/modules/advanced-text-editor/extensions/slash-command/DefaultSlashCommands.ts
 msgid "Bullet List"
 msgstr "Bullet List"
+
+#. js-lingui-id: ChDLlO
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Button Text"
+msgstr "Button Text"
+
+#. js-lingui-id: MOht10
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Button URL"
+msgstr "Button URL"
 
 #. js-lingui-id: 8ds4Hj
 #: src/pages/settings/applications/components/SettingsAvailableApplicationCard.tsx
@@ -2701,6 +2757,26 @@ msgstr "Calendars"
 #: src/modules/object-record/record-field/ui/form-types/components/FormPhoneFieldInput.tsx
 msgid "Calling Code"
 msgstr "Calling Code"
+
+#. js-lingui-id: PoVCSO
+#: src/modules/campaign/hooks/useSendCampaign.ts
+msgid "Campaign is being sent"
+msgstr "Campaign is being sent"
+
+#. js-lingui-id: Z+NJu1
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+msgid "Campaign paused"
+msgstr "Campaign paused"
+
+#. js-lingui-id: biVu9d
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+msgid "Campaign resumed"
+msgstr "Campaign resumed"
+
+#. js-lingui-id: Ww/GVZ
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+msgid "Campaign scheduled successfully"
+msgstr "Campaign scheduled successfully"
 
 #. js-lingui-id: msssZq
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectAboutForm.tsx
@@ -3028,11 +3104,21 @@ msgstr "Clear"
 msgid "Clear the field or \"X\" to revert to environment/default value."
 msgstr "Clear the field or \"X\" to revert to environment/default value."
 
+#. js-lingui-id: p0uf2+
+#: src/modules/form/components/FormBuilder.tsx
+msgid "Click \"Add Field\" below to add the first input. Published forms will be accessible via a public URL."
+msgstr "Click \"Add Field\" below to add the first input. Published forms will be accessible via a public URL."
+
 #. js-lingui-id: Gt8ndY
 #: src/pages/settings/ai/components/SettingsAIUsageTab.tsx
 #: src/modules/settings/usage/components/SettingsUsageAnalyticsSection.tsx
 msgid "Click a user to see their daily breakdown."
 msgstr "Click a user to see their daily breakdown."
+
+#. js-lingui-id: V0xvdH
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Click Here"
+msgstr "Click Here"
 
 #. js-lingui-id: HevGC0
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
@@ -3422,6 +3508,11 @@ msgstr "Confirm role update"
 msgid "Confirm upgrade"
 msgstr "Confirm upgrade"
 
+#. js-lingui-id: I7LxQR
+#: src/modules/form/components/FormSettings.tsx
+msgid "Confirmation Email"
+msgstr "Confirmation Email"
+
 #. js-lingui-id: D8ATlr
 #: src/modules/settings/accounts/components/SettingsNewAccountSection.tsx
 msgid "Connect a new account to your workspace"
@@ -3492,6 +3583,7 @@ msgstr "Contains"
 #: src/pages/settings/applications/SettingsAvailableApplicationDetails.tsx
 #: src/pages/settings/applications/SettingsAvailableApplicationDetails.tsx
 #: src/pages/settings/applications/SettingsApplicationDetails.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
 msgid "Content"
 msgstr "Content"
 
@@ -4674,6 +4766,7 @@ msgstr "Delete Evaluation Input"
 
 #. js-lingui-id: x2p4/4
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
+#: src/modules/form/components/FormBuilder.tsx
 msgid "Delete field"
 msgstr "Delete field"
 
@@ -5044,6 +5137,21 @@ msgstr "Drag and Drop Here"
 msgid "Drag to add to navbar"
 msgstr "Drag to add to navbar"
 
+#. js-lingui-id: dMmPpt
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+msgid "Drip campaign activated"
+msgstr "Drip campaign activated"
+
+#. js-lingui-id: Xxl/+c
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+msgid "Drip campaign created"
+msgstr "Drip campaign created"
+
+#. js-lingui-id: ioYwxX
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+msgid "Drip campaign paused"
+msgstr "Drip campaign paused"
+
 #. js-lingui-id: VIbDgE
 #: src/modules/page-layout/widgets/fields/components/FieldsConfigurationGroupEditor.tsx
 msgid "Drop fields here"
@@ -5078,6 +5186,11 @@ msgstr "Duplicates"
 #: src/pages/settings/profile/appearance/components/LocalePicker.tsx
 msgid "Dutch"
 msgstr "Dutch"
+
+#. js-lingui-id: 5eAomn
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "e.g. ^[\\w.+-]+@[\\w-]+\\.[\\w.]+$"
+msgstr "e.g. ^[\\w.+-]+@[\\w-]+\\.[\\w.]+$"
 
 #. js-lingui-id: 8zfXiN
 #: src/pages/settings/admin-panel/SettingsAdminNewAiModel.tsx
@@ -5365,6 +5478,11 @@ msgstr "Email is required"
 msgid "Email must be a valid email"
 msgstr "Email must be a valid email"
 
+#. js-lingui-id: zQ1Ylj
+#: src/modules/form/components/FormSettings.tsx
+msgid "Email Notifications"
+msgstr "Email Notifications"
+
 #. js-lingui-id: QT/Wo7
 #: src/modules/settings/accounts/components/SettingsAccountsBlocklistInput.tsx
 msgid "Email or domain is already in blocklist"
@@ -5404,6 +5522,11 @@ msgstr "Email verification link resent!"
 #: src/modules/auth/components/VerifyEmailEffect.tsx
 msgid "Email verified."
 msgstr "Email verified."
+
+#. js-lingui-id: BopPj6
+#: src/modules/form/components/FormSettings.tsx
+msgid "email@example.com"
+msgstr "email@example.com"
 
 #. js-lingui-id: VI2hiF
 #: src/modules/settings/accounts/components/SettingsAccountsBlocklistTable.tsx
@@ -5455,6 +5578,11 @@ msgstr "Emails settings"
 #: src/modules/workspace/components/WorkspaceInviteTeam.tsx
 msgid "Emails should not be empty"
 msgstr "Emails should not be empty"
+
+#. js-lingui-id: NTZ/NX
+#: src/modules/form/components/FormEmbedSnippet.tsx
+msgid "Embed Code"
+msgstr "Embed Code"
 
 #. js-lingui-id: eXoH4Q
 #: src/modules/settings/data-model/fields/forms/components/SettingsDataModelFieldIconLabelForm.tsx
@@ -5575,6 +5703,11 @@ msgstr "Enjoy a {withCreditCardTrialPeriodDuration}-days free trial"
 msgid "Enjoy a 30-day free trial"
 msgstr "Enjoy a 30-day free trial"
 
+#. js-lingui-id: sKNDB/
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+msgid "Enrolled {enrolled} contacts ({skipped} skipped)"
+msgstr "Enrolled {enrolled} contacts ({skipped} skipped)"
+
 #. js-lingui-id: T/N+2Z
 #: src/modules/workflow/workflow-trigger/components/WorkflowEditTriggerWebhookForm.tsx
 #: src/modules/object-record/record-field/ui/form-types/components/FormRawJsonFieldInput.tsx
@@ -5627,6 +5760,11 @@ msgstr "Enter BCC emails, comma-separated"
 msgid "Enter CC emails, comma-separated"
 msgstr "Enter CC emails, comma-separated"
 
+#. js-lingui-id: bbkvhv
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter CTA heading"
+msgstr "Enter CTA heading"
+
 #. js-lingui-id: MJoxIi
 #: src/modules/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionEmailBase.tsx
 msgid "Enter email subject"
@@ -5646,6 +5784,11 @@ msgstr "Enter files as JSON array"
 #: src/modules/object-record/advanced-filter/components/AdvancedFilterValueInputDropdownButtonClickableSelect.tsx
 msgid "Enter filter"
 msgstr "Enter filter"
+
+#. js-lingui-id: j8ieIT
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter heading"
+msgstr "Enter heading"
 
 #. js-lingui-id: f09Lhk
 #: src/modules/settings/data-model/fields/forms/date/components/SettingsDataModelFieldDateForm.tsx
@@ -5714,6 +5857,11 @@ msgstr "Enter phone number"
 msgid "Enter secret value"
 msgstr "Enter secret value"
 
+#. js-lingui-id: rCE/vs
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter subheading"
+msgstr "Enter subheading"
+
 #. js-lingui-id: xCiJkz
 #: src/modules/workflow/workflow-steps/workflow-actions/http-request-action/components/HttpRequestTestVariableInput.tsx
 msgid "Enter test value"
@@ -5724,6 +5872,11 @@ msgstr "Enter test value"
 #: src/modules/object-record/record-field/ui/form-types/components/FormTextFieldInput.tsx
 msgid "Enter text"
 msgstr "Enter text"
+
+#. js-lingui-id: RUr+uB
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter text content"
+msgstr "Enter text content"
 
 #. js-lingui-id: +rrO69
 #: src/modules/page-layout/widgets/standalone-rich-text/components/StandaloneRichTextEditorContent.tsx
@@ -5739,6 +5892,11 @@ msgstr "Enter text or Type '/' for commands"
 #: src/modules/settings/security/components/SSO/SettingsSSOOIDCForm.tsx
 msgid "Enter the credentials to set the connection"
 msgstr "Enter the credentials to set the connection"
+
+#. js-lingui-id: j4KT7a
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter the form ID to embed"
+msgstr "Enter the form ID to embed"
 
 #. js-lingui-id: rGWgcm
 #: src/modules/settings/security/components/SSO/SettingsSSOSAMLForm.tsx
@@ -6328,6 +6486,12 @@ msgstr "Failed to {translatedOperationType} {translatedMetadataName}. Please try
 msgid "Failed to {translatedOperationType} {translatedMetadataName}. Related {relatedEntityNames} validation failed. Please check your configuration and try again."
 msgstr "Failed to {translatedOperationType} {translatedMetadataName}. Related {relatedEntityNames} validation failed. Please check your configuration and try again."
 
+#. js-lingui-id: rfe2U/
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+msgid "Failed to activate drip campaign"
+msgstr "Failed to activate drip campaign"
+
 #. js-lingui-id: R1XJV1
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
 msgid "Failed to activate enterprise license. Please check your key or contact support."
@@ -6347,6 +6511,12 @@ msgstr "Failed to add model"
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
 msgid "Failed to add provider"
 msgstr "Failed to add provider"
+
+#. js-lingui-id: pD5GhY
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+msgid "Failed to create drip campaign"
+msgstr "Failed to create drip campaign"
 
 #. js-lingui-id: WM7GKt
 #: src/pages/settings/ai/SettingsAI.tsx
@@ -6378,6 +6548,12 @@ msgstr "Failed to duplicate dashboard"
 msgid "Failed to duplicate workflow"
 msgstr "Failed to duplicate workflow"
 
+#. js-lingui-id: m1cPVI
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+msgid "Failed to enroll contacts"
+msgstr "Failed to enroll contacts"
+
 #. js-lingui-id: dqEkUR
 #: src/pages/settings/ai/components/SettingsAgentLogsTab.tsx
 msgid "Failed to evaluate turn"
@@ -6408,6 +6584,12 @@ msgstr "Failed to install the application."
 msgid "Failed to load front component: {errorMessage}"
 msgstr "Failed to load front component: {errorMessage}"
 
+#. js-lingui-id: Nln426
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+msgid "Failed to load template"
+msgstr "Failed to load template"
+
 #. js-lingui-id: nKkohy
 #: src/modules/settings/developers/hooks/useWebhookForm.ts
 msgid "Failed to load webhook"
@@ -6422,6 +6604,18 @@ msgstr "Failed to merge records. Please try again."
 #: src/modules/ai/components/RoutingDebugDisplay.tsx
 msgid "Failed to parse context: {contextValue}"
 msgstr "Failed to parse context: {contextValue}"
+
+#. js-lingui-id: bOoTIM
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+msgid "Failed to pause campaign"
+msgstr "Failed to pause campaign"
+
+#. js-lingui-id: 3yogZA
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+msgid "Failed to pause drip campaign"
+msgstr "Failed to pause drip campaign"
 
 #. js-lingui-id: 3YA1cX
 #: src/pages/settings/admin-panel/SettingsAdminAiProviderDetail.tsx
@@ -6443,10 +6637,28 @@ msgstr "Failed to remove picture"
 msgid "Failed to remove provider"
 msgstr "Failed to remove provider"
 
+#. js-lingui-id: POpPbR
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+msgid "Failed to resolve recipients"
+msgstr "Failed to resolve recipients"
+
+#. js-lingui-id: nhnScg
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+msgid "Failed to resume campaign"
+msgstr "Failed to resume campaign"
+
 #. js-lingui-id: SJEIIJ
 #: src/modules/settings/admin-panel/health-status/hooks/useRetryJobs.ts
 msgid "Failed to retry jobs. Please try again later."
 msgstr "Failed to retry jobs. Please try again later."
+
+#. js-lingui-id: 3qAUvt
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+msgid "Failed to save as template"
+msgstr "Failed to save as template"
 
 #. js-lingui-id: farFvy
 #: src/modules/layout-customization/hooks/useSaveLayoutCustomization.ts
@@ -6464,11 +6676,29 @@ msgstr "Failed to save role permissions: {errorMessage}"
 msgid "Failed to save workspace instructions"
 msgstr "Failed to save workspace instructions"
 
+#. js-lingui-id: +1isbF
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+msgid "Failed to schedule campaign"
+msgstr "Failed to schedule campaign"
+
+#. js-lingui-id: GpNLad
+#: src/modules/campaign/hooks/useSendCampaign.ts
+#: src/modules/campaign/hooks/useSendCampaign.ts
+msgid "Failed to send campaign"
+msgstr "Failed to send campaign"
+
 #. js-lingui-id: Lo/GQ5
 #: src/modules/activities/emails/hooks/useSendEmail.ts
 #: src/modules/activities/emails/hooks/useSendEmail.ts
 msgid "Failed to send email"
 msgstr "Failed to send email"
+
+#. js-lingui-id: aH/q8K
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+msgid "Failed to send test email"
+msgstr "Failed to send test email"
 
 #. js-lingui-id: aj02T8
 #: src/modules/settings/admin-panel/health-status/maintenance-mode/components/SettingsAdminMaintenanceMode.tsx
@@ -6921,6 +7151,11 @@ msgstr "Forgot your password?"
 msgid "Form Data"
 msgstr "Form Data"
 
+#. js-lingui-id: 8fcpj9
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Form ID"
+msgstr "Form ID"
+
 #. js-lingui-id: kI1qVD
 #: src/modules/settings/data-model/fields/forms/currency/components/SettingsDataModelFieldCurrencyForm.tsx
 msgid "Format"
@@ -7063,6 +7298,11 @@ msgstr "Get Enterprise"
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
 msgid "Get Enterprise Key"
 msgstr "Get Enterprise Key"
+
+#. js-lingui-id: c3b0B0
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Get Started"
+msgstr "Get Started"
 
 #. js-lingui-id: NXEW3h
 #: src/pages/onboarding/InviteTeam.tsx
@@ -7241,6 +7481,12 @@ msgstr "Headers Input"
 msgid "heading"
 msgstr "heading"
 
+#. js-lingui-id: zgPjoD
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Heading"
+msgstr "Heading"
+
 #. js-lingui-id: lXKZGw
 #: src/modules/advanced-text-editor/hooks/useTurnIntoBlockOptions.ts
 #: src/modules/advanced-text-editor/extensions/slash-command/DefaultSlashCommands.ts
@@ -7406,6 +7652,11 @@ msgstr "https://example.com/callback"
 msgid "https://example.com/embed"
 msgstr "https://example.com/embed"
 
+#. js-lingui-id: hqYwF3
+#: src/modules/form/components/FormSettings.tsx
+msgid "https://example.com/thank-you"
+msgstr "https://example.com/thank-you"
+
 #. js-lingui-id: 0yRnXS
 #: src/modules/settings/developers/components/SettingsDevelopersWebhookForm.tsx
 msgid "https://example.com/webhook"
@@ -7528,6 +7779,16 @@ msgstr "iFrame Widget"
 #: src/pages/settings/admin-panel/SettingsAdminNewAiModel.tsx
 msgid "Image"
 msgstr "Image"
+
+#. js-lingui-id: Lh8B0N
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Image description"
+msgstr "Image description"
+
+#. js-lingui-id: VyUuZb
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Image URL"
+msgstr "Image URL"
 
 #. js-lingui-id: ijW9MW
 #: src/modules/settings/accounts/components/SettingsAccountsConnectionForm.tsx
@@ -8848,6 +9109,11 @@ msgstr "Max"
 msgid "Max import capacity: {formatSpreadsheetMaxRecordImportCapacity} records. Otherwise, consider splitting your file or using the API."
 msgstr "Max import capacity: {formatSpreadsheetMaxRecordImportCapacity} records. Otherwise, consider splitting your file or using the API."
 
+#. js-lingui-id: vx4Eho
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Max Length"
+msgstr "Max Length"
+
 #. js-lingui-id: S8w4XA
 #: src/pages/settings/admin-panel/SettingsAdminNewAiModel.tsx
 #: src/modules/settings/admin-panel/ai/components/SettingsAdminAiModelHoverCard.tsx
@@ -8858,6 +9124,11 @@ msgstr "Max output"
 #: src/modules/side-panel/pages/page-layout/constants/settings/ChartConfigurationSettingLabels.ts
 msgid "Max range"
 msgstr "Max range"
+
+#. js-lingui-id: 6/AQ1M
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Max Value"
+msgstr "Max Value"
 
 #. js-lingui-id: DBiUDH
 #: src/modules/settings/data-model/fields/forms/components/SettingsDataModelFieldMaxValuesForm.tsx
@@ -8985,6 +9256,16 @@ msgstr "Message Sync is not available because the service is down"
 msgid "Messages"
 msgstr "Messages"
 
+#. js-lingui-id: HxrYy0
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Meta Description"
+msgstr "Meta Description"
+
+#. js-lingui-id: 8gtn2Z
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Meta Title"
+msgstr "Meta Title"
+
 #. js-lingui-id: 6GBt0m
 #: src/modules/settings/playground/constants/SettingsPlaygroundFormSchemaSelectOptions.ts
 #: src/modules/settings/developers/components/WebhookEntitySelect.tsx
@@ -9022,10 +9303,20 @@ msgstr "Microsoft"
 msgid "Min"
 msgstr "Min"
 
+#. js-lingui-id: QN7FxC
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Min Length"
+msgstr "Min Length"
+
 #. js-lingui-id: JBisyL
 #: src/modules/side-panel/pages/page-layout/constants/settings/ChartConfigurationSettingLabels.ts
 msgid "Min range"
 msgstr "Min range"
+
+#. js-lingui-id: HIhjJJ
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Min Value"
+msgstr "Min Value"
 
 #. js-lingui-id: 5IrCQY
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
@@ -9250,6 +9541,11 @@ msgstr "must be an array of valid emails"
 #: src/modules/views/view-picker/components/ViewPickerListContent.tsx
 msgid "My unlisted views"
 msgstr "My unlisted views"
+
+#. js-lingui-id: vCl4Lj
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "my-landing-page"
+msgstr "my-landing-page"
 
 #. js-lingui-id: JUrq94
 #: src/pages/settings/ai/SettingsSkillForm.tsx
@@ -9812,6 +10108,11 @@ msgstr "No field configured"
 msgid "No fields available"
 msgstr "No fields available"
 
+#. js-lingui-id: OkioUp
+#: src/modules/form/components/FormPreview.tsx
+msgid "No fields configured"
+msgstr "No fields configured"
+
 #. js-lingui-id: RM6uKY
 #: src/modules/settings/security/components/SettingsSecurityEditableProfileFields.tsx
 msgid "No fields selected"
@@ -10028,6 +10329,16 @@ msgstr "No roles found"
 msgid "No rows with errors"
 msgstr "No rows with errors"
 
+#. js-lingui-id: VNjGU/
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+msgid "No sections to preview. Add sections in the Builder tab."
+msgstr "No sections to preview. Add sections in the Builder tab."
+
+#. js-lingui-id: A6qPq7
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "No sections yet. Add a section to get started."
+msgstr "No sections yet. Add a section to get started."
+
 #. js-lingui-id: Hsl+kr
 #: src/modules/views/view-picker/components/ViewPickerContentCreateMode.tsx
 msgid "No Select field"
@@ -10174,6 +10485,16 @@ msgstr "Note"
 #: src/modules/page-layout/constants/StandardPageLayoutTabTitleTranslations.ts
 msgid "Notes"
 msgstr "Notes"
+
+#. js-lingui-id: k2SOMs
+#: src/modules/form/components/FormSettings.tsx
+msgid "Notification Email"
+msgstr "Notification Email"
+
+#. js-lingui-id: iDNBZe
+#: src/modules/form/components/FormSettings.tsx
+msgid "Notifications"
+msgstr "Notifications"
 
 #. js-lingui-id: YwzE9K
 #: src/utils/date-utils.ts
@@ -10705,6 +11026,11 @@ msgstr "Package"
 msgid "Page"
 msgstr "Page"
 
+#. js-lingui-id: IXkV7z
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Page description for search engines"
+msgstr "Page description for search engines"
+
 #. js-lingui-id: SZgFyi
 #: src/modules/metadata-error-handler/hooks/useMetadataErrorHandler.ts
 msgid "page layout"
@@ -10740,6 +11066,11 @@ msgstr "Page Name"
 #: src/pages/not-found/NotFound.tsx
 msgid "Page Not Found | Twenty"
 msgstr "Page Not Found | Twenty"
+
+#. js-lingui-id: EjnP4B
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Page title for search engines"
+msgstr "Page title for search engines"
 
 #. js-lingui-id: sF+Xp9
 #: src/pages/settings/security/event-logs/components/EventLogTableSelector.tsx
@@ -10809,6 +11140,16 @@ msgstr "Paste your enterprise key here"
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionTriggersTab.tsx
 msgid "Path"
 msgstr "Path"
+
+#. js-lingui-id: cstC0z
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Pattern (regex)"
+msgstr "Pattern (regex)"
+
+#. js-lingui-id: OvT96n
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Pattern Error Message"
+msgstr "Pattern Error Message"
 
 #. js-lingui-id: QmXBEc
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
@@ -11017,6 +11358,11 @@ msgstr "Please check your email for a verification link."
 msgid "Please enter a valid URL"
 msgstr "Please enter a valid URL"
 
+#. js-lingui-id: gI4tTD
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Please enter a valid value"
+msgstr "Please enter a valid value"
+
 #. js-lingui-id: qg68zg
 #: src/modules/information-banner/components/reconnect-account/InformationBannerReconnectAccountEmailAliases.tsx
 msgid "Please reconnect your mailbox {mailboxHandle} to update your email aliases:"
@@ -11134,6 +11480,8 @@ msgstr "Prevent from assigning the same value to different records"
 #. js-lingui-id: rdUucN
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectSettingsFormCard.tsx
 #: src/modules/settings/data-model/components/SettingsDataModelPreviewFormCard.tsx
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+#: src/modules/page-layout/widgets/form-builder/components/FormBuilderWidget.tsx
 msgid "Preview"
 msgstr "Preview"
 
@@ -11319,6 +11667,11 @@ msgstr "Public domain successfully deleted"
 #: src/pages/settings/domains/SettingsDomains.tsx
 msgid "Public Domains"
 msgstr "Public Domains"
+
+#. js-lingui-id: guA9ot
+#: src/modules/form/components/FormPublicUrlDisplay.tsx
+msgid "Public URL"
+msgstr "Public URL"
 
 #. js-lingui-id: mF9LxA
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
@@ -11564,6 +11917,11 @@ msgstr "Redirect URIs"
 msgid "Redirect URIs updated"
 msgstr "Redirect URIs updated"
 
+#. js-lingui-id: VTB2Rz
+#: src/modules/form/components/FormSettings.tsx
+msgid "Redirect URL"
+msgstr "Redirect URL"
+
 #. js-lingui-id: LfH+Ea
 #: src/modules/settings/security/components/SSO/SettingsSSOOIDCForm.tsx
 msgid "Redirect Url copied to clipboard"
@@ -11671,6 +12029,7 @@ msgstr "Reloading..."
 #: src/modules/ui/input/components/ImageInput.tsx
 #: src/modules/spreadsheet-import/steps/components/ValidationStep/ValidationStep.tsx
 #: src/modules/object-record/record-group/components/RecordGroupReorderConfirmationModal.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
 msgid "Remove"
 msgstr "Remove"
 
@@ -11788,6 +12147,7 @@ msgstr "Renewal date"
 
 #. js-lingui-id: Ee8JBW
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
+#: src/modules/form/components/FormBuilder.tsx
 msgid "Reorder field"
 msgstr "Reorder field"
 
@@ -11826,6 +12186,7 @@ msgstr "Request Failed"
 #. js-lingui-id: TMLAx2
 #: src/pages/settings/applications/tabs/SettingsApplicationRegistrationGeneralTab.tsx
 #: src/pages/settings/ai/components/SettingsToolParameterTable.tsx
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
 msgid "Required"
 msgstr "Required"
 
@@ -12762,10 +13123,25 @@ msgstr "Select your preferred language"
 msgid "Send"
 msgstr "Send"
 
+#. js-lingui-id: +WjBbv
+#: src/modules/form/components/FormSettings.tsx
+msgid "Send a confirmation email to the submitter"
+msgstr "Send a confirmation email to the submitter"
+
+#. js-lingui-id: l5Dot5
+#: src/modules/form/components/FormSettings.tsx
+msgid "Send an email when a new submission is received"
+msgstr "Send an email when a new submission is received"
+
 #. js-lingui-id: mjK8F3
 #: src/pages/settings/members/SettingsWorkspaceMembers.tsx
 msgid "Send an invite email to your team"
 msgstr "Send an invite email to your team"
+
+#. js-lingui-id: vp9yIB
+#: src/modules/form/components/FormSettings.tsx
+msgid "Send Confirmation Email"
+msgstr "Send Confirmation Email"
 
 #. js-lingui-id: i/TzEU
 #: src/modules/settings/roles/role-permissions/permission-flags/hooks/useActionRolePermissionFlagConfig.ts
@@ -12906,6 +13282,8 @@ msgstr "Setting up your database..."
 #: src/modules/settings/roles/role-permissions/permission-flags/components/SettingsRolePermissionsSettingsSection.tsx
 #: src/modules/settings/roles/role/components/SettingsRole.tsx
 #: src/modules/settings/accounts/components/SettingsAccountsSettingsSection.tsx
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+#: src/modules/page-layout/widgets/form-builder/components/FormBuilderWidget.tsx
 #: src/modules/object-record/record-merge/hooks/useMergeRecordsContainerTabs.ts
 #: src/modules/navigation/components/NavigationDrawerOtherSection.tsx
 msgid "Settings"
@@ -13152,6 +13530,11 @@ msgstr "Skip the junction object (similar to many-to-many relations)"
 msgid "Sky"
 msgstr "Sky"
 
+#. js-lingui-id: L85WcV
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Slug"
+msgstr "Slug"
+
 #. js-lingui-id: Ik7fz5
 #: src/modules/advanced-text-editor/extensions/slash-command/DefaultSlashCommands.ts
 msgid "Small section heading"
@@ -13241,8 +13624,8 @@ msgstr "Sorry, something went wrong"
 #: src/modules/object-record/record-table/record-table-header/components/RecordTableColumnHeadDropdownMenu.tsx
 #: src/modules/object-record/object-sort-dropdown/components/ObjectSortDropdownButton.tsx
 #: src/modules/object-record/object-sort-dropdown/components/ObjectSortDropdownButton.tsx
-#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupsContent.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupSortContent.tsx
+#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupsContent.tsx
 msgid "Sort"
 msgstr "Sort"
 
@@ -13475,8 +13858,14 @@ msgstr "Subdomain updated"
 msgid "subheading"
 msgstr "subheading"
 
+#. js-lingui-id: r05Ezz
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Subheading"
+msgstr "Subheading"
+
 #. js-lingui-id: UJmAAK
 #: src/modules/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionEmailBase.tsx
+#: src/modules/form/components/FormSettings.tsx
 #: src/modules/activities/emails/components/EmailComposerFields.tsx
 #: src/modules/activities/emails/components/EmailComposerFields.tsx
 msgid "Subject"
@@ -13713,9 +14102,9 @@ msgstr "System objects"
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
 #: src/pages/settings/ai/forms/components/SettingsAIAgentForm.tsx
+#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
+#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
 #: src/pages/settings/ai/components/SettingsAgentSettingsTab.tsx
-#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
-#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
 msgid "System Prompt"
 msgstr "System Prompt"
 
@@ -13795,6 +14184,16 @@ msgstr "Task Title"
 msgid "Tasks"
 msgstr "Tasks"
 
+#. js-lingui-id: fRKsLK
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+msgid "Template loaded into campaign"
+msgstr "Template loaded into campaign"
+
+#. js-lingui-id: G04Zjt
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+msgid "Template saved successfully"
+msgstr "Template saved successfully"
+
 #. js-lingui-id: lKXcJz
 #: src/pages/settings/emailing-domains/utils/getEmailingDomainStatusText.ts
 msgid "Temporary Failure"
@@ -13820,6 +14219,11 @@ msgstr "Terms of Service"
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionCodeEditorTab.tsx
 msgid "Test"
 msgstr "Test"
+
+#. js-lingui-id: hvjvkT
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+msgid "Test email sent to {testEmailAddress}"
+msgstr "Test email sent to {testEmailAddress}"
 
 #. js-lingui-id: 3nWPN6
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionTestTab.tsx
@@ -13852,6 +14256,21 @@ msgstr "Text copied to clipboard"
 #: src/modules/object-record/record-field/ui/form-types/components/FormAdvancedTextFieldInput.tsx
 msgid "Text Editor"
 msgstr "Text Editor"
+
+#. js-lingui-id: gLCgz5
+#: src/modules/form/components/FormSettings.tsx
+msgid "Thank you for your submission"
+msgstr "Thank you for your submission"
+
+#. js-lingui-id: +hc0hx
+#: src/modules/form/components/FormSettings.tsx
+msgid "Thank you for your submission!"
+msgstr "Thank you for your submission!"
+
+#. js-lingui-id: rbfEde
+#: src/modules/form/components/FormSettings.tsx
+msgid "Thank You Message"
+msgstr "Thank You Message"
 
 #. js-lingui-id: oVH0Mt
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
@@ -15048,6 +15467,11 @@ msgstr "Uploading..."
 msgid "URL"
 msgstr "URL"
 
+#. js-lingui-id: 5aWXU2
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "URL & SEO"
+msgstr "URL & SEO"
+
 #. js-lingui-id: pphDjD
 #: src/modules/side-panel/pages/page-layout/components/SidePanelPageLayoutIframeSettings.tsx
 msgid "URL to Embed"
@@ -15147,8 +15571,8 @@ msgstr "Useful for pivot/junction tables"
 #: src/pages/settings/security/event-logs/components/EventLogResultsTable.tsx
 #: src/pages/settings/security/event-logs/components/EventLogResultsTable.tsx
 #: src/pages/settings/profile/appearance/components/SettingsExperience.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/accounts/SettingsNewAccount.tsx
 #: src/pages/settings/accounts/SettingsAccountsEmails.tsx
 #: src/pages/settings/accounts/SettingsAccountsConfigurationStepEmail.tsx
@@ -15220,6 +15644,11 @@ msgstr "Valid until"
 #: src/modules/spreadsheet-import/steps/components/SpreadsheetImportStepperContainer.tsx
 msgid "Validate Data"
 msgstr "Validate Data"
+
+#. js-lingui-id: lGWE4b
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Validation"
+msgstr "Validation"
 
 #. js-lingui-id: PWZBIT
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
@@ -15835,13 +16264,13 @@ msgstr "Workflows"
 #: src/pages/settings/applications/SettingsApplicationDetails.tsx
 #: src/pages/settings/ai/SettingsToolDetail.tsx
 #: src/pages/settings/ai/SettingsSkillForm.tsx
+#: src/pages/settings/ai/SettingsAIUsageUserDetail.tsx
+#: src/pages/settings/ai/SettingsAIPrompts.tsx
+#: src/pages/settings/ai/SettingsAI.tsx
 #: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAgentForm.tsx
-#: src/pages/settings/ai/SettingsAIUsageUserDetail.tsx
-#: src/pages/settings/ai/SettingsAIPrompts.tsx
-#: src/pages/settings/ai/SettingsAI.tsx
 #: src/modules/views/view-picker/components/ViewPickerListContent.tsx
 #: src/modules/sign-in-background-mock/components/SignInAppNavigationDrawerMock.tsx
 #: src/modules/settings/roles/role-permissions/permission-flags/hooks/useSettingsRolePermissionFlagConfig.ts
