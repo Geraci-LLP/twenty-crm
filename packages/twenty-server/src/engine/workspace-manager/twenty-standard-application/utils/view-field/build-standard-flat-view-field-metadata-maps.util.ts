@@ -7,7 +7,11 @@ import { type FlatViewField } from 'src/engine/metadata-modules/flat-view-field/
 import { type AllStandardObjectName } from 'src/engine/workspace-manager/twenty-standard-application/types/all-standard-object-name.type';
 import { computeStandardAttachmentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-attachment-view-fields.util';
 import { computeStandardBlocklistViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-blocklist-view-fields.util';
+import { computeStandardBookingViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-booking-view-fields.util';
 import { computeStandardCampaignViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-campaign-view-fields.util';
+import { computeStandardChatConversationViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-chat-conversation-view-fields.util';
+import { computeStandardChatMessageViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-chat-message-view-fields.util';
+import { computeStandardChatWidgetViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-chat-widget-view-fields.util';
 import { computeStandardCalendarChannelEventAssociationViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-channel-event-association-view-fields.util';
 import { computeStandardCalendarChannelViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-channel-view-fields.util';
 import { computeStandardCalendarEventParticipantViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-event-participant-view-fields.util';
@@ -31,11 +35,15 @@ import { computeStandardMessageChannelViewFields } from 'src/engine/workspace-ma
 import { computeStandardMessageFolderViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-folder-view-fields.util';
 import { computeStandardMessageParticipantViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-participant-view-fields.util';
 import { computeStandardMessageThreadViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-thread-view-fields.util';
+import { computeStandardMeetingTypeViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-meeting-type-view-fields.util';
 import { computeStandardMessageViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-view-fields.util';
 import { computeStandardNoteTargetViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-note-target-view-fields.util';
 import { computeStandardNoteViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-note-view-fields.util';
 import { computeStandardOpportunityViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-opportunity-view-fields.util';
 import { computeStandardPersonViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-person-view-fields.util';
+import { computeStandardSequenceViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-sequence-view-fields.util';
+import { computeStandardSequenceEnrollmentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-sequence-enrollment-view-fields.util';
+import { computeStandardSequenceStepViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-sequence-step-view-fields.util';
 import { computeStandardTaskTargetViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-task-target-view-fields.util';
 import { computeStandardTaskViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-task-view-fields.util';
 import { computeStandardTimelineActivityViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-timeline-activity-view-fields.util';
@@ -53,7 +61,11 @@ type StandardViewFieldBuilder<P extends AllStandardObjectName> = (
 const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   attachment: computeStandardAttachmentViewFields,
   blocklist: computeStandardBlocklistViewFields,
+  booking: computeStandardBookingViewFields,
   campaign: computeStandardCampaignViewFields,
+  chatConversation: computeStandardChatConversationViewFields,
+  chatMessage: computeStandardChatMessageViewFields,
+  chatWidget: computeStandardChatWidgetViewFields,
   calendarChannel: computeStandardCalendarChannelViewFields,
   calendarChannelEventAssociation:
     computeStandardCalendarChannelEventAssociationViewFields,
@@ -81,10 +93,14 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   messageFolder: computeStandardMessageFolderViewFields,
   messageParticipant: computeStandardMessageParticipantViewFields,
   messageThread: computeStandardMessageThreadViewFields,
+  meetingType: computeStandardMeetingTypeViewFields,
   note: computeStandardNoteViewFields,
   noteTarget: computeStandardNoteTargetViewFields,
   opportunity: computeStandardOpportunityViewFields,
   person: computeStandardPersonViewFields,
+  sequence: computeStandardSequenceViewFields,
+  sequenceEnrollment: computeStandardSequenceEnrollmentViewFields,
+  sequenceStep: computeStandardSequenceStepViewFields,
   task: computeStandardTaskViewFields,
   taskTarget: computeStandardTaskTargetViewFields,
   timelineActivity: computeStandardTimelineActivityViewFields,

@@ -73,12 +73,33 @@ export const STANDARD_NAVIGATION_MENU_ITEMS = {
       STANDARD_OBJECTS.trackedDocument.views.allDocuments.universalIdentifier,
     position: 9,
   },
+  allMeetingTypes: {
+    universalIdentifier: 'a1b2c301-b010-4b10-8b10-c0aba11c0011',
+    type: NavigationMenuItemType.OBJECT,
+    viewUniversalIdentifier:
+      STANDARD_OBJECTS.meetingType.views.allMeetingTypes.universalIdentifier,
+    position: 10,
+  },
+  allChatWidgets: {
+    universalIdentifier: 'b2c3d402-b010-4b10-8b10-c0aba11c0012',
+    type: NavigationMenuItemType.OBJECT,
+    viewUniversalIdentifier:
+      STANDARD_OBJECTS.chatWidget.views.allChatWidgets.universalIdentifier,
+    position: 11,
+  },
+  allSequences: {
+    universalIdentifier: 'c3d4e503-b010-4b10-8b10-c0aba11c0013',
+    type: NavigationMenuItemType.OBJECT,
+    viewUniversalIdentifier:
+      STANDARD_OBJECTS.sequence.views.allSequences.universalIdentifier,
+    position: 12,
+  },
   workflowsFolder: {
     universalIdentifier: '20202020-b007-4b07-8b07-c0aba11c0007',
     type: NavigationMenuItemType.FOLDER,
     name: 'Workflows',
     icon: 'IconSettingsAutomation',
-    position: 10,
+    position: 13,
   },
   workflowsFolderAllWorkflows: {
     universalIdentifier: '20202020-b008-4b08-8b08-c0aba11c0008',
@@ -114,6 +135,9 @@ export const STANDARD_NAVIGATION_MENU_ITEM_DEFAULT_COLORS: Partial<
   allForms: 'purple',
   allLandingPages: 'sky',
   allDocuments: 'orange',
+  allMeetingTypes: 'red',
+  allChatWidgets: 'yellow',
+  allSequences: 'turquoise',
   allCompanies: 'blue',
   allPeople: 'blue',
   allTasks: 'turquoise',
