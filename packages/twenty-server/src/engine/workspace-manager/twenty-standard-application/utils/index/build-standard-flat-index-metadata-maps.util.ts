@@ -19,6 +19,9 @@ import { buildDripEnrollmentStandardFlatIndexMetadatas } from 'src/engine/worksp
 import { buildFormStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-form-standard-flat-index-metadata.util';
 import { buildFormSubmissionStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-form-submission-standard-flat-index-metadata.util';
 import { buildLandingPageStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-landing-page-standard-flat-index-metadata.util';
+import { buildTrackedDocumentStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-tracked-document-standard-flat-index-metadata.util';
+import { buildDocumentSharingLinkStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-document-sharing-link-standard-flat-index-metadata.util';
+import { buildDocumentViewStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-document-view-standard-flat-index-metadata.util';
 import { buildFavoriteStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-favorite-standard-flat-index-metadata.util';
 import { buildMessageChannelMessageAssociationMessageFolderStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-message-channel-message-association-message-folder-standard-flat-index-metadata.util';
 import { buildMessageChannelMessageAssociationStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-message-channel-message-association-standard-flat-index-metadata.util';
@@ -63,6 +66,9 @@ const STANDARD_FLAT_INDEX_METADATA_BUILDERS_BY_OBJECT_NAME = {
   form: buildFormStandardFlatIndexMetadatas,
   formSubmission: buildFormSubmissionStandardFlatIndexMetadatas,
   landingPage: buildLandingPageStandardFlatIndexMetadatas,
+  trackedDocument: buildTrackedDocumentStandardFlatIndexMetadatas,
+  documentSharingLink: buildDocumentSharingLinkStandardFlatIndexMetadatas,
+  documentView: buildDocumentViewStandardFlatIndexMetadatas,
   favorite: buildFavoriteStandardFlatIndexMetadatas,
   message: buildMessageStandardFlatIndexMetadatas,
   messageChannel: buildMessageChannelStandardFlatIndexMetadatas,

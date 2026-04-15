@@ -263,6 +263,96 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  trackedDocument: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'trackedDocument'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'trackedDocument',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.trackedDocument.universalIdentifier,
+        nameSingular: 'trackedDocument',
+        namePlural: 'trackedDocuments',
+        labelSingular: i18nLabel(msg`Tracked Document`),
+        labelPlural: i18nLabel(msg`Tracked Documents`),
+        description: i18nLabel(msg`A tracked document for sharing and analytics`),
+        icon: 'IconFileText',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  documentSharingLink: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'documentSharingLink'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'documentSharingLink',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.documentSharingLink.universalIdentifier,
+        nameSingular: 'documentSharingLink',
+        namePlural: 'documentSharingLinks',
+        labelSingular: i18nLabel(msg`Document Sharing Link`),
+        labelPlural: i18nLabel(msg`Document Sharing Links`),
+        description: i18nLabel(msg`A sharing link for a tracked document`),
+        icon: 'IconLink',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'slug',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  documentView: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'documentView'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'documentView',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.documentView.universalIdentifier,
+        nameSingular: 'documentView',
+        namePlural: 'documentViews',
+        labelSingular: i18nLabel(msg`Document View`),
+        labelPlural: i18nLabel(msg`Document Views`),
+        description: i18nLabel(msg`A document view event`),
+        icon: 'IconEye',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'viewerEmail',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   blocklist: ({
     now,
     workspaceId,

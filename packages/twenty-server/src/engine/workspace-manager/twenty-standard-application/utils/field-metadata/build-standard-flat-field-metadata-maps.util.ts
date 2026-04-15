@@ -22,6 +22,9 @@ import { buildDripEnrollmentStandardFlatFieldMetadatas } from 'src/engine/worksp
 import { buildFormStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util';
 import { buildFormSubmissionStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util';
 import { buildLandingPageStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util';
+import { buildTrackedDocumentStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-tracked-document-standard-flat-field-metadata.util';
+import { buildDocumentSharingLinkStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-sharing-link-standard-flat-field-metadata.util';
+import { buildDocumentViewStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-document-view-standard-flat-field-metadata.util';
 import { buildFavoriteFolderStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util';
 import { buildFavoriteStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-standard-flat-field-metadata.util';
 import { buildMessageChannelMessageAssociationMessageFolderStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util';
@@ -69,6 +72,9 @@ const STANDARD_FLAT_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   form: buildFormStandardFlatFieldMetadatas,
   formSubmission: buildFormSubmissionStandardFlatFieldMetadatas,
   landingPage: buildLandingPageStandardFlatFieldMetadatas,
+  trackedDocument: buildTrackedDocumentStandardFlatFieldMetadatas,
+  documentSharingLink: buildDocumentSharingLinkStandardFlatFieldMetadatas,
+  documentView: buildDocumentViewStandardFlatFieldMetadatas,
   favorite: buildFavoriteStandardFlatFieldMetadatas,
   favoriteFolder: buildFavoriteFolderStandardFlatFieldMetadatas,
   message: buildMessageStandardFlatFieldMetadatas,

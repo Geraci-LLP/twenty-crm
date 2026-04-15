@@ -66,12 +66,19 @@ export const STANDARD_NAVIGATION_MENU_ITEMS = {
       STANDARD_OBJECTS.landingPage.views.allLandingPages.universalIdentifier,
     position: 8,
   },
+  allDocuments: {
+    universalIdentifier: '7f3d8b3a-212b-467a-be4c-037828c47c98',
+    type: NavigationMenuItemType.OBJECT,
+    viewUniversalIdentifier:
+      STANDARD_OBJECTS.trackedDocument.views.allDocuments.universalIdentifier,
+    position: 9,
+  },
   workflowsFolder: {
     universalIdentifier: '20202020-b007-4b07-8b07-c0aba11c0007',
     type: NavigationMenuItemType.FOLDER,
     name: 'Workflows',
     icon: 'IconSettingsAutomation',
-    position: 9,
+    position: 10,
   },
   workflowsFolderAllWorkflows: {
     universalIdentifier: '20202020-b008-4b08-8b08-c0aba11c0008',
@@ -106,6 +113,7 @@ export const STANDARD_NAVIGATION_MENU_ITEM_DEFAULT_COLORS: Partial<
   allCampaigns: 'green',
   allForms: 'purple',
   allLandingPages: 'sky',
+  allDocuments: 'orange',
   allCompanies: 'blue',
   allPeople: 'blue',
   allTasks: 'turquoise',

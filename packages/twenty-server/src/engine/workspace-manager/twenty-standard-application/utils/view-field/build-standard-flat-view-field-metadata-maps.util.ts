@@ -20,6 +20,9 @@ import { computeStandardDripEnrollmentViewFields } from 'src/engine/workspace-ma
 import { computeStandardFormViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-form-view-fields.util';
 import { computeStandardFormSubmissionViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-form-submission-view-fields.util';
 import { computeStandardLandingPageViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-landing-page-view-fields.util';
+import { computeStandardTrackedDocumentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-tracked-document-view-fields.util';
+import { computeStandardDocumentSharingLinkViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-document-sharing-link-view-fields.util';
+import { computeStandardDocumentViewViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-document-view-view-fields.util';
 import { computeStandardFavoriteFolderViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-favorite-folder-view-fields.util';
 import { computeStandardFavoriteViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-favorite-view-fields.util';
 import { computeStandardMessageChannelMessageAssociationMessageFolderViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-channel-message-association-message-folder-view-fields.util';
@@ -64,6 +67,9 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   form: computeStandardFormViewFields,
   formSubmission: computeStandardFormSubmissionViewFields,
   landingPage: computeStandardLandingPageViewFields,
+  trackedDocument: computeStandardTrackedDocumentViewFields,
+  documentSharingLink: computeStandardDocumentSharingLinkViewFields,
+  documentView: computeStandardDocumentViewViewFields,
   favorite: computeStandardFavoriteViewFields,
   favoriteFolder: computeStandardFavoriteFolderViewFields,
   message: computeStandardMessageViewFields,
