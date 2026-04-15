@@ -5,6 +5,7 @@ import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity
 import { type CustomWorkspaceEntity } from 'src/engine/twenty-orm/custom.workspace-entity';
 import { type FieldTypeAndNameMetadata } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
 import { type EntityRelation } from 'src/engine/workspace-manager/workspace-migration/types/entity-relation.interface';
+import { type CampaignWorkspaceEntity } from 'src/modules/campaign/standard-objects/campaign.workspace-entity';
 import { type CompanyWorkspaceEntity } from 'src/modules/company/standard-objects/company.workspace-entity';
 import { type DashboardWorkspaceEntity } from 'src/modules/dashboard/standard-objects/dashboard.workspace-entity';
 import { type NoteWorkspaceEntity } from 'src/modules/note/standard-objects/note.workspace-entity';
@@ -49,5 +50,7 @@ export class AttachmentWorkspaceEntity extends BaseWorkspaceEntity {
   targetDashboardId: string | null;
   targetWorkflow: EntityRelation<WorkflowWorkspaceEntity> | null;
   targetWorkflowId: string | null;
+  targetCampaign: EntityRelation<CampaignWorkspaceEntity> | null;
+  targetCampaignId: string | null;
   custom: EntityRelation<CustomWorkspaceEntity>;
 }

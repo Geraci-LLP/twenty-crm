@@ -19,6 +19,9 @@ import { computeStandardConnectedAccountViews } from 'src/engine/workspace-manag
 import { computeStandardDashboardViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-dashboard-views.util';
 import { computeStandardDripCampaignViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-drip-campaign-views.util';
 import { computeStandardDripEnrollmentViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-drip-enrollment-views.util';
+import { computeStandardFormViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-form-views.util';
+import { computeStandardFormSubmissionViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-form-submission-views.util';
+import { computeStandardLandingPageViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-landing-page-views.util';
 import { computeStandardFavoriteFolderViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-favorite-folder-views.util';
 import { computeStandardFavoriteViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-favorite-views.util';
 import { computeStandardMessageChannelMessageAssociationMessageFolderViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-message-channel-message-association-message-folder-views.util';
@@ -62,6 +65,9 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   dashboard: computeStandardDashboardViews,
   dripCampaign: computeStandardDripCampaignViews,
   dripEnrollment: computeStandardDripEnrollmentViews,
+  form: computeStandardFormViews,
+  formSubmission: computeStandardFormSubmissionViews,
+  landingPage: computeStandardLandingPageViews,
   favorite: computeStandardFavoriteViews,
   favoriteFolder: computeStandardFavoriteFolderViews,
   message: computeStandardMessageViews,

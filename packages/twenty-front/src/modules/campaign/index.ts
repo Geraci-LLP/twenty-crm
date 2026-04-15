@@ -4,6 +4,7 @@ export { CampaignRecipientSelector } from './components/CampaignRecipientSelecto
 export { CampaignStats } from './components/CampaignStats';
 export { CAMPAIGN_PERSONALIZATION_TOKENS } from './constants/CampaignPersonalizationTokens';
 export { useActivateDripCampaign } from './hooks/useActivateDripCampaign';
+export { useCampaignRecord } from './hooks/useCampaignRecord';
 export { useCreateDripCampaign } from './hooks/useCreateDripCampaign';
 export { useEnrollContacts } from './hooks/useEnrollContacts';
 export { useLoadTemplate } from './hooks/useLoadTemplate';

@@ -19,6 +19,9 @@ import { buildConnectedAccountStandardFlatFieldMetadatas } from 'src/engine/work
 import { buildDashboardStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-dashboard-standard-flat-field-metadata.util';
 import { buildDripCampaignStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-campaign-standard-flat-field-metadata.util';
 import { buildDripEnrollmentStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-drip-enrollment-standard-flat-field-metadata.util';
+import { buildFormStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-standard-flat-field-metadata.util';
+import { buildFormSubmissionStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-form-submission-standard-flat-field-metadata.util';
+import { buildLandingPageStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-landing-page-standard-flat-field-metadata.util';
 import { buildFavoriteFolderStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-folder-standard-flat-field-metadata.util';
 import { buildFavoriteStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-favorite-standard-flat-field-metadata.util';
 import { buildMessageChannelMessageAssociationMessageFolderStandardFlatFieldMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/compute-message-channel-message-association-message-folder-standard-flat-field-metadata.util';
@@ -63,6 +66,9 @@ const STANDARD_FLAT_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   dashboard: buildDashboardStandardFlatFieldMetadatas,
   dripCampaign: buildDripCampaignStandardFlatFieldMetadatas,
   dripEnrollment: buildDripEnrollmentStandardFlatFieldMetadatas,
+  form: buildFormStandardFlatFieldMetadatas,
+  formSubmission: buildFormSubmissionStandardFlatFieldMetadatas,
+  landingPage: buildLandingPageStandardFlatFieldMetadatas,
   favorite: buildFavoriteStandardFlatFieldMetadatas,
   favoriteFolder: buildFavoriteFolderStandardFlatFieldMetadatas,
   message: buildMessageStandardFlatFieldMetadatas,

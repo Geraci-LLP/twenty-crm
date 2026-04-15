@@ -100,4 +100,16 @@ export const buildAttachmentStandardFlatIndexMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  campaignIdIndex: createStandardIndexFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      indexName: 'campaignIdIndex',
+      relatedFieldNames: ['targetCampaign'],
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
 });

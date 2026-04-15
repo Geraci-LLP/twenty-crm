@@ -338,7 +338,8 @@ export class CampaignActionResolver {
         .replace(/\{\{contact\.fullName\}\}/g, 'Test User')
         .replace(/\{\{contact\.email\}\}/g, input.testEmailAddress)
         .replace(/\{\{contact\.jobTitle\}\}/g, 'Tester')
-        .replace(/\{\{contact\.city\}\}/g, 'Test City');
+        .replace(/\{\{contact\.city\}\}/g, 'Test City')
+        .replace(/\{\{contact\.companyName\}\}/g, 'ACME Corp');
 
       await this.sendGridDriverService.send({
         to: input.testEmailAddress,

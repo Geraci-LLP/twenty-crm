@@ -58,6 +58,15 @@ export class FlatPageLayoutWidgetTypeValidatorService {
       GRAPH: validateGraphFlatPageLayoutWidgetForCreation,
       STANDALONE_RICH_TEXT:
         validateStandaloneRichTextFlatPageLayoutWidgetForCreation,
+      CAMPAIGN_EDITOR: validateSimpleRecordPageWidgetForCreation(
+        WidgetConfigurationType.CAMPAIGN_EDITOR,
+      ),
+      FORM_BUILDER: validateSimpleRecordPageWidgetForCreation(
+        WidgetConfigurationType.FORM_BUILDER,
+      ),
+      LANDING_PAGE_BUILDER: validateSimpleRecordPageWidgetForCreation(
+        WidgetConfigurationType.LANDING_PAGE_BUILDER,
+      ),
       FRONT_COMPONENT: validateFrontComponentFlatPageLayoutWidgetForCreation,
       TIMELINE: validateSimpleRecordPageWidgetForCreation(
         WidgetConfigurationType.TIMELINE,
@@ -112,6 +121,15 @@ export class FlatPageLayoutWidgetTypeValidatorService {
       GRAPH: validateGraphFlatPageLayoutWidgetForUpdate,
       STANDALONE_RICH_TEXT:
         validateStandaloneRichTextFlatPageLayoutWidgetForUpdate,
+      CAMPAIGN_EDITOR: validateSimpleRecordPageWidgetForUpdate(
+        WidgetConfigurationType.CAMPAIGN_EDITOR,
+      ),
+      FORM_BUILDER: validateSimpleRecordPageWidgetForUpdate(
+        WidgetConfigurationType.FORM_BUILDER,
+      ),
+      LANDING_PAGE_BUILDER: validateSimpleRecordPageWidgetForUpdate(
+        WidgetConfigurationType.LANDING_PAGE_BUILDER,
+      ),
       FRONT_COMPONENT: validateFrontComponentFlatPageLayoutWidgetForUpdate,
       TIMELINE: validateSimpleRecordPageWidgetForUpdate(
         WidgetConfigurationType.TIMELINE,

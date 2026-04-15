@@ -1,6 +1,8 @@
 import { styled } from '@linaria/react';
 import { useCallback, useRef, useState } from 'react';
 
+import { CampaignSaveAsTemplateButton } from '@/campaign/components/CampaignSaveAsTemplateButton';
+import { CampaignTemplateGallery } from '@/campaign/components/CampaignTemplateGallery';
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
 import {
   type CampaignEditorData,
@@ -9,6 +11,7 @@ import {
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledContainer = styled.div`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: ${themeCssVariables.spacing[4]};
@@ -49,6 +52,7 @@ const StyledInput = styled.input`
 
 const StyledSenderRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: ${themeCssVariables.spacing[3]};
 `;
 
@@ -120,13 +124,39 @@ const StyledWarningBanner = styled.div`
   padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
 `;
 
+const StyledTemplatesButton = styled.button`
+  background: none;
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.secondary};
+  cursor: pointer;
+  font-family: ${themeCssVariables.font.family};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+
+  &:hover {
+    background: ${themeCssVariables.background.tertiary};
+    color: ${themeCssVariables.font.color.primary};
+  }
+`;
+
+const StyledToolbar = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${themeCssVariables.spacing[2]};
+  justify-content: space-between;
+`;
+
 type CampaignEditorProps = {
+  campaignId?: string;
   value: CampaignEditorData;
   onChange: (data: CampaignEditorData) => void;
   readOnly?: boolean;
 };
 
 export const CampaignEditor = ({
+  campaignId,
   value,
   onChange,
   readOnly = false,
@@ -134,6 +164,7 @@ export const CampaignEditor = ({
   const bodyTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const [selectedToken, setSelectedToken] =
     useState<CampaignPersonalizationToken>(CAMPAIGN_PERSONALIZATION_TOKENS[0]);
+  const [isTemplateGalleryOpen, setIsTemplateGalleryOpen] = useState(false);
 
   const handleFieldChange = useCallback(
     (field: keyof CampaignEditorData, fieldValue: string) => {
@@ -209,33 +240,42 @@ export const CampaignEditor = ({
       <StyledFieldGroup>
         <StyledLabel>Body</StyledLabel>
         {!readOnly && (
-          <StyledTokenRow>
-            <StyledTokenSelect
-              value={selectedToken.value}
-              onChange={(event) => {
-                const token = CAMPAIGN_PERSONALIZATION_TOKENS.find(
-                  (personalizationToken) =>
-                    personalizationToken.value === event.target.value,
-                );
+          <StyledToolbar>
+            <StyledTokenRow>
+              <StyledTokenSelect
+                value={selectedToken.value}
+                onChange={(event) => {
+                  const token = CAMPAIGN_PERSONALIZATION_TOKENS.find(
+                    (personalizationToken) =>
+                      personalizationToken.value === event.target.value,
+                  );
 
-                if (token) {
-                  setSelectedToken(token);
-                }
-              }}
-            >
-              {CAMPAIGN_PERSONALIZATION_TOKENS.map((personalizationToken) => (
-                <option
-                  key={personalizationToken.value}
-                  value={personalizationToken.value}
-                >
-                  {personalizationToken.label}
-                </option>
-              ))}
-            </StyledTokenSelect>
-            <StyledInsertButton onClick={handleInsertToken}>
-              Insert Token
-            </StyledInsertButton>
-          </StyledTokenRow>
+                  if (token) {
+                    setSelectedToken(token);
+                  }
+                }}
+              >
+                {CAMPAIGN_PERSONALIZATION_TOKENS.map((personalizationToken) => (
+                  <option
+                    key={personalizationToken.value}
+                    value={personalizationToken.value}
+                  >
+                    {personalizationToken.label}
+                  </option>
+                ))}
+              </StyledTokenSelect>
+              <StyledInsertButton onClick={handleInsertToken}>
+                Insert Token
+              </StyledInsertButton>
+            </StyledTokenRow>
+            {campaignId && (
+              <StyledTemplatesButton
+                onClick={() => setIsTemplateGalleryOpen(true)}
+              >
+                Templates
+              </StyledTemplatesButton>
+            )}
+          </StyledToolbar>
         )}
         <StyledTextArea
           ref={bodyTextAreaRef}
@@ -252,6 +292,20 @@ export const CampaignEditor = ({
           </StyledWarningBanner>
         )}
       </StyledFieldGroup>
+
+      {!readOnly && campaignId && (
+        <CampaignSaveAsTemplateButton campaignId={campaignId} />
+      )}
+
+      {isTemplateGalleryOpen && campaignId && (
+        <CampaignTemplateGallery
+          campaignId={campaignId}
+          onClose={() => setIsTemplateGalleryOpen(false)}
+          onLoaded={() => {
+            // Parent will re-fetch; editor reads from value prop
+          }}
+        />
+      )}
     </StyledContainer>
   );
 };

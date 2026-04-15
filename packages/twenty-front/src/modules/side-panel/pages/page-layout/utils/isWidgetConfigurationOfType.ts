@@ -3,14 +3,17 @@ import {
   type AggregateChartConfiguration,
   type BarChartConfiguration,
   type CalendarConfiguration,
+  type CampaignEditorConfiguration,
   type EmailThreadConfiguration,
   type EmailsConfiguration,
   type FieldRichTextConfiguration,
   type FieldsConfiguration,
   type FilesConfiguration,
+  type FormBuilderConfiguration,
   type FrontComponentConfiguration,
   type GaugeChartConfiguration,
   type IframeConfiguration,
+  type LandingPageBuilderConfiguration,
   type LineChartConfiguration,
   type NotesConfiguration,
   type PieChartConfiguration,
@@ -35,6 +38,12 @@ type WidgetConfigurationTypenameMap = {
   };
   BarChartConfiguration: Omit<BarChartConfiguration, 'configurationType'> & {
     configurationType: WidgetConfigurationType.BAR_CHART;
+  };
+  CampaignEditorConfiguration: Omit<
+    CampaignEditorConfiguration,
+    'configurationType'
+  > & {
+    configurationType: WidgetConfigurationType.CAMPAIGN_EDITOR;
   };
   CalendarConfiguration: Omit<CalendarConfiguration, 'configurationType'> & {
     configurationType: WidgetConfigurationType.CALENDAR;
@@ -69,6 +78,12 @@ type WidgetConfigurationTypenameMap = {
   FilesConfiguration: Omit<FilesConfiguration, 'configurationType'> & {
     configurationType: WidgetConfigurationType.FILES;
   };
+  FormBuilderConfiguration: Omit<
+    FormBuilderConfiguration,
+    'configurationType'
+  > & {
+    configurationType: WidgetConfigurationType.FORM_BUILDER;
+  };
   GaugeChartConfiguration: Omit<
     GaugeChartConfiguration,
     'configurationType'
@@ -77,6 +92,12 @@ type WidgetConfigurationTypenameMap = {
   };
   IframeConfiguration: Omit<IframeConfiguration, 'configurationType'> & {
     configurationType: WidgetConfigurationType.IFRAME;
+  };
+  LandingPageBuilderConfiguration: Omit<
+    LandingPageBuilderConfiguration,
+    'configurationType'
+  > & {
+    configurationType: WidgetConfigurationType.LANDING_PAGE_BUILDER;
   };
   LineChartConfiguration: Omit<LineChartConfiguration, 'configurationType'> & {
     configurationType: WidgetConfigurationType.LINE_CHART;

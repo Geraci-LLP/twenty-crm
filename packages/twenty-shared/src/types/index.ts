@@ -191,6 +191,9 @@ export type {
   WorkflowConfiguration,
   WorkflowVersionConfiguration,
   WorkflowRunConfiguration,
+  CampaignEditorConfiguration,
+  FormBuilderConfiguration,
+  LandingPageBuilderConfiguration,
   PageLayoutWidgetConfiguration,
 } from './page-layout/page-layout-widget-configuration.type';
 export type {

@@ -17,6 +17,9 @@ import { computeStandardConnectedAccountViewFields } from 'src/engine/workspace-
 import { computeStandardDashboardViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-dashboard-view-fields.util';
 import { computeStandardDripCampaignViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-drip-campaign-view-fields.util';
 import { computeStandardDripEnrollmentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-drip-enrollment-view-fields.util';
+import { computeStandardFormViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-form-view-fields.util';
+import { computeStandardFormSubmissionViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-form-submission-view-fields.util';
+import { computeStandardLandingPageViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-landing-page-view-fields.util';
 import { computeStandardFavoriteFolderViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-favorite-folder-view-fields.util';
 import { computeStandardFavoriteViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-favorite-view-fields.util';
 import { computeStandardMessageChannelMessageAssociationMessageFolderViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-channel-message-association-message-folder-view-fields.util';
@@ -58,6 +61,9 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   dashboard: computeStandardDashboardViewFields,
   dripCampaign: computeStandardDripCampaignViewFields,
   dripEnrollment: computeStandardDripEnrollmentViewFields,
+  form: computeStandardFormViewFields,
+  formSubmission: computeStandardFormSubmissionViewFields,
+  landingPage: computeStandardLandingPageViewFields,
   favorite: computeStandardFavoriteViewFields,
   favoriteFolder: computeStandardFavoriteFolderViewFields,
   message: computeStandardMessageViewFields,

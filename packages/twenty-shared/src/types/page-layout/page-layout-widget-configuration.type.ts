@@ -171,6 +171,18 @@ export type WorkflowRunConfiguration = {
   configurationType: 'WORKFLOW_RUN';
 };
 
+export type CampaignEditorConfiguration = {
+  configurationType: 'CAMPAIGN_EDITOR';
+};
+
+export type FormBuilderConfiguration = {
+  configurationType: 'FORM_BUILDER';
+};
+
+export type LandingPageBuilderConfiguration = {
+  configurationType: 'LANDING_PAGE_BUILDER';
+};
+
 export type PageLayoutWidgetConfiguration =
   | AggregateChartConfiguration
   | GaugeChartConfiguration
@@ -194,4 +206,7 @@ export type PageLayoutWidgetConfiguration =
   | WorkflowConfiguration
   | WorkflowVersionConfiguration
   | WorkflowRunConfiguration
-  | EmailThreadConfiguration;
+  | EmailThreadConfiguration
+  | CampaignEditorConfiguration
+  | FormBuilderConfiguration
+  | LandingPageBuilderConfiguration;

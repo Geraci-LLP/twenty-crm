@@ -181,6 +181,88 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  form: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'form'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'form',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.form.universalIdentifier,
+        nameSingular: 'form',
+        namePlural: 'forms',
+        labelSingular: i18nLabel(msg`Form`),
+        labelPlural: i18nLabel(msg`Forms`),
+        description: i18nLabel(msg`A lead capture form`),
+        icon: 'IconForms',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  formSubmission: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'formSubmission'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'formSubmission',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.formSubmission.universalIdentifier,
+        nameSingular: 'formSubmission',
+        namePlural: 'formSubmissions',
+        labelSingular: i18nLabel(msg`Form Submission`),
+        labelPlural: i18nLabel(msg`Form Submissions`),
+        description: i18nLabel(msg`A form submission from a lead`),
+        icon: 'IconInbox',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'submitterEmail',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  landingPage: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'landingPage'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'landingPage',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.landingPage.universalIdentifier,
+        nameSingular: 'landingPage',
+        namePlural: 'landingPages',
+        labelSingular: i18nLabel(msg`Landing Page`),
+        labelPlural: i18nLabel(msg`Landing Pages`),
+        description: i18nLabel(msg`A landing page`),
+        icon: 'IconLayout',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'title',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   blocklist: ({
     now,
     workspaceId,

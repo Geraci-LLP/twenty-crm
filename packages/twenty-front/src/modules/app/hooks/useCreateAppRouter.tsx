@@ -100,6 +100,18 @@ const NotFound = lazy(() =>
   })),
 );
 
+const PublicFormPage = lazy(() =>
+  import('~/pages/public-form/PublicFormPage').then((module) => ({
+    default: module.PublicFormPage,
+  })),
+);
+
+const PublicLandingPage = lazy(() =>
+  import('~/pages/public-landing-page/PublicLandingPage').then((module) => ({
+    default: module.PublicLandingPage,
+  })),
+);
+
 export const useCreateAppRouter = (
   isFunctionSettingsEnabled?: boolean,
   isAdminPageEnabled?: boolean,
@@ -244,6 +256,22 @@ export const useCreateAppRouter = (
             element={
               <LazyRoute>
                 <Authorize />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PublicForm}
+            element={
+              <LazyRoute>
+                <PublicFormPage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PublicLandingPage}
+            element={
+              <LazyRoute>
+                <PublicLandingPage />
               </LazyRoute>
             }
           />

@@ -2,6 +2,7 @@ import { FormFieldInputContainer } from '@/object-record/record-field/ui/form-ty
 import { FormSelectFieldInput } from '@/object-record/record-field/ui/form-types/components/FormSelectFieldInput';
 import { InputLabel } from '@/ui/input/components/InputLabel';
 import { WorkflowFormFieldSettingsByType } from '@/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldSettingsByType';
+import { WorkflowFormFieldValidationSettings } from '@/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings';
 import { FORM_SELECT_FIELD_TYPE_OPTIONS } from '@/workflow/workflow-steps/workflow-actions/form-action/constants/FormSelectFieldTypeOptions';
 import { type WorkflowFormActionField } from '@/workflow/workflow-steps/workflow-actions/form-action/types/WorkflowFormActionField';
 import { type WorkflowFormFieldType } from '@/workflow/workflow-steps/workflow-actions/form-action/types/WorkflowFormFieldType';
@@ -111,6 +112,12 @@ export const WorkflowEditActionFormFieldSettings = ({
           />
         </FormFieldInputContainer>
         <WorkflowFormFieldSettingsByType field={field} onChange={onChange} />
+        {field.type !== 'RECORD' && (
+          <WorkflowFormFieldValidationSettings
+            field={field}
+            onChange={onChange}
+          />
+        )}
       </StyledSettingsContent>
     </StyledFormFieldSettingsContainer>
   );

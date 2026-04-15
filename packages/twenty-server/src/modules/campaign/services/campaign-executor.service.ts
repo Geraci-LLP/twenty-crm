@@ -80,7 +80,7 @@ export class CampaignExecutorService {
         campaignId,
         status: In([CampaignRecipientStatus.PENDING]),
       },
-      relations: { person: true },
+      relations: { person: { company: true } },
     });
 
     // Collect all emails to check suppression list
@@ -163,6 +163,7 @@ export class CampaignExecutorService {
             '{{contact.email}}': primaryEmail,
             '{{contact.jobTitle}}': person.jobTitle ?? '',
             '{{contact.city}}': person.city ?? '',
+            '{{contact.companyName}}': person.company?.name ?? '',
             '{{unsubscribe_link}}': unsubscribeLink,
           },
           customArgs: {
