@@ -83,7 +83,9 @@ export class I18nService implements OnModuleInit {
     (
       Object.entries(messagesByLocale) as [keyof typeof APP_LOCALES, Messages][]
     ).forEach(([locale, messages]) => {
-      const localeI18n = setupI18n();
+      const localeI18n = setupI18n({
+        missing: (_locale: string, id: string) => id,
+      });
 
       localeI18n.load(locale, messages);
       localeI18n.activate(locale);
