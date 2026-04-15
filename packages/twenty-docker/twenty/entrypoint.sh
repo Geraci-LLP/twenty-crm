@@ -20,6 +20,17 @@ setup_and_migrate_db() {
     yarn command:prod upgrade
     yarn command:prod cache:flush
 
+    # Sync standard metadata to create any new standard objects (Form,
+    # LandingPage, etc.) that were added after the workspace was first created.
+    # The upgrade command handles versioned migrations but does NOT create new
+    # standard object metadata — this command fills that gap.
+    echo "Syncing standard object metadata..."
+    if yarn command:prod workspace:sync-standard-metadata; then
+        echo "Successfully synced standard metadata!"
+    else
+        echo "Warning: Standard metadata sync failed, but continuing startup..."
+    fi
+
     echo "Successfully migrated DB!"
 }
 
