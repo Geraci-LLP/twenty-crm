@@ -208,6 +208,15 @@ export const PAGE_LAYOUT_WIDGET_FRAGMENT = gql`
         configurationType
         frontComponentId
       }
+      ... on CampaignEditorConfiguration {
+        configurationType
+      }
+      ... on FormBuilderConfiguration {
+        configurationType
+      }
+      ... on LandingPageBuilderConfiguration {
+        configurationType
+      }
     }
     pageLayoutTabId
   }
