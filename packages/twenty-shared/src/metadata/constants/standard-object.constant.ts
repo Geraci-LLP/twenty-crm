@@ -53,6 +53,9 @@ export const STANDARD_OBJECTS = {
       targetWorkflow: {
         universalIdentifier: '20202020-f1e8-4c9d-8a7b-3f5e1d2c9a8b',
       },
+      targetCampaign: {
+        universalIdentifier: 'e6ae17aa-8175-4170-8695-9a39d229c443',
+      },
       position: {
         universalIdentifier: 'cef8f62c-cd46-4444-8cbb-17d463b7464a',
       },
@@ -84,6 +87,9 @@ export const STANDARD_OBJECTS = {
       },
       workflowIdIndex: {
         universalIdentifier: 'fadeab4b-79ee-4173-af79-72c51fbad888',
+      },
+      campaignIdIndex: {
+        universalIdentifier: 'f8562123-b374-4565-80c7-05d6318b7f4b',
       },
     },
     views: {
@@ -2075,6 +2081,9 @@ export const STANDARD_OBJECTS = {
       targetOpportunity: {
         universalIdentifier: '20202020-4e42-417a-a705-76581c9ade79',
       },
+      targetCampaign: {
+        universalIdentifier: 'deb5d45c-d821-4b50-ac62-f173f7ea3d42',
+      },
       createdBy: {
         universalIdentifier: '820a3163-bb7d-41bc-93d9-81a464559c48',
       },
@@ -2103,6 +2112,9 @@ export const STANDARD_OBJECTS = {
       },
       opportunityIdIndex: {
         universalIdentifier: '0d1a59b4-cc87-4b7d-804a-656e8504f371',
+      },
+      campaignIdIndex: {
+        universalIdentifier: '37ba6566-2302-4c68-a86d-8574e556873c',
       },
     },
     views: {
@@ -3569,6 +3581,12 @@ export const STANDARD_OBJECTS = {
       },
       campaignRecipients: {
         universalIdentifier: '199c7d0d-20f8-4751-93c1-867f7deffa8c',
+      },
+      noteTargets: {
+        universalIdentifier: 'ca8b87b5-1045-41d1-98de-8fcf31327702',
+      },
+      attachments: {
+        universalIdentifier: 'a02d9bf3-abca-401c-a9f3-1a0f0a36050b',
       },
       searchVector: {
         universalIdentifier: '33423631-ff9c-4843-bf9c-212fa966387f',

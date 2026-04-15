@@ -11,6 +11,7 @@ import {
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledContainer = styled.div`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: ${themeCssVariables.spacing[4]};
@@ -51,6 +52,7 @@ const StyledInput = styled.input`
 
 const StyledSenderRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: ${themeCssVariables.spacing[3]};
 `;
 
@@ -141,6 +143,7 @@ const StyledTemplatesButton = styled.button`
 const StyledToolbar = styled.div`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: ${themeCssVariables.spacing[2]};
   justify-content: space-between;
 `;

@@ -1,15 +1,17 @@
+import { useCallback } from 'react';
+
+import { CoreObjectNameSingular } from 'twenty-shared/types';
+
+import { type CampaignEditorData } from '@/campaign/types/CampaignTypes';
 import { useFindOneRecord } from '@/object-record/hooks/useFindOneRecord';
 import { useUpdateOneRecord } from '@/object-record/hooks/useUpdateOneRecord';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
-import { type CampaignEditorData } from '@/campaign/types/CampaignTypes';
-import { useCallback } from 'react';
-import { CoreObjectNameSingular } from 'twenty-shared/types';
 
 type CampaignRecord = ObjectRecord & {
   name: string | null;
   status: string;
   subject: string | null;
-  body: string | null;
+  bodyHtml: string | null;
   fromName: string | null;
   fromEmail: string | null;
 };
@@ -23,7 +25,7 @@ export const useCampaignRecord = ({ campaignId }: { campaignId: string }) => {
       name: true,
       status: true,
       subject: true,
-      body: true,
+      bodyHtml: true,
       fromName: true,
       fromEmail: true,
     },
@@ -38,7 +40,7 @@ export const useCampaignRecord = ({ campaignId }: { campaignId: string }) => {
         idToUpdate: campaignId,
         updateOneRecordInput: {
           subject: data.subject,
-          body: data.body,
+          bodyHtml: data.body,
           fromName: data.fromName,
           fromEmail: data.fromEmail,
         },
@@ -50,7 +52,7 @@ export const useCampaignRecord = ({ campaignId }: { campaignId: string }) => {
   const editorData: CampaignEditorData | undefined = record
     ? {
         subject: record.subject ?? '',
-        body: record.body ?? '',
+        body: record.bodyHtml ?? '',
         fromName: record.fromName ?? '',
         fromEmail: record.fromEmail ?? '',
       }
