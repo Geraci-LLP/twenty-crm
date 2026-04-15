@@ -158,6 +158,13 @@ msgstr "{0, plural, one {Ви не маєте доступу до поля {fiel
 msgid "{0} credits"
 msgstr "{0} кредитів"
 
+#. js-lingui-id: DGgVm3
+#. placeholder {0}: data.created
+#. placeholder {1}: data.skipped
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+msgid "{0} recipients added ({1} skipped)"
+msgstr ""
+
 #. js-lingui-id: r4l/MK
 #. placeholder {0}: formatUsageValue(totalCredits)
 #: src/pages/settings/SettingsUsageUserDetail.tsx
@@ -455,6 +462,11 @@ msgstr "{workspaceMemberName} буде позбавлений наступної
 #: src/modules/settings/accounts/components/SettingsAccountsConnectionForm.tsx
 msgid "••••••••"
 msgstr "••••••••"
+
+#. js-lingui-id: DHt5b0
+#: src/modules/form/components/FormSettings.tsx
+msgid "<p>Thank you for contacting us. We'll be in touch shortly.</p>"
+msgstr ""
 
 #. js-lingui-id: SMgdEJ
 #. placeholder {0}: formatNumber(preview.estimatedTokenCount, { abbreviate: true, decimals: 1, })
@@ -912,8 +924,19 @@ msgstr "Додати домен для електронної пошти"
 #. js-lingui-id: DpV70M
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
 #: src/modules/settings/data-model/object-details/components/tabs/ObjectFields.tsx
+#: src/modules/form/components/FormBuilder.tsx
 msgid "Add Field"
 msgstr "Додати поле"
+
+#. js-lingui-id: X+DVWX
+#: src/modules/form/components/FormBuilder.tsx
+msgid "Add fields to your form"
+msgstr ""
+
+#. js-lingui-id: j0BMyn
+#: src/modules/form/components/FormPreview.tsx
+msgid "Add fields to your form using the Builder tab to see a preview here."
+msgstr ""
 
 #. js-lingui-id: T7RGT6
 #: src/modules/activities/files/components/FilesCard.tsx
@@ -1250,6 +1273,11 @@ msgstr "Після заданого часу"
 msgid "After or equal"
 msgstr "Пізніше або дорівнює"
 
+#. js-lingui-id: I5QfOc
+#: src/modules/form/components/FormSettings.tsx
+msgid "After Submission"
+msgstr ""
+
 #. js-lingui-id: fcYF58
 #: src/pages/settings/applications/SettingsAvailableApplicationDetails.tsx
 #: src/modules/metadata-error-handler/hooks/useMetadataErrorHandler.ts
@@ -1324,14 +1352,14 @@ msgstr ""
 #: src/pages/settings/logic-functions/SettingsLogicFunctionDetail.tsx
 #: src/pages/settings/ai/SettingsToolDetail.tsx
 #: src/pages/settings/ai/SettingsSkillForm.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
-#: src/pages/settings/ai/SettingsAgentForm.tsx
 #: src/pages/settings/ai/SettingsAIUsageUserDetail.tsx
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
 #: src/pages/settings/ai/SettingsAI.tsx
 #: src/pages/settings/ai/SettingsAI.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
+#: src/pages/settings/ai/SettingsAgentForm.tsx
 #: src/pages/settings/admin-panel/SettingsAdminAiProviderDetail.tsx
 #: src/modules/workflow/workflow-steps/workflow-actions/utils/getActionHeaderTypeOrThrow.ts
 #: src/modules/side-panel/pages/workflow/action/components/SidePanelWorkflowSelectAction.tsx
@@ -1649,6 +1677,11 @@ msgstr "за абеткою"
 #: src/modules/navigation-menu-item/edit/side-panel/components/SidePanelObjectMenuItem.tsx
 msgid "Already in navbar"
 msgstr "Вже у панелі навігації"
+
+#. js-lingui-id: TEAx2g
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Alt Text"
+msgstr ""
 
 #. js-lingui-id: uprOiC
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
@@ -2500,6 +2533,11 @@ msgstr "Синій"
 msgid "Body"
 msgstr "Текст"
 
+#. js-lingui-id: dRO5A2
+#: src/modules/form/components/FormSettings.tsx
+msgid "Body (HTML)"
+msgstr ""
+
 #. js-lingui-id: khA6nE
 #: src/modules/workflow/workflow-steps/workflow-actions/http-request-action/components/BodyInput.tsx
 msgid "Body Input"
@@ -2561,6 +2599,12 @@ msgstr "Створіть панель, яка показує: (1) загальн
 msgid "Build many-to-many relations"
 msgstr "Створюйте зв’язки «багато-до-багатьох»"
 
+#. js-lingui-id: pxh+PI
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+#: src/modules/page-layout/widgets/form-builder/components/FormBuilderWidget.tsx
+msgid "Builder"
+msgstr ""
+
 #. js-lingui-id: uvoIrk
 #: src/pages/settings/admin-panel/SettingsAdminAiProviderDetail.tsx
 msgid "Built-in models from this provider. Toggle to enable or disable."
@@ -2584,6 +2628,18 @@ msgstr ""
 #. js-lingui-id: s1c0ja
 #: src/modules/advanced-text-editor/extensions/slash-command/DefaultSlashCommands.ts
 msgid "Bullet List"
+msgstr ""
+
+#. js-lingui-id: ChDLlO
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Button Text"
+msgstr ""
+
+#. js-lingui-id: MOht10
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Button URL"
 msgstr ""
 
 #. js-lingui-id: 8ds4Hj
@@ -2706,6 +2762,26 @@ msgstr "Календарі"
 #: src/modules/object-record/record-field/ui/form-types/components/FormPhoneFieldInput.tsx
 msgid "Calling Code"
 msgstr "Код країни"
+
+#. js-lingui-id: PoVCSO
+#: src/modules/campaign/hooks/useSendCampaign.ts
+msgid "Campaign is being sent"
+msgstr ""
+
+#. js-lingui-id: Z+NJu1
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+msgid "Campaign paused"
+msgstr ""
+
+#. js-lingui-id: biVu9d
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+msgid "Campaign resumed"
+msgstr ""
+
+#. js-lingui-id: Ww/GVZ
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+msgid "Campaign scheduled successfully"
+msgstr ""
 
 #. js-lingui-id: msssZq
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectAboutForm.tsx
@@ -3033,11 +3109,21 @@ msgstr "Очистити"
 msgid "Clear the field or \"X\" to revert to environment/default value."
 msgstr "Очистити поле або натиснути \"X\", щоб повернутись до значення за умовчанням/середовища."
 
+#. js-lingui-id: p0uf2+
+#: src/modules/form/components/FormBuilder.tsx
+msgid "Click \"Add Field\" below to add the first input. Published forms will be accessible via a public URL."
+msgstr ""
+
 #. js-lingui-id: Gt8ndY
 #: src/pages/settings/ai/components/SettingsAIUsageTab.tsx
 #: src/modules/settings/usage/components/SettingsUsageAnalyticsSection.tsx
 msgid "Click a user to see their daily breakdown."
 msgstr "Натисніть на користувача, щоб переглянути щоденну деталізацію."
+
+#. js-lingui-id: V0xvdH
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Click Here"
+msgstr ""
 
 #. js-lingui-id: HevGC0
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
@@ -3427,6 +3513,11 @@ msgstr "Підтвердити оновлення ролі"
 msgid "Confirm upgrade"
 msgstr "Підтвердити оновлення"
 
+#. js-lingui-id: I7LxQR
+#: src/modules/form/components/FormSettings.tsx
+msgid "Confirmation Email"
+msgstr ""
+
 #. js-lingui-id: D8ATlr
 #: src/modules/settings/accounts/components/SettingsNewAccountSection.tsx
 msgid "Connect a new account to your workspace"
@@ -3497,6 +3588,7 @@ msgstr "Містить"
 #: src/pages/settings/applications/SettingsAvailableApplicationDetails.tsx
 #: src/pages/settings/applications/SettingsAvailableApplicationDetails.tsx
 #: src/pages/settings/applications/SettingsApplicationDetails.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
 msgid "Content"
 msgstr "Вміст"
 
@@ -4679,6 +4771,7 @@ msgstr ""
 
 #. js-lingui-id: x2p4/4
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
+#: src/modules/form/components/FormBuilder.tsx
 msgid "Delete field"
 msgstr "Видалити поле"
 
@@ -5049,6 +5142,21 @@ msgstr "Перетягніть і відпустіть тут"
 msgid "Drag to add to navbar"
 msgstr "Перетягніть, щоб додати до панелі навігації"
 
+#. js-lingui-id: dMmPpt
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+msgid "Drip campaign activated"
+msgstr ""
+
+#. js-lingui-id: Xxl/+c
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+msgid "Drip campaign created"
+msgstr ""
+
+#. js-lingui-id: ioYwxX
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+msgid "Drip campaign paused"
+msgstr ""
+
 #. js-lingui-id: VIbDgE
 #: src/modules/page-layout/widgets/fields/components/FieldsConfigurationGroupEditor.tsx
 msgid "Drop fields here"
@@ -5083,6 +5191,11 @@ msgstr "Дублети"
 #: src/pages/settings/profile/appearance/components/LocalePicker.tsx
 msgid "Dutch"
 msgstr "Голландська"
+
+#. js-lingui-id: 5eAomn
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "e.g. ^[\\w.+-]+@[\\w-]+\\.[\\w.]+$"
+msgstr ""
 
 #. js-lingui-id: 8zfXiN
 #: src/pages/settings/admin-panel/SettingsAdminNewAiModel.tsx
@@ -5370,6 +5483,11 @@ msgstr "Ел. пошта обов'язкова"
 msgid "Email must be a valid email"
 msgstr "Електронна адреса має бути дійсною"
 
+#. js-lingui-id: zQ1Ylj
+#: src/modules/form/components/FormSettings.tsx
+msgid "Email Notifications"
+msgstr ""
+
 #. js-lingui-id: QT/Wo7
 #: src/modules/settings/accounts/components/SettingsAccountsBlocklistInput.tsx
 msgid "Email or domain is already in blocklist"
@@ -5409,6 +5527,11 @@ msgstr "Посилання для верифікації електронної 
 #: src/modules/auth/components/VerifyEmailEffect.tsx
 msgid "Email verified."
 msgstr "Електронну пошту верифіковано."
+
+#. js-lingui-id: BopPj6
+#: src/modules/form/components/FormSettings.tsx
+msgid "email@example.com"
+msgstr ""
 
 #. js-lingui-id: VI2hiF
 #: src/modules/settings/accounts/components/SettingsAccountsBlocklistTable.tsx
@@ -5460,6 +5583,11 @@ msgstr "Налаштування електронної пошти"
 #: src/modules/workspace/components/WorkspaceInviteTeam.tsx
 msgid "Emails should not be empty"
 msgstr "Електронні адреси не мають бути порожніми"
+
+#. js-lingui-id: NTZ/NX
+#: src/modules/form/components/FormEmbedSnippet.tsx
+msgid "Embed Code"
+msgstr ""
 
 #. js-lingui-id: eXoH4Q
 #: src/modules/settings/data-model/fields/forms/components/SettingsDataModelFieldIconLabelForm.tsx
@@ -5580,6 +5708,11 @@ msgstr "Насолоджуйтеся {withCreditCardTrialPeriodDuration}-ден�
 msgid "Enjoy a 30-day free trial"
 msgstr "Скористайтеся 30-денним безкоштовним пробним періодом"
 
+#. js-lingui-id: sKNDB/
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+msgid "Enrolled {enrolled} contacts ({skipped} skipped)"
+msgstr ""
+
 #. js-lingui-id: T/N+2Z
 #: src/modules/workflow/workflow-trigger/components/WorkflowEditTriggerWebhookForm.tsx
 #: src/modules/object-record/record-field/ui/form-types/components/FormRawJsonFieldInput.tsx
@@ -5632,6 +5765,11 @@ msgstr "Введіть адреси електронної пошти для п�
 msgid "Enter CC emails, comma-separated"
 msgstr "Введіть адреси електронної пошти для копії, розділені комами"
 
+#. js-lingui-id: bbkvhv
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter CTA heading"
+msgstr ""
+
 #. js-lingui-id: MJoxIi
 #: src/modules/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionEmailBase.tsx
 msgid "Enter email subject"
@@ -5651,6 +5789,11 @@ msgstr "Введіть файли у вигляді масиву JSON"
 #: src/modules/object-record/advanced-filter/components/AdvancedFilterValueInputDropdownButtonClickableSelect.tsx
 msgid "Enter filter"
 msgstr "Введіть фільтр"
+
+#. js-lingui-id: j8ieIT
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter heading"
+msgstr ""
 
 #. js-lingui-id: f09Lhk
 #: src/modules/settings/data-model/fields/forms/date/components/SettingsDataModelFieldDateForm.tsx
@@ -5719,6 +5862,11 @@ msgstr "Введіть номер телефону"
 msgid "Enter secret value"
 msgstr "Введіть значення секрету"
 
+#. js-lingui-id: rCE/vs
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter subheading"
+msgstr ""
+
 #. js-lingui-id: xCiJkz
 #: src/modules/workflow/workflow-steps/workflow-actions/http-request-action/components/HttpRequestTestVariableInput.tsx
 msgid "Enter test value"
@@ -5729,6 +5877,11 @@ msgstr "Введіть тестове значення"
 #: src/modules/object-record/record-field/ui/form-types/components/FormTextFieldInput.tsx
 msgid "Enter text"
 msgstr "Введіть текст"
+
+#. js-lingui-id: RUr+uB
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter text content"
+msgstr ""
 
 #. js-lingui-id: +rrO69
 #: src/modules/page-layout/widgets/standalone-rich-text/components/StandaloneRichTextEditorContent.tsx
@@ -5744,6 +5897,11 @@ msgstr ""
 #: src/modules/settings/security/components/SSO/SettingsSSOOIDCForm.tsx
 msgid "Enter the credentials to set the connection"
 msgstr "Введіть облікові дані для налаштування з'єднання"
+
+#. js-lingui-id: j4KT7a
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Enter the form ID to embed"
+msgstr ""
 
 #. js-lingui-id: rGWgcm
 #: src/modules/settings/security/components/SSO/SettingsSSOSAMLForm.tsx
@@ -6333,6 +6491,12 @@ msgstr "Не вдалося {translatedOperationType} {translatedMetadataName}. 
 msgid "Failed to {translatedOperationType} {translatedMetadataName}. Related {relatedEntityNames} validation failed. Please check your configuration and try again."
 msgstr "Не вдалося {translatedOperationType} {translatedMetadataName}. Валідація пов’язаних {relatedEntityNames} не пройшла. Будь ласка, перевірте свою конфігурацію та спробуйте ще раз."
 
+#. js-lingui-id: rfe2U/
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+#: src/modules/campaign/hooks/useActivateDripCampaign.ts
+msgid "Failed to activate drip campaign"
+msgstr ""
+
 #. js-lingui-id: R1XJV1
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
 msgid "Failed to activate enterprise license. Please check your key or contact support."
@@ -6352,6 +6516,12 @@ msgstr "Не вдалося додати модель"
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
 msgid "Failed to add provider"
 msgstr "Не вдалося додати провайдера"
+
+#. js-lingui-id: pD5GhY
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+#: src/modules/campaign/hooks/useCreateDripCampaign.ts
+msgid "Failed to create drip campaign"
+msgstr ""
 
 #. js-lingui-id: WM7GKt
 #: src/pages/settings/ai/SettingsAI.tsx
@@ -6381,6 +6551,12 @@ msgstr "Не вдалося продублювати інформаційну п
 #. js-lingui-id: WYXxQF
 #: src/modules/command-menu-item/engine-command/record/single-record/workflow/components/DuplicateWorkflowSingleRecordCommand.tsx
 msgid "Failed to duplicate workflow"
+msgstr ""
+
+#. js-lingui-id: m1cPVI
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+#: src/modules/campaign/hooks/useEnrollContacts.ts
+msgid "Failed to enroll contacts"
 msgstr ""
 
 #. js-lingui-id: dqEkUR
@@ -6413,6 +6589,12 @@ msgstr "Не вдалося встановити застосунок."
 msgid "Failed to load front component: {errorMessage}"
 msgstr "Не вдалося завантажити компонент фронтенду: {errorMessage}"
 
+#. js-lingui-id: Nln426
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+msgid "Failed to load template"
+msgstr ""
+
 #. js-lingui-id: nKkohy
 #: src/modules/settings/developers/hooks/useWebhookForm.ts
 msgid "Failed to load webhook"
@@ -6427,6 +6609,18 @@ msgstr "Не вдалося об’єднати записи. Будь ласк�
 #: src/modules/ai/components/RoutingDebugDisplay.tsx
 msgid "Failed to parse context: {contextValue}"
 msgstr "Не вдалося розібрати контекст: {contextValue}"
+
+#. js-lingui-id: bOoTIM
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+#: src/modules/campaign/hooks/usePauseCampaign.ts
+msgid "Failed to pause campaign"
+msgstr ""
+
+#. js-lingui-id: 3yogZA
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+#: src/modules/campaign/hooks/usePauseDripCampaign.ts
+msgid "Failed to pause drip campaign"
+msgstr ""
 
 #. js-lingui-id: 3YA1cX
 #: src/pages/settings/admin-panel/SettingsAdminAiProviderDetail.tsx
@@ -6448,10 +6642,28 @@ msgstr "Не вдалося видалити зображення"
 msgid "Failed to remove provider"
 msgstr "Не вдалося видалити провайдера"
 
+#. js-lingui-id: POpPbR
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+#: src/modules/campaign/hooks/useResolveRecipients.ts
+msgid "Failed to resolve recipients"
+msgstr ""
+
+#. js-lingui-id: nhnScg
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+#: src/modules/campaign/hooks/useResumeCampaign.ts
+msgid "Failed to resume campaign"
+msgstr ""
+
 #. js-lingui-id: SJEIIJ
 #: src/modules/settings/admin-panel/health-status/hooks/useRetryJobs.ts
 msgid "Failed to retry jobs. Please try again later."
 msgstr "Не вдалося повторити завдання. Будь ласка, спробуйте пізніше."
+
+#. js-lingui-id: 3qAUvt
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+msgid "Failed to save as template"
+msgstr ""
 
 #. js-lingui-id: farFvy
 #: src/modules/layout-customization/hooks/useSaveLayoutCustomization.ts
@@ -6469,10 +6681,28 @@ msgstr ""
 msgid "Failed to save workspace instructions"
 msgstr "Не вдалося зберегти інструкції робочого простору"
 
+#. js-lingui-id: +1isbF
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+#: src/modules/campaign/hooks/useScheduleCampaign.ts
+msgid "Failed to schedule campaign"
+msgstr ""
+
+#. js-lingui-id: GpNLad
+#: src/modules/campaign/hooks/useSendCampaign.ts
+#: src/modules/campaign/hooks/useSendCampaign.ts
+msgid "Failed to send campaign"
+msgstr ""
+
 #. js-lingui-id: Lo/GQ5
 #: src/modules/activities/emails/hooks/useSendEmail.ts
 #: src/modules/activities/emails/hooks/useSendEmail.ts
 msgid "Failed to send email"
+msgstr ""
+
+#. js-lingui-id: aH/q8K
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+msgid "Failed to send test email"
 msgstr ""
 
 #. js-lingui-id: aj02T8
@@ -6926,6 +7156,11 @@ msgstr "Забули свій пароль?"
 msgid "Form Data"
 msgstr "Дані форми"
 
+#. js-lingui-id: 8fcpj9
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Form ID"
+msgstr ""
+
 #. js-lingui-id: kI1qVD
 #: src/modules/settings/data-model/fields/forms/currency/components/SettingsDataModelFieldCurrencyForm.tsx
 msgid "Format"
@@ -7068,6 +7303,11 @@ msgstr "Отримати Enterprise"
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
 msgid "Get Enterprise Key"
 msgstr "Отримати ключ Enterprise"
+
+#. js-lingui-id: c3b0B0
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Get Started"
+msgstr ""
 
 #. js-lingui-id: NXEW3h
 #: src/pages/onboarding/InviteTeam.tsx
@@ -7246,6 +7486,12 @@ msgstr "Введення заголовків"
 msgid "heading"
 msgstr ""
 
+#. js-lingui-id: zgPjoD
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Heading"
+msgstr ""
+
 #. js-lingui-id: lXKZGw
 #: src/modules/advanced-text-editor/hooks/useTurnIntoBlockOptions.ts
 #: src/modules/advanced-text-editor/extensions/slash-command/DefaultSlashCommands.ts
@@ -7411,6 +7657,11 @@ msgstr "https://example.com/callback"
 msgid "https://example.com/embed"
 msgstr "https://example.com/embed"
 
+#. js-lingui-id: hqYwF3
+#: src/modules/form/components/FormSettings.tsx
+msgid "https://example.com/thank-you"
+msgstr ""
+
 #. js-lingui-id: 0yRnXS
 #: src/modules/settings/developers/components/SettingsDevelopersWebhookForm.tsx
 msgid "https://example.com/webhook"
@@ -7533,6 +7784,16 @@ msgstr "Віджет iFrame"
 #: src/pages/settings/admin-panel/SettingsAdminNewAiModel.tsx
 msgid "Image"
 msgstr "Зображення"
+
+#. js-lingui-id: Lh8B0N
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Image description"
+msgstr ""
+
+#. js-lingui-id: VyUuZb
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Image URL"
+msgstr ""
 
 #. js-lingui-id: ijW9MW
 #: src/modules/settings/accounts/components/SettingsAccountsConnectionForm.tsx
@@ -8853,6 +9114,11 @@ msgstr "Максимум"
 msgid "Max import capacity: {formatSpreadsheetMaxRecordImportCapacity} records. Otherwise, consider splitting your file or using the API."
 msgstr "Макс. ємність імпорту: {formatSpreadsheetMaxRecordImportCapacity} записів. В іншому випадку, розділіть ваш файл або використовуйте API."
 
+#. js-lingui-id: vx4Eho
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Max Length"
+msgstr ""
+
 #. js-lingui-id: S8w4XA
 #: src/pages/settings/admin-panel/SettingsAdminNewAiModel.tsx
 #: src/modules/settings/admin-panel/ai/components/SettingsAdminAiModelHoverCard.tsx
@@ -8863,6 +9129,11 @@ msgstr "Максимальний вивід"
 #: src/modules/side-panel/pages/page-layout/constants/settings/ChartConfigurationSettingLabels.ts
 msgid "Max range"
 msgstr "Максимальний діапазон"
+
+#. js-lingui-id: 6/AQ1M
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Max Value"
+msgstr ""
 
 #. js-lingui-id: DBiUDH
 #: src/modules/settings/data-model/fields/forms/components/SettingsDataModelFieldMaxValuesForm.tsx
@@ -8990,6 +9261,16 @@ msgstr "Синхронізація повідомлень недоступна, 
 msgid "Messages"
 msgstr "Повідомлення"
 
+#. js-lingui-id: HxrYy0
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Meta Description"
+msgstr ""
+
+#. js-lingui-id: 8gtn2Z
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Meta Title"
+msgstr ""
+
 #. js-lingui-id: 6GBt0m
 #: src/modules/settings/playground/constants/SettingsPlaygroundFormSchemaSelectOptions.ts
 #: src/modules/settings/developers/components/WebhookEntitySelect.tsx
@@ -9027,10 +9308,20 @@ msgstr "Microsoft"
 msgid "Min"
 msgstr "Мінімум"
 
+#. js-lingui-id: QN7FxC
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Min Length"
+msgstr ""
+
 #. js-lingui-id: JBisyL
 #: src/modules/side-panel/pages/page-layout/constants/settings/ChartConfigurationSettingLabels.ts
 msgid "Min range"
 msgstr "Мінімальний діапазон"
+
+#. js-lingui-id: HIhjJJ
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Min Value"
+msgstr ""
 
 #. js-lingui-id: 5IrCQY
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
@@ -9255,6 +9546,11 @@ msgstr "повинен бути масивом дійсних електронн
 #: src/modules/views/view-picker/components/ViewPickerListContent.tsx
 msgid "My unlisted views"
 msgstr "Мої неофіційні перегляди"
+
+#. js-lingui-id: vCl4Lj
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "my-landing-page"
+msgstr ""
 
 #. js-lingui-id: JUrq94
 #: src/pages/settings/ai/SettingsSkillForm.tsx
@@ -9817,6 +10113,11 @@ msgstr "Поле не налаштовано"
 msgid "No fields available"
 msgstr ""
 
+#. js-lingui-id: OkioUp
+#: src/modules/form/components/FormPreview.tsx
+msgid "No fields configured"
+msgstr ""
+
 #. js-lingui-id: RM6uKY
 #: src/modules/settings/security/components/SettingsSecurityEditableProfileFields.tsx
 msgid "No fields selected"
@@ -10033,6 +10334,16 @@ msgstr "Ролі не знайдені"
 msgid "No rows with errors"
 msgstr "Немає рядків з помилками"
 
+#. js-lingui-id: VNjGU/
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+msgid "No sections to preview. Add sections in the Builder tab."
+msgstr ""
+
+#. js-lingui-id: A6qPq7
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "No sections yet. Add a section to get started."
+msgstr ""
+
 #. js-lingui-id: Hsl+kr
 #: src/modules/views/view-picker/components/ViewPickerContentCreateMode.tsx
 msgid "No Select field"
@@ -10179,6 +10490,16 @@ msgstr "Примітка"
 #: src/modules/page-layout/constants/StandardPageLayoutTabTitleTranslations.ts
 msgid "Notes"
 msgstr "Нотатки"
+
+#. js-lingui-id: k2SOMs
+#: src/modules/form/components/FormSettings.tsx
+msgid "Notification Email"
+msgstr ""
+
+#. js-lingui-id: iDNBZe
+#: src/modules/form/components/FormSettings.tsx
+msgid "Notifications"
+msgstr ""
 
 #. js-lingui-id: YwzE9K
 #: src/utils/date-utils.ts
@@ -10710,6 +11031,11 @@ msgstr "Пакет"
 msgid "Page"
 msgstr "Сторінка"
 
+#. js-lingui-id: IXkV7z
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Page description for search engines"
+msgstr ""
+
 #. js-lingui-id: SZgFyi
 #: src/modules/metadata-error-handler/hooks/useMetadataErrorHandler.ts
 msgid "page layout"
@@ -10745,6 +11071,11 @@ msgstr "Назва сторінки"
 #: src/pages/not-found/NotFound.tsx
 msgid "Page Not Found | Twenty"
 msgstr "Сторінку не знайдено | Twenty"
+
+#. js-lingui-id: EjnP4B
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Page title for search engines"
+msgstr ""
 
 #. js-lingui-id: sF+Xp9
 #: src/pages/settings/security/event-logs/components/EventLogTableSelector.tsx
@@ -10814,6 +11145,16 @@ msgstr "Вставте тут свій ключ Enterprise"
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionTriggersTab.tsx
 msgid "Path"
 msgstr "Шлях"
+
+#. js-lingui-id: cstC0z
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Pattern (regex)"
+msgstr ""
+
+#. js-lingui-id: OvT96n
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Pattern Error Message"
+msgstr ""
 
 #. js-lingui-id: QmXBEc
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
@@ -11022,6 +11363,11 @@ msgstr "Будь ласка, перевірте свою електронну п
 msgid "Please enter a valid URL"
 msgstr "Будь ласка, введіть дійсний URL"
 
+#. js-lingui-id: gI4tTD
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Please enter a valid value"
+msgstr ""
+
 #. js-lingui-id: qg68zg
 #: src/modules/information-banner/components/reconnect-account/InformationBannerReconnectAccountEmailAliases.tsx
 msgid "Please reconnect your mailbox {mailboxHandle} to update your email aliases:"
@@ -11139,6 +11485,8 @@ msgstr "Запобігти призначенню одного й того ж з
 #. js-lingui-id: rdUucN
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectSettingsFormCard.tsx
 #: src/modules/settings/data-model/components/SettingsDataModelPreviewFormCard.tsx
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+#: src/modules/page-layout/widgets/form-builder/components/FormBuilderWidget.tsx
 msgid "Preview"
 msgstr "Перегляд"
 
@@ -11324,6 +11672,11 @@ msgstr "Публічний домен успішно видалено"
 #: src/pages/settings/domains/SettingsDomains.tsx
 msgid "Public Domains"
 msgstr "Публічні домени"
+
+#. js-lingui-id: guA9ot
+#: src/modules/form/components/FormPublicUrlDisplay.tsx
+msgid "Public URL"
+msgstr ""
 
 #. js-lingui-id: mF9LxA
 #: src/modules/settings/data-model/fields/forms/select/components/SettingsDataModelFieldSelectFormOptionRow.tsx
@@ -11569,6 +11922,11 @@ msgstr "URI переадресації"
 msgid "Redirect URIs updated"
 msgstr "URI переадресації оновлено"
 
+#. js-lingui-id: VTB2Rz
+#: src/modules/form/components/FormSettings.tsx
+msgid "Redirect URL"
+msgstr ""
+
 #. js-lingui-id: LfH+Ea
 #: src/modules/settings/security/components/SSO/SettingsSSOOIDCForm.tsx
 msgid "Redirect Url copied to clipboard"
@@ -11676,6 +12034,7 @@ msgstr "Перезавантаження..."
 #: src/modules/ui/input/components/ImageInput.tsx
 #: src/modules/spreadsheet-import/steps/components/ValidationStep/ValidationStep.tsx
 #: src/modules/object-record/record-group/components/RecordGroupReorderConfirmationModal.tsx
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
 msgid "Remove"
 msgstr "Видалити"
 
@@ -11793,6 +12152,7 @@ msgstr "Дата поновлення"
 
 #. js-lingui-id: Ee8JBW
 #: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowEditActionFormBuilder.tsx
+#: src/modules/form/components/FormBuilder.tsx
 msgid "Reorder field"
 msgstr "Змінити порядок полів"
 
@@ -11831,6 +12191,7 @@ msgstr "Запит не вдався"
 #. js-lingui-id: TMLAx2
 #: src/pages/settings/applications/tabs/SettingsApplicationRegistrationGeneralTab.tsx
 #: src/pages/settings/ai/components/SettingsToolParameterTable.tsx
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
 msgid "Required"
 msgstr "Обов'язково"
 
@@ -12767,10 +13128,25 @@ msgstr "Оберіть бажану мову"
 msgid "Send"
 msgstr ""
 
+#. js-lingui-id: +WjBbv
+#: src/modules/form/components/FormSettings.tsx
+msgid "Send a confirmation email to the submitter"
+msgstr ""
+
+#. js-lingui-id: l5Dot5
+#: src/modules/form/components/FormSettings.tsx
+msgid "Send an email when a new submission is received"
+msgstr ""
+
 #. js-lingui-id: mjK8F3
 #: src/pages/settings/members/SettingsWorkspaceMembers.tsx
 msgid "Send an invite email to your team"
 msgstr "Надішліть запрошення на електронну адресу вашої команди"
+
+#. js-lingui-id: vp9yIB
+#: src/modules/form/components/FormSettings.tsx
+msgid "Send Confirmation Email"
+msgstr ""
 
 #. js-lingui-id: i/TzEU
 #: src/modules/settings/roles/role-permissions/permission-flags/hooks/useActionRolePermissionFlagConfig.ts
@@ -12911,6 +13287,8 @@ msgstr "Налаштування вашої бази даних..."
 #: src/modules/settings/roles/role-permissions/permission-flags/components/SettingsRolePermissionsSettingsSection.tsx
 #: src/modules/settings/roles/role/components/SettingsRole.tsx
 #: src/modules/settings/accounts/components/SettingsAccountsSettingsSection.tsx
+#: src/modules/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget.tsx
+#: src/modules/page-layout/widgets/form-builder/components/FormBuilderWidget.tsx
 #: src/modules/object-record/record-merge/hooks/useMergeRecordsContainerTabs.ts
 #: src/modules/navigation/components/NavigationDrawerOtherSection.tsx
 msgid "Settings"
@@ -13157,6 +13535,11 @@ msgstr "Пропустити зв’язувальний об’єкт (поді
 msgid "Sky"
 msgstr "Небесний"
 
+#. js-lingui-id: L85WcV
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "Slug"
+msgstr ""
+
 #. js-lingui-id: Ik7fz5
 #: src/modules/advanced-text-editor/extensions/slash-command/DefaultSlashCommands.ts
 msgid "Small section heading"
@@ -13246,8 +13629,8 @@ msgstr "Вибачте, щось пішло не так"
 #: src/modules/object-record/record-table/record-table-header/components/RecordTableColumnHeadDropdownMenu.tsx
 #: src/modules/object-record/object-sort-dropdown/components/ObjectSortDropdownButton.tsx
 #: src/modules/object-record/object-sort-dropdown/components/ObjectSortDropdownButton.tsx
-#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupsContent.tsx
 #: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupSortContent.tsx
+#: src/modules/object-record/object-options-dropdown/components/ObjectOptionsDropdownRecordGroupsContent.tsx
 msgid "Sort"
 msgstr "Сортування"
 
@@ -13480,8 +13863,14 @@ msgstr "Піддомен оновлено"
 msgid "subheading"
 msgstr ""
 
+#. js-lingui-id: r05Ezz
+#: src/modules/landing-page/components/LandingPageSectionEditor.tsx
+msgid "Subheading"
+msgstr ""
+
 #. js-lingui-id: UJmAAK
 #: src/modules/workflow/workflow-steps/workflow-actions/components/WorkflowEditActionEmailBase.tsx
+#: src/modules/form/components/FormSettings.tsx
 #: src/modules/activities/emails/components/EmailComposerFields.tsx
 #: src/modules/activities/emails/components/EmailComposerFields.tsx
 msgid "Subject"
@@ -13718,9 +14107,9 @@ msgstr ""
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
 #: src/pages/settings/ai/forms/components/SettingsAIAgentForm.tsx
+#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
+#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
 #: src/pages/settings/ai/components/SettingsAgentSettingsTab.tsx
-#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
-#: src/pages/settings/ai/components/SettingsAIMoreTab.tsx
 msgid "System Prompt"
 msgstr "Системний запит"
 
@@ -13800,6 +14189,16 @@ msgstr "Назва завдання"
 msgid "Tasks"
 msgstr "Завдання"
 
+#. js-lingui-id: fRKsLK
+#: src/modules/campaign/hooks/useLoadTemplate.ts
+msgid "Template loaded into campaign"
+msgstr ""
+
+#. js-lingui-id: G04Zjt
+#: src/modules/campaign/hooks/useSaveAsTemplate.ts
+msgid "Template saved successfully"
+msgstr ""
+
 #. js-lingui-id: lKXcJz
 #: src/pages/settings/emailing-domains/utils/getEmailingDomainStatusText.ts
 msgid "Temporary Failure"
@@ -13825,6 +14224,11 @@ msgstr "Умови надання послуг"
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionCodeEditorTab.tsx
 msgid "Test"
 msgstr "Тест"
+
+#. js-lingui-id: hvjvkT
+#: src/modules/campaign/hooks/useSendTestEmail.ts
+msgid "Test email sent to {testEmailAddress}"
+msgstr ""
 
 #. js-lingui-id: 3nWPN6
 #: src/modules/settings/logic-functions/components/tabs/SettingsLogicFunctionTestTab.tsx
@@ -13857,6 +14261,21 @@ msgstr "Текст скопійовано в буфер обміну"
 #: src/modules/object-record/record-field/ui/form-types/components/FormAdvancedTextFieldInput.tsx
 msgid "Text Editor"
 msgstr "Текстовий редактор"
+
+#. js-lingui-id: gLCgz5
+#: src/modules/form/components/FormSettings.tsx
+msgid "Thank you for your submission"
+msgstr ""
+
+#. js-lingui-id: +hc0hx
+#: src/modules/form/components/FormSettings.tsx
+msgid "Thank you for your submission!"
+msgstr ""
+
+#. js-lingui-id: rbfEde
+#: src/modules/form/components/FormSettings.tsx
+msgid "Thank You Message"
+msgstr ""
 
 #. js-lingui-id: oVH0Mt
 #: src/pages/settings/admin-panel/SettingsAdminNewAiProvider.tsx
@@ -15053,6 +15472,11 @@ msgstr "Завантаження..."
 msgid "URL"
 msgstr "URL-адреса"
 
+#. js-lingui-id: 5aWXU2
+#: src/modules/landing-page/components/LandingPageSettings.tsx
+msgid "URL & SEO"
+msgstr ""
+
 #. js-lingui-id: pphDjD
 #: src/modules/side-panel/pages/page-layout/components/SidePanelPageLayoutIframeSettings.tsx
 msgid "URL to Embed"
@@ -15152,8 +15576,8 @@ msgstr "Корисно для проміжних/зв’язувальних т�
 #: src/pages/settings/security/event-logs/components/EventLogResultsTable.tsx
 #: src/pages/settings/security/event-logs/components/EventLogResultsTable.tsx
 #: src/pages/settings/profile/appearance/components/SettingsExperience.tsx
-#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAIPrompts.tsx
+#: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/accounts/SettingsNewAccount.tsx
 #: src/pages/settings/accounts/SettingsAccountsEmails.tsx
 #: src/pages/settings/accounts/SettingsAccountsConfigurationStepEmail.tsx
@@ -15225,6 +15649,11 @@ msgstr "Дійсно до"
 #: src/modules/spreadsheet-import/steps/components/SpreadsheetImportStepperContainer.tsx
 msgid "Validate Data"
 msgstr "Перевірити дані"
+
+#. js-lingui-id: lGWE4b
+#: src/modules/workflow/workflow-steps/workflow-actions/form-action/components/WorkflowFormFieldValidationSettings.tsx
+msgid "Validation"
+msgstr ""
 
 #. js-lingui-id: PWZBIT
 #: src/pages/settings/enterprise/SettingsEnterprise.tsx
@@ -15840,13 +16269,13 @@ msgstr "Робочі процеси"
 #: src/pages/settings/applications/SettingsApplicationDetails.tsx
 #: src/pages/settings/ai/SettingsToolDetail.tsx
 #: src/pages/settings/ai/SettingsSkillForm.tsx
+#: src/pages/settings/ai/SettingsAIUsageUserDetail.tsx
+#: src/pages/settings/ai/SettingsAIPrompts.tsx
+#: src/pages/settings/ai/SettingsAI.tsx
 #: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAgentTurnDetail.tsx
 #: src/pages/settings/ai/SettingsAgentForm.tsx
-#: src/pages/settings/ai/SettingsAIUsageUserDetail.tsx
-#: src/pages/settings/ai/SettingsAIPrompts.tsx
-#: src/pages/settings/ai/SettingsAI.tsx
 #: src/modules/views/view-picker/components/ViewPickerListContent.tsx
 #: src/modules/sign-in-background-mock/components/SignInAppNavigationDrawerMock.tsx
 #: src/modules/settings/roles/role-permissions/permission-flags/hooks/useSettingsRolePermissionFlagConfig.ts
