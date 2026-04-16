@@ -12,6 +12,8 @@ jobs:
   deploy-main:
     timeout-minutes: 3
     runs-on: ubuntu-latest
+    # Upstream-only: dispatches deploy event to twentyhq/twenty-infra (forks use Railway via build-and-push.yml instead)
+    if: github.repository_owner == 'twentyhq'
     steps:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
