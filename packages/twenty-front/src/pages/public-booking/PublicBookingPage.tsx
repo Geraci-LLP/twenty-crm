@@ -550,9 +550,9 @@ export const PublicBookingPage = () => {
           throw new Error('Failed to load available times');
         }
 
-        const data: TimeSlot[] = await response.json();
+        const data = await response.json();
 
-        setAvailableSlots(data);
+        setAvailableSlots(data.slots ?? []);
       } catch {
         setAvailableSlots([]);
       } finally {
@@ -649,7 +649,7 @@ export const PublicBookingPage = () => {
 
       setBookedStartTime(selectedSlot.startTime);
       setConfirmationMessage(
-        data.confirmationMessage ??
+        data.meetingType?.confirmationMessage ??
           meetingTypeSchema?.confirmationMessage ??
           'Your meeting has been booked.',
       );

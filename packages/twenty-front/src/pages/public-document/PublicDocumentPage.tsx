@@ -241,19 +241,26 @@ export const PublicDocumentPage = () => {
           );
         }
 
-        const data: DocumentMetadata = await response.json();
+        const data = await response.json();
+        const metadata: DocumentMetadata = {
+          id: data.document?.id ?? '',
+          name: data.document?.name ?? '',
+          mimeType: data.document?.mimeType ?? null,
+          pageCount: data.document?.pageCount ?? null,
+          requiresEmail: data.requiresEmail ?? false,
+        };
 
-        setDocumentMetadata(data);
+        setDocumentMetadata(metadata);
 
-        if (data.requiresEmail) {
+        if (metadata.requiresEmail) {
           setPageState('emailGate');
         } else {
           setPageState('viewing');
         }
 
         // Update the browser tab title
-        if (data.name.length > 0) {
-          document.title = data.name;
+        if (metadata.name.length > 0) {
+          document.title = metadata.name;
         }
       } catch (fetchError) {
         setErrorMessage(

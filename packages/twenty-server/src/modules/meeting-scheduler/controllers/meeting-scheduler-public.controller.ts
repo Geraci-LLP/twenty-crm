@@ -84,8 +84,10 @@ export class MeetingSchedulerPublicController {
     }
 
     return {
+      id: meetingType.id,
       name: meetingType.name,
       slug: meetingType.slug,
+      description: meetingType.description,
       durationMinutes: meetingType.durationMinutes,
       location: meetingType.location,
       confirmationMessage: meetingType.confirmationMessage,

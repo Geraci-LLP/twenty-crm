@@ -12,8 +12,8 @@ type ChatWidgetEmbedProps = {
 type WidgetConfig = {
   greetingMessage: string;
   accentColor: string;
-  title: string;
-  widgetPosition: 'bottom-right' | 'bottom-left';
+  name: string;
+  widgetPosition: 'BOTTOM_RIGHT' | 'BOTTOM_LEFT';
 };
 
 type ChatMessage = {
@@ -424,9 +424,9 @@ export const ChatWidgetEmbed = ({
           return;
         }
 
-        const data: ChatMessage[] = await response.json();
+        const data = await response.json();
 
-        setMessages(data);
+        setMessages(data.messages ?? []);
       } catch {
         // Silently ignore polling errors to avoid disrupting the user
       }
@@ -639,12 +639,12 @@ export const ChatWidgetEmbed = ({
 
   // Determine bubble position from widget config
   const bubblePositionStyle =
-    widgetConfig?.widgetPosition === 'bottom-left'
+    widgetConfig?.widgetPosition === 'BOTTOM_LEFT'
       ? { left: 20, right: 'auto' }
       : {};
 
   const windowPositionStyle =
-    widgetConfig?.widgetPosition === 'bottom-left'
+    widgetConfig?.widgetPosition === 'BOTTOM_LEFT'
       ? { left: 20, right: 'auto' }
       : {};
 
@@ -694,7 +694,7 @@ export const ChatWidgetEmbed = ({
         <StyledChatWindow style={windowPositionStyle}>
           <StyledChatHeader style={{ backgroundColor: accentColor }}>
             <StyledHeaderTitle>
-              {widgetConfig?.title ?? 'Chat with us'}
+              {widgetConfig?.name ?? 'Chat with us'}
             </StyledHeaderTitle>
             <StyledCloseButton onClick={handleCloseClick} aria-label="Close">
               <CloseIcon />
@@ -758,7 +758,7 @@ export const ChatWidgetEmbed = ({
       <StyledChatWindow style={windowPositionStyle}>
         <StyledChatHeader style={{ backgroundColor: accentColor }}>
           <StyledHeaderTitle>
-            {widgetConfig?.title ?? 'Chat with us'}
+            {widgetConfig?.name ?? 'Chat with us'}
           </StyledHeaderTitle>
           <StyledCloseButton onClick={handleCloseClick} aria-label="Close">
             <CloseIcon />
