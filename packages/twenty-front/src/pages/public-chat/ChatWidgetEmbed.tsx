@@ -1,3 +1,7 @@
+/* oxlint-disable twenty/no-hardcoded-colors */
+// This widget is embedded on external websites where the Twenty theme
+// system is not available. Hardcoded colors and rgba shadows are intentional
+// so the widget renders consistently outside the app.
 import { styled } from '@linaria/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { isDefined } from 'twenty-shared/utils';
