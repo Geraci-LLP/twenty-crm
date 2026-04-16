@@ -193,6 +193,7 @@ export const buildBookingStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Name of the guest`),
       icon: 'IconUser',
       isNullable: false,
+      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
@@ -209,6 +210,7 @@ export const buildBookingStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Email address of the guest`),
       icon: 'IconMail',
       isNullable: false,
+      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
@@ -240,7 +242,7 @@ export const buildBookingStandardFlatFieldMetadatas = ({
       label: i18nLabel(msg`Starts At`),
       description: i18nLabel(msg`Date and time the booking starts`),
       icon: 'IconCalendarEvent',
-      isNullable: false,
+      isNullable: true,
       settings: {
         displayFormat: DateDisplayFormat.RELATIVE,
       },
@@ -259,7 +261,7 @@ export const buildBookingStandardFlatFieldMetadatas = ({
       label: i18nLabel(msg`Ends At`),
       description: i18nLabel(msg`Date and time the booking ends`),
       icon: 'IconCalendarOff',
-      isNullable: false,
+      isNullable: true,
       settings: {
         displayFormat: DateDisplayFormat.RELATIVE,
       },

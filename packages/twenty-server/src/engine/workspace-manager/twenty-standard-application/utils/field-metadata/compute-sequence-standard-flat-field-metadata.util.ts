@@ -192,6 +192,7 @@ export const buildSequenceStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Sequence name`),
       icon: 'IconRoute',
       isNullable: false,
+      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

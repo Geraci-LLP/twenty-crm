@@ -195,6 +195,7 @@ export const buildTrackedDocumentStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Document name`),
       icon: 'IconFileText',
       isNullable: false,
+      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

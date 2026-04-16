@@ -192,6 +192,7 @@ export const buildChatWidgetStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Chat widget name`),
       icon: 'IconMessageCircle',
       isNullable: false,
+      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

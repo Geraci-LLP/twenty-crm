@@ -193,6 +193,7 @@ export const buildChatMessageStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`The message content`),
       icon: 'IconMessage',
       isNullable: false,
+      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
@@ -209,6 +210,7 @@ export const buildChatMessageStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Who sent this message`),
       icon: 'IconUserCircle',
       isNullable: false,
+      defaultValue: "'VISITOR'",
       options: [
         {
           id: '1b18f49d-d82d-41bb-9d6c-7c20fa536d75',

@@ -196,6 +196,7 @@ export const buildDocumentSharingLinkStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Short unique code for the sharing URL`),
       icon: 'IconLink',
       isNullable: false,
+      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

@@ -212,6 +212,7 @@ export const buildSequenceStepStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Type of sequence step`),
       icon: 'IconCategory',
       isNullable: false,
+      defaultValue: "'EMAIL'",
       options: [
         {
           id: '2d75bab4-c9bc-4608-ba8a-73ff471a78c2',
