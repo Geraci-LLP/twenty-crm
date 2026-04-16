@@ -19,7 +19,7 @@ type WidgetConfig = {
 type ChatMessage = {
   id: string;
   body: string;
-  senderType: 'visitor' | 'agent' | 'bot';
+  senderType: 'VISITOR' | 'AGENT' | 'BOT';
   senderName: string | null;
   createdAt: string;
 };
@@ -496,7 +496,10 @@ export const ChatWidgetEmbed = ({
     setErrorMessage(null);
 
     try {
-      const response = await fetch(`${baseApiUrl}/start`, {
+      // Generate a unique session ID for this visitor
+      const visitorSessionId = `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+      const startResponse = await fetch(`${baseApiUrl}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -504,20 +507,46 @@ export const ChatWidgetEmbed = ({
             visitorName.trim().length > 0 ? visitorName.trim() : null,
           visitorEmail:
             visitorEmail.trim().length > 0 ? visitorEmail.trim() : null,
-          message: initialMessage.trim(),
+          visitorSessionId,
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
+      if (!startResponse.ok) {
+        const errorData = await startResponse.json().catch(() => null);
 
         throw new Error(errorData?.message ?? 'Failed to start conversation');
       }
 
-      const data = await response.json();
+      const startData = await startResponse.json();
+      const newConversationId = startData.conversationId;
 
-      setConversationId(data.conversationId);
-      setMessages(data.messages ?? []);
+      setConversationId(newConversationId);
+
+      // Send the initial message as a separate request
+      const messageResponse = await fetch(`${baseApiUrl}/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conversationId: newConversationId,
+          body: initialMessage.trim(),
+          senderType: 'VISITOR',
+          senderName: visitorName.trim().length > 0 ? visitorName.trim() : null,
+        }),
+      });
+
+      if (messageResponse.ok) {
+        setMessages([
+          {
+            id: `temp-${Date.now()}`,
+            body: initialMessage.trim(),
+            senderType: 'VISITOR',
+            senderName:
+              visitorName.trim().length > 0 ? visitorName.trim() : null,
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+      }
+
       setInitialMessage('');
       setWidgetState('chatting');
     } catch (startError) {
@@ -550,7 +579,7 @@ export const ChatWidgetEmbed = ({
     const optimisticMessage: ChatMessage = {
       id: `temp-${Date.now()}`,
       body: messageText,
-      senderType: 'visitor',
+      senderType: 'VISITOR',
       senderName: visitorName.length > 0 ? visitorName : null,
       createdAt: new Date().toISOString(),
     };
@@ -563,7 +592,9 @@ export const ChatWidgetEmbed = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           conversationId,
-          message: messageText,
+          body: messageText,
+          senderType: 'VISITOR',
+          senderName: visitorName.length > 0 ? visitorName : null,
         }),
       });
 
@@ -736,7 +767,7 @@ export const ChatWidgetEmbed = ({
 
         <StyledMessageList ref={messageListReference}>
           {messages.map((message) => {
-            const isVisitor = message.senderType === 'visitor';
+            const isVisitor = message.senderType === 'VISITOR';
 
             return (
               <StyledMessageRow key={message.id} isVisitor={isVisitor}>
