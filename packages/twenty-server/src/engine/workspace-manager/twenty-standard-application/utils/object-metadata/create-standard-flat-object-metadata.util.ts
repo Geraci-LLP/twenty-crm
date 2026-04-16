@@ -122,6 +122,88 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  chatConversation: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'chatConversation'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'chatConversation',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.chatConversation.universalIdentifier,
+        nameSingular: 'chatConversation',
+        namePlural: 'chatConversations',
+        labelSingular: i18nLabel(msg`Chat Conversation`),
+        labelPlural: i18nLabel(msg`Chat Conversations`),
+        description: i18nLabel(msg`A chat conversation`),
+        icon: 'IconMessages',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'visitorName',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  chatMessage: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'chatMessage'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'chatMessage',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.chatMessage.universalIdentifier,
+        nameSingular: 'chatMessage',
+        namePlural: 'chatMessages',
+        labelSingular: i18nLabel(msg`Chat Message`),
+        labelPlural: i18nLabel(msg`Chat Messages`),
+        description: i18nLabel(msg`A chat message`),
+        icon: 'IconMessage',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'senderName',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  chatWidget: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'chatWidget'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'chatWidget',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.chatWidget.universalIdentifier,
+        nameSingular: 'chatWidget',
+        namePlural: 'chatWidgets',
+        labelSingular: i18nLabel(msg`Chat Widget`),
+        labelPlural: i18nLabel(msg`Chat Widgets`),
+        description: i18nLabel(msg`A chat widget configuration`),
+        icon: 'IconMessageCircle',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   dripCampaign: ({
     now,
     workspaceId,
@@ -263,6 +345,97 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  trackedDocument: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'trackedDocument'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'trackedDocument',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.trackedDocument.universalIdentifier,
+        nameSingular: 'trackedDocument',
+        namePlural: 'trackedDocuments',
+        labelSingular: i18nLabel(msg`Tracked Document`),
+        labelPlural: i18nLabel(msg`Tracked Documents`),
+        description: i18nLabel(
+          msg`A tracked document for sharing and analytics`,
+        ),
+        icon: 'IconFileText',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  documentSharingLink: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'documentSharingLink'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'documentSharingLink',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.documentSharingLink.universalIdentifier,
+        nameSingular: 'documentSharingLink',
+        namePlural: 'documentSharingLinks',
+        labelSingular: i18nLabel(msg`Document Sharing Link`),
+        labelPlural: i18nLabel(msg`Document Sharing Links`),
+        description: i18nLabel(msg`A sharing link for a tracked document`),
+        icon: 'IconLink',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'slug',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  documentView: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'documentView'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'documentView',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.documentView.universalIdentifier,
+        nameSingular: 'documentView',
+        namePlural: 'documentViews',
+        labelSingular: i18nLabel(msg`Document View`),
+        labelPlural: i18nLabel(msg`Document Views`),
+        description: i18nLabel(msg`A document view event`),
+        icon: 'IconEye',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'viewerEmail',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   blocklist: ({
     now,
     workspaceId,
@@ -283,6 +456,32 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
         icon: 'IconForbid2',
         isSystem: true,
         labelIdentifierFieldMetadataName: 'handle',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  booking: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'booking'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'booking',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.booking.universalIdentifier,
+        nameSingular: 'booking',
+        namePlural: 'bookings',
+        labelSingular: i18nLabel(msg`Booking`),
+        labelPlural: i18nLabel(msg`Bookings`),
+        description: i18nLabel(msg`A scheduled booking`),
+        icon: 'IconCalendarCheck',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'guestName',
       },
       workspaceId,
       standardObjectMetadataRelatedEntityIds,
@@ -771,6 +970,32 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  meetingType: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'meetingType'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'meetingType',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.meetingType.universalIdentifier,
+        nameSingular: 'meetingType',
+        namePlural: 'meetingTypes',
+        labelSingular: i18nLabel(msg`Meeting Type`),
+        labelPlural: i18nLabel(msg`Meeting Types`),
+        description: i18nLabel(msg`A meeting type for scheduling`),
+        icon: 'IconCalendarEvent',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   note: ({
     now,
     workspaceId,
@@ -878,6 +1103,91 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
         ],
         labelIdentifierFieldMetadataName: 'name',
         imageIdentifierFieldMetadataName: 'avatarUrl',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  sequence: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'sequence'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'sequence',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.sequence.universalIdentifier,
+        nameSingular: 'sequence',
+        namePlural: 'sequences',
+        labelSingular: i18nLabel(msg`Sequence`),
+        labelPlural: i18nLabel(msg`Sequences`),
+        description: i18nLabel(msg`A sales sequence`),
+        icon: 'IconRoute',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  sequenceEnrollment: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'sequenceEnrollment'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'sequenceEnrollment',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.sequenceEnrollment.universalIdentifier,
+        nameSingular: 'sequenceEnrollment',
+        namePlural: 'sequenceEnrollments',
+        labelSingular: i18nLabel(msg`Sequence Enrollment`),
+        labelPlural: i18nLabel(msg`Sequence Enrollments`),
+        description: i18nLabel(msg`A contact enrolled in a sequence`),
+        icon: 'IconUserCheck',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'id',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  sequenceStep: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'sequenceStep'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'sequenceStep',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.sequenceStep.universalIdentifier,
+        nameSingular: 'sequenceStep',
+        namePlural: 'sequenceSteps',
+        labelSingular: i18nLabel(msg`Sequence Step`),
+        labelPlural: i18nLabel(msg`Sequence Steps`),
+        description: i18nLabel(msg`A step in a sales sequence`),
+        icon: 'IconListNumbers',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'id',
       },
       workspaceId,
       standardObjectMetadataRelatedEntityIds,

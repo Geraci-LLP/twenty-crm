@@ -56,6 +56,18 @@ export const STANDARD_OBJECTS = {
       targetCampaign: {
         universalIdentifier: 'e6ae17aa-8175-4170-8695-9a39d229c443',
       },
+      targetTrackedDocument: {
+        universalIdentifier: 'd9d65570-9222-439e-bbde-f9dd8eb698ae',
+      },
+      targetMeetingType: {
+        universalIdentifier: '672a9ec2-2ea6-4311-879e-565bbdbc4882',
+      },
+      targetChatWidget: {
+        universalIdentifier: '86639d57-12bb-463e-99b1-e3ee33ecd1bf',
+      },
+      targetSequence: {
+        universalIdentifier: 'd027539a-edcc-4e6a-bd20-bda638747418',
+      },
       position: {
         universalIdentifier: 'cef8f62c-cd46-4444-8cbb-17d463b7464a',
       },
@@ -90,6 +102,18 @@ export const STANDARD_OBJECTS = {
       },
       campaignIdIndex: {
         universalIdentifier: 'f8562123-b374-4565-80c7-05d6318b7f4b',
+      },
+      trackedDocumentIdIndex: {
+        universalIdentifier: '78d3b56f-5890-47c7-9864-808028f4a22c',
+      },
+      meetingTypeIdIndex: {
+        universalIdentifier: 'cb28fc90-5896-4bba-9463-440c06eeaa6d',
+      },
+      chatWidgetIdIndex: {
+        universalIdentifier: 'ecc843fa-e605-4091-b91b-f68db0f8ec9b',
+      },
+      sequenceIdIndex: {
+        universalIdentifier: '182e7c9f-7c27-473e-be11-2feca4960f0b',
       },
     },
     views: {
@@ -2084,6 +2108,18 @@ export const STANDARD_OBJECTS = {
       targetCampaign: {
         universalIdentifier: 'deb5d45c-d821-4b50-ac62-f173f7ea3d42',
       },
+      targetTrackedDocument: {
+        universalIdentifier: '780b4050-ee19-472c-af8d-2ed4aacb4e52',
+      },
+      targetMeetingType: {
+        universalIdentifier: '4cacef21-e63e-47ac-97de-bb66dc485f1b',
+      },
+      targetChatWidget: {
+        universalIdentifier: '50d1147b-2ee1-410c-852f-6f292e7622fb',
+      },
+      targetSequence: {
+        universalIdentifier: '63eb182a-5a4c-496f-a1e9-1d6992a25348',
+      },
       createdBy: {
         universalIdentifier: '820a3163-bb7d-41bc-93d9-81a464559c48',
       },
@@ -2115,6 +2151,18 @@ export const STANDARD_OBJECTS = {
       },
       campaignIdIndex: {
         universalIdentifier: '37ba6566-2302-4c68-a86d-8574e556873c',
+      },
+      trackedDocumentIdIndex: {
+        universalIdentifier: 'd05e909c-be9e-4534-a50a-799865406775',
+      },
+      meetingTypeIdIndex: {
+        universalIdentifier: '298054e2-611d-40fd-a4fd-2ec7c60c34bb',
+      },
+      chatWidgetIdIndex: {
+        universalIdentifier: 'e3164301-0d75-4f4d-97bc-4ab85408aba3',
+      },
+      sequenceIdIndex: {
+        universalIdentifier: '911ed1d8-33d0-4a44-a6a7-7495ab1d9065',
       },
     },
     views: {
@@ -2398,6 +2446,21 @@ export const STANDARD_OBJECTS = {
       },
       dripEnrollments: {
         universalIdentifier: 'aafd96dd-4abb-47ce-b211-09fc9ef38ad6',
+      },
+      documentSharingLinks: {
+        universalIdentifier: '3f086ef3-fbec-4680-94c8-8f5d6de06ea3',
+      },
+      documentViews: {
+        universalIdentifier: '6aa2a9a1-dc84-47ce-9436-dd2ab02172da',
+      },
+      bookings: {
+        universalIdentifier: '7bb3b0b2-ed95-48df-a547-ee3bc13183eb',
+      },
+      chatConversations: {
+        universalIdentifier: '8cc4c1c3-fe06-49e0-b658-ff4cd24294fc',
+      },
+      sequenceEnrollments: {
+        universalIdentifier: '9dd5d2d4-0f17-40f1-8769-005de3530a0d',
       },
       searchVector: {
         universalIdentifier: '57d1d7ad-fa10-44fc-82f3-ad0959ec2534',
@@ -2763,6 +2826,18 @@ export const STANDARD_OBJECTS = {
       targetOpportunity: {
         universalIdentifier: '20202020-6cb2-4c01-a9a5-aca3dbc11d41',
       },
+      targetTrackedDocument: {
+        universalIdentifier: '945bb5ec-78c1-49aa-bef7-b60f0d116dd2',
+      },
+      targetMeetingType: {
+        universalIdentifier: 'b0a25117-a39a-4503-894c-07bac0416f8f',
+      },
+      targetChatWidget: {
+        universalIdentifier: 'b160114f-bdac-4d96-835d-1b513e96cb4b',
+      },
+      targetSequence: {
+        universalIdentifier: 'dc2ebb71-f064-46d5-a004-bb2b8035ae09',
+      },
       createdBy: {
         universalIdentifier: '65fe2a53-45e4-4225-9711-b827f55e51cc',
       },
@@ -2791,6 +2866,18 @@ export const STANDARD_OBJECTS = {
       },
       opportunityIdIndex: {
         universalIdentifier: '6942e0ba-90f6-4c33-bf40-7f00b1ec35ab',
+      },
+      trackedDocumentIdIndex: {
+        universalIdentifier: '378754d7-ca8b-448e-90e3-8f6861275c81',
+      },
+      meetingTypeIdIndex: {
+        universalIdentifier: '0f4573d9-7655-47eb-b9c7-2e08fb4c84ec',
+      },
+      chatWidgetIdIndex: {
+        universalIdentifier: '04cd88b4-f556-4037-a67b-94ff9bfff20d',
+      },
+      sequenceIdIndex: {
+        universalIdentifier: '4030068c-4695-47ff-8b46-44954b3df3db',
       },
     },
     views: {
@@ -3691,7 +3778,7 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: 'f4c3a120-8e4d-4b91-a6f7-3c8e5d9b2a01',
         viewFields: {
           status: {
-            universalIdentifier: 'b8d2e4f6-1a3c-5d7e-9f0b-2c4d6e8a0b1c',
+            universalIdentifier: 'b8d2e4f6-1a3c-4d7e-9f0b-2c4d6e8a0b1c',
           },
           person: {
             universalIdentifier: '77c65290-c889-4b07-bf18-145a0d2ba4a4',
@@ -3949,7 +4036,7 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: '7d4e8f1a-2b3c-4d5e-9f6a-1b2c3d4e5f6a',
       },
       sendConfirmationEmail: {
-        universalIdentifier: '8e5f9a2b-3c4d-5e6f-a7b8-2c3d4e5f6a7b',
+        universalIdentifier: '8e5f9a2b-3c4d-4e6f-a7b8-2c3d4e5f6a7b',
       },
       confirmationEmailSubject: {
         universalIdentifier: '3a3cf51d-014b-4a04-ab77-63a86206dc98',
@@ -4143,6 +4230,959 @@ export const STANDARD_OBJECTS = {
           },
           createdAt: {
             universalIdentifier: '364e4576-2259-4fcd-adde-2e458258a178',
+          },
+        },
+      },
+    },
+  },
+  trackedDocument: {
+    universalIdentifier: '73368b94-ffef-43b5-b262-2f15011b3334',
+    fields: {
+      id: { universalIdentifier: 'e7e1e668-4781-4fa0-8ac2-98acbe907e4b' },
+      createdAt: {
+        universalIdentifier: 'd555d5c7-38a3-4645-b748-928d4e0f95da',
+      },
+      updatedAt: {
+        universalIdentifier: 'e76dc2d6-d454-4260-b812-5a0e1e72eecb',
+      },
+      deletedAt: {
+        universalIdentifier: '68c6d2e0-9650-46e2-a163-2f6daa13b1b7',
+      },
+      position: {
+        universalIdentifier: '5a4bedd2-a7ad-42eb-bfc2-de258748253d',
+      },
+      createdBy: {
+        universalIdentifier: 'af39664e-b5c1-445a-865b-74f74bec5d4c',
+      },
+      updatedBy: {
+        universalIdentifier: 'ac1e610b-2d19-4ce5-8efb-be006c6c2736',
+      },
+      name: { universalIdentifier: 'dc1e1584-7c0b-49f3-be2a-448be80bbe32' },
+      description: {
+        universalIdentifier: 'cf43b81a-5bc9-4a93-ac2a-b8699a927d96',
+      },
+      mimeType: {
+        universalIdentifier: '4f0baa1a-392e-4f3d-97b8-6d0327c9b166',
+      },
+      pageCount: {
+        universalIdentifier: 'f699313d-22a7-43e7-b335-50fb5de65713',
+      },
+      status: { universalIdentifier: '6668f9ca-ad48-46a4-a8e8-0bba09257430' },
+      requireEmail: {
+        universalIdentifier: '9b8bafca-a3f6-4818-9d5c-347c9ec5d125',
+      },
+      enableDownload: {
+        universalIdentifier: '2cb7766e-ba79-4d0a-b650-e926ff26fba9',
+      },
+      expiresAt: {
+        universalIdentifier: '9f3f228a-7ba0-48cb-b8c8-7e566e1c7ba6',
+      },
+      viewCount: {
+        universalIdentifier: '07eae700-9744-446c-b015-64e5f65a1661',
+      },
+      uniqueViewerCount: {
+        universalIdentifier: 'f36b7fe5-3c14-4ebd-ac19-b2f6415b6529',
+      },
+      notifyOnView: {
+        universalIdentifier: '10a5ce6b-cd15-4d2f-a436-07124aaf9c39',
+      },
+      notificationEmail: {
+        universalIdentifier: '5a019c7f-7cd0-4706-92ca-3f5a1d215f04',
+      },
+      sharingLinks: {
+        universalIdentifier: '6de90a77-8574-47eb-ac12-01723d97314c',
+      },
+      documentViews: {
+        universalIdentifier: '945c9698-7f12-4f86-83ab-172dde955e1f',
+      },
+      searchVector: {
+        universalIdentifier: '7886d7dc-ecbc-4ce9-8364-874d2a81826a',
+      },
+      noteTargets: {
+        universalIdentifier: '3e0e3c40-188e-4160-96e2-b58f7b66c13e',
+      },
+      taskTargets: {
+        universalIdentifier: '53bbe4d1-b1bb-418e-b71b-8c07f5ef6ddf',
+      },
+      attachments: {
+        universalIdentifier: '4ce63bf2-98d2-499e-9767-63212730265b',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: 'fc94e077-ddf9-44c0-afda-da4592c283bb',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '555d9500-81f9-4f97-9784-680c48f41a96',
+      },
+    },
+    views: {
+      allDocuments: {
+        universalIdentifier: '1f0e8b5b-2bf8-4322-b247-0db5c6cb2077',
+        viewFields: {
+          name: {
+            universalIdentifier: 'bea43220-ecf5-4aad-9361-5d3e6ff01c65',
+          },
+          status: {
+            universalIdentifier: '8b45042e-7bb6-46e0-bd3c-49b62eb0683b',
+          },
+          viewCount: {
+            universalIdentifier: '7144c7e4-088d-4d6a-94b0-63a7293df0c5',
+          },
+          uniqueViewerCount: {
+            universalIdentifier: '6e1cd3e1-df89-4ec0-87eb-724fa3a9447e',
+          },
+          createdAt: {
+            universalIdentifier: '7617ffe9-f324-4047-bda6-f4ec9bec7e8a',
+          },
+        },
+      },
+    },
+  },
+  documentSharingLink: {
+    universalIdentifier: '2f59d8d8-8262-449c-a3e4-69f6be78e323',
+    fields: {
+      id: { universalIdentifier: 'a38020ae-1160-4bc2-9ed1-88ca7ac4c32b' },
+      createdAt: {
+        universalIdentifier: '3602616f-1d0c-4581-b492-0b2a5b32b9fb',
+      },
+      updatedAt: {
+        universalIdentifier: '9fa5cecf-bff6-4011-8671-58c5d5c64935',
+      },
+      deletedAt: {
+        universalIdentifier: '04d7ebb9-3f80-4bb3-8cbf-d736614ab3de',
+      },
+      position: {
+        universalIdentifier: 'db0825b2-e0e2-42d4-a5f2-13f9e7532a48',
+      },
+      createdBy: {
+        universalIdentifier: '1b630203-b3c7-4223-b4d8-8d4c22aa00df',
+      },
+      updatedBy: {
+        universalIdentifier: 'bdc45411-585a-4870-a5ec-418c9a70d694',
+      },
+      slug: { universalIdentifier: '85e1803e-9c19-4bac-bfa0-6925c9363ba1' },
+      isActive: {
+        universalIdentifier: '3147ccba-f9d2-4a96-9433-41c0165d6a98',
+      },
+      recipientEmail: {
+        universalIdentifier: 'd4a44300-f534-4da1-88a8-c5ffa1d0e1e4',
+      },
+      viewCount: {
+        universalIdentifier: '5fa96174-99a1-4658-b375-f75efa95ae5d',
+      },
+      trackedDocument: {
+        universalIdentifier: '9bf7bd5c-0774-4eb7-bc06-ff8a54d59c61',
+      },
+      person: { universalIdentifier: '625547e3-0fd6-4d26-97d8-5fe4dcfe82a7' },
+      documentViews: {
+        universalIdentifier: '077b9a6e-e669-4b45-84ac-29c201a50004',
+      },
+      searchVector: {
+        universalIdentifier: '26682ee9-b02d-4bd4-b689-2f40610f975b',
+      },
+    },
+    indexes: {
+      trackedDocumentIdIndex: {
+        universalIdentifier: '0c15eb97-af45-4156-9707-0a736f90c6d4',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '1c77a4fe-ea59-459e-b601-b368ff4028e4',
+      },
+    },
+    views: {
+      allDocumentSharingLinks: {
+        universalIdentifier: '43cb6775-ba40-4b7a-afa0-f07f6def8a39',
+        viewFields: {
+          slug: {
+            universalIdentifier: 'bcbf101a-74fb-4c53-ad45-3033aa8340ba',
+          },
+          isActive: {
+            universalIdentifier: '8dedd5c3-fd7f-4676-afd9-7e5981825fdf',
+          },
+          recipientEmail: {
+            universalIdentifier: 'e3211575-cb33-43f2-9780-aaac002ddab5',
+          },
+          viewCount: {
+            universalIdentifier: '65ae2a08-e24f-498b-aff4-27c557e31f75',
+          },
+          createdAt: {
+            universalIdentifier: '918443fc-69fd-4aba-b291-305b16b72ab2',
+          },
+        },
+      },
+    },
+  },
+  documentView: {
+    universalIdentifier: 'e4e742e5-120a-49c3-a043-aef9708a8a95',
+    fields: {
+      id: { universalIdentifier: 'aa298bad-5094-48d3-b5ca-d76c15fd9c68' },
+      createdAt: {
+        universalIdentifier: '8ccfd00a-c2c5-4d2b-887a-805e8e01f97d',
+      },
+      updatedAt: {
+        universalIdentifier: 'dc7664a8-6265-444f-b277-2d7c5c4ca78c',
+      },
+      deletedAt: {
+        universalIdentifier: '181fe53d-21e0-48ab-b614-d659348a959a',
+      },
+      viewerEmail: {
+        universalIdentifier: 'd8f0fab2-8503-4935-90d1-dc49365b9ba7',
+      },
+      viewerName: {
+        universalIdentifier: '8a0759fd-9fd2-45b5-9d9f-758f2cac9319',
+      },
+      viewedAt: {
+        universalIdentifier: '1a62afd1-cfc3-486c-9979-bf2cbd2ceb97',
+      },
+      durationSeconds: {
+        universalIdentifier: '678917bb-48c6-481f-8768-0c63167a4344',
+      },
+      pagesViewed: {
+        universalIdentifier: 'f715813c-8761-436c-b793-e92b380c78e7',
+      },
+      completionPercent: {
+        universalIdentifier: '1551108b-cd1c-4f61-b18d-618ebb965e13',
+      },
+      trackedDocument: {
+        universalIdentifier: '87a0dcfe-45b5-4b10-87bd-ee926323fee6',
+      },
+      documentSharingLink: {
+        universalIdentifier: '37a44367-ad00-4d8a-ab29-f57750ff3aeb',
+      },
+      person: { universalIdentifier: '6b6ee49c-d01c-4645-97c0-cb1e893041b4' },
+      createdBy: {
+        universalIdentifier: 'd33c8658-37c6-4ca8-b20f-3591aa030beb',
+      },
+      updatedBy: {
+        universalIdentifier: 'e8845ebe-4309-47d1-a082-ae74ee249eea',
+      },
+      position: {
+        universalIdentifier: '8e6ed8e9-ea21-49a0-92cd-6cd08f606f77',
+      },
+      searchVector: {
+        universalIdentifier: '4e7cde6e-545b-4e34-8645-a947ff133016',
+      },
+    },
+    indexes: {
+      trackedDocumentIdIndex: {
+        universalIdentifier: 'f98b4d05-49a6-440d-bdc2-fe590308f1ae',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'd5ae3ff5-91fa-42bd-a05f-772f447b39a1',
+      },
+    },
+    views: {
+      allDocumentViews: {
+        universalIdentifier: 'ddce8db5-942c-4cef-bb9d-45b2a466badd',
+        viewFields: {
+          viewerEmail: {
+            universalIdentifier: '6d28d9d4-dd1e-42ea-91f7-060e2b82dab9',
+          },
+          viewerName: {
+            universalIdentifier: '04dc127d-9556-4c35-9359-ad334d6626c0',
+          },
+          viewedAt: {
+            universalIdentifier: '257c74a7-eeb5-441a-bef4-5fd7a2bd393a',
+          },
+          durationSeconds: {
+            universalIdentifier: 'e963ed5c-f86a-47bb-96c2-b21779d6c19a',
+          },
+          completionPercent: {
+            universalIdentifier: '36b4bd53-c229-4ead-9900-252d0f4210d0',
+          },
+        },
+      },
+    },
+  },
+  meetingType: {
+    universalIdentifier: 'b7a1c2d3-e4f5-4a6b-8c9d-0e1f2a3b4c5d',
+    fields: {
+      id: { universalIdentifier: 'c8b2d3e4-f5a6-4b7c-9d0e-1f2a3b4c5d6e' },
+      createdAt: {
+        universalIdentifier: 'd9c3e4f5-a6b7-4c8d-8e1f-2a3b4c5d6e7f',
+      },
+      updatedAt: {
+        universalIdentifier: 'e0d4f5a6-b7c8-4d9e-9f20-3a4b5c6d7e8f',
+      },
+      deletedAt: {
+        universalIdentifier: 'f1e5a6b7-c8d9-4e0f-a031-4a5b6c7d8e9f',
+      },
+      position: {
+        universalIdentifier: 'a2f6b7c8-d9e0-4f10-b142-5a6b7c8d9e0f',
+      },
+      createdBy: {
+        universalIdentifier: 'b3a7c8d9-e0f1-4021-8253-6a7b8c9d0e1f',
+      },
+      updatedBy: {
+        universalIdentifier: 'c4b8d9e0-f102-4132-9364-7a8b9c0d1e2f',
+      },
+      name: { universalIdentifier: 'd5c9e0f1-0213-4243-a475-8a9b0c1d2e3f' },
+      slug: { universalIdentifier: 'e6d0f102-1324-4354-b586-9a0b1c2d3e4f' },
+      durationMinutes: {
+        universalIdentifier: 'f7e10213-2435-4465-8697-0a1b2c3d4e5f',
+      },
+      bufferBeforeMinutes: {
+        universalIdentifier: 'a8f21324-3546-4576-97a8-1a2b3c4d5e6f',
+      },
+      bufferAfterMinutes: {
+        universalIdentifier: 'b9032435-4657-4687-a8b9-2a3b4c5d6e7f',
+      },
+      status: { universalIdentifier: 'c0143546-5768-4798-b9c0-3a4b5c6d7e8f' },
+      availabilityConfig: {
+        universalIdentifier: 'd1254657-6879-4809-80d1-4a5b6c7d8e9f',
+      },
+      timezone: {
+        universalIdentifier: 'e2365768-7980-4910-91e2-5a6b7c8d9e0f',
+      },
+      location: {
+        universalIdentifier: 'f3476879-8091-4021-a2f3-6a7b8c9d0e1f',
+      },
+      confirmationMessage: {
+        universalIdentifier: 'a4587980-9102-4132-b304-7a8b9c0d1e2f',
+      },
+      notifyOnBooking: {
+        universalIdentifier: 'b5698091-0213-4243-8415-8a9b0c1d2e3f',
+      },
+      notificationEmail: {
+        universalIdentifier: 'c6709102-1324-4354-9526-9a0b1c2d3e4f',
+      },
+      color: { universalIdentifier: 'd7810213-2435-4465-a637-0a1b2c3d4e5f' },
+      bookingCount: {
+        universalIdentifier: 'e8921324-3546-4576-b748-1a2b3c4d5e6f',
+      },
+      bookings: {
+        universalIdentifier: 'f9032435-4657-4687-8859-2a3b4c5d6e7f',
+      },
+      searchVector: {
+        universalIdentifier: 'a0143546-5768-4798-9960-3a4b5c6d7e8f',
+      },
+      noteTargets: {
+        universalIdentifier: '1db54386-9883-4236-825e-639e035cbcc4',
+      },
+      taskTargets: {
+        universalIdentifier: 'd8f03731-218e-43e9-8d4c-cd4eaeb30d7d',
+      },
+      attachments: {
+        universalIdentifier: 'd2505c5d-a3c7-4d81-b842-58f5e52e1743',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: 'b1254657-6879-4809-a071-4a5b6c7d8e9f',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'c2365768-7980-4910-b182-5a6b7c8d9e0f',
+      },
+    },
+    views: {
+      allMeetingTypes: {
+        universalIdentifier: 'd3476879-8091-4021-8293-6a7b8c9d0e1f',
+        viewFields: {
+          name: {
+            universalIdentifier: 'e4587980-9102-4132-93a4-7a8b9c0d1e2f',
+          },
+          status: {
+            universalIdentifier: 'f5698091-0213-4243-a4b5-8a9b0c1d2e3f',
+          },
+          durationMinutes: {
+            universalIdentifier: 'a6709102-1324-4354-b5c6-9a0b1c2d3e4f',
+          },
+          bookingCount: {
+            universalIdentifier: 'b7810213-2435-4465-86d7-0a1b2c3d4e5f',
+          },
+          createdAt: {
+            universalIdentifier: 'c8921324-3546-4576-97e8-1a2b3c4d5e6f',
+          },
+        },
+      },
+    },
+  },
+  booking: {
+    universalIdentifier: 'a4b5c6d7-e8f9-4a0b-9c2d-3e4f5a6b7c8d',
+    fields: {
+      id: { universalIdentifier: 'b5c6d7e8-f9a0-4b1c-ad3e-4f5a6b7c8d9e' },
+      createdAt: {
+        universalIdentifier: 'c6d7e8f9-a0b1-4c2d-be4f-5a6b7c8d9e0f',
+      },
+      updatedAt: {
+        universalIdentifier: 'd7e8f9a0-b1c2-4d3e-8f50-6a7b8c9d0e1f',
+      },
+      deletedAt: {
+        universalIdentifier: 'e8f9a0b1-c2d3-4e4f-9061-7a8b9c0d1e2f',
+      },
+      position: {
+        universalIdentifier: 'f9a0b1c2-d3e4-4f50-a172-8a9b0c1d2e3f',
+      },
+      createdBy: {
+        universalIdentifier: 'a0b1c2d3-e4f5-4061-b283-9a0b1c2d3e4f',
+      },
+      updatedBy: {
+        universalIdentifier: 'b1c2d3e4-f506-4172-8394-0a1b2c3d4e5f',
+      },
+      guestName: {
+        universalIdentifier: 'c2d3e4f5-0617-4283-94a5-1a2b3c4d5e6f',
+      },
+      guestEmail: {
+        universalIdentifier: 'd3e4f506-1728-4394-a5b6-2a3b4c5d6e7f',
+      },
+      guestNotes: {
+        universalIdentifier: 'e4f50617-2839-44a5-b6c7-3a4b5c6d7e8f',
+      },
+      startsAt: {
+        universalIdentifier: 'f5061728-3940-4b5c-87d8-4a5b6c7d8e9f',
+      },
+      endsAt: {
+        universalIdentifier: 'a6172839-4051-4c6d-98e9-5a6b7c8d9e0f',
+      },
+      status: { universalIdentifier: 'b7283940-5162-4d7e-a9f0-6a7b8c9d0e1f' },
+      meetingType: {
+        universalIdentifier: 'c8394051-6273-4e8f-b001-7a8b9c0d1e2f',
+      },
+      person: { universalIdentifier: 'd9405162-7384-4f90-8112-8a9b0c1d2e3f' },
+      searchVector: {
+        universalIdentifier: 'af049127-f4cf-40a9-9983-b528dd99c003',
+      },
+    },
+    indexes: {
+      meetingTypeIdIndex: {
+        universalIdentifier: 'e0516273-8495-4001-9223-9a0b1c2d3e4f',
+      },
+      personIdIndex: {
+        universalIdentifier: 'f1627384-9506-4112-a334-0a1b2c3d4e5f',
+      },
+      statusIndex: {
+        universalIdentifier: 'a2738495-0617-4223-b445-1a2b3c4d5e6f',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '9c99a465-5956-496b-b690-587c70d2c108',
+      },
+    },
+    views: {
+      allBookings: {
+        universalIdentifier: 'b3849506-1728-4334-8556-2a3b4c5d6e7f',
+        viewFields: {
+          guestName: {
+            universalIdentifier: 'c4950617-2839-4445-9667-3a4b5c6d7e8f',
+          },
+          guestEmail: {
+            universalIdentifier: 'd5061728-3940-4556-a778-4a5b6c7d8e9f',
+          },
+          startsAt: {
+            universalIdentifier: 'e6172839-4051-4667-b889-5a6b7c8d9e0f',
+          },
+          status: {
+            universalIdentifier: 'f7283940-5162-4778-8990-6a7b8c9d0e1f',
+          },
+          meetingType: {
+            universalIdentifier: 'a8394051-6273-4889-90a1-7a8b9c0d1e2f',
+          },
+        },
+      },
+    },
+  },
+  chatWidget: {
+    universalIdentifier: 'c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f',
+    fields: {
+      id: { universalIdentifier: 'd2e3f4a5-b6c7-4d8e-9f0a-1b2c3d4e5f6a' },
+      createdAt: {
+        universalIdentifier: 'e3f4a5b6-c7d8-4e9f-8a1b-2c3d4e5f6a7b',
+      },
+      updatedAt: {
+        universalIdentifier: 'f4a5b6c7-d8e9-4f0a-9b2c-3d4e5f6a7b8c',
+      },
+      deletedAt: {
+        universalIdentifier: 'a5b6c7d8-e9f0-4a1b-ac3d-4e5f6a7b8c9d',
+      },
+      position: {
+        universalIdentifier: 'b6c7d8e9-f0a1-4b2c-bd4e-5f6a7b8c9d0e',
+      },
+      createdBy: {
+        universalIdentifier: 'c7d8e9f0-a1b2-4c3d-8e5f-6a7b8c9d0e1f',
+      },
+      updatedBy: {
+        universalIdentifier: 'd8e9f0a1-b2c3-4d4e-9f6a-7b8c9d0e1f2a',
+      },
+      name: { universalIdentifier: 'e9f0a1b2-c3d4-4e5f-aa7b-8c9d0e1f2a3b' },
+      status: { universalIdentifier: 'f0a1b2c3-d4e5-4f6a-bb8c-9d0e1f2a3b4c' },
+      greetingMessage: {
+        universalIdentifier: 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5e',
+      },
+      offlineMessage: {
+        universalIdentifier: 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6f',
+      },
+      accentColor: {
+        universalIdentifier: 'c3d4e5f6-a7b8-4c9d-8e1f-2a3b4c5d6e70',
+      },
+      widgetPosition: {
+        universalIdentifier: 'd4e5f6a7-b8c9-4d0e-9f2a-3b4c5d6e7f81',
+      },
+      businessHoursConfig: {
+        universalIdentifier: 'e5f6a7b8-c9d0-4e1f-aa3b-4c5d6e7f8092',
+      },
+      autoResponseEnabled: {
+        universalIdentifier: 'f6a7b8c9-d0e1-4f2a-bb4c-5d6e7f8090a3',
+      },
+      autoResponseDelay: {
+        universalIdentifier: 'a7b8c9d0-e1f2-4a3b-8c5d-6e7f8090a1b4',
+      },
+      autoResponseMessage: {
+        universalIdentifier: 'b8c9d0e1-f2a3-4b4c-9d6e-7f8090a1b2c5',
+      },
+      conversations: {
+        universalIdentifier: 'c9d0e1f2-a3b4-4c5d-ae7f-8090a1b2c3d6',
+      },
+      searchVector: {
+        universalIdentifier: 'd0e1f2a3-b4c5-4d6e-bf80-90a1b2c3d4e7',
+      },
+      noteTargets: {
+        universalIdentifier: '6649f5d5-53f8-4822-adf5-117e7328cbec',
+      },
+      taskTargets: {
+        universalIdentifier: 'c969f321-f094-4246-a847-89fda62e2ffe',
+      },
+      attachments: {
+        universalIdentifier: 'c0721efc-642e-44cd-81df-c3e7f0ad999e',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: 'e1f2a3b4-c5d6-4e7f-8091-a2b3c4d5e6f8',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'f2a3b4c5-d6e7-4f80-91a2-b3c4d5e6f7a9',
+      },
+    },
+    views: {
+      allChatWidgets: {
+        universalIdentifier: 'a3b4c5d6-e7f8-4091-a2b3-c4d5e6f7a8ba',
+        viewFields: {
+          name: {
+            universalIdentifier: 'b4c5d6e7-f809-41a2-b3c4-d5e6f7a8b9cb',
+          },
+          status: {
+            universalIdentifier: 'c5d6e7f8-0910-42b3-84d5-e6f7a8b9c0dc',
+          },
+          greetingMessage: {
+            universalIdentifier: 'd6e7f809-1021-43c4-95e6-f7a8b9c0d1ed',
+          },
+          autoResponseEnabled: {
+            universalIdentifier: 'e7f80910-2132-44d5-a6f7-a8b9c0d1e2fe',
+          },
+          createdAt: {
+            universalIdentifier: 'f8091021-3243-45e6-b7a8-b9c0d1e2f30f',
+          },
+        },
+      },
+    },
+  },
+  chatConversation: {
+    universalIdentifier: 'a1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e',
+    fields: {
+      id: { universalIdentifier: 'b2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f' },
+      createdAt: {
+        universalIdentifier: 'c3e4f5a6-b7c8-4d9e-8f1a-2b3c4d5e6f7a',
+      },
+      updatedAt: {
+        universalIdentifier: 'd4f5a6b7-c8d9-4e0f-9a2b-3c4d5e6f7a8b',
+      },
+      deletedAt: {
+        universalIdentifier: 'e5a6b7c8-d9e0-4f1a-ab3c-4d5e6f7a8b9c',
+      },
+      position: {
+        universalIdentifier: 'f6b7c8d9-e0f1-4a2b-bc4d-5e6f7a8b9c0d',
+      },
+      createdBy: {
+        universalIdentifier: 'a7c8d9e0-f1a2-4b3c-8d5e-6f7a8b9c0d1e',
+      },
+      updatedBy: {
+        universalIdentifier: 'b8d9e0f1-a2b3-4c4d-9e6f-7a8b9c0d1e2f',
+      },
+      visitorName: {
+        universalIdentifier: 'c9e0f1a2-b3c4-4d5e-af7a-8b9c0d1e2f3a',
+      },
+      visitorEmail: {
+        universalIdentifier: 'd0f1a2b3-c4d5-4e6f-ba8b-9c0d1e2f3a4b',
+      },
+      visitorSessionId: {
+        universalIdentifier: 'e1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c',
+      },
+      status: { universalIdentifier: 'f2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d' },
+      messageCount: {
+        universalIdentifier: 'a3c4d5e6-f7a8-4b9c-8d1e-2f3a4b5c6d7e',
+      },
+      lastMessageAt: {
+        universalIdentifier: 'b4d5e6f7-a8b9-4c0d-9e2f-3a4b5c6d7e8f',
+      },
+      chatWidget: {
+        universalIdentifier: 'c5e6f7a8-b9c0-4d1e-af3a-4b5c6d7e8f90',
+      },
+      person: { universalIdentifier: 'd6f7a8b9-c0d1-4e2f-ba4b-5c6d7e8f90a1' },
+      messages: {
+        universalIdentifier: 'e7a8b9c0-d1e2-4f3a-8b5c-6d7e8f90a1b2',
+      },
+      searchVector: {
+        universalIdentifier: '3bf4c63d-ed77-472d-b93d-0c652024b77e',
+      },
+    },
+    indexes: {
+      chatWidgetIdIndex: {
+        universalIdentifier: 'f8b9c0d1-e2f3-4a4b-9c6d-7e8f90a1b2c3',
+      },
+      personIdIndex: {
+        universalIdentifier: 'a9c0d1e2-f3a4-4b5c-ad7e-8f90a1b2c3d4',
+      },
+      statusIndex: {
+        universalIdentifier: 'b0d1e2f3-a4b5-4c6d-be8f-90a1b2c3d4e5',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '03ae4da4-930f-4340-bf9c-33f8c6da07c6',
+      },
+    },
+    views: {
+      allChatConversations: {
+        universalIdentifier: 'c1e2f3a4-b5c6-4d7e-8f90-a1b2c3d4e5f6',
+        viewFields: {
+          visitorName: {
+            universalIdentifier: 'd2f3a4b5-c6d7-4e8f-90a1-b2c3d4e5f6a7',
+          },
+          visitorEmail: {
+            universalIdentifier: 'e3a4b5c6-d7e8-4f90-a1b2-c3d4e5f6a7b8',
+          },
+          status: {
+            universalIdentifier: 'f4b5c6d7-e8f9-4a01-b2c3-d4e5f6a7b8c9',
+          },
+          messageCount: {
+            universalIdentifier: 'a5c6d7e8-f9a0-4b12-83d4-e5f6a7b8c9d0',
+          },
+          lastMessageAt: {
+            universalIdentifier: 'b6d7e8f9-a0b1-4c23-94e5-f6a7b8c9d0e1',
+          },
+        },
+      },
+    },
+  },
+  chatMessage: {
+    universalIdentifier: 'b1c2d3e4-f5a6-4778-8d9e-0f1a2b3c4d5f',
+    fields: {
+      id: { universalIdentifier: 'c2d3e4f5-a6b7-4889-9e0f-1a2b3c4d5e60' },
+      createdAt: {
+        universalIdentifier: 'd3e4f5a6-b7c8-4990-8f1a-2b3c4d5e6f71',
+      },
+      updatedAt: {
+        universalIdentifier: 'e4f5a6b7-c8d9-40a1-9a2b-3c4d5e6f7a82',
+      },
+      deletedAt: {
+        universalIdentifier: 'f5a6b7c8-d9e0-41b2-ab3c-4d5e6f7a8b93',
+      },
+      position: {
+        universalIdentifier: 'a6b7c8d9-e0f1-42c3-bc4d-5e6f7a8b9c04',
+      },
+      createdBy: {
+        universalIdentifier: 'b7c8d9e0-f1a2-43d4-8d5e-6f7a8b9c0d15',
+      },
+      updatedBy: {
+        universalIdentifier: 'c8d9e0f1-a2b3-44e5-9e6f-7a8b9c0d1e26',
+      },
+      body: { universalIdentifier: 'd9e0f1a2-b3c4-45f6-af7a-8b9c0d1e2f37' },
+      senderType: {
+        universalIdentifier: 'e0f1a2b3-c4d5-4607-ba8b-9c0d1e2f3a48',
+      },
+      senderName: {
+        universalIdentifier: 'f1a2b3c4-d5e6-4718-8b9c-0d1e2f3a4b59',
+      },
+      chatConversation: {
+        universalIdentifier: 'a2b3c4d5-e6f7-4829-9c0d-1e2f3a4b5c6a',
+      },
+      searchVector: {
+        universalIdentifier: '9ae61735-9594-4ac5-9d3c-4411578293ed',
+      },
+    },
+    indexes: {
+      chatConversationIdIndex: {
+        universalIdentifier: 'b3c4d5e6-f7a8-4930-8d1e-2f3a4b5c6d7b',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '2b9fa865-e74e-4872-88ac-52fdc6042e89',
+      },
+    },
+    views: {
+      allChatMessages: {
+        universalIdentifier: 'c4d5e6f7-a8b9-4041-9e2f-3a4b5c6d7e8c',
+        viewFields: {
+          senderName: {
+            universalIdentifier: 'd5e6f7a8-b9c0-4152-af3a-4b5c6d7e8f9d',
+          },
+          senderType: {
+            universalIdentifier: 'e6f7a8b9-c0d1-4263-ba4b-5c6d7e8f90ae',
+          },
+          body: {
+            universalIdentifier: 'f7a8b9c0-d1e2-4374-8b5c-6d7e8f90a1bf',
+          },
+          createdAt: {
+            universalIdentifier: 'a8b9c0d1-e2f3-4485-9c6d-7e8f90a1b2c0',
+          },
+        },
+      },
+    },
+  },
+  sequence: {
+    universalIdentifier: '1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c6d',
+    fields: {
+      id: { universalIdentifier: '2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d7e' },
+      createdAt: {
+        universalIdentifier: '3c4d5e6f-7a8b-4c9d-8e1f-2a3b4c5d6e8f',
+      },
+      updatedAt: {
+        universalIdentifier: '4d5e6f7a-8b9c-4d0e-9f2a-3b4c5d6e7f90',
+      },
+      deletedAt: {
+        universalIdentifier: '5e6f7a8b-9c0d-4e1f-aa3b-4c5d6e7f8001',
+      },
+      position: {
+        universalIdentifier: '6f7a8b9c-0d1e-4f2a-bb4c-5d6e7f800112',
+      },
+      createdBy: {
+        universalIdentifier: '7a8b9c0d-1e2f-4a3b-8c5d-6e7f80011223',
+      },
+      updatedBy: {
+        universalIdentifier: '8b9c0d1e-2f3a-4b4c-9d6e-7f8001122334',
+      },
+      name: { universalIdentifier: '9c0d1e2f-3a4b-4c5d-ae7f-800112233445' },
+      description: {
+        universalIdentifier: '0d1e2f3a-4b5c-4d6e-bf80-011223344556',
+      },
+      status: {
+        universalIdentifier: '1e2f3a4b-5c6d-4e7f-8001-122334455667',
+      },
+      stepCount: {
+        universalIdentifier: '2f3a4b5c-6d7e-4f80-8112-233445566778',
+      },
+      enrollmentCount: {
+        universalIdentifier: '3a4b5c6d-7e8f-4001-9223-344556677889',
+      },
+      activeEnrollmentCount: {
+        universalIdentifier: '4b5c6d7e-8f90-4112-a334-45566778899a',
+      },
+      completedCount: {
+        universalIdentifier: '5c6d7e8f-9001-4223-b445-566778899a0b',
+      },
+      replyRate: {
+        universalIdentifier: '6d7e8f90-0112-4334-8556-6778899a0b1c',
+      },
+      autoEnrollEnabled: {
+        universalIdentifier: '7e8f9001-1223-4445-9667-78899a0b1c2d',
+      },
+      pauseOnReply: {
+        universalIdentifier: '8f900112-2334-4556-a778-899a0b1c2d3e',
+      },
+      steps: {
+        universalIdentifier: '90011223-3445-4667-b889-9a0b1c2d3e4f',
+      },
+      enrollments: {
+        universalIdentifier: '01122334-4556-4778-8990-a0b1c2d3e4f5',
+      },
+      searchVector: {
+        universalIdentifier: '12233445-5667-4889-9a0b-1c2d3e4f5a60',
+      },
+      noteTargets: {
+        universalIdentifier: 'e2b0957e-371d-4e2a-93c0-df16b694455a',
+      },
+      taskTargets: {
+        universalIdentifier: '1a06d56e-ff64-4ac7-86f0-6a7ebb2d9d6c',
+      },
+      attachments: {
+        universalIdentifier: 'c6657c7c-2757-4b97-a5ed-5cf7954f7430',
+      },
+    },
+    indexes: {
+      statusIndex: {
+        universalIdentifier: '23344556-6778-4990-8b1c-2d3e4f5a6b71',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '34455667-7889-40a1-9c2d-3e4f5a6b7c82',
+      },
+    },
+    views: {
+      allSequences: {
+        universalIdentifier: '45566778-8990-41b2-ad3e-4f5a6b7c8d93',
+        viewFields: {
+          name: {
+            universalIdentifier: '56677889-90a1-42c3-be4f-5a6b7c8d9ea4',
+          },
+          status: {
+            universalIdentifier: '67788990-a1b2-43d4-8f5a-6b7c8d9e0fb5',
+          },
+          stepCount: {
+            universalIdentifier: '78899a01-b2c3-44e5-9a6b-7c8d9e0f10c6',
+          },
+          enrollmentCount: {
+            universalIdentifier: '899a0b12-c3d4-45f6-ab7c-8d9e0f1021d7',
+          },
+          replyRate: {
+            universalIdentifier: '9a0b1c23-d4e5-4607-bc8d-9e0f102132e8',
+          },
+          createdAt: {
+            universalIdentifier: '0b1c2d34-e5f6-4718-8d9e-0f10213243f9',
+          },
+        },
+      },
+    },
+  },
+  sequenceStep: {
+    universalIdentifier: 'a1b2c3d4-e5f6-4a78-9c0d-1e2f3a4b5c7d',
+    fields: {
+      id: { universalIdentifier: 'b2c3d4e5-f6a7-4b89-8d1e-2f3a4b5c6d8e' },
+      createdAt: {
+        universalIdentifier: 'c3d4e5f6-a7b8-4c90-9e2f-3a4b5c6d7e9f',
+      },
+      updatedAt: {
+        universalIdentifier: 'd4e5f6a7-b8c9-4d01-af3a-4b5c6d7e8f00',
+      },
+      deletedAt: {
+        universalIdentifier: 'e5f6a7b8-c9d0-4e12-ba4b-5c6d7e8f9011',
+      },
+      position: {
+        universalIdentifier: 'f6a7b8c9-d0e1-4f23-8b5c-6d7e8f901122',
+      },
+      createdBy: {
+        universalIdentifier: 'a7b8c9d0-e1f2-4034-9c6d-7e8f90112233',
+      },
+      updatedBy: {
+        universalIdentifier: 'b8c9d0e1-f2a3-4145-ad7e-8f9011223344',
+      },
+      stepOrder: {
+        universalIdentifier: 'c9d0e1f2-a3b4-4256-be8f-901122334455',
+      },
+      type: {
+        universalIdentifier: 'd0e1f2a3-b4c5-4367-8f90-112233445566',
+      },
+      delayDays: {
+        universalIdentifier: 'e1f2a3b4-c5d6-4478-9001-223344556677',
+      },
+      subject: {
+        universalIdentifier: 'f2a3b4c5-d6e7-4589-8112-334455667788',
+      },
+      bodyHtml: {
+        universalIdentifier: 'a3b4c5d6-e7f8-4690-9223-445566778899',
+      },
+      sequence: {
+        universalIdentifier: 'b4c5d6e7-f8a9-4701-a334-5566778899a0',
+      },
+      searchVector: {
+        universalIdentifier: '87927e6f-3d0d-4e38-b65e-0c08eec3dfc4',
+      },
+    },
+    indexes: {
+      sequenceIdIndex: {
+        universalIdentifier: 'c5d6e7f8-a9b0-4812-b445-66778899a0b1',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'd090842d-56fd-44da-89dc-081c9167a454',
+      },
+    },
+    views: {
+      allSequenceSteps: {
+        universalIdentifier: 'd6e7f8a9-b0c1-4923-8556-778899a0b1c2',
+        viewFields: {
+          stepOrder: {
+            universalIdentifier: 'e7f8a9b0-c1d2-4034-9667-8899a0b1c2d3',
+          },
+          type: {
+            universalIdentifier: 'f8a9b0c1-d2e3-4145-a778-99a0b1c2d3e4',
+          },
+          delayDays: {
+            universalIdentifier: 'a9b0c1d2-e3f4-4256-b889-a0b1c2d3e4f5',
+          },
+          subject: {
+            universalIdentifier: 'b0c1d2e3-f4a5-4367-8990-b1c2d3e4f5a6',
+          },
+          createdAt: {
+            universalIdentifier: 'c1d2e3f4-a5b6-4478-90a1-c2d3e4f5a6b7',
+          },
+        },
+      },
+    },
+  },
+  sequenceEnrollment: {
+    universalIdentifier: 'd1e2f3a4-b5c6-4789-8d1e-2f3a4b5c6d8e',
+    fields: {
+      id: { universalIdentifier: 'e2f3a4b5-c6d7-4890-9e2f-3a4b5c6d7e9f' },
+      createdAt: {
+        universalIdentifier: 'f3a4b5c6-d7e8-4901-af3a-4b5c6d7e8f00',
+      },
+      updatedAt: {
+        universalIdentifier: 'a4b5c6d7-e8f9-4012-ba4b-5c6d7e8f9011',
+      },
+      deletedAt: {
+        universalIdentifier: 'b5c6d7e8-f9a0-4123-8b5c-6d7e8f901122',
+      },
+      position: {
+        universalIdentifier: 'c6d7e8f9-a0b1-4234-9c6d-7e8f90112233',
+      },
+      createdBy: {
+        universalIdentifier: 'd7e8f9a0-b1c2-4345-ad7e-8f9011223344',
+      },
+      updatedBy: {
+        universalIdentifier: 'e8f9a0b1-c2d3-4456-be8f-901122334455',
+      },
+      status: {
+        universalIdentifier: 'f9a0b1c2-d3e4-4567-8f90-112233445566',
+      },
+      currentStepIndex: {
+        universalIdentifier: 'a0b1c2d3-e4f5-4678-9001-223344556677',
+      },
+      enrolledAt: {
+        universalIdentifier: 'b1c2d3e4-f5a6-4789-8112-334455667788',
+      },
+      completedAt: {
+        universalIdentifier: 'c2d3e4f5-a6b7-4890-9223-445566778899',
+      },
+      lastStepAt: {
+        universalIdentifier: 'd3e4f5a6-b7c8-4901-a334-5566778899a0',
+      },
+      sequence: {
+        universalIdentifier: 'e4f5a6b7-c8d9-4012-b445-66778899a0b1',
+      },
+      person: {
+        universalIdentifier: 'f5a6b7c8-d9e0-4123-8556-778899a0b1c2',
+      },
+      searchVector: {
+        universalIdentifier: '81a6d310-efaa-4268-9d85-ea06cff746a5',
+      },
+    },
+    indexes: {
+      sequenceIdIndex: {
+        universalIdentifier: 'a6b7c8d9-e0f1-4234-9667-8899a0b1c2d3',
+      },
+      personIdIndex: {
+        universalIdentifier: 'b7c8d9e0-f1a2-4345-a778-99a0b1c2d3e4',
+      },
+      statusIndex: {
+        universalIdentifier: 'c8d9e0f1-a2b3-4456-b889-a0b1c2d3e4f5',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '3ee1b11b-224d-4fb6-92b4-44eaeb2225b3',
+      },
+    },
+    views: {
+      allSequenceEnrollments: {
+        universalIdentifier: 'd9e0f1a2-b3c4-4567-8990-b1c2d3e4f5a6',
+        viewFields: {
+          status: {
+            universalIdentifier: 'e0f1a2b3-c4d5-4678-90a1-c2d3e4f5a6b7',
+          },
+          currentStepIndex: {
+            universalIdentifier: 'f1a2b3c4-d5e6-4789-a1b2-d3e4f5a6b7c8',
+          },
+          enrolledAt: {
+            universalIdentifier: 'a2b3c4d5-e6f7-4890-b2c3-e4f5a6b7c8d9',
+          },
+          completedAt: {
+            universalIdentifier: 'b3c4d5e6-f7a8-4901-83d4-f5a6b7c8d9e0',
+          },
+          sequence: {
+            universalIdentifier: 'c4d5e6f7-a8b9-4012-94e5-a6b7c8d9e0f1',
           },
         },
       },

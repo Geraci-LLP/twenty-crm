@@ -12,9 +12,14 @@ import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity
 import { type FieldTypeAndNameMetadata } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
 import { type EntityRelation } from 'src/engine/workspace-manager/workspace-migration/types/entity-relation.interface';
 import { type AttachmentWorkspaceEntity } from 'src/modules/attachment/standard-objects/attachment.workspace-entity';
+import { type BookingWorkspaceEntity } from 'src/modules/meeting-scheduler/standard-objects/booking.workspace-entity';
+import { type ChatConversationWorkspaceEntity } from 'src/modules/live-chat/standard-objects/chat-conversation.workspace-entity';
+import { type SequenceEnrollmentWorkspaceEntity } from 'src/modules/sales-sequence/standard-objects/sequence-enrollment.workspace-entity';
 import { type CalendarEventParticipantWorkspaceEntity } from 'src/modules/calendar/common/standard-objects/calendar-event-participant.workspace-entity';
 import { type CampaignRecipientWorkspaceEntity } from 'src/modules/campaign/standard-objects/campaign-recipient.workspace-entity';
 import { type DripEnrollmentWorkspaceEntity } from 'src/modules/campaign/standard-objects/drip-enrollment.workspace-entity';
+import { type DocumentSharingLinkWorkspaceEntity } from 'src/modules/document-tracking/standard-objects/document-sharing-link.workspace-entity';
+import { type DocumentViewWorkspaceEntity } from 'src/modules/document-tracking/standard-objects/document-view.workspace-entity';
 import { type CompanyWorkspaceEntity } from 'src/modules/company/standard-objects/company.workspace-entity';
 import { type FavoriteWorkspaceEntity } from 'src/modules/favorite/standard-objects/favorite.workspace-entity';
 import { type MessageParticipantWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-participant.workspace-entity';
@@ -65,5 +70,10 @@ export class PersonWorkspaceEntity extends BaseWorkspaceEntity {
   timelineActivities: EntityRelation<TimelineActivityWorkspaceEntity[]>;
   campaignRecipients: EntityRelation<CampaignRecipientWorkspaceEntity[]>;
   dripEnrollments: EntityRelation<DripEnrollmentWorkspaceEntity[]>;
+  documentSharingLinks: EntityRelation<DocumentSharingLinkWorkspaceEntity[]>;
+  documentViews: EntityRelation<DocumentViewWorkspaceEntity[]>;
+  bookings: EntityRelation<BookingWorkspaceEntity[]>;
+  chatConversations: EntityRelation<ChatConversationWorkspaceEntity[]>;
+  sequenceEnrollments: EntityRelation<SequenceEnrollmentWorkspaceEntity[]>;
   searchVector: string;
 }

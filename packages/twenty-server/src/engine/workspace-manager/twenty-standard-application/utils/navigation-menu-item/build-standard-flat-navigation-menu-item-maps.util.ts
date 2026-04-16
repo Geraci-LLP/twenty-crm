@@ -14,13 +14,17 @@ import {
 
 const FLAT_NAVIGATION_MENU_ITEM_NAMES = [
   'allCampaigns',
+  'allChatWidgets',
   'allCompanies',
   'allDashboards',
+  'allDocuments',
   'allForms',
   'allLandingPages',
+  'allMeetingTypes',
   'allNotes',
   'allOpportunities',
   'allPeople',
+  'allSequences',
   'allTasks',
 ] as const;
 

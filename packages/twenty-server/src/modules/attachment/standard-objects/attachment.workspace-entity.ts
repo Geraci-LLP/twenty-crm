@@ -8,9 +8,13 @@ import { type EntityRelation } from 'src/engine/workspace-manager/workspace-migr
 import { type CampaignWorkspaceEntity } from 'src/modules/campaign/standard-objects/campaign.workspace-entity';
 import { type CompanyWorkspaceEntity } from 'src/modules/company/standard-objects/company.workspace-entity';
 import { type DashboardWorkspaceEntity } from 'src/modules/dashboard/standard-objects/dashboard.workspace-entity';
+import { type TrackedDocumentWorkspaceEntity } from 'src/modules/document-tracking/standard-objects/tracked-document.workspace-entity';
+import { type ChatWidgetWorkspaceEntity } from 'src/modules/live-chat/standard-objects/chat-widget.workspace-entity';
+import { type MeetingTypeWorkspaceEntity } from 'src/modules/meeting-scheduler/standard-objects/meeting-type.workspace-entity';
 import { type NoteWorkspaceEntity } from 'src/modules/note/standard-objects/note.workspace-entity';
 import { type OpportunityWorkspaceEntity } from 'src/modules/opportunity/standard-objects/opportunity.workspace-entity';
 import { type PersonWorkspaceEntity } from 'src/modules/person/standard-objects/person.workspace-entity';
+import { type SequenceWorkspaceEntity } from 'src/modules/sales-sequence/standard-objects/sequence.workspace-entity';
 import { type TaskWorkspaceEntity } from 'src/modules/task/standard-objects/task.workspace-entity';
 import { type WorkflowWorkspaceEntity } from 'src/modules/workflow/common/standard-objects/workflow.workspace-entity';
 import { type WorkspaceMemberWorkspaceEntity } from 'src/modules/workspace-member/standard-objects/workspace-member.workspace-entity';
@@ -52,5 +56,13 @@ export class AttachmentWorkspaceEntity extends BaseWorkspaceEntity {
   targetWorkflowId: string | null;
   targetCampaign: EntityRelation<CampaignWorkspaceEntity> | null;
   targetCampaignId: string | null;
+  targetTrackedDocument: EntityRelation<TrackedDocumentWorkspaceEntity> | null;
+  targetTrackedDocumentId: string | null;
+  targetMeetingType: EntityRelation<MeetingTypeWorkspaceEntity> | null;
+  targetMeetingTypeId: string | null;
+  targetChatWidget: EntityRelation<ChatWidgetWorkspaceEntity> | null;
+  targetChatWidgetId: string | null;
+  targetSequence: EntityRelation<SequenceWorkspaceEntity> | null;
+  targetSequenceId: string | null;
   custom: EntityRelation<CustomWorkspaceEntity>;
 }

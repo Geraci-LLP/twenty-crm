@@ -54,3 +54,4 @@ mcp.json
 TRANSLATION_QA_REPORT.md
 .playwright-mcp/
 .playwright-cli/
+seed-output.log
