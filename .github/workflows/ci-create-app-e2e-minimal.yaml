@@ -31,7 +31,8 @@ jobs:
         !packages/twenty-server/package.json
   create-app-e2e-minimal:
     needs: changed-files-check
-    if: needs.changed-files-check.outputs.any_changed == 'true'
+    # Upstream-only: requires ubuntu-latest-4-cores runner (twentyhq org has this tier; forks do not)
+    if: github.repository_owner == 'twentyhq' && needs.changed-files-check.outputs.any_changed == 'true'
     timeout-minutes: 30
     runs-on: ubuntu-latest-4-cores
     services:

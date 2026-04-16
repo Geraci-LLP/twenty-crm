@@ -23,7 +23,8 @@ jobs:
   danger-js:
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
+    # Upstream-only: Danger.js rules are specific to twentyhq repo workflow
+    if: github.repository_owner == 'twentyhq' && github.event.action != 'closed'
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
@@ -36,7 +37,8 @@ jobs:
   congratulate:
     timeout-minutes: 3
     runs-on: ubuntu-latest
-    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    # Upstream-only: first-PR congratulation bot for twentyhq org
+    if: github.repository_owner == 'twentyhq' && github.event.action == 'closed' && github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
