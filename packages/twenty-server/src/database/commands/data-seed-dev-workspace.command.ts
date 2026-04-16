@@ -8,6 +8,7 @@ import {
   SeededWorkspacesIds,
 } from 'src/engine/workspace-manager/dev-seeder/core/constants/seeder-workspaces.constant';
 import { DevSeederService } from 'src/engine/workspace-manager/dev-seeder/services/dev-seeder.service';
+import { WorkspaceMigrationBuilderException } from 'src/engine/workspace-manager/workspace-migration/exceptions/workspace-migration-builder-exception';
 
 type DataSeedWorkspaceOptions = {
   light?: boolean;
@@ -51,6 +52,24 @@ export class DataSeedWorkspaceCommand extends CommandRunner {
     } catch (error) {
       this.logger.error(error);
       this.logger.error(error.stack);
+
+      if (error instanceof WorkspaceMigrationBuilderException) {
+        const report = error.failedWorkspaceMigrationBuildResult.report;
+
+        for (const [metadataName, failures] of Object.entries(report)) {
+          if (!Array.isArray(failures) || failures.length === 0) {
+            continue;
+          }
+
+          for (const failure of failures) {
+            this.logger.error(
+              `  [${metadataName}] ${failure.type}: ` +
+                `${JSON.stringify(failure.errors)} ` +
+                `entity=${JSON.stringify(failure.flatEntityMinimalInformation)}`,
+            );
+          }
+        }
+      }
     }
   }
 }

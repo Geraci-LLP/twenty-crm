@@ -14,6 +14,8 @@ import {
   createStandardFieldFlatMetadata,
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
+import { getTsVectorColumnExpressionFromFields } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
+import { SEARCH_FIELDS_FOR_CHAT_MESSAGE } from 'src/modules/live-chat/standard-objects/chat-message.workspace-entity';
 
 export const buildChatMessageStandardFlatFieldMetadatas = ({
   now,
@@ -209,21 +211,21 @@ export const buildChatMessageStandardFlatFieldMetadatas = ({
       isNullable: false,
       options: [
         {
-          id: 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a',
+          id: '1b18f49d-d82d-41bb-9d6c-7c20fa536d75',
           value: 'VISITOR',
           label: i18nLabel(msg`Visitor`),
           position: 0,
           color: 'green',
         },
         {
-          id: 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b',
+          id: 'adbc5991-afe6-4a9f-88b1-79e21971559c',
           value: 'AGENT',
           label: i18nLabel(msg`Agent`),
           position: 1,
           color: 'blue',
         },
         {
-          id: 'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c',
+          id: 'b7dad90c-de61-4f84-a3c4-b7f1a7302f8c',
           value: 'BOT',
           label: i18nLabel(msg`Bot`),
           position: 2,
@@ -246,6 +248,30 @@ export const buildChatMessageStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Display name of the message sender`),
       icon: 'IconUser',
       isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  searchVector: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'searchVector',
+      type: FieldMetadataType.TS_VECTOR,
+      label: i18nLabel(msg`Search vector`),
+      description: i18nLabel(msg`Field used for full-text search`),
+      icon: 'IconUser',
+      isSystem: true,
+      isNullable: true,
+      settings: {
+        generatedType: 'STORED',
+        asExpression: getTsVectorColumnExpressionFromFields(
+          SEARCH_FIELDS_FOR_CHAT_MESSAGE,
+        ),
+      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

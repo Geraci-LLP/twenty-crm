@@ -14,6 +14,8 @@ import {
   createStandardFieldFlatMetadata,
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
+import { getTsVectorColumnExpressionFromFields } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
+import { SEARCH_FIELDS_FOR_SEQUENCE_STEP } from 'src/modules/sales-sequence/standard-objects/sequence-step.workspace-entity';
 
 export const buildSequenceStepStandardFlatFieldMetadatas = ({
   now,
@@ -212,21 +214,21 @@ export const buildSequenceStepStandardFlatFieldMetadatas = ({
       isNullable: false,
       options: [
         {
-          id: 'd4e5f6a7-b8c9-0123-defa-123456789abc',
+          id: '2d75bab4-c9bc-4608-ba8a-73ff471a78c2',
           value: 'EMAIL',
           label: i18nLabel(msg`Email`),
           position: 0,
           color: 'green',
         },
         {
-          id: 'e5f6a7b8-c9d0-1234-efab-23456789abcd',
+          id: '0565a7a4-0ca0-4e05-b5c8-e87ad192d656',
           value: 'LINKEDIN_TASK',
           label: i18nLabel(msg`LinkedIn Task`),
           position: 1,
           color: 'blue',
         },
         {
-          id: 'f6a7b8c9-d0e1-2345-fabc-3456789abcde',
+          id: '62b73dcc-21b3-4ac9-89fc-08a6cef5837d',
           value: 'CALL_TASK',
           label: i18nLabel(msg`Call Task`),
           position: 2,
@@ -291,6 +293,30 @@ export const buildSequenceStepStandardFlatFieldMetadatas = ({
       description: i18nLabel(msg`Email body content in HTML for this step`),
       icon: 'IconFileText',
       isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  searchVector: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'searchVector',
+      type: FieldMetadataType.TS_VECTOR,
+      label: i18nLabel(msg`Search vector`),
+      description: i18nLabel(msg`Field used for full-text search`),
+      icon: 'IconUser',
+      isSystem: true,
+      isNullable: true,
+      settings: {
+        generatedType: 'STORED',
+        asExpression: getTsVectorColumnExpressionFromFields(
+          SEARCH_FIELDS_FOR_SEQUENCE_STEP,
+        ),
+      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

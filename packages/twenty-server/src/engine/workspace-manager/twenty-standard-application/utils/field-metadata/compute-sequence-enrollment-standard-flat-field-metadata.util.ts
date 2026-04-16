@@ -14,6 +14,8 @@ import {
   createStandardFieldFlatMetadata,
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
+import { getTsVectorColumnExpressionFromFields } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
+import { SEARCH_FIELDS_FOR_SEQUENCE_ENROLLMENT } from 'src/modules/sales-sequence/standard-objects/sequence-enrollment.workspace-entity';
 
 export const buildSequenceEnrollmentStandardFlatFieldMetadatas = ({
   now,
@@ -204,21 +206,21 @@ export const buildSequenceEnrollmentStandardFlatFieldMetadatas = ({
           color: 'green',
         },
         {
-          id: 'c9d0e1f2-a3b4-5678-cdef-6789abcdef01',
+          id: '677560ed-e923-4468-8b71-ab061bb0fadd',
           value: 'PAUSED',
           label: i18nLabel(msg`Paused`),
           position: 1,
           color: 'yellow',
         },
         {
-          id: 'd0e1f2a3-b4c5-6789-defa-789abcdef012',
+          id: '41725d94-abde-43e6-a5f7-1cc7ea266538',
           value: 'COMPLETED',
           label: i18nLabel(msg`Completed`),
           position: 2,
           color: 'gray',
         },
         {
-          id: 'e1f2a3b4-c5d6-789a-efab-89abcdef0123',
+          id: '4c8e1d92-ce75-4a56-8442-35cb0ddef8ce',
           value: 'BOUNCED',
           label: i18nLabel(msg`Bounced`),
           position: 3,
@@ -301,6 +303,30 @@ export const buildSequenceEnrollmentStandardFlatFieldMetadatas = ({
       isNullable: true,
       settings: {
         displayFormat: DateDisplayFormat.RELATIVE,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  searchVector: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'searchVector',
+      type: FieldMetadataType.TS_VECTOR,
+      label: i18nLabel(msg`Search vector`),
+      description: i18nLabel(msg`Field used for full-text search`),
+      icon: 'IconUser',
+      isSystem: true,
+      isNullable: true,
+      settings: {
+        generatedType: 'STORED',
+        asExpression: getTsVectorColumnExpressionFromFields(
+          SEARCH_FIELDS_FOR_SEQUENCE_ENROLLMENT,
+        ),
       },
     },
     standardObjectMetadataRelatedEntityIds,

@@ -14,6 +14,8 @@ import {
   createStandardFieldFlatMetadata,
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
+import { getTsVectorColumnExpressionFromFields } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
+import { SEARCH_FIELDS_FOR_CHAT_CONVERSATION } from 'src/modules/live-chat/standard-objects/chat-conversation.workspace-entity';
 
 export const buildChatConversationStandardFlatFieldMetadatas = ({
   now,
@@ -260,7 +262,7 @@ export const buildChatConversationStandardFlatFieldMetadatas = ({
           color: 'blue',
         },
         {
-          id: 'c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f',
+          id: '974a5b1c-c081-4b92-b9d5-43803baac179',
           value: 'CLOSED',
           label: i18nLabel(msg`Closed`),
           position: 2,
@@ -302,6 +304,30 @@ export const buildChatConversationStandardFlatFieldMetadatas = ({
       isNullable: true,
       settings: {
         displayFormat: DateDisplayFormat.RELATIVE,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  searchVector: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'searchVector',
+      type: FieldMetadataType.TS_VECTOR,
+      label: i18nLabel(msg`Search vector`),
+      description: i18nLabel(msg`Field used for full-text search`),
+      icon: 'IconUser',
+      isSystem: true,
+      isNullable: true,
+      settings: {
+        generatedType: 'STORED',
+        asExpression: getTsVectorColumnExpressionFromFields(
+          SEARCH_FIELDS_FOR_CHAT_CONVERSATION,
+        ),
       },
     },
     standardObjectMetadataRelatedEntityIds,

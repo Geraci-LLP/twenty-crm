@@ -241,7 +241,7 @@ export const buildSequenceStandardFlatFieldMetadatas = ({
           color: 'yellow',
         },
         {
-          id: 'c3d4e5f6-a7b8-9012-cdef-012345678902',
+          id: '35496d8e-62f5-4ebb-bf56-5936bdf17a62',
           value: 'ARCHIVED',
           label: i18nLabel(msg`Archived`),
           position: 2,

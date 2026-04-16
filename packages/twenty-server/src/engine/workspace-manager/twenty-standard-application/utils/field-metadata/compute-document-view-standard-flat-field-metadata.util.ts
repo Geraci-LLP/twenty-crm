@@ -14,6 +14,8 @@ import {
   createStandardFieldFlatMetadata,
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
+import { getTsVectorColumnExpressionFromFields } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
+import { SEARCH_FIELDS_FOR_DOCUMENT_VIEW } from 'src/modules/document-tracking/standard-objects/document-view.workspace-entity';
 
 export const buildDocumentViewStandardFlatFieldMetadatas = ({
   now,
@@ -25,10 +27,7 @@ export const buildDocumentViewStandardFlatFieldMetadatas = ({
 }: Omit<
   CreateStandardFieldArgs<'documentView', FieldMetadataType>,
   'context'
->): Record<
-  AllStandardObjectFieldName<'documentView'>,
-  FlatFieldMetadata
-> => ({
+>): Record<AllStandardObjectFieldName<'documentView'>, FlatFieldMetadata> => ({
   // Base fields
   id: createStandardFieldFlatMetadata({
     objectName,
@@ -107,6 +106,97 @@ export const buildDocumentViewStandardFlatFieldMetadatas = ({
       isUIReadOnly: true,
       settings: {
         displayFormat: DateDisplayFormat.RELATIVE,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  // System fields
+  position: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'position',
+      type: FieldMetadataType.POSITION,
+      label: i18nLabel(msg`Position`),
+      description: i18nLabel(msg`Document view record position`),
+      icon: 'IconHierarchy2',
+      isSystem: true,
+      isNullable: false,
+      defaultValue: 0,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  createdBy: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'createdBy',
+      type: FieldMetadataType.ACTOR,
+      label: i18nLabel(msg`Created by`),
+      description: i18nLabel(msg`The creator of the record`),
+      icon: 'IconCreativeCommonsSa',
+      isSystem: true,
+      isUIReadOnly: true,
+      isNullable: false,
+      defaultValue: {
+        source: "'MANUAL'",
+        name: "'System'",
+        workspaceMemberId: null,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  updatedBy: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'updatedBy',
+      type: FieldMetadataType.ACTOR,
+      label: i18nLabel(msg`Updated by`),
+      description: i18nLabel(
+        msg`The workspace member who last updated the record`,
+      ),
+      icon: 'IconUserCircle',
+      isSystem: true,
+      isUIReadOnly: true,
+      isNullable: false,
+      defaultValue: {
+        source: "'MANUAL'",
+        name: "'System'",
+        workspaceMemberId: null,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  searchVector: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'searchVector',
+      type: FieldMetadataType.TS_VECTOR,
+      label: i18nLabel(msg`Search vector`),
+      description: i18nLabel(msg`Field used for full-text search`),
+      icon: 'IconUser',
+      isSystem: true,
+      isNullable: true,
+      settings: {
+        generatedType: 'STORED',
+        asExpression: getTsVectorColumnExpressionFromFields(
+          SEARCH_FIELDS_FOR_DOCUMENT_VIEW,
+        ),
       },
     },
     standardObjectMetadataRelatedEntityIds,

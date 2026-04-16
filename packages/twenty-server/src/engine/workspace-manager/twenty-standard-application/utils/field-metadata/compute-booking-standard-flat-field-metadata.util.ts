@@ -14,6 +14,8 @@ import {
   createStandardFieldFlatMetadata,
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
+import { getTsVectorColumnExpressionFromFields } from 'src/engine/workspace-manager/utils/get-ts-vector-column-expression.util';
+import { SEARCH_FIELDS_FOR_BOOKING } from 'src/modules/meeting-scheduler/standard-objects/booking.workspace-entity';
 
 export const buildBookingStandardFlatFieldMetadatas = ({
   now,
@@ -280,27 +282,51 @@ export const buildBookingStandardFlatFieldMetadatas = ({
       defaultValue: "'CONFIRMED'",
       options: [
         {
-          id: 'b0000001-0000-0000-0000-000000000001',
+          id: '086f5c7d-dc0e-4496-ada7-4bacff98000a',
           value: 'CONFIRMED',
           label: i18nLabel(msg`Confirmed`),
           position: 0,
           color: 'green',
         },
         {
-          id: 'b0000001-0000-0000-0000-000000000002',
+          id: '0dfd3681-46fa-4fe6-a7fd-ffb81c152ed4',
           value: 'CANCELLED',
           label: i18nLabel(msg`Cancelled`),
           position: 1,
           color: 'red',
         },
         {
-          id: 'b0000001-0000-0000-0000-000000000003',
+          id: '63ffa65d-6b72-497a-aa47-88e91670bbc7',
           value: 'COMPLETED',
           label: i18nLabel(msg`Completed`),
           position: 2,
           color: 'gray',
         },
       ],
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+
+  searchVector: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'searchVector',
+      type: FieldMetadataType.TS_VECTOR,
+      label: i18nLabel(msg`Search vector`),
+      description: i18nLabel(msg`Field used for full-text search`),
+      icon: 'IconUser',
+      isSystem: true,
+      isNullable: true,
+      settings: {
+        generatedType: 'STORED',
+        asExpression: getTsVectorColumnExpressionFromFields(
+          SEARCH_FIELDS_FOR_BOOKING,
+        ),
+      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

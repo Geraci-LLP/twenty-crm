@@ -2412,7 +2412,7 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: '8cc4c1c3-fe06-49e0-b658-ff4cd24294fc',
       },
       sequenceEnrollments: {
-        universalIdentifier: '9dd5d2d4-0f17-40f1-c769-005de3530a0d',
+        universalIdentifier: '9dd5d2d4-0f17-40f1-8769-005de3530a0d',
       },
       searchVector: {
         universalIdentifier: '57d1d7ad-fa10-44fc-82f3-ad0959ec2534',
@@ -3706,7 +3706,7 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: 'f4c3a120-8e4d-4b91-a6f7-3c8e5d9b2a01',
         viewFields: {
           status: {
-            universalIdentifier: 'b8d2e4f6-1a3c-5d7e-9f0b-2c4d6e8a0b1c',
+            universalIdentifier: 'b8d2e4f6-1a3c-4d7e-9f0b-2c4d6e8a0b1c',
           },
           person: {
             universalIdentifier: '77c65290-c889-4b07-bf18-145a0d2ba4a4',
@@ -3964,7 +3964,7 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: '7d4e8f1a-2b3c-4d5e-9f6a-1b2c3d4e5f6a',
       },
       sendConfirmationEmail: {
-        universalIdentifier: '8e5f9a2b-3c4d-5e6f-a7b8-2c3d4e5f6a7b',
+        universalIdentifier: '8e5f9a2b-3c4d-4e6f-a7b8-2c3d4e5f6a7b',
       },
       confirmationEmailSubject: {
         universalIdentifier: '3a3cf51d-014b-4a04-ab77-63a86206dc98',
@@ -4370,10 +4370,25 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: '37a44367-ad00-4d8a-ab29-f57750ff3aeb',
       },
       person: { universalIdentifier: '6b6ee49c-d01c-4645-97c0-cb1e893041b4' },
+      createdBy: {
+        universalIdentifier: 'd33c8658-37c6-4ca8-b20f-3591aa030beb',
+      },
+      updatedBy: {
+        universalIdentifier: 'e8845ebe-4309-47d1-a082-ae74ee249eea',
+      },
+      position: {
+        universalIdentifier: '8e6ed8e9-ea21-49a0-92cd-6cd08f606f77',
+      },
+      searchVector: {
+        universalIdentifier: '4e7cde6e-545b-4e34-8645-a947ff133016',
+      },
     },
     indexes: {
       trackedDocumentIdIndex: {
         universalIdentifier: 'f98b4d05-49a6-440d-bdc2-fe590308f1ae',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'd5ae3ff5-91fa-42bd-a05f-772f447b39a1',
       },
     },
     views: {
@@ -4404,25 +4419,25 @@ export const STANDARD_OBJECTS = {
     fields: {
       id: { universalIdentifier: 'c8b2d3e4-f5a6-4b7c-9d0e-1f2a3b4c5d6e' },
       createdAt: {
-        universalIdentifier: 'd9c3e4f5-a6b7-4c8d-0e1f-2a3b4c5d6e7f',
+        universalIdentifier: 'd9c3e4f5-a6b7-4c8d-8e1f-2a3b4c5d6e7f',
       },
       updatedAt: {
-        universalIdentifier: 'e0d4f5a6-b7c8-4d9e-1f20-3a4b5c6d7e8f',
+        universalIdentifier: 'e0d4f5a6-b7c8-4d9e-9f20-3a4b5c6d7e8f',
       },
       deletedAt: {
-        universalIdentifier: 'f1e5a6b7-c8d9-4e0f-2031-4a5b6c7d8e9f',
+        universalIdentifier: 'f1e5a6b7-c8d9-4e0f-a031-4a5b6c7d8e9f',
       },
       position: {
-        universalIdentifier: 'a2f6b7c8-d9e0-4f10-3142-5a6b7c8d9e0f',
+        universalIdentifier: 'a2f6b7c8-d9e0-4f10-b142-5a6b7c8d9e0f',
       },
       createdBy: {
-        universalIdentifier: 'b3a7c8d9-e0f1-4021-4253-6a7b8c9d0e1f',
+        universalIdentifier: 'b3a7c8d9-e0f1-4021-8253-6a7b8c9d0e1f',
       },
       updatedBy: {
-        universalIdentifier: 'c4b8d9e0-f102-4132-5364-7a8b9c0d1e2f',
+        universalIdentifier: 'c4b8d9e0-f102-4132-9364-7a8b9c0d1e2f',
       },
-      name: { universalIdentifier: 'd5c9e0f1-0213-4243-6475-8a9b0c1d2e3f' },
-      slug: { universalIdentifier: 'e6d0f102-1324-4354-7586-9a0b1c2d3e4f' },
+      name: { universalIdentifier: 'd5c9e0f1-0213-4243-a475-8a9b0c1d2e3f' },
+      slug: { universalIdentifier: 'e6d0f102-1324-4354-b586-9a0b1c2d3e4f' },
       durationMinutes: {
         universalIdentifier: 'f7e10213-2435-4465-8697-0a1b2c3d4e5f',
       },
@@ -4434,40 +4449,40 @@ export const STANDARD_OBJECTS = {
       },
       status: { universalIdentifier: 'c0143546-5768-4798-b9c0-3a4b5c6d7e8f' },
       availabilityConfig: {
-        universalIdentifier: 'd1254657-6879-4809-c0d1-4a5b6c7d8e9f',
+        universalIdentifier: 'd1254657-6879-4809-80d1-4a5b6c7d8e9f',
       },
       timezone: {
-        universalIdentifier: 'e2365768-7980-4910-d1e2-5a6b7c8d9e0f',
+        universalIdentifier: 'e2365768-7980-4910-91e2-5a6b7c8d9e0f',
       },
       location: {
-        universalIdentifier: 'f3476879-8091-4021-e2f3-6a7b8c9d0e1f',
+        universalIdentifier: 'f3476879-8091-4021-a2f3-6a7b8c9d0e1f',
       },
       confirmationMessage: {
-        universalIdentifier: 'a4587980-9102-4132-f304-7a8b9c0d1e2f',
+        universalIdentifier: 'a4587980-9102-4132-b304-7a8b9c0d1e2f',
       },
       notifyOnBooking: {
-        universalIdentifier: 'b5698091-0213-4243-0415-8a9b0c1d2e3f',
+        universalIdentifier: 'b5698091-0213-4243-8415-8a9b0c1d2e3f',
       },
       notificationEmail: {
-        universalIdentifier: 'c6709102-1324-4354-1526-9a0b1c2d3e4f',
+        universalIdentifier: 'c6709102-1324-4354-9526-9a0b1c2d3e4f',
       },
-      color: { universalIdentifier: 'd7810213-2435-4465-2637-0a1b2c3d4e5f' },
+      color: { universalIdentifier: 'd7810213-2435-4465-a637-0a1b2c3d4e5f' },
       bookingCount: {
-        universalIdentifier: 'e8921324-3546-4576-3748-1a2b3c4d5e6f',
+        universalIdentifier: 'e8921324-3546-4576-b748-1a2b3c4d5e6f',
       },
       bookings: {
-        universalIdentifier: 'f9032435-4657-4687-4859-2a3b4c5d6e7f',
+        universalIdentifier: 'f9032435-4657-4687-8859-2a3b4c5d6e7f',
       },
       searchVector: {
-        universalIdentifier: 'a0143546-5768-4798-5960-3a4b5c6d7e8f',
+        universalIdentifier: 'a0143546-5768-4798-9960-3a4b5c6d7e8f',
       },
     },
     indexes: {
       statusIndex: {
-        universalIdentifier: 'b1254657-6879-4809-6071-4a5b6c7d8e9f',
+        universalIdentifier: 'b1254657-6879-4809-a071-4a5b6c7d8e9f',
       },
       searchVectorGinIndex: {
-        universalIdentifier: 'c2365768-7980-4910-7182-5a6b7c8d9e0f',
+        universalIdentifier: 'c2365768-7980-4910-b182-5a6b7c8d9e0f',
       },
     },
     views: {
@@ -4484,33 +4499,33 @@ export const STANDARD_OBJECTS = {
             universalIdentifier: 'a6709102-1324-4354-b5c6-9a0b1c2d3e4f',
           },
           bookingCount: {
-            universalIdentifier: 'b7810213-2435-4465-c6d7-0a1b2c3d4e5f',
+            universalIdentifier: 'b7810213-2435-4465-86d7-0a1b2c3d4e5f',
           },
           createdAt: {
-            universalIdentifier: 'c8921324-3546-4576-d7e8-1a2b3c4d5e6f',
+            universalIdentifier: 'c8921324-3546-4576-97e8-1a2b3c4d5e6f',
           },
         },
       },
     },
   },
   booking: {
-    universalIdentifier: 'a4b5c6d7-e8f9-4a0b-1c2d-3e4f5a6b7c8d',
+    universalIdentifier: 'a4b5c6d7-e8f9-4a0b-9c2d-3e4f5a6b7c8d',
     fields: {
-      id: { universalIdentifier: 'b5c6d7e8-f9a0-4b1c-2d3e-4f5a6b7c8d9e' },
+      id: { universalIdentifier: 'b5c6d7e8-f9a0-4b1c-ad3e-4f5a6b7c8d9e' },
       createdAt: {
-        universalIdentifier: 'c6d7e8f9-a0b1-4c2d-3e4f-5a6b7c8d9e0f',
+        universalIdentifier: 'c6d7e8f9-a0b1-4c2d-be4f-5a6b7c8d9e0f',
       },
       updatedAt: {
-        universalIdentifier: 'd7e8f9a0-b1c2-4d3e-4f50-6a7b8c9d0e1f',
+        universalIdentifier: 'd7e8f9a0-b1c2-4d3e-8f50-6a7b8c9d0e1f',
       },
       deletedAt: {
-        universalIdentifier: 'e8f9a0b1-c2d3-4e4f-5061-7a8b9c0d1e2f',
+        universalIdentifier: 'e8f9a0b1-c2d3-4e4f-9061-7a8b9c0d1e2f',
       },
       position: {
-        universalIdentifier: 'f9a0b1c2-d3e4-4f50-6172-8a9b0c1d2e3f',
+        universalIdentifier: 'f9a0b1c2-d3e4-4f50-a172-8a9b0c1d2e3f',
       },
       createdBy: {
-        universalIdentifier: 'a0b1c2d3-e4f5-4061-7283-9a0b1c2d3e4f',
+        universalIdentifier: 'a0b1c2d3-e4f5-4061-b283-9a0b1c2d3e4f',
       },
       updatedBy: {
         universalIdentifier: 'b1c2d3e4-f506-4172-8394-0a1b2c3d4e5f',
@@ -4525,40 +4540,46 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: 'e4f50617-2839-44a5-b6c7-3a4b5c6d7e8f',
       },
       startsAt: {
-        universalIdentifier: 'f5061728-3940-4b5c-c7d8-4a5b6c7d8e9f',
+        universalIdentifier: 'f5061728-3940-4b5c-87d8-4a5b6c7d8e9f',
       },
       endsAt: {
-        universalIdentifier: 'a6172839-4051-4c6d-d8e9-5a6b7c8d9e0f',
+        universalIdentifier: 'a6172839-4051-4c6d-98e9-5a6b7c8d9e0f',
       },
-      status: { universalIdentifier: 'b7283940-5162-4d7e-e9f0-6a7b8c9d0e1f' },
+      status: { universalIdentifier: 'b7283940-5162-4d7e-a9f0-6a7b8c9d0e1f' },
       meetingType: {
-        universalIdentifier: 'c8394051-6273-4e8f-f001-7a8b9c0d1e2f',
+        universalIdentifier: 'c8394051-6273-4e8f-b001-7a8b9c0d1e2f',
       },
-      person: { universalIdentifier: 'd9405162-7384-4f90-0112-8a9b0c1d2e3f' },
+      person: { universalIdentifier: 'd9405162-7384-4f90-8112-8a9b0c1d2e3f' },
+      searchVector: {
+        universalIdentifier: 'af049127-f4cf-40a9-9983-b528dd99c003',
+      },
     },
     indexes: {
       meetingTypeIdIndex: {
-        universalIdentifier: 'e0516273-8495-4001-1223-9a0b1c2d3e4f',
+        universalIdentifier: 'e0516273-8495-4001-9223-9a0b1c2d3e4f',
       },
       personIdIndex: {
-        universalIdentifier: 'f1627384-9506-4112-2334-0a1b2c3d4e5f',
+        universalIdentifier: 'f1627384-9506-4112-a334-0a1b2c3d4e5f',
       },
       statusIndex: {
-        universalIdentifier: 'a2738495-0617-4223-3445-1a2b3c4d5e6f',
+        universalIdentifier: 'a2738495-0617-4223-b445-1a2b3c4d5e6f',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '9c99a465-5956-496b-b690-587c70d2c108',
       },
     },
     views: {
       allBookings: {
-        universalIdentifier: 'b3849506-1728-4334-4556-2a3b4c5d6e7f',
+        universalIdentifier: 'b3849506-1728-4334-8556-2a3b4c5d6e7f',
         viewFields: {
           guestName: {
-            universalIdentifier: 'c4950617-2839-4445-5667-3a4b5c6d7e8f',
+            universalIdentifier: 'c4950617-2839-4445-9667-3a4b5c6d7e8f',
           },
           guestEmail: {
-            universalIdentifier: 'd5061728-3940-4556-6778-4a5b6c7d8e9f',
+            universalIdentifier: 'd5061728-3940-4556-a778-4a5b6c7d8e9f',
           },
           startsAt: {
-            universalIdentifier: 'e6172839-4051-4667-7889-5a6b7c8d9e0f',
+            universalIdentifier: 'e6172839-4051-4667-b889-5a6b7c8d9e0f',
           },
           status: {
             universalIdentifier: 'f7283940-5162-4778-8990-6a7b8c9d0e1f',
@@ -4575,25 +4596,25 @@ export const STANDARD_OBJECTS = {
     fields: {
       id: { universalIdentifier: 'd2e3f4a5-b6c7-4d8e-9f0a-1b2c3d4e5f6a' },
       createdAt: {
-        universalIdentifier: 'e3f4a5b6-c7d8-4e9f-0a1b-2c3d4e5f6a7b',
+        universalIdentifier: 'e3f4a5b6-c7d8-4e9f-8a1b-2c3d4e5f6a7b',
       },
       updatedAt: {
-        universalIdentifier: 'f4a5b6c7-d8e9-4f0a-1b2c-3d4e5f6a7b8c',
+        universalIdentifier: 'f4a5b6c7-d8e9-4f0a-9b2c-3d4e5f6a7b8c',
       },
       deletedAt: {
-        universalIdentifier: 'a5b6c7d8-e9f0-4a1b-2c3d-4e5f6a7b8c9d',
+        universalIdentifier: 'a5b6c7d8-e9f0-4a1b-ac3d-4e5f6a7b8c9d',
       },
       position: {
-        universalIdentifier: 'b6c7d8e9-f0a1-4b2c-3d4e-5f6a7b8c9d0e',
+        universalIdentifier: 'b6c7d8e9-f0a1-4b2c-bd4e-5f6a7b8c9d0e',
       },
       createdBy: {
-        universalIdentifier: 'c7d8e9f0-a1b2-4c3d-4e5f-6a7b8c9d0e1f',
+        universalIdentifier: 'c7d8e9f0-a1b2-4c3d-8e5f-6a7b8c9d0e1f',
       },
       updatedBy: {
-        universalIdentifier: 'd8e9f0a1-b2c3-4d4e-5f6a-7b8c9d0e1f2a',
+        universalIdentifier: 'd8e9f0a1-b2c3-4d4e-9f6a-7b8c9d0e1f2a',
       },
-      name: { universalIdentifier: 'e9f0a1b2-c3d4-4e5f-6a7b-8c9d0e1f2a3b' },
-      status: { universalIdentifier: 'f0a1b2c3-d4e5-4f6a-7b8c-9d0e1f2a3b4c' },
+      name: { universalIdentifier: 'e9f0a1b2-c3d4-4e5f-aa7b-8c9d0e1f2a3b' },
+      status: { universalIdentifier: 'f0a1b2c3-d4e5-4f6a-bb8c-9d0e1f2a3b4c' },
       greetingMessage: {
         universalIdentifier: 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5e',
       },
@@ -4601,28 +4622,28 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6f',
       },
       accentColor: {
-        universalIdentifier: 'c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e70',
+        universalIdentifier: 'c3d4e5f6-a7b8-4c9d-8e1f-2a3b4c5d6e70',
       },
       widgetPosition: {
-        universalIdentifier: 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81',
+        universalIdentifier: 'd4e5f6a7-b8c9-4d0e-9f2a-3b4c5d6e7f81',
       },
       businessHoursConfig: {
-        universalIdentifier: 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8092',
+        universalIdentifier: 'e5f6a7b8-c9d0-4e1f-aa3b-4c5d6e7f8092',
       },
       autoResponseEnabled: {
-        universalIdentifier: 'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8090a3',
+        universalIdentifier: 'f6a7b8c9-d0e1-4f2a-bb4c-5d6e7f8090a3',
       },
       autoResponseDelay: {
-        universalIdentifier: 'a7b8c9d0-e1f2-4a3b-4c5d-6e7f8090a1b4',
+        universalIdentifier: 'a7b8c9d0-e1f2-4a3b-8c5d-6e7f8090a1b4',
       },
       autoResponseMessage: {
-        universalIdentifier: 'b8c9d0e1-f2a3-4b4c-5d6e-7f8090a1b2c5',
+        universalIdentifier: 'b8c9d0e1-f2a3-4b4c-9d6e-7f8090a1b2c5',
       },
       conversations: {
-        universalIdentifier: 'c9d0e1f2-a3b4-4c5d-6e7f-8090a1b2c3d6',
+        universalIdentifier: 'c9d0e1f2-a3b4-4c5d-ae7f-8090a1b2c3d6',
       },
       searchVector: {
-        universalIdentifier: 'd0e1f2a3-b4c5-4d6e-7f80-90a1b2c3d4e7',
+        universalIdentifier: 'd0e1f2a3-b4c5-4d6e-bf80-90a1b2c3d4e7',
       },
     },
     indexes: {
@@ -4641,16 +4662,16 @@ export const STANDARD_OBJECTS = {
             universalIdentifier: 'b4c5d6e7-f809-41a2-b3c4-d5e6f7a8b9cb',
           },
           status: {
-            universalIdentifier: 'c5d6e7f8-0910-42b3-c4d5-e6f7a8b9c0dc',
+            universalIdentifier: 'c5d6e7f8-0910-42b3-84d5-e6f7a8b9c0dc',
           },
           greetingMessage: {
-            universalIdentifier: 'd6e7f809-1021-43c4-d5e6-f7a8b9c0d1ed',
+            universalIdentifier: 'd6e7f809-1021-43c4-95e6-f7a8b9c0d1ed',
           },
           autoResponseEnabled: {
-            universalIdentifier: 'e7f80910-2132-44d5-e6f7-a8b9c0d1e2fe',
+            universalIdentifier: 'e7f80910-2132-44d5-a6f7-a8b9c0d1e2fe',
           },
           createdAt: {
-            universalIdentifier: 'f8091021-3243-45e6-f7a8-b9c0d1e2f30f',
+            universalIdentifier: 'f8091021-3243-45e6-b7a8-b9c0d1e2f30f',
           },
         },
       },
@@ -4661,56 +4682,62 @@ export const STANDARD_OBJECTS = {
     fields: {
       id: { universalIdentifier: 'b2d3e4f5-a6b7-4c8d-9e0f-1a2b3c4d5e6f' },
       createdAt: {
-        universalIdentifier: 'c3e4f5a6-b7c8-4d9e-0f1a-2b3c4d5e6f7a',
+        universalIdentifier: 'c3e4f5a6-b7c8-4d9e-8f1a-2b3c4d5e6f7a',
       },
       updatedAt: {
-        universalIdentifier: 'd4f5a6b7-c8d9-4e0f-1a2b-3c4d5e6f7a8b',
+        universalIdentifier: 'd4f5a6b7-c8d9-4e0f-9a2b-3c4d5e6f7a8b',
       },
       deletedAt: {
-        universalIdentifier: 'e5a6b7c8-d9e0-4f1a-2b3c-4d5e6f7a8b9c',
+        universalIdentifier: 'e5a6b7c8-d9e0-4f1a-ab3c-4d5e6f7a8b9c',
       },
       position: {
-        universalIdentifier: 'f6b7c8d9-e0f1-4a2b-3c4d-5e6f7a8b9c0d',
+        universalIdentifier: 'f6b7c8d9-e0f1-4a2b-bc4d-5e6f7a8b9c0d',
       },
       createdBy: {
-        universalIdentifier: 'a7c8d9e0-f1a2-4b3c-4d5e-6f7a8b9c0d1e',
+        universalIdentifier: 'a7c8d9e0-f1a2-4b3c-8d5e-6f7a8b9c0d1e',
       },
       updatedBy: {
-        universalIdentifier: 'b8d9e0f1-a2b3-4c4d-5e6f-7a8b9c0d1e2f',
+        universalIdentifier: 'b8d9e0f1-a2b3-4c4d-9e6f-7a8b9c0d1e2f',
       },
       visitorName: {
-        universalIdentifier: 'c9e0f1a2-b3c4-4d5e-6f7a-8b9c0d1e2f3a',
+        universalIdentifier: 'c9e0f1a2-b3c4-4d5e-af7a-8b9c0d1e2f3a',
       },
       visitorEmail: {
-        universalIdentifier: 'd0f1a2b3-c4d5-4e6f-7a8b-9c0d1e2f3a4b',
+        universalIdentifier: 'd0f1a2b3-c4d5-4e6f-ba8b-9c0d1e2f3a4b',
       },
       visitorSessionId: {
         universalIdentifier: 'e1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c',
       },
       status: { universalIdentifier: 'f2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d' },
       messageCount: {
-        universalIdentifier: 'a3c4d5e6-f7a8-4b9c-0d1e-2f3a4b5c6d7e',
+        universalIdentifier: 'a3c4d5e6-f7a8-4b9c-8d1e-2f3a4b5c6d7e',
       },
       lastMessageAt: {
-        universalIdentifier: 'b4d5e6f7-a8b9-4c0d-1e2f-3a4b5c6d7e8f',
+        universalIdentifier: 'b4d5e6f7-a8b9-4c0d-9e2f-3a4b5c6d7e8f',
       },
       chatWidget: {
-        universalIdentifier: 'c5e6f7a8-b9c0-4d1e-2f3a-4b5c6d7e8f90',
+        universalIdentifier: 'c5e6f7a8-b9c0-4d1e-af3a-4b5c6d7e8f90',
       },
-      person: { universalIdentifier: 'd6f7a8b9-c0d1-4e2f-3a4b-5c6d7e8f90a1' },
+      person: { universalIdentifier: 'd6f7a8b9-c0d1-4e2f-ba4b-5c6d7e8f90a1' },
       messages: {
-        universalIdentifier: 'e7a8b9c0-d1e2-4f3a-4b5c-6d7e8f90a1b2',
+        universalIdentifier: 'e7a8b9c0-d1e2-4f3a-8b5c-6d7e8f90a1b2',
+      },
+      searchVector: {
+        universalIdentifier: '3bf4c63d-ed77-472d-b93d-0c652024b77e',
       },
     },
     indexes: {
       chatWidgetIdIndex: {
-        universalIdentifier: 'f8b9c0d1-e2f3-4a4b-5c6d-7e8f90a1b2c3',
+        universalIdentifier: 'f8b9c0d1-e2f3-4a4b-9c6d-7e8f90a1b2c3',
       },
       personIdIndex: {
-        universalIdentifier: 'a9c0d1e2-f3a4-4b5c-6d7e-8f90a1b2c3d4',
+        universalIdentifier: 'a9c0d1e2-f3a4-4b5c-ad7e-8f90a1b2c3d4',
       },
       statusIndex: {
-        universalIdentifier: 'b0d1e2f3-a4b5-4c6d-7e8f-90a1b2c3d4e5',
+        universalIdentifier: 'b0d1e2f3-a4b5-4c6d-be8f-90a1b2c3d4e5',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '03ae4da4-930f-4340-bf9c-33f8c6da07c6',
       },
     },
     views: {
@@ -4727,10 +4754,10 @@ export const STANDARD_OBJECTS = {
             universalIdentifier: 'f4b5c6d7-e8f9-4a01-b2c3-d4e5f6a7b8c9',
           },
           messageCount: {
-            universalIdentifier: 'a5c6d7e8-f9a0-4b12-c3d4-e5f6a7b8c9d0',
+            universalIdentifier: 'a5c6d7e8-f9a0-4b12-83d4-e5f6a7b8c9d0',
           },
           lastMessageAt: {
-            universalIdentifier: 'b6d7e8f9-a0b1-4c23-d4e5-f6a7b8c9d0e1',
+            universalIdentifier: 'b6d7e8f9-a0b1-4c23-94e5-f6a7b8c9d0e1',
           },
         },
       },
@@ -4741,26 +4768,26 @@ export const STANDARD_OBJECTS = {
     fields: {
       id: { universalIdentifier: 'c2d3e4f5-a6b7-4889-9e0f-1a2b3c4d5e60' },
       createdAt: {
-        universalIdentifier: 'd3e4f5a6-b7c8-4990-0f1a-2b3c4d5e6f71',
+        universalIdentifier: 'd3e4f5a6-b7c8-4990-8f1a-2b3c4d5e6f71',
       },
       updatedAt: {
-        universalIdentifier: 'e4f5a6b7-c8d9-40a1-1a2b-3c4d5e6f7a82',
+        universalIdentifier: 'e4f5a6b7-c8d9-40a1-9a2b-3c4d5e6f7a82',
       },
       deletedAt: {
-        universalIdentifier: 'f5a6b7c8-d9e0-41b2-2b3c-4d5e6f7a8b93',
+        universalIdentifier: 'f5a6b7c8-d9e0-41b2-ab3c-4d5e6f7a8b93',
       },
       position: {
-        universalIdentifier: 'a6b7c8d9-e0f1-42c3-3c4d-5e6f7a8b9c04',
+        universalIdentifier: 'a6b7c8d9-e0f1-42c3-bc4d-5e6f7a8b9c04',
       },
       createdBy: {
-        universalIdentifier: 'b7c8d9e0-f1a2-43d4-4d5e-6f7a8b9c0d15',
+        universalIdentifier: 'b7c8d9e0-f1a2-43d4-8d5e-6f7a8b9c0d15',
       },
       updatedBy: {
-        universalIdentifier: 'c8d9e0f1-a2b3-44e5-5e6f-7a8b9c0d1e26',
+        universalIdentifier: 'c8d9e0f1-a2b3-44e5-9e6f-7a8b9c0d1e26',
       },
-      body: { universalIdentifier: 'd9e0f1a2-b3c4-45f6-6f7a-8b9c0d1e2f37' },
+      body: { universalIdentifier: 'd9e0f1a2-b3c4-45f6-af7a-8b9c0d1e2f37' },
       senderType: {
-        universalIdentifier: 'e0f1a2b3-c4d5-4607-7a8b-9c0d1e2f3a48',
+        universalIdentifier: 'e0f1a2b3-c4d5-4607-ba8b-9c0d1e2f3a48',
       },
       senderName: {
         universalIdentifier: 'f1a2b3c4-d5e6-4718-8b9c-0d1e2f3a4b59',
@@ -4768,27 +4795,33 @@ export const STANDARD_OBJECTS = {
       chatConversation: {
         universalIdentifier: 'a2b3c4d5-e6f7-4829-9c0d-1e2f3a4b5c6a',
       },
+      searchVector: {
+        universalIdentifier: '9ae61735-9594-4ac5-9d3c-4411578293ed',
+      },
     },
     indexes: {
       chatConversationIdIndex: {
-        universalIdentifier: 'b3c4d5e6-f7a8-4930-0d1e-2f3a4b5c6d7b',
+        universalIdentifier: 'b3c4d5e6-f7a8-4930-8d1e-2f3a4b5c6d7b',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '2b9fa865-e74e-4872-88ac-52fdc6042e89',
       },
     },
     views: {
       allChatMessages: {
-        universalIdentifier: 'c4d5e6f7-a8b9-4041-1e2f-3a4b5c6d7e8c',
+        universalIdentifier: 'c4d5e6f7-a8b9-4041-9e2f-3a4b5c6d7e8c',
         viewFields: {
           senderName: {
-            universalIdentifier: 'd5e6f7a8-b9c0-4152-2f3a-4b5c6d7e8f9d',
+            universalIdentifier: 'd5e6f7a8-b9c0-4152-af3a-4b5c6d7e8f9d',
           },
           senderType: {
-            universalIdentifier: 'e6f7a8b9-c0d1-4263-3a4b-5c6d7e8f90ae',
+            universalIdentifier: 'e6f7a8b9-c0d1-4263-ba4b-5c6d7e8f90ae',
           },
           body: {
-            universalIdentifier: 'f7a8b9c0-d1e2-4374-4b5c-6d7e8f90a1bf',
+            universalIdentifier: 'f7a8b9c0-d1e2-4374-8b5c-6d7e8f90a1bf',
           },
           createdAt: {
-            universalIdentifier: 'a8b9c0d1-e2f3-4485-5c6d-7e8f90a1b2c0',
+            universalIdentifier: 'a8b9c0d1-e2f3-4485-9c6d-7e8f90a1b2c0',
           },
         },
       },
@@ -4799,53 +4832,53 @@ export const STANDARD_OBJECTS = {
     fields: {
       id: { universalIdentifier: '2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d7e' },
       createdAt: {
-        universalIdentifier: '3c4d5e6f-7a8b-4c9d-0e1f-2a3b4c5d6e8f',
+        universalIdentifier: '3c4d5e6f-7a8b-4c9d-8e1f-2a3b4c5d6e8f',
       },
       updatedAt: {
-        universalIdentifier: '4d5e6f7a-8b9c-4d0e-1f2a-3b4c5d6e7f90',
+        universalIdentifier: '4d5e6f7a-8b9c-4d0e-9f2a-3b4c5d6e7f90',
       },
       deletedAt: {
-        universalIdentifier: '5e6f7a8b-9c0d-4e1f-2a3b-4c5d6e7f8001',
+        universalIdentifier: '5e6f7a8b-9c0d-4e1f-aa3b-4c5d6e7f8001',
       },
       position: {
-        universalIdentifier: '6f7a8b9c-0d1e-4f2a-3b4c-5d6e7f800112',
+        universalIdentifier: '6f7a8b9c-0d1e-4f2a-bb4c-5d6e7f800112',
       },
       createdBy: {
-        universalIdentifier: '7a8b9c0d-1e2f-4a3b-4c5d-6e7f80011223',
+        universalIdentifier: '7a8b9c0d-1e2f-4a3b-8c5d-6e7f80011223',
       },
       updatedBy: {
-        universalIdentifier: '8b9c0d1e-2f3a-4b4c-5d6e-7f8001122334',
+        universalIdentifier: '8b9c0d1e-2f3a-4b4c-9d6e-7f8001122334',
       },
-      name: { universalIdentifier: '9c0d1e2f-3a4b-4c5d-6e7f-800112233445' },
+      name: { universalIdentifier: '9c0d1e2f-3a4b-4c5d-ae7f-800112233445' },
       description: {
-        universalIdentifier: '0d1e2f3a-4b5c-4d6e-7f80-011223344556',
+        universalIdentifier: '0d1e2f3a-4b5c-4d6e-bf80-011223344556',
       },
       status: {
         universalIdentifier: '1e2f3a4b-5c6d-4e7f-8001-122334455667',
       },
       stepCount: {
-        universalIdentifier: '2f3a4b5c-6d7e-4f80-0112-233445566778',
+        universalIdentifier: '2f3a4b5c-6d7e-4f80-8112-233445566778',
       },
       enrollmentCount: {
-        universalIdentifier: '3a4b5c6d-7e8f-4001-1223-344556677889',
+        universalIdentifier: '3a4b5c6d-7e8f-4001-9223-344556677889',
       },
       activeEnrollmentCount: {
-        universalIdentifier: '4b5c6d7e-8f90-4112-2334-45566778899a',
+        universalIdentifier: '4b5c6d7e-8f90-4112-a334-45566778899a',
       },
       completedCount: {
-        universalIdentifier: '5c6d7e8f-9001-4223-3445-566778899a0b',
+        universalIdentifier: '5c6d7e8f-9001-4223-b445-566778899a0b',
       },
       replyRate: {
-        universalIdentifier: '6d7e8f90-0112-4334-4556-6778899a0b1c',
+        universalIdentifier: '6d7e8f90-0112-4334-8556-6778899a0b1c',
       },
       autoEnrollEnabled: {
-        universalIdentifier: '7e8f9001-1223-4445-5667-78899a0b1c2d',
+        universalIdentifier: '7e8f9001-1223-4445-9667-78899a0b1c2d',
       },
       pauseOnReply: {
-        universalIdentifier: '8f900112-2334-4556-6778-899a0b1c2d3e',
+        universalIdentifier: '8f900112-2334-4556-a778-899a0b1c2d3e',
       },
       steps: {
-        universalIdentifier: '90011223-3445-4667-7889-9a0b1c2d3e4f',
+        universalIdentifier: '90011223-3445-4667-b889-9a0b1c2d3e4f',
       },
       enrollments: {
         universalIdentifier: '01122334-4556-4778-8990-a0b1c2d3e4f5',
@@ -4856,30 +4889,30 @@ export const STANDARD_OBJECTS = {
     },
     indexes: {
       statusIndex: {
-        universalIdentifier: '23344556-6778-4990-0b1c-2d3e4f5a6b71',
+        universalIdentifier: '23344556-6778-4990-8b1c-2d3e4f5a6b71',
       },
       searchVectorGinIndex: {
-        universalIdentifier: '34455667-7889-40a1-1c2d-3e4f5a6b7c82',
+        universalIdentifier: '34455667-7889-40a1-9c2d-3e4f5a6b7c82',
       },
     },
     views: {
       allSequences: {
-        universalIdentifier: '45566778-8990-41b2-2d3e-4f5a6b7c8d93',
+        universalIdentifier: '45566778-8990-41b2-ad3e-4f5a6b7c8d93',
         viewFields: {
           name: {
-            universalIdentifier: '56677889-90a1-42c3-3e4f-5a6b7c8d9ea4',
+            universalIdentifier: '56677889-90a1-42c3-be4f-5a6b7c8d9ea4',
           },
           status: {
-            universalIdentifier: '67788990-a1b2-43d4-4f5a-6b7c8d9e0fb5',
+            universalIdentifier: '67788990-a1b2-43d4-8f5a-6b7c8d9e0fb5',
           },
           stepCount: {
-            universalIdentifier: '78899a01-b2c3-44e5-5a6b-7c8d9e0f10c6',
+            universalIdentifier: '78899a01-b2c3-44e5-9a6b-7c8d9e0f10c6',
           },
           enrollmentCount: {
-            universalIdentifier: '899a0b12-c3d4-45f6-6b7c-8d9e0f1021d7',
+            universalIdentifier: '899a0b12-c3d4-45f6-ab7c-8d9e0f1021d7',
           },
           replyRate: {
-            universalIdentifier: '9a0b1c23-d4e5-4607-7c8d-9e0f102132e8',
+            universalIdentifier: '9a0b1c23-d4e5-4607-bc8d-9e0f102132e8',
           },
           createdAt: {
             universalIdentifier: '0b1c2d34-e5f6-4718-8d9e-0f10213243f9',
@@ -4891,27 +4924,27 @@ export const STANDARD_OBJECTS = {
   sequenceStep: {
     universalIdentifier: 'a1b2c3d4-e5f6-4a78-9c0d-1e2f3a4b5c7d',
     fields: {
-      id: { universalIdentifier: 'b2c3d4e5-f6a7-4b89-0d1e-2f3a4b5c6d8e' },
+      id: { universalIdentifier: 'b2c3d4e5-f6a7-4b89-8d1e-2f3a4b5c6d8e' },
       createdAt: {
-        universalIdentifier: 'c3d4e5f6-a7b8-4c90-1e2f-3a4b5c6d7e9f',
+        universalIdentifier: 'c3d4e5f6-a7b8-4c90-9e2f-3a4b5c6d7e9f',
       },
       updatedAt: {
-        universalIdentifier: 'd4e5f6a7-b8c9-4d01-2f3a-4b5c6d7e8f00',
+        universalIdentifier: 'd4e5f6a7-b8c9-4d01-af3a-4b5c6d7e8f00',
       },
       deletedAt: {
-        universalIdentifier: 'e5f6a7b8-c9d0-4e12-3a4b-5c6d7e8f9011',
+        universalIdentifier: 'e5f6a7b8-c9d0-4e12-ba4b-5c6d7e8f9011',
       },
       position: {
-        universalIdentifier: 'f6a7b8c9-d0e1-4f23-4b5c-6d7e8f901122',
+        universalIdentifier: 'f6a7b8c9-d0e1-4f23-8b5c-6d7e8f901122',
       },
       createdBy: {
-        universalIdentifier: 'a7b8c9d0-e1f2-4034-5c6d-7e8f90112233',
+        universalIdentifier: 'a7b8c9d0-e1f2-4034-9c6d-7e8f90112233',
       },
       updatedBy: {
-        universalIdentifier: 'b8c9d0e1-f2a3-4145-6d7e-8f9011223344',
+        universalIdentifier: 'b8c9d0e1-f2a3-4145-ad7e-8f9011223344',
       },
       stepOrder: {
-        universalIdentifier: 'c9d0e1f2-a3b4-4256-7e8f-901122334455',
+        universalIdentifier: 'c9d0e1f2-a3b4-4256-be8f-901122334455',
       },
       type: {
         universalIdentifier: 'd0e1f2a3-b4c5-4367-8f90-112233445566',
@@ -4920,32 +4953,38 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: 'e1f2a3b4-c5d6-4478-9001-223344556677',
       },
       subject: {
-        universalIdentifier: 'f2a3b4c5-d6e7-4589-0112-334455667788',
+        universalIdentifier: 'f2a3b4c5-d6e7-4589-8112-334455667788',
       },
       bodyHtml: {
-        universalIdentifier: 'a3b4c5d6-e7f8-4690-1223-445566778899',
+        universalIdentifier: 'a3b4c5d6-e7f8-4690-9223-445566778899',
       },
       sequence: {
-        universalIdentifier: 'b4c5d6e7-f8a9-4701-2334-5566778899a0',
+        universalIdentifier: 'b4c5d6e7-f8a9-4701-a334-5566778899a0',
+      },
+      searchVector: {
+        universalIdentifier: '87927e6f-3d0d-4e38-b65e-0c08eec3dfc4',
       },
     },
     indexes: {
       sequenceIdIndex: {
-        universalIdentifier: 'c5d6e7f8-a9b0-4812-3445-66778899a0b1',
+        universalIdentifier: 'c5d6e7f8-a9b0-4812-b445-66778899a0b1',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'd090842d-56fd-44da-89dc-081c9167a454',
       },
     },
     views: {
       allSequenceSteps: {
-        universalIdentifier: 'd6e7f8a9-b0c1-4923-4556-778899a0b1c2',
+        universalIdentifier: 'd6e7f8a9-b0c1-4923-8556-778899a0b1c2',
         viewFields: {
           stepOrder: {
-            universalIdentifier: 'e7f8a9b0-c1d2-4034-5667-8899a0b1c2d3',
+            universalIdentifier: 'e7f8a9b0-c1d2-4034-9667-8899a0b1c2d3',
           },
           type: {
-            universalIdentifier: 'f8a9b0c1-d2e3-4145-6778-99a0b1c2d3e4',
+            universalIdentifier: 'f8a9b0c1-d2e3-4145-a778-99a0b1c2d3e4',
           },
           delayDays: {
-            universalIdentifier: 'a9b0c1d2-e3f4-4256-7889-a0b1c2d3e4f5',
+            universalIdentifier: 'a9b0c1d2-e3f4-4256-b889-a0b1c2d3e4f5',
           },
           subject: {
             universalIdentifier: 'b0c1d2e3-f4a5-4367-8990-b1c2d3e4f5a6',
@@ -4958,26 +4997,26 @@ export const STANDARD_OBJECTS = {
     },
   },
   sequenceEnrollment: {
-    universalIdentifier: 'd1e2f3a4-b5c6-4789-0d1e-2f3a4b5c6d8e',
+    universalIdentifier: 'd1e2f3a4-b5c6-4789-8d1e-2f3a4b5c6d8e',
     fields: {
-      id: { universalIdentifier: 'e2f3a4b5-c6d7-4890-1e2f-3a4b5c6d7e9f' },
+      id: { universalIdentifier: 'e2f3a4b5-c6d7-4890-9e2f-3a4b5c6d7e9f' },
       createdAt: {
-        universalIdentifier: 'f3a4b5c6-d7e8-4901-2f3a-4b5c6d7e8f00',
+        universalIdentifier: 'f3a4b5c6-d7e8-4901-af3a-4b5c6d7e8f00',
       },
       updatedAt: {
-        universalIdentifier: 'a4b5c6d7-e8f9-4012-3a4b-5c6d7e8f9011',
+        universalIdentifier: 'a4b5c6d7-e8f9-4012-ba4b-5c6d7e8f9011',
       },
       deletedAt: {
-        universalIdentifier: 'b5c6d7e8-f9a0-4123-4b5c-6d7e8f901122',
+        universalIdentifier: 'b5c6d7e8-f9a0-4123-8b5c-6d7e8f901122',
       },
       position: {
-        universalIdentifier: 'c6d7e8f9-a0b1-4234-5c6d-7e8f90112233',
+        universalIdentifier: 'c6d7e8f9-a0b1-4234-9c6d-7e8f90112233',
       },
       createdBy: {
-        universalIdentifier: 'd7e8f9a0-b1c2-4345-6d7e-8f9011223344',
+        universalIdentifier: 'd7e8f9a0-b1c2-4345-ad7e-8f9011223344',
       },
       updatedBy: {
-        universalIdentifier: 'e8f9a0b1-c2d3-4456-7e8f-901122334455',
+        universalIdentifier: 'e8f9a0b1-c2d3-4456-be8f-901122334455',
       },
       status: {
         universalIdentifier: 'f9a0b1c2-d3e4-4567-8f90-112233445566',
@@ -4986,30 +5025,36 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: 'a0b1c2d3-e4f5-4678-9001-223344556677',
       },
       enrolledAt: {
-        universalIdentifier: 'b1c2d3e4-f5a6-4789-0112-334455667788',
+        universalIdentifier: 'b1c2d3e4-f5a6-4789-8112-334455667788',
       },
       completedAt: {
-        universalIdentifier: 'c2d3e4f5-a6b7-4890-1223-445566778899',
+        universalIdentifier: 'c2d3e4f5-a6b7-4890-9223-445566778899',
       },
       lastStepAt: {
-        universalIdentifier: 'd3e4f5a6-b7c8-4901-2334-5566778899a0',
+        universalIdentifier: 'd3e4f5a6-b7c8-4901-a334-5566778899a0',
       },
       sequence: {
-        universalIdentifier: 'e4f5a6b7-c8d9-4012-3445-66778899a0b1',
+        universalIdentifier: 'e4f5a6b7-c8d9-4012-b445-66778899a0b1',
       },
       person: {
-        universalIdentifier: 'f5a6b7c8-d9e0-4123-4556-778899a0b1c2',
+        universalIdentifier: 'f5a6b7c8-d9e0-4123-8556-778899a0b1c2',
+      },
+      searchVector: {
+        universalIdentifier: '81a6d310-efaa-4268-9d85-ea06cff746a5',
       },
     },
     indexes: {
       sequenceIdIndex: {
-        universalIdentifier: 'a6b7c8d9-e0f1-4234-5667-8899a0b1c2d3',
+        universalIdentifier: 'a6b7c8d9-e0f1-4234-9667-8899a0b1c2d3',
       },
       personIdIndex: {
-        universalIdentifier: 'b7c8d9e0-f1a2-4345-6778-99a0b1c2d3e4',
+        universalIdentifier: 'b7c8d9e0-f1a2-4345-a778-99a0b1c2d3e4',
       },
       statusIndex: {
-        universalIdentifier: 'c8d9e0f1-a2b3-4456-7889-a0b1c2d3e4f5',
+        universalIdentifier: 'c8d9e0f1-a2b3-4456-b889-a0b1c2d3e4f5',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: '3ee1b11b-224d-4fb6-92b4-44eaeb2225b3',
       },
     },
     views: {
@@ -5026,10 +5071,10 @@ export const STANDARD_OBJECTS = {
             universalIdentifier: 'a2b3c4d5-e6f7-4890-b2c3-e4f5a6b7c8d9',
           },
           completedAt: {
-            universalIdentifier: 'b3c4d5e6-f7a8-4901-c3d4-f5a6b7c8d9e0',
+            universalIdentifier: 'b3c4d5e6-f7a8-4901-83d4-f5a6b7c8d9e0',
           },
           sequence: {
-            universalIdentifier: 'c4d5e6f7-a8b9-4012-d4e5-a6b7c8d9e0f1',
+            universalIdentifier: 'c4d5e6f7-a8b9-4012-94e5-a6b7c8d9e0f1',
           },
         },
       },
