@@ -112,6 +112,18 @@ const PublicLandingPage = lazy(() =>
   })),
 );
 
+const PublicBookingPage = lazy(() =>
+  import('~/pages/public-booking/PublicBookingPage').then((module) => ({
+    default: module.PublicBookingPage,
+  })),
+);
+
+const PublicDocumentPage = lazy(() =>
+  import('~/pages/public-document/PublicDocumentPage').then((module) => ({
+    default: module.PublicDocumentPage,
+  })),
+);
+
 export const useCreateAppRouter = (
   isFunctionSettingsEnabled?: boolean,
   isAdminPageEnabled?: boolean,
@@ -272,6 +284,22 @@ export const useCreateAppRouter = (
             element={
               <LazyRoute>
                 <PublicLandingPage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PublicBooking}
+            element={
+              <LazyRoute>
+                <PublicBookingPage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PublicDocument}
+            element={
+              <LazyRoute>
+                <PublicDocumentPage />
               </LazyRoute>
             }
           />
