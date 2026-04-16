@@ -56,6 +56,18 @@ export const STANDARD_OBJECTS = {
       targetCampaign: {
         universalIdentifier: 'e6ae17aa-8175-4170-8695-9a39d229c443',
       },
+      targetTrackedDocument: {
+        universalIdentifier: 'd9d65570-9222-439e-bbde-f9dd8eb698ae',
+      },
+      targetMeetingType: {
+        universalIdentifier: '672a9ec2-2ea6-4311-879e-565bbdbc4882',
+      },
+      targetChatWidget: {
+        universalIdentifier: '86639d57-12bb-463e-99b1-e3ee33ecd1bf',
+      },
+      targetSequence: {
+        universalIdentifier: 'd027539a-edcc-4e6a-bd20-bda638747418',
+      },
       position: {
         universalIdentifier: 'cef8f62c-cd46-4444-8cbb-17d463b7464a',
       },
@@ -90,6 +102,18 @@ export const STANDARD_OBJECTS = {
       },
       campaignIdIndex: {
         universalIdentifier: 'f8562123-b374-4565-80c7-05d6318b7f4b',
+      },
+      trackedDocumentIdIndex: {
+        universalIdentifier: '78d3b56f-5890-47c7-9864-808028f4a22c',
+      },
+      meetingTypeIdIndex: {
+        universalIdentifier: 'cb28fc90-5896-4bba-9463-440c06eeaa6d',
+      },
+      chatWidgetIdIndex: {
+        universalIdentifier: 'ecc843fa-e605-4091-b91b-f68db0f8ec9b',
+      },
+      sequenceIdIndex: {
+        universalIdentifier: '182e7c9f-7c27-473e-be11-2feca4960f0b',
       },
     },
     views: {
@@ -2084,6 +2108,18 @@ export const STANDARD_OBJECTS = {
       targetCampaign: {
         universalIdentifier: 'deb5d45c-d821-4b50-ac62-f173f7ea3d42',
       },
+      targetTrackedDocument: {
+        universalIdentifier: '780b4050-ee19-472c-af8d-2ed4aacb4e52',
+      },
+      targetMeetingType: {
+        universalIdentifier: '4cacef21-e63e-47ac-97de-bb66dc485f1b',
+      },
+      targetChatWidget: {
+        universalIdentifier: '50d1147b-2ee1-410c-852f-6f292e7622fb',
+      },
+      targetSequence: {
+        universalIdentifier: '63eb182a-5a4c-496f-a1e9-1d6992a25348',
+      },
       createdBy: {
         universalIdentifier: '820a3163-bb7d-41bc-93d9-81a464559c48',
       },
@@ -2115,6 +2151,18 @@ export const STANDARD_OBJECTS = {
       },
       campaignIdIndex: {
         universalIdentifier: '37ba6566-2302-4c68-a86d-8574e556873c',
+      },
+      trackedDocumentIdIndex: {
+        universalIdentifier: 'd05e909c-be9e-4534-a50a-799865406775',
+      },
+      meetingTypeIdIndex: {
+        universalIdentifier: '298054e2-611d-40fd-a4fd-2ec7c60c34bb',
+      },
+      chatWidgetIdIndex: {
+        universalIdentifier: 'e3164301-0d75-4f4d-97bc-4ab85408aba3',
+      },
+      sequenceIdIndex: {
+        universalIdentifier: '911ed1d8-33d0-4a44-a6a7-7495ab1d9065',
       },
     },
     views: {
@@ -2778,6 +2826,18 @@ export const STANDARD_OBJECTS = {
       targetOpportunity: {
         universalIdentifier: '20202020-6cb2-4c01-a9a5-aca3dbc11d41',
       },
+      targetTrackedDocument: {
+        universalIdentifier: '945bb5ec-78c1-49aa-bef7-b60f0d116dd2',
+      },
+      targetMeetingType: {
+        universalIdentifier: 'b0a25117-a39a-4503-894c-07bac0416f8f',
+      },
+      targetChatWidget: {
+        universalIdentifier: 'b160114f-bdac-4d96-835d-1b513e96cb4b',
+      },
+      targetSequence: {
+        universalIdentifier: 'dc2ebb71-f064-46d5-a004-bb2b8035ae09',
+      },
       createdBy: {
         universalIdentifier: '65fe2a53-45e4-4225-9711-b827f55e51cc',
       },
@@ -2806,6 +2866,18 @@ export const STANDARD_OBJECTS = {
       },
       opportunityIdIndex: {
         universalIdentifier: '6942e0ba-90f6-4c33-bf40-7f00b1ec35ab',
+      },
+      trackedDocumentIdIndex: {
+        universalIdentifier: '378754d7-ca8b-448e-90e3-8f6861275c81',
+      },
+      meetingTypeIdIndex: {
+        universalIdentifier: '0f4573d9-7655-47eb-b9c7-2e08fb4c84ec',
+      },
+      chatWidgetIdIndex: {
+        universalIdentifier: '04cd88b4-f556-4037-a67b-94ff9bfff20d',
+      },
+      sequenceIdIndex: {
+        universalIdentifier: '4030068c-4695-47ff-8b46-44954b3df3db',
       },
     },
     views: {
@@ -4226,6 +4298,15 @@ export const STANDARD_OBJECTS = {
       searchVector: {
         universalIdentifier: '7886d7dc-ecbc-4ce9-8364-874d2a81826a',
       },
+      noteTargets: {
+        universalIdentifier: '3e0e3c40-188e-4160-96e2-b58f7b66c13e',
+      },
+      taskTargets: {
+        universalIdentifier: '53bbe4d1-b1bb-418e-b71b-8c07f5ef6ddf',
+      },
+      attachments: {
+        universalIdentifier: '4ce63bf2-98d2-499e-9767-63212730265b',
+      },
     },
     indexes: {
       statusIndex: {
@@ -4476,6 +4557,15 @@ export const STANDARD_OBJECTS = {
       searchVector: {
         universalIdentifier: 'a0143546-5768-4798-9960-3a4b5c6d7e8f',
       },
+      noteTargets: {
+        universalIdentifier: '1db54386-9883-4236-825e-639e035cbcc4',
+      },
+      taskTargets: {
+        universalIdentifier: 'd8f03731-218e-43e9-8d4c-cd4eaeb30d7d',
+      },
+      attachments: {
+        universalIdentifier: 'd2505c5d-a3c7-4d81-b842-58f5e52e1743',
+      },
     },
     indexes: {
       statusIndex: {
@@ -4644,6 +4734,15 @@ export const STANDARD_OBJECTS = {
       },
       searchVector: {
         universalIdentifier: 'd0e1f2a3-b4c5-4d6e-bf80-90a1b2c3d4e7',
+      },
+      noteTargets: {
+        universalIdentifier: '6649f5d5-53f8-4822-adf5-117e7328cbec',
+      },
+      taskTargets: {
+        universalIdentifier: 'c969f321-f094-4246-a847-89fda62e2ffe',
+      },
+      attachments: {
+        universalIdentifier: 'c0721efc-642e-44cd-81df-c3e7f0ad999e',
       },
     },
     indexes: {
@@ -4885,6 +4984,15 @@ export const STANDARD_OBJECTS = {
       },
       searchVector: {
         universalIdentifier: '12233445-5667-4889-9a0b-1c2d3e4f5a60',
+      },
+      noteTargets: {
+        universalIdentifier: 'e2b0957e-371d-4e2a-93c0-df16b694455a',
+      },
+      taskTargets: {
+        universalIdentifier: '1a06d56e-ff64-4ac7-86f0-6a7ebb2d9d6c',
+      },
+      attachments: {
+        universalIdentifier: 'c6657c7c-2757-4b97-a5ed-5cf7954f7430',
       },
     },
     indexes: {
