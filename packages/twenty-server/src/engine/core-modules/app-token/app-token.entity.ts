@@ -28,6 +28,7 @@ export enum AppTokenType {
   InvitationToken = 'INVITATION_TOKEN',
   EmailVerificationToken = 'EMAIL_VERIFICATION_TOKEN',
   EnterpriseValidityToken = 'ENTERPRISE_VALIDITY_TOKEN',
+  MagicLinkToken = 'MAGIC_LINK_TOKEN',
 }
 
 @Entity({ name: 'appToken', schema: 'core' })
@@ -97,5 +98,7 @@ export class AppTokenEntity {
     clientId?: string;
     codeChallenge?: string;
     scope?: string;
+    portalUserId?: string;
+    workspaceId?: string;
   } | null;
 }

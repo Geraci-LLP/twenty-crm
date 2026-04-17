@@ -43,6 +43,8 @@ import { computeStandardNoteTargetViews } from 'src/engine/workspace-manager/twe
 import { computeStandardNoteViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-note-views.util';
 import { computeStandardOpportunityViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-opportunity-views.util';
 import { computeStandardPersonViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-person-views.util';
+import { computeStandardQuoteViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-quote-views.util';
+import { computeStandardQuoteLineItemViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-quote-line-item-views.util';
 import { computeStandardSequenceViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-sequence-views.util';
 import { computeStandardSequenceEnrollmentViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-sequence-enrollment-views.util';
 import { computeStandardSequenceStepViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-sequence-step-views.util';
@@ -102,6 +104,8 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   noteTarget: computeStandardNoteTargetViews,
   opportunity: computeStandardOpportunityViews,
   person: computeStandardPersonViews,
+  quote: computeStandardQuoteViews,
+  quoteLineItem: computeStandardQuoteLineItemViews,
   sequence: computeStandardSequenceViews,
   sequenceEnrollment: computeStandardSequenceEnrollmentViews,
   sequenceStep: computeStandardSequenceStepViews,

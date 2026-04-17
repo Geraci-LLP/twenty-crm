@@ -25,6 +25,7 @@ export class MeetingTypeWorkspaceEntity extends BaseWorkspaceEntity {
   updatedBy: ActorMetadata;
   name: string;
   slug: string;
+  description: string | null;
   durationMinutes: number;
   bufferBeforeMinutes: number;
   bufferAfterMinutes: number;

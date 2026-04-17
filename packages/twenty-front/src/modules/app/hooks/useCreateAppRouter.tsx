@@ -124,6 +124,60 @@ const PublicDocumentPage = lazy(() =>
   })),
 );
 
+const PublicQuotePage = lazy(() =>
+  import('~/pages/public-quote/PublicQuotePage').then((module) => ({
+    default: module.PublicQuotePage,
+  })),
+);
+
+const PortalLayout = lazy(() =>
+  import('~/pages/portal/PortalLayout').then((module) => ({
+    default: module.PortalLayout,
+  })),
+);
+
+const DashboardRedirectPage = lazy(() =>
+  import('~/pages/dashboard-redirect/DashboardRedirectPage').then((module) => ({
+    default: module.DashboardRedirectPage,
+  })),
+);
+
+const PortalLoginPage = lazy(() =>
+  import('~/pages/portal/PortalLoginPage').then((module) => ({
+    default: module.PortalLoginPage,
+  })),
+);
+
+const PortalVerifyPage = lazy(() =>
+  import('~/pages/portal/PortalVerifyPage').then((module) => ({
+    default: module.PortalVerifyPage,
+  })),
+);
+
+const PortalDashboard = lazy(() =>
+  import('~/pages/portal/PortalDashboard').then((module) => ({
+    default: module.PortalDashboard,
+  })),
+);
+
+const PortalQuotes = lazy(() =>
+  import('~/pages/portal/PortalQuotes').then((module) => ({
+    default: module.PortalQuotes,
+  })),
+);
+
+const PortalQuoteDetail = lazy(() =>
+  import('~/pages/portal/PortalQuoteDetail').then((module) => ({
+    default: module.PortalQuoteDetail,
+  })),
+);
+
+const PortalDocuments = lazy(() =>
+  import('~/pages/portal/PortalDocuments').then((module) => ({
+    default: module.PortalDocuments,
+  })),
+);
+
 export const useCreateAppRouter = (
   isFunctionSettingsEnabled?: boolean,
   isAdminPageEnabled?: boolean,
@@ -300,6 +354,78 @@ export const useCreateAppRouter = (
             element={
               <LazyRoute>
                 <PublicDocumentPage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PublicQuote}
+            element={
+              <LazyRoute>
+                <PublicQuotePage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PortalLogin}
+            element={
+              <LazyRoute>
+                <PortalLoginPage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            path={AppPath.PortalVerify}
+            element={
+              <LazyRoute>
+                <PortalVerifyPage />
+              </LazyRoute>
+            }
+          />
+          <Route
+            element={
+              <LazyRoute>
+                <PortalLayout />
+              </LazyRoute>
+            }
+          >
+            <Route
+              path={AppPath.Portal}
+              element={
+                <LazyRoute>
+                  <PortalDashboard />
+                </LazyRoute>
+              }
+            />
+            <Route
+              path={AppPath.PortalQuotes}
+              element={
+                <LazyRoute>
+                  <PortalQuotes />
+                </LazyRoute>
+              }
+            />
+            <Route
+              path={AppPath.PortalQuoteDetail}
+              element={
+                <LazyRoute>
+                  <PortalQuoteDetail />
+                </LazyRoute>
+              }
+            />
+            <Route
+              path={AppPath.PortalDocuments}
+              element={
+                <LazyRoute>
+                  <PortalDocuments />
+                </LazyRoute>
+              }
+            />
+          </Route>
+          <Route
+            path={AppPath.DashboardRedirect}
+            element={
+              <LazyRoute>
+                <DashboardRedirectPage />
               </LazyRoute>
             }
           />

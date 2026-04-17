@@ -41,7 +41,22 @@ type TrackBody = {
 // but the workspace entity types only declare the relation objects.
 // These extended types expose the FK columns for type-safe access.
 type SharingLinkWithForeignKeys = DocumentSharingLinkWorkspaceEntity & {
-  trackedDocumentId: string;
+  trackedDocumentId?: string | null;
+  quoteId?: string | null;
+  targetType?: string | null;
+};
+
+// Polymorphism guard: documentSharingLink is shared between tracked-documents
+// (F9) and quotes (F11). The /documents/* endpoints must NOT serve quote
+// sharing links. A row is treated as a document link when targetType is
+// either DOCUMENT, null (legacy pre-targetType rows), or absent, AND it has
+// a trackedDocumentId. Any row with targetType = 'QUOTE' is rejected as 404.
+const isDocumentSharingLink = (link: SharingLinkWithForeignKeys): boolean => {
+  if (link.targetType === 'QUOTE') return false;
+
+  if (!isDefined(link.trackedDocumentId)) return false;
+
+  return true;
 };
 
 @Controller('documents')
@@ -79,7 +94,7 @@ export class DocumentPublicController {
             where: { slug },
           });
 
-          if (!isDefined(sharingLink)) {
+          if (!isDefined(sharingLink) || !isDocumentSharingLink(sharingLink)) {
             throw new HttpException(
               'Sharing link not found',
               HttpStatus.NOT_FOUND,
@@ -101,7 +116,7 @@ export class DocumentPublicController {
             );
 
           const document = await documentRepository.findOne({
-            where: { id: sharingLink.trackedDocumentId },
+            where: { id: sharingLink.trackedDocumentId as string },
           });
 
           if (!isDefined(document)) {
@@ -177,7 +192,7 @@ export class DocumentPublicController {
             where: { slug },
           });
 
-          if (!isDefined(sharingLink)) {
+          if (!isDefined(sharingLink) || !isDocumentSharingLink(sharingLink)) {
             throw new HttpException(
               'Sharing link not found',
               HttpStatus.NOT_FOUND,
@@ -245,7 +260,7 @@ export class DocumentPublicController {
             );
 
           const document = await documentRepository.findOne({
-            where: { id: sharingLink.trackedDocumentId },
+            where: { id: sharingLink.trackedDocumentId as string },
           });
 
           if (
@@ -345,7 +360,7 @@ export class DocumentPublicController {
             where: { slug },
           });
 
-          if (!isDefined(sharingLink)) {
+          if (!isDefined(sharingLink) || !isDocumentSharingLink(sharingLink)) {
             throw new HttpException(
               'Sharing link not found',
               HttpStatus.NOT_FOUND,
@@ -367,7 +382,7 @@ export class DocumentPublicController {
             );
 
           const document = await documentRepository.findOne({
-            where: { id: sharingLink.trackedDocumentId },
+            where: { id: sharingLink.trackedDocumentId as string },
           });
 
           if (!isDefined(document)) {

@@ -94,12 +94,19 @@ export const STANDARD_NAVIGATION_MENU_ITEMS = {
       STANDARD_OBJECTS.sequence.views.allSequences.universalIdentifier,
     position: 12,
   },
+  allQuotes: {
+    universalIdentifier: 'd4e5f604-b010-4b10-8b10-c0aba11c0014',
+    type: NavigationMenuItemType.OBJECT,
+    viewUniversalIdentifier:
+      STANDARD_OBJECTS.quote.views.allQuotes.universalIdentifier,
+    position: 13,
+  },
   workflowsFolder: {
     universalIdentifier: '20202020-b007-4b07-8b07-c0aba11c0007',
     type: NavigationMenuItemType.FOLDER,
     name: 'Workflows',
     icon: 'IconSettingsAutomation',
-    position: 13,
+    position: 14,
   },
   workflowsFolderAllWorkflows: {
     universalIdentifier: '20202020-b008-4b08-8b08-c0aba11c0008',
@@ -138,6 +145,7 @@ export const STANDARD_NAVIGATION_MENU_ITEM_DEFAULT_COLORS: Partial<
   allMeetingTypes: 'red',
   allChatWidgets: 'yellow',
   allSequences: 'turquoise',
+  allQuotes: 'green',
   allCompanies: 'blue',
   allPeople: 'blue',
   allTasks: 'turquoise',

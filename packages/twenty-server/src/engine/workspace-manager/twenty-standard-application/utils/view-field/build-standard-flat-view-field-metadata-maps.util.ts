@@ -41,6 +41,8 @@ import { computeStandardNoteTargetViewFields } from 'src/engine/workspace-manage
 import { computeStandardNoteViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-note-view-fields.util';
 import { computeStandardOpportunityViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-opportunity-view-fields.util';
 import { computeStandardPersonViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-person-view-fields.util';
+import { computeStandardQuoteViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-quote-view-fields.util';
+import { computeStandardQuoteLineItemViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-quote-line-item-view-fields.util';
 import { computeStandardSequenceViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-sequence-view-fields.util';
 import { computeStandardSequenceEnrollmentViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-sequence-enrollment-view-fields.util';
 import { computeStandardSequenceStepViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-sequence-step-view-fields.util';
@@ -98,6 +100,8 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   noteTarget: computeStandardNoteTargetViewFields,
   opportunity: computeStandardOpportunityViewFields,
   person: computeStandardPersonViewFields,
+  quote: computeStandardQuoteViewFields,
+  quoteLineItem: computeStandardQuoteLineItemViewFields,
   sequence: computeStandardSequenceViewFields,
   sequenceEnrollment: computeStandardSequenceEnrollmentViewFields,
   sequenceStep: computeStandardSequenceStepViewFields,

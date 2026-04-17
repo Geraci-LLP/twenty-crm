@@ -16,6 +16,8 @@ import { MicrosoftAuthController } from 'src/engine/core-modules/auth/controller
 import { OAuthPropagatorController } from 'src/engine/core-modules/auth/controllers/oauth-propagator.controller';
 import { SSOAuthController } from 'src/engine/core-modules/auth/controllers/sso-auth.controller';
 import { AuthSsoService } from 'src/engine/core-modules/auth/services/auth-sso.service';
+import { DashboardTokenService } from 'src/engine/core-modules/auth/services/dashboard-token.service';
+import { DashboardTokenResolver } from 'src/engine/core-modules/auth/dashboard-token.resolver';
 import { CreateCalendarChannelService } from 'src/engine/core-modules/auth/services/create-calendar-channel.service';
 import { CreateConnectedAccountService } from 'src/engine/core-modules/auth/services/create-connected-account.service';
 import { CreateMessageChannelService } from 'src/engine/core-modules/auth/services/create-message-channel.service';
@@ -24,6 +26,8 @@ import { GoogleAPIScopesService } from 'src/engine/core-modules/auth/services/go
 import { GoogleApisServiceAvailabilityService } from 'src/engine/core-modules/auth/services/google-apis-service-availability.service';
 import { GoogleAPIsService } from 'src/engine/core-modules/auth/services/google-apis.service';
 import { MicrosoftAPIsService } from 'src/engine/core-modules/auth/services/microsoft-apis.service';
+import { PortalUserModule } from 'src/engine/core-modules/portal-user/portal-user.module';
+import { PortalJwtAuthStrategy } from 'src/engine/core-modules/portal-auth/strategies/portal-jwt.auth.strategy';
 import { ResetPasswordService } from 'src/engine/core-modules/auth/services/reset-password.service';
 import { SignInUpService } from 'src/engine/core-modules/auth/services/sign-in-up.service';
 import { UpdateConnectedAccountOnReconnectService } from 'src/engine/core-modules/auth/services/update-connected-account-on-reconnect.service';
@@ -120,6 +124,7 @@ import { JwtAuthStrategy } from './strategies/jwt.auth.strategy';
     SecureHttpClientModule,
     EnterpriseModule,
     FileModule,
+    PortalUserModule,
   ],
   controllers: [
     GoogleAuthController,
@@ -133,6 +138,7 @@ import { JwtAuthStrategy } from './strategies/jwt.auth.strategy';
     SignInUpService,
     AuthService,
     JwtAuthStrategy,
+    PortalJwtAuthStrategy,
     SamlAuthStrategy,
     AuthResolver,
     GoogleAPIsService,
@@ -155,6 +161,8 @@ import { JwtAuthStrategy } from './strategies/jwt.auth.strategy';
     UpdateConnectedAccountOnReconnectService,
     TransientTokenService,
     AuthSsoService,
+    DashboardTokenService,
+    DashboardTokenResolver,
   ],
   exports: [
     AccessTokenService,
