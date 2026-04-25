@@ -1,16 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { AuthModule } from 'src/engine/core-modules/auth/auth.module';
-import { WorkspaceCacheStorageModule } from 'src/engine/workspace-cache-storage/workspace-cache-storage.module';
-import { InboundLeadController } from 'src/modules/lead/controllers/inbound-lead.controller';
 import { LeadCreationService } from 'src/modules/lead/services/lead-creation.service';
 
-// AuthModule + WorkspaceCacheStorageModule provide AccessTokenService and
-// WorkspaceCacheStorageService — required by JwtAuthGuard + WorkspaceAuthGuard
-// applied on the InboundLeadController.
+// InboundLeadController temporarily disabled — JwtAuthGuard's AccessTokenService
+// dep wasn't resolving cleanly in deployed context. Form→Person path still works
+// because form-public.controller.ts uses LeadCreationService directly. Re-enable
+// the controller once auth-module wiring is verified locally with `nx serve`.
 @Module({
-  imports: [AuthModule, WorkspaceCacheStorageModule],
-  controllers: [InboundLeadController],
   providers: [LeadCreationService],
   exports: [LeadCreationService],
 })
