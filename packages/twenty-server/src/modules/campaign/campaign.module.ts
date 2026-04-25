@@ -43,6 +43,10 @@ import { SendGridDriverService } from 'src/modules/campaign/services/sendgrid-dr
     CampaignScheduleSendCronJob,
     CampaignScheduleSendCronCommand,
   ],
-  exports: [CampaignExecutorService, SendGridDriverService],
+  exports: [
+    CampaignExecutorService,
+    SendGridDriverService,
+    CampaignScheduleSendCronCommand,
+  ],
 })
 export class CampaignModule {}

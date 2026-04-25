@@ -38,6 +38,8 @@ type SendGridWebhookEvent = {
   timestamp: number;
   // Custom args passed during send
   campaignRecipientId?: string;
+  // Sequence enrollment custom arg — set by sales-sequence step executor
+  sequenceEnrollmentId?: string;
   workspaceId?: string;
 };
 
@@ -98,10 +100,21 @@ export class CampaignWebhookController {
   @Get('unsubscribe')
   async handleUnsubscribe(
     @Query('rid') recipientId: string,
+    @Query('seid') sequenceEnrollmentId: string,
     @Query('wid') workspaceId: string,
     @Query('sig') sig: string,
     @Res() res: Response,
   ): Promise<void> {
+    // Sequence unsubscribe path — different identifier, separate handler.
+    if (sequenceEnrollmentId && !recipientId) {
+      return this.handleSequenceUnsubscribe(
+        sequenceEnrollmentId,
+        workspaceId,
+        sig,
+        res,
+      );
+    }
+
     // Validate HMAC signature
     const expectedSig = this.generateUnsubscribeHmac(recipientId, workspaceId);
 
@@ -191,6 +204,68 @@ export class CampaignWebhookController {
     return `${baseUrl}/campaign-webhooks/unsubscribe?rid=${recipientId}&wid=${workspaceId}&sig=${sig}`;
   }
 
+  // Same HMAC scheme as campaign recipients but with the enrollment id; the controller
+  // routes by the presence of `seid` instead of `rid`.
+  static generateSequenceUnsubscribeUrl(
+    enrollmentId: string,
+    workspaceId: string,
+    baseUrl: string,
+  ): string {
+    const sig = crypto
+      .createHmac('sha256', UNSUBSCRIBE_HMAC_SECRET)
+      .update(`seq:${enrollmentId}:${workspaceId}`)
+      .digest('hex');
+
+    return `${baseUrl}/campaign-webhooks/unsubscribe?seid=${enrollmentId}&wid=${workspaceId}&sig=${sig}`;
+  }
+
+  private async handleSequenceUnsubscribe(
+    enrollmentId: string,
+    workspaceId: string,
+    sig: string,
+    res: Response,
+  ): Promise<void> {
+    const expected = crypto
+      .createHmac('sha256', UNSUBSCRIBE_HMAC_SECRET)
+      .update(`seq:${enrollmentId}:${workspaceId}`)
+      .digest('hex');
+
+    if (sig !== expected) {
+      this.logger.warn(
+        `Invalid sequence unsubscribe HMAC for enrollment ${enrollmentId}`,
+      );
+      res.status(403).send('Invalid unsubscribe link');
+      return;
+    }
+
+    const enrollmentRepository =
+      await this.globalWorkspaceOrmManager.getRepository<{
+        id: string;
+        status: string;
+      }>(workspaceId, 'sequenceEnrollment', {
+        shouldBypassPermissionChecks: true,
+      });
+
+    await enrollmentRepository.update({ id: enrollmentId }, {
+      status: 'PAUSED',
+    } as Partial<{ id: string; status: string }>);
+
+    this.logger.log(
+      `Sequence enrollment ${enrollmentId} unsubscribed (status=PAUSED)`,
+    );
+
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>Unsubscribed</title></head>
+        <body style="font-family: sans-serif; text-align: center; padding: 60px;">
+          <h1>You have been unsubscribed</h1>
+          <p>You will no longer receive emails in this sequence.</p>
+        </body>
+      </html>
+    `);
+  }
+
   private generateUnsubscribeHmac(
     recipientId: string,
     workspaceId: string,
@@ -231,11 +306,21 @@ export class CampaignWebhookController {
   }
 
   private async processEvent(event: SendGridWebhookEvent): Promise<void> {
-    if (!event.campaignRecipientId || !event.workspaceId) {
-      this.logger.warn(
-        'Received SendGrid event without campaignRecipientId or workspaceId',
-      );
+    if (!event.workspaceId) {
+      this.logger.warn('Received SendGrid event without workspaceId');
+      return;
+    }
 
+    // Sequence enrollment events are handled separately — no campaign recipient.
+    if (event.sequenceEnrollmentId) {
+      await this.processSequenceEvent(event);
+      return;
+    }
+
+    if (!event.campaignRecipientId) {
+      this.logger.warn(
+        'Received SendGrid event without campaignRecipientId or sequenceEnrollmentId',
+      );
       return;
     }
 
@@ -319,6 +404,37 @@ export class CampaignWebhookController {
       default:
         this.logger.warn(`Unhandled SendGrid event type: ${event.event}`);
     }
+  }
+
+  // Bounce → mark BOUNCED. Unsub → mark PAUSED (no UNSUBSCRIBED status on enrollment yet).
+  // Open/click/delivered are ignored at the enrollment level for now.
+  private async processSequenceEvent(
+    event: SendGridWebhookEvent,
+  ): Promise<void> {
+    const enrollmentId = event.sequenceEnrollmentId;
+    const workspaceId = event.workspaceId;
+    if (!enrollmentId || !workspaceId) return;
+
+    if (event.event !== 'bounce' && event.event !== 'unsubscribe') {
+      return;
+    }
+
+    const enrollmentRepository =
+      await this.globalWorkspaceOrmManager.getRepository<{
+        id: string;
+        status: string;
+      }>(workspaceId, 'sequenceEnrollment', {
+        shouldBypassPermissionChecks: true,
+      });
+
+    const newStatus = event.event === 'bounce' ? 'BOUNCED' : 'PAUSED';
+    await enrollmentRepository.update({ id: enrollmentId }, {
+      status: newStatus,
+    } as Partial<{ id: string; status: string }>);
+
+    this.logger.log(
+      `Sequence enrollment ${enrollmentId} → ${newStatus} (event=${event.event})`,
+    );
   }
 
   private async addToSuppressionFromEvent(

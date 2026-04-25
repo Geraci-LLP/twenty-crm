@@ -15,6 +15,9 @@ import { TrashCleanupCronCommand } from 'src/engine/trash-cleanup/commands/trash
 import { CleanOnboardingWorkspacesCronCommand } from 'src/engine/workspace-manager/workspace-cleaner/commands/clean-onboarding-workspaces.cron.command';
 import { CleanSuspendedWorkspacesCronCommand } from 'src/engine/workspace-manager/workspace-cleaner/commands/clean-suspended-workspaces.cron.command';
 import { CalendarEventListFetchCronCommand } from 'src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-event-list-fetch.cron.command';
+import { CampaignScheduleSendCronCommand } from 'src/modules/campaign/crons/commands/campaign-schedule-send.cron.command';
+import { MarketingCampaignStatsCronCommand } from 'src/modules/marketing-campaign/crons/commands/marketing-campaign-stats.cron.command';
+import { SequenceAdvanceCronCommand } from 'src/modules/sales-sequence/crons/commands/sequence-advance.cron.command';
 import { CalendarEventsImportCronCommand } from 'src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-import.cron.command';
 import { CalendarOngoingStaleCronCommand } from 'src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-ongoing-stale.cron.command';
 import { CalendarRelaunchFailedCalendarChannelsCronCommand } from 'src/modules/calendar/calendar-event-import-manager/crons/commands/calendar-relaunch-failed-calendar-channels.cron.command';
@@ -62,6 +65,9 @@ export class CronRegisterAllCommand extends CommandRunner {
     private readonly marketplaceCatalogSyncCronCommand: MarketplaceCatalogSyncCronCommand,
     private readonly applicationVersionCheckCronCommand: ApplicationVersionCheckCronCommand,
     private readonly staleRegistrationCleanupCronCommand: StaleRegistrationCleanupCronCommand,
+    private readonly campaignScheduleSendCronCommand: CampaignScheduleSendCronCommand,
+    private readonly sequenceAdvanceCronCommand: SequenceAdvanceCronCommand,
+    private readonly marketingCampaignStatsCronCommand: MarketingCampaignStatsCronCommand,
   ) {
     super();
   }
@@ -186,6 +192,18 @@ export class CronRegisterAllCommand extends CommandRunner {
       {
         name: 'StaleRegistrationCleanup',
         command: this.staleRegistrationCleanupCronCommand,
+      },
+      {
+        name: 'CampaignScheduleSend',
+        command: this.campaignScheduleSendCronCommand,
+      },
+      {
+        name: 'SequenceAdvance',
+        command: this.sequenceAdvanceCronCommand,
+      },
+      {
+        name: 'MarketingCampaignStats',
+        command: this.marketingCampaignStatsCronCommand,
       },
     ];
 
