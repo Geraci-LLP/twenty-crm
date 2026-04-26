@@ -1,5 +1,5 @@
 import { styled } from '@linaria/react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   buildDefaultModule,
@@ -12,6 +12,7 @@ import {
 } from '@/campaign/email-builder/constants/EmailBuilderDefaults';
 import { PreviewModal } from '@/campaign/email-builder/components/preview/PreviewModal';
 import { ButtonModuleEditor } from '@/campaign/email-builder/components/modules/ButtonModuleEditor';
+import { ColorWithSwatches } from '@/campaign/email-builder/components/modules/ColorWithSwatches';
 import { DividerModuleEditor } from '@/campaign/email-builder/components/modules/DividerModuleEditor';
 import { FooterModuleEditor } from '@/campaign/email-builder/components/modules/FooterModuleEditor';
 import { HeadingModuleEditor } from '@/campaign/email-builder/components/modules/HeadingModuleEditor';
@@ -21,9 +22,18 @@ import { SocialModuleEditor } from '@/campaign/email-builder/components/modules/
 import { SpacerModuleEditor } from '@/campaign/email-builder/components/modules/SpacerModuleEditor';
 import { TextModuleEditor } from '@/campaign/email-builder/components/modules/TextModuleEditor';
 import { migrateDesign } from '@/campaign/email-builder/render/migrateDesign';
+import {
+  readModuleFromClipboard,
+  writeModuleToClipboard,
+} from '@/campaign/email-builder/utils/moduleClipboard';
 import { DraggableItem } from '@/ui/layout/draggable-list/components/DraggableItem';
 import { DraggableList } from '@/ui/layout/draggable-list/components/DraggableList';
-import { type DropResult } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  type DropResult,
+} from '@hello-pangea/dnd';
 import {
   type RenderMeta,
   renderDesignToHtml,
@@ -165,6 +175,37 @@ const StyledSectionLabel = styled.span`
   text-transform: uppercase;
 `;
 
+const StyledPaddingRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: ${themeCssVariables.spacing[2]};
+  margin-bottom: ${themeCssVariables.spacing[2]};
+`;
+
+const StyledPaddingLabel = styled.span`
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: ${themeCssVariables.font.size.xs};
+`;
+
+const StyledPaddingField = styled.label`
+  align-items: center;
+  color: ${themeCssVariables.font.color.secondary};
+  display: flex;
+  font-size: ${themeCssVariables.font.size.xs};
+  gap: 2px;
+`;
+
+const StyledPaddingInput = styled.input`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.xs};
+  padding: 2px 4px;
+  text-align: right;
+  width: 44px;
+`;
+
 const StyledIconButton = styled.button`
   background: transparent;
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -189,15 +230,6 @@ const StyledSelect = styled.select`
   color: ${themeCssVariables.font.color.primary};
   font-size: ${themeCssVariables.font.size.sm};
   padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
-`;
-
-const StyledColorInput = styled.input`
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  cursor: pointer;
-  height: 28px;
-  padding: 2px;
-  width: 36px;
 `;
 
 const StyledColumnsRow = styled.div`
@@ -393,6 +425,24 @@ export const EmailBuilder = ({
     'desktop',
   );
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [clipboardModuleType, setClipboardModuleType] = useState<string | null>(
+    () => readModuleFromClipboard()?.type ?? null,
+  );
+
+  // Re-read the clipboard whenever the tab regains focus or another tab
+  // updates localStorage, so the Paste button reflects the current state
+  // even after copying in a different campaign.
+  useEffect(() => {
+    const refresh = () => {
+      setClipboardModuleType(readModuleFromClipboard()?.type ?? null);
+    };
+    window.addEventListener('focus', refresh);
+    window.addEventListener('storage', refresh);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, []);
 
   // Migrate on every read so older designs (v1) work seamlessly. The next
   // user edit writes the migrated v2 shape back to the record.
@@ -446,6 +496,22 @@ export const EmailBuilder = ({
   const handleSectionColorChange = useCallback(
     (sectionId: string, color: string) => {
       updateSection(sectionId, (s) => ({ ...s, bgColor: color }));
+    },
+    [updateSection],
+  );
+
+  const handleSectionPaddingChange = useCallback(
+    (
+      sectionId: string,
+      side: 'Top' | 'Bottom' | 'Left' | 'Right',
+      value: number,
+    ) => {
+      const key = `padding${side}` as
+        | 'paddingTop'
+        | 'paddingBottom'
+        | 'paddingLeft'
+        | 'paddingRight';
+      updateSection(sectionId, (s) => ({ ...s, [key]: value }));
     },
     [updateSection],
   );
@@ -558,6 +624,30 @@ export const EmailBuilder = ({
     [selectedModuleId, updateSection],
   );
 
+  const handleModuleCopy = useCallback((module: EmailModule) => {
+    writeModuleToClipboard(module);
+    setClipboardModuleType(module.type);
+  }, []);
+
+  const handleModulePaste = useCallback(
+    (sectionId: string, columnId: string) => {
+      const fromClipboard = readModuleFromClipboard();
+      if (!fromClipboard) return;
+      const pasted = {
+        ...fromClipboard,
+        id: generateEmailBuilderId('mod'),
+      } as EmailModule;
+      updateSection(sectionId, (s) => ({
+        ...s,
+        columns: s.columns.map((c) =>
+          c.id === columnId ? { ...c, modules: [...c.modules, pasted] } : c,
+        ),
+      }));
+      setSelectedModuleId(pasted.id);
+    },
+    [updateSection],
+  );
+
   const handleModuleDuplicate = useCallback(
     (sectionId: string, columnId: string, moduleId: string) => {
       const cloneId = generateEmailBuilderId('mod');
@@ -584,6 +674,56 @@ export const EmailBuilder = ({
         }),
       }));
       setSelectedModuleId(cloneId);
+    },
+    [updateSection],
+  );
+
+  // Cross-column DnD within a single section. droppableId of each column is
+  // the column id. Source/destination indices are positions inside that
+  // column's modules array. Cross-section drag is not supported here — we
+  // wire one DnD context per section, so dragging out of a section cancels.
+  const handleSectionModulesDragEnd = useCallback(
+    (sectionId: string, result: DropResult) => {
+      const { source, destination, draggableId } = result;
+      if (!destination) return;
+      if (
+        source.droppableId === destination.droppableId &&
+        source.index === destination.index
+      ) {
+        return;
+      }
+      updateSection(sectionId, (s) => {
+        const fromCol = s.columns.find((c) => c.id === source.droppableId);
+        const toCol = s.columns.find((c) => c.id === destination.droppableId);
+        if (!fromCol || !toCol) return s;
+        const moved = fromCol.modules.find((m) => m.id === draggableId);
+        if (!moved) return s;
+        return {
+          ...s,
+          columns: s.columns.map((c) => {
+            if (
+              c.id === source.droppableId &&
+              c.id === destination.droppableId
+            ) {
+              const next = c.modules.filter((m) => m.id !== draggableId);
+              next.splice(destination.index, 0, moved);
+              return { ...c, modules: next };
+            }
+            if (c.id === source.droppableId) {
+              return {
+                ...c,
+                modules: c.modules.filter((m) => m.id !== draggableId),
+              };
+            }
+            if (c.id === destination.droppableId) {
+              const next = c.modules.slice();
+              next.splice(destination.index, 0, moved);
+              return { ...c, modules: next };
+            }
+            return c;
+          }),
+        };
+      });
     },
     [updateSection],
   );
@@ -728,14 +868,10 @@ export const EmailBuilder = ({
                                 </option>
                               ))}
                             </StyledSelect>
-                            <StyledColorInput
-                              type="color"
+                            <ColorWithSwatches
                               value={section.bgColor}
-                              onChange={(e) =>
-                                handleSectionColorChange(
-                                  section.id,
-                                  e.target.value,
-                                )
+                              onChange={(next) =>
+                                handleSectionColorChange(section.id, next)
                               }
                               title="Section background"
                             />
@@ -755,245 +891,335 @@ export const EmailBuilder = ({
                           </>
                         )}
                       </StyledSectionHeader>
-
-                      <StyledColumnsRow
-                        style={{
-                          gridTemplateColumns: widths
-                            .map((w) => `${w}fr`)
-                            .join(' '),
-                        }}
-                      >
-                        {section.columns.map((col, colIdx) => (
-                          <StyledColumn key={col.id}>
-                            <StyledColumnHeader>
-                              Col {colIdx + 1}
-                            </StyledColumnHeader>
-                            {col.modules.map((m, moduleIdx) => {
-                              const isSelected = selectedModuleId === m.id;
+                      {!readOnly && (
+                        <StyledPaddingRow>
+                          <StyledPaddingLabel>Padding (px)</StyledPaddingLabel>
+                          {(['Top', 'Bottom', 'Left', 'Right'] as const).map(
+                            (side) => {
+                              const key = `padding${side}` as
+                                | 'paddingTop'
+                                | 'paddingBottom'
+                                | 'paddingLeft'
+                                | 'paddingRight';
                               return (
-                                <StyledModuleRow
-                                  key={m.id}
-                                  selected={isSelected}
-                                >
-                                  <StyledModuleHeader>
-                                    <StyledModuleHeaderLeft
-                                      onClick={() =>
-                                        setSelectedModuleId(
-                                          isSelected ? null : m.id,
-                                        )
-                                      }
-                                    >
-                                      <span style={{ fontWeight: 600 }}>
-                                        {m.type[0].toUpperCase()}
-                                      </span>
-                                      <StyledModuleSummary>
-                                        {moduleSummary(m)}
-                                      </StyledModuleSummary>
-                                    </StyledModuleHeaderLeft>
-                                    {!readOnly && (
-                                      <>
-                                        <StyledIconButton
-                                          onClick={() =>
-                                            handleModuleMove(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              -1,
-                                            )
-                                          }
-                                          disabled={moduleIdx === 0}
-                                          title="Up"
-                                        >
-                                          ↑
-                                        </StyledIconButton>
-                                        <StyledIconButton
-                                          onClick={() =>
-                                            handleModuleMove(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              +1,
-                                            )
-                                          }
-                                          disabled={
-                                            moduleIdx === col.modules.length - 1
-                                          }
-                                          title="Down"
-                                        >
-                                          ↓
-                                        </StyledIconButton>
-                                        <StyledIconButton
-                                          onClick={() =>
-                                            handleModuleDuplicate(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                            )
-                                          }
-                                          title="Duplicate"
-                                        >
-                                          ⎘
-                                        </StyledIconButton>
-                                        <StyledIconButton
-                                          onClick={() =>
-                                            handleModuleDelete(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                            )
-                                          }
-                                          title="Delete"
-                                        >
-                                          ✕
-                                        </StyledIconButton>
-                                      </>
-                                    )}
-                                  </StyledModuleHeader>
-                                  {isSelected && !readOnly && (
-                                    <StyledEditorPanel>
-                                      {m.type === 'text' && (
-                                        <TextModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'heading' && (
-                                        <HeadingModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'button' && (
-                                        <ButtonModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'image' && (
-                                        <ImageModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'divider' && (
-                                        <DividerModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'spacer' && (
-                                        <SpacerModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'html' && (
-                                        <HtmlModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'social' && (
-                                        <SocialModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                      {m.type === 'footer' && (
-                                        <FooterModuleEditor
-                                          module={m}
-                                          onChange={(next) =>
-                                            handleModuleChange(
-                                              section.id,
-                                              col.id,
-                                              m.id,
-                                              next,
-                                            )
-                                          }
-                                        />
-                                      )}
-                                    </StyledEditorPanel>
-                                  )}
-                                </StyledModuleRow>
-                              );
-                            })}
-                            {!readOnly && (
-                              <StyledAddModuleRow>
-                                {MODULE_LIBRARY.map((entry) => (
-                                  <StyledAddModuleButton
-                                    key={entry.type}
-                                    onClick={() =>
-                                      handleModuleAdd(
+                                <StyledPaddingField key={side}>
+                                  {side[0]}
+                                  <StyledPaddingInput
+                                    type="number"
+                                    min={0}
+                                    max={200}
+                                    value={section[key]}
+                                    onChange={(e) =>
+                                      handleSectionPaddingChange(
                                         section.id,
-                                        col.id,
-                                        entry.type,
+                                        side,
+                                        Number(e.target.value),
                                       )
                                     }
-                                  >
-                                    + {entry.label}
-                                  </StyledAddModuleButton>
-                                ))}
-                              </StyledAddModuleRow>
-                            )}
-                          </StyledColumn>
-                        ))}
-                      </StyledColumnsRow>
+                                  />
+                                </StyledPaddingField>
+                              );
+                            },
+                          )}
+                        </StyledPaddingRow>
+                      )}
+
+                      <DragDropContext
+                        onDragEnd={(result) =>
+                          handleSectionModulesDragEnd(section.id, result)
+                        }
+                      >
+                        <StyledColumnsRow
+                          style={{
+                            gridTemplateColumns: widths
+                              .map((w) => `${w}fr`)
+                              .join(' '),
+                          }}
+                        >
+                          {section.columns.map((col, colIdx) => (
+                            <Droppable
+                              key={col.id}
+                              droppableId={col.id}
+                              type="module"
+                              isDropDisabled={readOnly}
+                            >
+                              {(droppableProvided) => (
+                                <StyledColumn
+                                  ref={droppableProvided.innerRef}
+                                  // oxlint-disable-next-line react/jsx-props-no-spreading
+                                  {...droppableProvided.droppableProps}
+                                >
+                                  <StyledColumnHeader>
+                                    Col {colIdx + 1}
+                                  </StyledColumnHeader>
+                                  {col.modules.map((m, moduleIdx) => {
+                                    const isSelected =
+                                      selectedModuleId === m.id;
+                                    return (
+                                      <Draggable
+                                        key={m.id}
+                                        draggableId={m.id}
+                                        index={moduleIdx}
+                                        isDragDisabled={readOnly}
+                                      >
+                                        {(draggableProvided) => (
+                                          <StyledModuleRow
+                                            ref={draggableProvided.innerRef}
+                                            // oxlint-disable-next-line react/jsx-props-no-spreading
+                                            {...draggableProvided.draggableProps}
+                                            // oxlint-disable-next-line react/jsx-props-no-spreading
+                                            {...draggableProvided.dragHandleProps}
+                                            selected={isSelected}
+                                          >
+                                            <StyledModuleHeader>
+                                              <StyledModuleHeaderLeft
+                                                onClick={() =>
+                                                  setSelectedModuleId(
+                                                    isSelected ? null : m.id,
+                                                  )
+                                                }
+                                              >
+                                                <span
+                                                  style={{ fontWeight: 600 }}
+                                                >
+                                                  {m.type[0].toUpperCase()}
+                                                </span>
+                                                <StyledModuleSummary>
+                                                  {moduleSummary(m)}
+                                                </StyledModuleSummary>
+                                              </StyledModuleHeaderLeft>
+                                              {!readOnly && (
+                                                <>
+                                                  <StyledIconButton
+                                                    onClick={() =>
+                                                      handleModuleMove(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        -1,
+                                                      )
+                                                    }
+                                                    disabled={moduleIdx === 0}
+                                                    title="Up"
+                                                  >
+                                                    ↑
+                                                  </StyledIconButton>
+                                                  <StyledIconButton
+                                                    onClick={() =>
+                                                      handleModuleMove(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        +1,
+                                                      )
+                                                    }
+                                                    disabled={
+                                                      moduleIdx ===
+                                                      col.modules.length - 1
+                                                    }
+                                                    title="Down"
+                                                  >
+                                                    ↓
+                                                  </StyledIconButton>
+                                                  <StyledIconButton
+                                                    onClick={() =>
+                                                      handleModuleCopy(m)
+                                                    }
+                                                    title="Copy (paste in any campaign)"
+                                                  >
+                                                    ⧉
+                                                  </StyledIconButton>
+                                                  <StyledIconButton
+                                                    onClick={() =>
+                                                      handleModuleDuplicate(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                      )
+                                                    }
+                                                    title="Duplicate"
+                                                  >
+                                                    ⎘
+                                                  </StyledIconButton>
+                                                  <StyledIconButton
+                                                    onClick={() =>
+                                                      handleModuleDelete(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                      )
+                                                    }
+                                                    title="Delete"
+                                                  >
+                                                    ✕
+                                                  </StyledIconButton>
+                                                </>
+                                              )}
+                                            </StyledModuleHeader>
+                                            {isSelected && !readOnly && (
+                                              <StyledEditorPanel>
+                                                {m.type === 'text' && (
+                                                  <TextModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'heading' && (
+                                                  <HeadingModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'button' && (
+                                                  <ButtonModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'image' && (
+                                                  <ImageModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'divider' && (
+                                                  <DividerModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'spacer' && (
+                                                  <SpacerModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'html' && (
+                                                  <HtmlModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'social' && (
+                                                  <SocialModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                                {m.type === 'footer' && (
+                                                  <FooterModuleEditor
+                                                    module={m}
+                                                    onChange={(next) =>
+                                                      handleModuleChange(
+                                                        section.id,
+                                                        col.id,
+                                                        m.id,
+                                                        next,
+                                                      )
+                                                    }
+                                                  />
+                                                )}
+                                              </StyledEditorPanel>
+                                            )}
+                                          </StyledModuleRow>
+                                        )}
+                                      </Draggable>
+                                    );
+                                  })}
+                                  {droppableProvided.placeholder}
+                                  {!readOnly && (
+                                    <StyledAddModuleRow>
+                                      {MODULE_LIBRARY.map((entry) => (
+                                        <StyledAddModuleButton
+                                          key={entry.type}
+                                          onClick={() =>
+                                            handleModuleAdd(
+                                              section.id,
+                                              col.id,
+                                              entry.type,
+                                            )
+                                          }
+                                        >
+                                          + {entry.label}
+                                        </StyledAddModuleButton>
+                                      ))}
+                                      {clipboardModuleType !== null && (
+                                        <StyledAddModuleButton
+                                          onClick={() =>
+                                            handleModulePaste(
+                                              section.id,
+                                              col.id,
+                                            )
+                                          }
+                                          title={`Paste ${clipboardModuleType} from clipboard`}
+                                        >
+                                          📋 Paste
+                                        </StyledAddModuleButton>
+                                      )}
+                                    </StyledAddModuleRow>
+                                  )}
+                                </StyledColumn>
+                              )}
+                            </Droppable>
+                          ))}
+                        </StyledColumnsRow>
+                      </DragDropContext>
                     </StyledSectionCard>
                   )}
                 />

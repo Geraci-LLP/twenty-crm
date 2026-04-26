@@ -244,6 +244,17 @@ export const CampaignEditor = ({
     initialDesign ? 'design' : 'code',
   );
 
+  // CAN-SPAM compliance: every marketing email needs a physical mailing
+  // address + unsubscribe mechanism. The Footer module renders both, so
+  // warn if the user hasn't added one. Soft warning, not a block on save.
+  const designLacksFooter = useMemo(() => {
+    const design = parseDesign(value.designJson);
+    if (!design) return false; // legacy / code mode — code-mode has its own warning
+    return !design.sections.some((s) =>
+      s.columns?.some((c) => c.modules.some((m) => m.type === 'footer')),
+    );
+  }, [value.designJson]);
+
   const handleFieldChange = useCallback(
     (field: keyof CampaignEditorData, fieldValue: string) => {
       onChange({ ...value, [field]: fieldValue });
@@ -393,17 +404,26 @@ export const CampaignEditor = ({
           </StyledModeTabs>
         )}
         {mode === 'design' ? (
-          <EmailBuilder
-            design={parseDesign(value.designJson) ?? buildEmptyDesign()}
-            onChange={handleDesignChange}
-            readOnly={readOnly}
-            meta={{
-              fromName: value.fromName,
-              fromEmail: value.fromEmail,
-              subject: value.subject,
-              previewText: value.previewText,
-            }}
-          />
+          <>
+            {!readOnly && designLacksFooter && (
+              <StyledWarningBanner>
+                Your email design has no Footer module. CAN-SPAM requires a
+                physical mailing address and an unsubscribe mechanism in every
+                marketing email — add a Footer module before sending.
+              </StyledWarningBanner>
+            )}
+            <EmailBuilder
+              design={parseDesign(value.designJson) ?? buildEmptyDesign()}
+              onChange={handleDesignChange}
+              readOnly={readOnly}
+              meta={{
+                fromName: value.fromName,
+                fromEmail: value.fromEmail,
+                subject: value.subject,
+                previewText: value.previewText,
+              }}
+            />
+          </>
         ) : (
           <>
             {!readOnly && (
