@@ -11,6 +11,7 @@ export const SUPPORTED_FILE_FOLDERS = [
   FileFolder.CorePicture,
   FileFolder.FilesField,
   FileFolder.Workflow,
+  FileFolder.Marketing,
   FileFolder.AgentChat,
   FileFolder.AppTarball,
 ] as const;

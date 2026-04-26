@@ -3,16 +3,15 @@ import { t } from '@lingui/core/macro';
 import { useCallback, useState } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 
+import { UPLOAD_MARKETING_FILE } from '@/campaign/graphql/mutations/uploadMarketingFile';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
-import { UploadWorkflowFileDocument } from '~/generated-metadata/graphql';
 
-// Reuses the workflow file upload mutation for marketing email assets. The
-// dedicated marketing upload mutation (with its own FileFolder + accounting)
-// is queued as a follow-up — for now this gives us a stable signed URL with
-// no DI risk on the server. Files land in FileFolder.Workflow as
-// isTemporaryFile=true; there is currently no active TTL cleanup of those,
-// but if/when one is added we'll need to migrate to a dedicated marketing
-// folder before that lands.
+// Uploads marketing email assets (e.g. images embedded in campaign body
+// designs) via the dedicated uploadMarketingFile mutation added in PR 31.
+// Files land in FileFolder.Marketing with isTemporaryFile=false so the
+// signed URL stays valid indefinitely — recipients may open the email
+// weeks after send. Earlier PRs reused the workflow upload as a temporary
+// stop-gap; this hook now points at the proper resolver.
 
 const ALLOWED_IMAGE_TYPES = [
   'image/png',
@@ -24,9 +23,26 @@ const ALLOWED_IMAGE_TYPES = [
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 10 MB
 
+type UploadMarketingFileResult = {
+  uploadMarketingFile: {
+    id: string;
+    path: string;
+    size: number;
+    createdAt: string;
+    url: string;
+  } | null;
+};
+
+type UploadMarketingFileVariables = {
+  file: File;
+};
+
 export const useUploadCampaignAssetFile = () => {
   const apolloClient = useApolloClient();
-  const [uploadWorkflowFile] = useMutation(UploadWorkflowFileDocument, {
+  const [uploadMarketingFile] = useMutation<
+    UploadMarketingFileResult,
+    UploadMarketingFileVariables
+  >(UPLOAD_MARKETING_FILE, {
     client: apolloClient,
   });
   const { enqueueErrorSnackBar } = useSnackBar();
@@ -49,8 +65,8 @@ export const useUploadCampaignAssetFile = () => {
 
       setUploading(true);
       try {
-        const result = await uploadWorkflowFile({ variables: { file } });
-        const uploaded = result.data?.uploadWorkflowFile;
+        const result = await uploadMarketingFile({ variables: { file } });
+        const uploaded = result.data?.uploadMarketingFile;
         if (!isDefined(uploaded?.url)) {
           enqueueErrorSnackBar({ message: t`Upload failed.` });
           return null;
@@ -63,7 +79,7 @@ export const useUploadCampaignAssetFile = () => {
         setUploading(false);
       }
     },
-    [uploadWorkflowFile, enqueueErrorSnackBar],
+    [uploadMarketingFile, enqueueErrorSnackBar],
   );
 
   return { upload, uploading };
