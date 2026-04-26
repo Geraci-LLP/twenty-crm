@@ -7,6 +7,7 @@ import { CampaignTemplateGallery } from '@/campaign/components/CampaignTemplateG
 import { SendTestEmailModal } from '@/campaign/components/SendTestEmailModal';
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
 import { useSendTestEmail } from '@/campaign/hooks/useSendTestEmail';
+import { checkCampaignPreflight } from '@/campaign/utils/checkCampaignPreflight';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import {
   EmailBuilder,
@@ -151,6 +152,28 @@ const StyledWarningBanner = styled.div`
   padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
 `;
 
+const StyledPreflightPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${themeCssVariables.spacing[1]};
+`;
+
+const StyledPreflightItem = styled.div<{ severity: 'error' | 'warning' }>`
+  background: ${(p) =>
+    p.severity === 'error'
+      ? `${themeCssVariables.color.red}15`
+      : `${themeCssVariables.color.orange}15`};
+  border: 1px solid
+    ${(p) =>
+      p.severity === 'error'
+        ? themeCssVariables.color.red
+        : themeCssVariables.color.orange};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
+`;
+
 const StyledTemplatesButton = styled.button`
   background: none;
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -286,16 +309,13 @@ export const CampaignEditor = ({
     initialDesign ? 'design' : 'code',
   );
 
-  // CAN-SPAM compliance: every marketing email needs a physical mailing
-  // address + unsubscribe mechanism. The Footer module renders both, so
-  // warn if the user hasn't added one. Soft warning, not a block on save.
-  const designLacksFooter = useMemo(() => {
-    const design = parseDesign(value.designJson);
-    if (!design) return false; // legacy / code mode — code-mode has its own warning
-    return !design.sections.some((s) =>
-      s.columns?.some((c) => c.modules.some((m) => m.type === 'footer')),
-    );
-  }, [value.designJson]);
+  // Preflight checks — run on every edit, surface as a banner. Errors are
+  // send-blockers (subject empty, no body); warnings are advisory (no
+  // footer, unknown tokens). We don't gate save here — the actual send
+  // gate is on the server side. This is just early feedback.
+  const preflightIssues = useMemo(() => {
+    return checkCampaignPreflight(value, parseDesign(value.designJson));
+  }, [value]);
 
   const handleFieldChange = useCallback(
     (field: keyof CampaignEditorData, fieldValue: string) => {
@@ -457,12 +477,17 @@ export const CampaignEditor = ({
                 </StyledTemplatesButton>
               </StyledToolbar>
             )}
-            {!readOnly && designLacksFooter && (
-              <StyledWarningBanner>
-                Your email design has no Footer module. CAN-SPAM requires a
-                physical mailing address and an unsubscribe mechanism in every
-                marketing email — add a Footer module before sending.
-              </StyledWarningBanner>
+            {!readOnly && preflightIssues.length > 0 && (
+              <StyledPreflightPanel>
+                {preflightIssues.map((issue) => (
+                  <StyledPreflightItem key={issue.id} severity={issue.severity}>
+                    <strong>
+                      {issue.severity === 'error' ? '⚠ ' : 'ℹ '}
+                    </strong>
+                    {issue.message}
+                  </StyledPreflightItem>
+                ))}
+              </StyledPreflightPanel>
             )}
             <EmailBuilder
               design={parseDesign(value.designJson) ?? buildEmptyDesign()}
@@ -533,6 +558,18 @@ export const CampaignEditor = ({
                 footer will be automatically appended. Use the &quot;Unsubscribe
                 Link&quot; personalization token for a custom placement.
               </StyledWarningBanner>
+            )}
+            {!readOnly && preflightIssues.length > 0 && (
+              <StyledPreflightPanel>
+                {preflightIssues.map((issue) => (
+                  <StyledPreflightItem key={issue.id} severity={issue.severity}>
+                    <strong>
+                      {issue.severity === 'error' ? '⚠ ' : 'ℹ '}
+                    </strong>
+                    {issue.message}
+                  </StyledPreflightItem>
+                ))}
+              </StyledPreflightPanel>
             )}
           </>
         )}
