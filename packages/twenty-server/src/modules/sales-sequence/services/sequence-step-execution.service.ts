@@ -114,6 +114,49 @@ export class SequenceStepExecutionService {
           return this.empty('sequence-inactive');
         }
 
+        // Resolve sender via inheritance chain: sequence override → MarketingCampaign
+        // default → SEQUENCE_FROM_EMAIL/NAME env var. Fields are custom (added via
+        // metadata API) so we cast through unknown to read them.
+        const sequenceCustom = sequence as unknown as {
+          fromEmail?: string | null;
+          fromName?: string | null;
+          marketingCampaignId?: string | null;
+        };
+        let mcDefaultFromEmail: string | null = null;
+        let mcDefaultFromName: string | null = null;
+        if (sequenceCustom.marketingCampaignId) {
+          try {
+            const mcRepository =
+              await this.globalWorkspaceOrmManager.getRepository<{
+                id: string;
+                defaultFromEmail: string | null;
+                defaultFromName: string | null;
+              }>(workspaceId, 'marketingCampaign', {
+                shouldBypassPermissionChecks: true,
+              });
+            const mc = await mcRepository.findOne({
+              where: { id: sequenceCustom.marketingCampaignId },
+            });
+            mcDefaultFromEmail = mc?.defaultFromEmail ?? null;
+            mcDefaultFromName = mc?.defaultFromName ?? null;
+          } catch (error) {
+            this.logger.warn(
+              `Could not load MarketingCampaign for sequence ${sequenceId}: ${(error as Error).message}`,
+            );
+          }
+        }
+        const resolvedFromEmail =
+          sequenceCustom.fromEmail ||
+          mcDefaultFromEmail ||
+          process.env.SEQUENCE_FROM_EMAIL ||
+          'noreply@example.com';
+        const resolvedFromName =
+          sequenceCustom.fromName ||
+          mcDefaultFromName ||
+          process.env.SEQUENCE_FROM_NAME ||
+          sequence.name ||
+          'Sales';
+
         const steps = await stepRepository.find({
           where: { sequenceId } as object,
           order: { stepOrder: 'ASC' } as object,
@@ -153,6 +196,8 @@ export class SequenceStepExecutionService {
           sequence,
           person,
           workspaceId,
+          fromEmail: resolvedFromEmail,
+          fromName: resolvedFromName,
         });
 
         if (sendResult.skipped) {
@@ -211,8 +256,10 @@ export class SequenceStepExecutionService {
     sequence: SequenceWorkspaceEntity;
     person: PersonWorkspaceEntity | null;
     workspaceId: string;
+    fromEmail: string;
+    fromName: string;
   }): Promise<{ skipped: boolean; reason?: string }> {
-    const { step, enrollment, sequence, person, workspaceId } = args;
+    const { step, enrollment, person, workspaceId, fromEmail, fromName } = args;
 
     switch (step.type) {
       case 'EMAIL': {
@@ -269,8 +316,8 @@ export class SequenceStepExecutionService {
             htmlContent,
             plainTextContent: this.htmlToPlainText(htmlContent),
             from: {
-              email: process.env.SEQUENCE_FROM_EMAIL ?? 'noreply@example.com',
-              name: process.env.SEQUENCE_FROM_NAME ?? sequence.name ?? 'Sales',
+              email: fromEmail,
+              name: fromName,
             },
             personalizations: [
               {

@@ -65,6 +65,40 @@ export class CampaignExecutorService {
       where: { id: campaignId },
     });
 
+    // Resolve sender via inheritance chain: campaign-level overrides first,
+    // then fall back to the parent MarketingCampaign's defaults if linked.
+    // marketingCampaignId is a custom field added via metadata API, so cast.
+    const campaignCustom = campaign as unknown as {
+      marketingCampaignId?: string | null;
+    };
+    let mcDefaultFromEmail: string | null = null;
+    let mcDefaultFromName: string | null = null;
+    if (campaignCustom.marketingCampaignId) {
+      try {
+        const mcRepository =
+          await this.globalWorkspaceOrmManager.getRepository<{
+            id: string;
+            defaultFromEmail: string | null;
+            defaultFromName: string | null;
+          }>(workspaceId, 'marketingCampaign', {
+            shouldBypassPermissionChecks: true,
+          });
+        const mc = await mcRepository.findOne({
+          where: { id: campaignCustom.marketingCampaignId },
+        });
+        mcDefaultFromEmail = mc?.defaultFromEmail ?? null;
+        mcDefaultFromName = mc?.defaultFromName ?? null;
+      } catch (error) {
+        this.logger.warn(
+          `Could not load MarketingCampaign for campaign ${campaignId}: ${(error as Error).message}`,
+        );
+      }
+    }
+    const resolvedFromEmail =
+      campaign.fromEmail || mcDefaultFromEmail || '';
+    const resolvedFromName =
+      campaign.fromName || mcDefaultFromName || '';
+
     // Idempotency: skip if campaign already completed
     if (campaign.status === CampaignStatus.SENT) {
       this.logger.warn(
@@ -199,8 +233,8 @@ export class CampaignExecutorService {
           htmlContent,
           plainTextContent,
           from: {
-            email: campaign.fromEmail ?? '',
-            name: campaign.fromName ?? '',
+            email: resolvedFromEmail,
+            name: resolvedFromName,
           },
           personalizations,
           headers: {
