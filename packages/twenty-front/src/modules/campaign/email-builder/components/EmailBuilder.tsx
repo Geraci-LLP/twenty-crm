@@ -52,6 +52,48 @@ const StyledPreviewBar = styled.div`
   justify-content: flex-end;
 `;
 
+const StyledDesignSettingsRow = styled.div`
+  align-items: center;
+  background: ${themeCssVariables.background.secondary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${themeCssVariables.spacing[3]};
+  padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
+`;
+
+const StyledDesignSettingLabel = styled.label`
+  align-items: center;
+  color: ${themeCssVariables.font.color.secondary};
+  display: flex;
+  font-size: ${themeCssVariables.font.size.xs};
+  gap: ${themeCssVariables.spacing[1]};
+`;
+
+const StyledFontSelect = styled.select`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+`;
+
+// Email-safe font stacks. Gmail / Apple Mail / Outlook all reliably render
+// these without falling back to a default. Web fonts (Google Fonts etc.)
+// are intentionally excluded — they require <link> tags many clients strip.
+const EMAIL_SAFE_FONTS: ReadonlyArray<{ label: string; value: string }> = [
+  { label: 'Arial', value: 'Arial, sans-serif' },
+  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Times New Roman', value: '"Times New Roman", Times, serif' },
+  { label: 'Trebuchet MS', value: '"Trebuchet MS", Helvetica, sans-serif' },
+  { label: 'Verdana', value: 'Verdana, Geneva, sans-serif' },
+  { label: 'Tahoma', value: 'Tahoma, Geneva, sans-serif' },
+  { label: 'Courier New', value: '"Courier New", Courier, monospace' },
+];
+
 const StyledPreviewToggle = styled.button<{ active: boolean }>`
   background: ${(p) =>
     p.active
@@ -370,6 +412,17 @@ export const EmailBuilder = ({
     [design, onChange],
   );
 
+  const handleSettingsChange = useCallback(
+    (updater: (s: EmailDesign['settings']) => EmailDesign['settings']) => {
+      const nextDesign: EmailDesign = {
+        ...design,
+        settings: updater(design.settings),
+      };
+      onChange(nextDesign, renderDesignToHtml(nextDesign));
+    },
+    [design, onChange],
+  );
+
   const updateSection = useCallback(
     (sectionId: string, updater: (s: EmailSection) => EmailSection) => {
       updateSections(
@@ -422,6 +475,34 @@ export const EmailBuilder = ({
   const handleSectionAdd = useCallback(
     (layout: ColumnLayout) => {
       updateSections([...design.sections, buildDefaultSection(layout)]);
+    },
+    [design.sections, updateSections],
+  );
+
+  const handleSectionDuplicate = useCallback(
+    (sectionId: string) => {
+      const idx = design.sections.findIndex((s) => s.id === sectionId);
+      if (idx < 0) return;
+      const original = design.sections[idx];
+      // Deep clone via JSON, then regenerate every id (section, columns,
+      // modules) so the duplicate is fully independent — no id collisions
+      // when the user edits one and not the other.
+      const cloned = JSON.parse(JSON.stringify(original)) as EmailSection;
+      cloned.id = generateEmailBuilderId('sec');
+      cloned.columns = cloned.columns.map((c) => ({
+        ...c,
+        id: generateEmailBuilderId('col'),
+        modules: c.modules.map((m) => ({
+          ...m,
+          id: generateEmailBuilderId('mod'),
+        })),
+      }));
+      const next = [
+        ...design.sections.slice(0, idx + 1),
+        cloned,
+        ...design.sections.slice(idx + 1),
+      ];
+      updateSections(next);
     },
     [design.sections, updateSections],
   );
@@ -532,6 +613,36 @@ export const EmailBuilder = ({
 
   return (
     <StyledLayout>
+      {!readOnly && (
+        <StyledDesignSettingsRow>
+          <StyledDesignSettingLabel>
+            Font
+            <StyledFontSelect
+              value={design.settings.fontFamily}
+              onChange={(e) =>
+                handleSettingsChange((s) => ({
+                  ...s,
+                  fontFamily: e.target.value,
+                }))
+              }
+              title="Email-safe font stack"
+            >
+              {EMAIL_SAFE_FONTS.map((f) => (
+                <option key={f.value} value={f.value}>
+                  {f.label}
+                </option>
+              ))}
+              {!EMAIL_SAFE_FONTS.some(
+                (f) => f.value === design.settings.fontFamily,
+              ) && (
+                <option value={design.settings.fontFamily}>
+                  Custom: {design.settings.fontFamily}
+                </option>
+              )}
+            </StyledFontSelect>
+          </StyledDesignSettingLabel>
+        </StyledDesignSettingsRow>
+      )}
       <StyledPreviewBar>
         <StyledPreviewToggle
           active={previewMode === 'desktop'}
@@ -628,6 +739,12 @@ export const EmailBuilder = ({
                               }
                               title="Section background"
                             />
+                            <StyledIconButton
+                              onClick={() => handleSectionDuplicate(section.id)}
+                              title="Duplicate section"
+                            >
+                              ⎘
+                            </StyledIconButton>
                             <StyledIconButton
                               onClick={() => handleSectionDelete(section.id)}
                               disabled={design.sections.length <= 1}

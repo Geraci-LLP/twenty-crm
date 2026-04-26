@@ -38,6 +38,22 @@ const StyledLabel = styled.label`
   font-weight: ${themeCssVariables.font.weight.medium};
 `;
 
+const StyledLabelRow = styled.div`
+  align-items: baseline;
+  display: flex;
+  gap: ${themeCssVariables.spacing[2]};
+  justify-content: space-between;
+`;
+
+const StyledCharCount = styled.span<{ overLimit: boolean }>`
+  color: ${(p) =>
+    p.overLimit
+      ? themeCssVariables.color.red
+      : themeCssVariables.font.color.tertiary};
+  font-size: ${themeCssVariables.font.size.xs};
+  font-variant-numeric: tabular-nums;
+`;
+
 const StyledInput = styled.input`
   background: ${themeCssVariables.background.primary};
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -179,6 +195,13 @@ const StyledModeTab = styled.button<{ active: boolean }>`
   padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
 `;
 
+// Inbox truncation thresholds — Gmail / Apple Mail / Outlook all start
+// truncating subject lines around 50 chars on mobile and around 70 on
+// desktop. Preview text gets ~90–100 chars before truncation. These are
+// soft limits; the count just turns red so the user knows.
+const SUBJECT_RECOMMENDED_LIMIT = 60;
+const PREVIEW_TEXT_RECOMMENDED_LIMIT = 90;
+
 type CampaignEditorProps = {
   campaignId?: string;
   value: CampaignEditorData;
@@ -308,7 +331,15 @@ export const CampaignEditor = ({
       </StyledSenderRow>
 
       <StyledFieldGroup>
-        <StyledLabel>Subject</StyledLabel>
+        <StyledLabelRow>
+          <StyledLabel>Subject</StyledLabel>
+          <StyledCharCount
+            overLimit={value.subject.length > SUBJECT_RECOMMENDED_LIMIT}
+            title={`Most inboxes truncate after ~${SUBJECT_RECOMMENDED_LIMIT} chars`}
+          >
+            {value.subject.length} / {SUBJECT_RECOMMENDED_LIMIT}
+          </StyledCharCount>
+        </StyledLabelRow>
         <StyledInput
           type="text"
           placeholder="Email subject line"
@@ -319,7 +350,17 @@ export const CampaignEditor = ({
       </StyledFieldGroup>
 
       <StyledFieldGroup>
-        <StyledLabel>Preview text</StyledLabel>
+        <StyledLabelRow>
+          <StyledLabel>Preview text</StyledLabel>
+          <StyledCharCount
+            overLimit={
+              value.previewText.length > PREVIEW_TEXT_RECOMMENDED_LIMIT
+            }
+            title={`Most inboxes truncate after ~${PREVIEW_TEXT_RECOMMENDED_LIMIT} chars`}
+          >
+            {value.previewText.length} / {PREVIEW_TEXT_RECOMMENDED_LIMIT}
+          </StyledCharCount>
+        </StyledLabelRow>
         <StyledInput
           type="text"
           placeholder="Inbox preview shown after the subject (recommended ~90 chars)"
