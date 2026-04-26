@@ -31,6 +31,12 @@ export type CampaignEditorData = {
   body: string;
   fromName: string;
   fromEmail: string;
+  // Visual builder fields. designJson is the source of truth when designVersion
+  // is set; body holds the rendered HTML the server sends. Legacy emails have
+  // designJson === null and edit body directly.
+  designJson: unknown | null;
+  designVersion: number | null;
+  previewText: string;
 };
 
 export type CampaignSchedule = {
