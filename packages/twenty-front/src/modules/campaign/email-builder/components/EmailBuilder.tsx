@@ -9,6 +9,7 @@ import {
   MODULE_LIBRARY,
   SECTION_LAYOUT_LIBRARY,
 } from '@/campaign/email-builder/constants/EmailBuilderDefaults';
+import { PreviewModal } from '@/campaign/email-builder/components/preview/PreviewModal';
 import { ButtonModuleEditor } from '@/campaign/email-builder/components/modules/ButtonModuleEditor';
 import { DividerModuleEditor } from '@/campaign/email-builder/components/modules/DividerModuleEditor';
 import { FooterModuleEditor } from '@/campaign/email-builder/components/modules/FooterModuleEditor';
@@ -327,6 +328,7 @@ const COLUMN_COUNT_BY_LAYOUT: Record<ColumnLayout, number> = {
 export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, meta }: EmailBuilderProps) => {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Migrate on every read so older designs (v1) work seamlessly. The next
   // user edit writes the migrated v2 shape back to the record.
@@ -480,7 +482,19 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
         >
           Mobile
         </StyledPreviewToggle>
+        <StyledPreviewToggle
+          active={false}
+          onClick={() => setIsPreviewOpen(true)}
+          type="button"
+          title="Open full preview"
+        >
+          Open preview ↗
+        </StyledPreviewToggle>
       </StyledPreviewBar>
+
+      {isPreviewOpen && (
+        <PreviewModal html={previewHtml} onClose={() => setIsPreviewOpen(false)} />
+      )}
 
       <StyledPreviewWrap>
         {previewMode === 'desktop' ? (
