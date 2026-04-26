@@ -6,6 +6,7 @@ import {
   buildDefaultSection,
   buildEmptyColumn,
   EMPTY_EMAIL_DESIGN,
+  generateEmailBuilderId,
   MODULE_LIBRARY,
   SECTION_LAYOUT_LIBRARY,
 } from '@/campaign/email-builder/constants/EmailBuilderDefaults';
@@ -130,8 +131,13 @@ const StyledIconButton = styled.button`
   cursor: pointer;
   font-size: ${themeCssVariables.font.size.sm};
   padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
-  &:hover { background: ${themeCssVariables.background.tertiary}; }
-  &:disabled { cursor: not-allowed; opacity: 0.4; }
+  &:hover {
+    background: ${themeCssVariables.background.tertiary};
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
 `;
 
 const StyledSelect = styled.select`
@@ -233,7 +239,10 @@ const StyledAddModuleButton = styled.button`
   cursor: pointer;
   font-size: ${themeCssVariables.font.size.xs};
   padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
-  &:hover { background: ${themeCssVariables.background.primary}; color: ${themeCssVariables.font.color.primary}; }
+  &:hover {
+    background: ${themeCssVariables.background.primary};
+    color: ${themeCssVariables.font.color.primary};
+  }
 `;
 
 const StyledAddSectionRow = styled.div`
@@ -255,7 +264,9 @@ const StyledAddSectionButton = styled.button`
   cursor: pointer;
   font-size: ${themeCssVariables.font.size.sm};
   padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
-  &:hover { background: ${themeCssVariables.background.tertiary}; }
+  &:hover {
+    background: ${themeCssVariables.background.tertiary};
+  }
 `;
 
 type EmailBuilderProps = {
@@ -273,7 +284,10 @@ const moduleSummary = (m: EmailModule): string => {
     case 'text':
       return m.html.replace(/<[^>]+>/g, '').slice(0, 40) || '(empty text)';
     case 'heading':
-      return `${m.level.toUpperCase()}: ${m.text.slice(0, 40)}` || `(empty ${m.level})`;
+      return (
+        `${m.level.toUpperCase()}: ${m.text.slice(0, 40)}` ||
+        `(empty ${m.level})`
+      );
     case 'button':
       return m.label;
     case 'image':
@@ -299,9 +313,8 @@ const reshapeColumns = (
 ): EmailColumn[] => {
   if (oldCols.length === newCount) return oldCols;
   if (newCount > oldCols.length) {
-    const extras = Array.from(
-      { length: newCount - oldCols.length },
-      () => buildEmptyColumn(),
+    const extras = Array.from({ length: newCount - oldCols.length }, () =>
+      buildEmptyColumn(),
     );
     return [...oldCols, ...extras];
   }
@@ -312,22 +325,31 @@ const reshapeColumns = (
   if (lastIdx >= 0) {
     kept[lastIdx] = {
       ...kept[lastIdx],
-      modules: [
-        ...kept[lastIdx].modules,
-        ...dropped.flatMap((c) => c.modules),
-      ],
+      modules: [...kept[lastIdx].modules, ...dropped.flatMap((c) => c.modules)],
     };
   }
   return kept;
 };
 
 const COLUMN_COUNT_BY_LAYOUT: Record<ColumnLayout, number> = {
-  '1': 1, '2': 2, '3': 3, '4': 4, '1-2': 2, '2-1': 2,
+  '1': 1,
+  '2': 2,
+  '3': 3,
+  '4': 4,
+  '1-2': 2,
+  '2-1': 2,
 };
 
-export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, meta }: EmailBuilderProps) => {
+export const EmailBuilder = ({
+  design: rawDesign,
+  onChange,
+  readOnly = false,
+  meta,
+}: EmailBuilderProps) => {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>(
+    'desktop',
+  );
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Migrate on every read so older designs (v1) work seamlessly. The next
@@ -335,7 +357,10 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
   const design = useMemo(() => migrateDesign(rawDesign), [rawDesign]);
   // Preview HTML includes the inbox-meta header. Saved HTML (passed to onChange)
   // does NOT — server stores only what gets sent.
-  const previewHtml = useMemo(() => renderDesignToHtml(design, meta), [design, meta]);
+  const previewHtml = useMemo(
+    () => renderDesignToHtml(design, meta),
+    [design, meta],
+  );
 
   const updateSections = useCallback(
     (next: EmailSection[]) => {
@@ -416,7 +441,12 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
   );
 
   const handleModuleChange = useCallback(
-    (sectionId: string, columnId: string, moduleId: string, next: EmailModule) => {
+    (
+      sectionId: string,
+      columnId: string,
+      moduleId: string,
+      next: EmailModule,
+    ) => {
       updateSection(sectionId, (s) => ({
         ...s,
         columns: s.columns.map((c) =>
@@ -447,8 +477,43 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
     [selectedModuleId, updateSection],
   );
 
+  const handleModuleDuplicate = useCallback(
+    (sectionId: string, columnId: string, moduleId: string) => {
+      const cloneId = generateEmailBuilderId('mod');
+      updateSection(sectionId, (s) => ({
+        ...s,
+        columns: s.columns.map((c) => {
+          if (c.id !== columnId) return c;
+          const idx = c.modules.findIndex((m) => m.id === moduleId);
+          if (idx < 0) return c;
+          // Deep-clone via JSON round-trip — every module in the union is plain
+          // JSON-serializable data, and only inner arrays (e.g. SocialModule.links)
+          // need cloning. Cast preserves the discriminated union shape.
+          const original = c.modules[idx];
+          const clone = {
+            ...(JSON.parse(JSON.stringify(original)) as EmailModule),
+            id: cloneId,
+          } as EmailModule;
+          const next = [
+            ...c.modules.slice(0, idx + 1),
+            clone,
+            ...c.modules.slice(idx + 1),
+          ];
+          return { ...c, modules: next };
+        }),
+      }));
+      setSelectedModuleId(cloneId);
+    },
+    [updateSection],
+  );
+
   const handleModuleMove = useCallback(
-    (sectionId: string, columnId: string, moduleId: string, direction: -1 | 1) => {
+    (
+      sectionId: string,
+      columnId: string,
+      moduleId: string,
+      direction: -1 | 1,
+    ) => {
       updateSection(sectionId, (s) => ({
         ...s,
         columns: s.columns.map((c) => {
@@ -493,7 +558,10 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
       </StyledPreviewBar>
 
       {isPreviewOpen && (
-        <PreviewModal html={previewHtml} onClose={() => setIsPreviewOpen(false)} />
+        <PreviewModal
+          html={previewHtml}
+          onClose={() => setIsPreviewOpen(false)}
+        />
       )}
 
       <StyledPreviewWrap>
@@ -526,154 +594,290 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
                   isDragDisabled={readOnly}
                   draggableComponentStyles={{ marginBottom: 8 }}
                   itemComponent={() => (
-            <StyledSectionCard>
-              <StyledSectionHeader>
-                <StyledSectionLabel>≡ Section {sectionIdx + 1}</StyledSectionLabel>
-                {!readOnly && (
-                  <>
-                    <StyledSelect
-                      value={section.layout}
-                      onChange={(e) =>
-                        handleSectionLayoutChange(section.id, e.target.value as ColumnLayout)
-                      }
-                      title="Column layout"
-                    >
-                      {SECTION_LAYOUT_LIBRARY.map((opt) => (
-                        <option key={opt.layout} value={opt.layout}>
-                          {opt.label}
-                        </option>
-                      ))}
-                    </StyledSelect>
-                    <StyledColorInput
-                      type="color"
-                      value={section.bgColor}
-                      onChange={(e) => handleSectionColorChange(section.id, e.target.value)}
-                      title="Section background"
-                    />
-                    <StyledIconButton
-                      onClick={() => handleSectionDelete(section.id)}
-                      disabled={design.sections.length <= 1}
-                      title="Delete section (keeps at least one)"
-                    >✕</StyledIconButton>
-                  </>
-                )}
-              </StyledSectionHeader>
-
-              <StyledColumnsRow
-                style={{
-                  gridTemplateColumns: widths.map((w) => `${w}fr`).join(' '),
-                }}
-              >
-                {section.columns.map((col, colIdx) => (
-                  <StyledColumn key={col.id}>
-                    <StyledColumnHeader>Col {colIdx + 1}</StyledColumnHeader>
-                    {col.modules.map((m, moduleIdx) => {
-                      const isSelected = selectedModuleId === m.id;
-                      return (
-                        <StyledModuleRow key={m.id} selected={isSelected}>
-                          <StyledModuleHeader>
-                            <StyledModuleHeaderLeft
-                              onClick={() => setSelectedModuleId(isSelected ? null : m.id)}
+                    <StyledSectionCard>
+                      <StyledSectionHeader>
+                        <StyledSectionLabel>
+                          ≡ Section {sectionIdx + 1}
+                        </StyledSectionLabel>
+                        {!readOnly && (
+                          <>
+                            <StyledSelect
+                              value={section.layout}
+                              onChange={(e) =>
+                                handleSectionLayoutChange(
+                                  section.id,
+                                  e.target.value as ColumnLayout,
+                                )
+                              }
+                              title="Column layout"
                             >
-                              <span style={{ fontWeight: 600 }}>{m.type[0].toUpperCase()}</span>
-                              <StyledModuleSummary>{moduleSummary(m)}</StyledModuleSummary>
-                            </StyledModuleHeaderLeft>
+                              {SECTION_LAYOUT_LIBRARY.map((opt) => (
+                                <option key={opt.layout} value={opt.layout}>
+                                  {opt.label}
+                                </option>
+                              ))}
+                            </StyledSelect>
+                            <StyledColorInput
+                              type="color"
+                              value={section.bgColor}
+                              onChange={(e) =>
+                                handleSectionColorChange(
+                                  section.id,
+                                  e.target.value,
+                                )
+                              }
+                              title="Section background"
+                            />
+                            <StyledIconButton
+                              onClick={() => handleSectionDelete(section.id)}
+                              disabled={design.sections.length <= 1}
+                              title="Delete section (keeps at least one)"
+                            >
+                              ✕
+                            </StyledIconButton>
+                          </>
+                        )}
+                      </StyledSectionHeader>
+
+                      <StyledColumnsRow
+                        style={{
+                          gridTemplateColumns: widths
+                            .map((w) => `${w}fr`)
+                            .join(' '),
+                        }}
+                      >
+                        {section.columns.map((col, colIdx) => (
+                          <StyledColumn key={col.id}>
+                            <StyledColumnHeader>
+                              Col {colIdx + 1}
+                            </StyledColumnHeader>
+                            {col.modules.map((m, moduleIdx) => {
+                              const isSelected = selectedModuleId === m.id;
+                              return (
+                                <StyledModuleRow
+                                  key={m.id}
+                                  selected={isSelected}
+                                >
+                                  <StyledModuleHeader>
+                                    <StyledModuleHeaderLeft
+                                      onClick={() =>
+                                        setSelectedModuleId(
+                                          isSelected ? null : m.id,
+                                        )
+                                      }
+                                    >
+                                      <span style={{ fontWeight: 600 }}>
+                                        {m.type[0].toUpperCase()}
+                                      </span>
+                                      <StyledModuleSummary>
+                                        {moduleSummary(m)}
+                                      </StyledModuleSummary>
+                                    </StyledModuleHeaderLeft>
+                                    {!readOnly && (
+                                      <>
+                                        <StyledIconButton
+                                          onClick={() =>
+                                            handleModuleMove(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              -1,
+                                            )
+                                          }
+                                          disabled={moduleIdx === 0}
+                                          title="Up"
+                                        >
+                                          ↑
+                                        </StyledIconButton>
+                                        <StyledIconButton
+                                          onClick={() =>
+                                            handleModuleMove(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              +1,
+                                            )
+                                          }
+                                          disabled={
+                                            moduleIdx === col.modules.length - 1
+                                          }
+                                          title="Down"
+                                        >
+                                          ↓
+                                        </StyledIconButton>
+                                        <StyledIconButton
+                                          onClick={() =>
+                                            handleModuleDuplicate(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                            )
+                                          }
+                                          title="Duplicate"
+                                        >
+                                          ⎘
+                                        </StyledIconButton>
+                                        <StyledIconButton
+                                          onClick={() =>
+                                            handleModuleDelete(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                            )
+                                          }
+                                          title="Delete"
+                                        >
+                                          ✕
+                                        </StyledIconButton>
+                                      </>
+                                    )}
+                                  </StyledModuleHeader>
+                                  {isSelected && !readOnly && (
+                                    <StyledEditorPanel>
+                                      {m.type === 'text' && (
+                                        <TextModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'heading' && (
+                                        <HeadingModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'button' && (
+                                        <ButtonModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'image' && (
+                                        <ImageModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'divider' && (
+                                        <DividerModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'spacer' && (
+                                        <SpacerModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'html' && (
+                                        <HtmlModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'social' && (
+                                        <SocialModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                      {m.type === 'footer' && (
+                                        <FooterModuleEditor
+                                          module={m}
+                                          onChange={(next) =>
+                                            handleModuleChange(
+                                              section.id,
+                                              col.id,
+                                              m.id,
+                                              next,
+                                            )
+                                          }
+                                        />
+                                      )}
+                                    </StyledEditorPanel>
+                                  )}
+                                </StyledModuleRow>
+                              );
+                            })}
                             {!readOnly && (
-                              <>
-                                <StyledIconButton
-                                  onClick={() => handleModuleMove(section.id, col.id, m.id, -1)}
-                                  disabled={moduleIdx === 0}
-                                  title="Up"
-                                >↑</StyledIconButton>
-                                <StyledIconButton
-                                  onClick={() => handleModuleMove(section.id, col.id, m.id, +1)}
-                                  disabled={moduleIdx === col.modules.length - 1}
-                                  title="Down"
-                                >↓</StyledIconButton>
-                                <StyledIconButton
-                                  onClick={() => handleModuleDelete(section.id, col.id, m.id)}
-                                  title="Delete"
-                                >✕</StyledIconButton>
-                              </>
+                              <StyledAddModuleRow>
+                                {MODULE_LIBRARY.map((entry) => (
+                                  <StyledAddModuleButton
+                                    key={entry.type}
+                                    onClick={() =>
+                                      handleModuleAdd(
+                                        section.id,
+                                        col.id,
+                                        entry.type,
+                                      )
+                                    }
+                                  >
+                                    + {entry.label}
+                                  </StyledAddModuleButton>
+                                ))}
+                              </StyledAddModuleRow>
                             )}
-                          </StyledModuleHeader>
-                          {isSelected && !readOnly && (
-                            <StyledEditorPanel>
-                              {m.type === 'text' && (
-                                <TextModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'heading' && (
-                                <HeadingModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'button' && (
-                                <ButtonModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'image' && (
-                                <ImageModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'divider' && (
-                                <DividerModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'spacer' && (
-                                <SpacerModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'html' && (
-                                <HtmlModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'social' && (
-                                <SocialModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                              {m.type === 'footer' && (
-                                <FooterModuleEditor
-                                  module={m}
-                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
-                                />
-                              )}
-                            </StyledEditorPanel>
-                          )}
-                        </StyledModuleRow>
-                      );
-                    })}
-                    {!readOnly && (
-                      <StyledAddModuleRow>
-                        {MODULE_LIBRARY.map((entry) => (
-                          <StyledAddModuleButton
-                            key={entry.type}
-                            onClick={() => handleModuleAdd(section.id, col.id, entry.type)}
-                          >
-                            + {entry.label}
-                          </StyledAddModuleButton>
+                          </StyledColumn>
                         ))}
-                      </StyledAddModuleRow>
-                    )}
-                  </StyledColumn>
-                ))}
-              </StyledColumnsRow>
-            </StyledSectionCard>
+                      </StyledColumnsRow>
+                    </StyledSectionCard>
                   )}
                 />
               );
@@ -684,7 +888,9 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
 
       {!readOnly && (
         <StyledAddSectionRow>
-          <span style={{ marginRight: 'auto', color: 'var(--font-color-tertiary)' }}>
+          <span
+            style={{ marginRight: 'auto', color: 'var(--font-color-tertiary)' }}
+          >
             Add section:
           </span>
           {SECTION_LAYOUT_LIBRARY.map((opt) => (

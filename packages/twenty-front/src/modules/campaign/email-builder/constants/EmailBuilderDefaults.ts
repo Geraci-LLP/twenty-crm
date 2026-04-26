@@ -16,20 +16,27 @@ import {
   type TextModule,
 } from '@/campaign/email-builder/types/CampaignDesign';
 
-const generateId = (prefix: string): string =>
+export const generateEmailBuilderId = (prefix: string): string =>
   `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 
 const COLUMN_COUNT: Record<ColumnLayout, number> = {
-  '1': 1, '2': 2, '3': 3, '4': 4, '1-2': 2, '2-1': 2,
+  '1': 1,
+  '2': 2,
+  '3': 3,
+  '4': 4,
+  '1-2': 2,
+  '2-1': 2,
 };
 
 export const buildEmptyColumn = (): EmailColumn => ({
-  id: generateId('col'),
+  id: generateEmailBuilderId('col'),
   modules: [],
 });
 
-export const buildDefaultSection = (layout: ColumnLayout = '1'): EmailSection => ({
-  id: generateId('sec'),
+export const buildDefaultSection = (
+  layout: ColumnLayout = '1',
+): EmailSection => ({
+  id: generateEmailBuilderId('sec'),
   layout,
   alignment: 'top',
   bgColor: '#ffffff',
@@ -37,7 +44,9 @@ export const buildDefaultSection = (layout: ColumnLayout = '1'): EmailSection =>
   paddingBottom: 24,
   paddingLeft: 16,
   paddingRight: 16,
-  columns: Array.from({ length: COLUMN_COUNT[layout] }, () => buildEmptyColumn()),
+  columns: Array.from({ length: COLUMN_COUNT[layout] }, () =>
+    buildEmptyColumn(),
+  ),
 });
 
 export const EMPTY_EMAIL_DESIGN: EmailDesign = {
@@ -53,7 +62,11 @@ export const EMPTY_EMAIL_DESIGN: EmailDesign = {
 };
 
 export const buildDefaultModule = (type: EmailModuleType): EmailModule => {
-  const base = { id: generateId('mod'), paddingTop: 12, paddingBottom: 12 };
+  const base = {
+    id: generateEmailBuilderId('mod'),
+    paddingTop: 12,
+    paddingBottom: 12,
+  };
   switch (type) {
     case 'text':
       return {
@@ -117,7 +130,8 @@ export const buildDefaultModule = (type: EmailModuleType): EmailModule => {
       return {
         ...base,
         type: 'html',
-        rawHtml: '<!-- Custom HTML — may render inconsistently across email clients -->\n<p>Edit this raw HTML.</p>',
+        rawHtml:
+          '<!-- Custom HTML — may render inconsistently across email clients -->\n<p>Edit this raw HTML.</p>',
       } satisfies HtmlModule;
     case 'social':
       return {
@@ -136,7 +150,8 @@ export const buildDefaultModule = (type: EmailModuleType): EmailModule => {
       return {
         ...base,
         type: 'footer',
-        address: 'Geraci LLP, 90 Discovery, Irvine, California 92618, United States, (949) 403-3488',
+        address:
+          'Geraci LLP, 90 Discovery, Irvine, California 92618, United States, (949) 403-3488',
         fontSize: 12,
         textColor: '#8a8a85',
         alignment: 'center',
@@ -167,10 +182,10 @@ export const SECTION_LAYOUT_LIBRARY: ReadonlyArray<{
   label: string;
   preview: string;
 }> = [
-  { layout: '1',   label: '1 column',     preview: '▭' },
-  { layout: '2',   label: '2 columns',    preview: '▭▭' },
-  { layout: '3',   label: '3 columns',    preview: '▭▭▭' },
-  { layout: '4',   label: '4 columns',    preview: '▭▭▭▭' },
-  { layout: '1-2', label: '1/3 + 2/3',    preview: '▭▭▭' },
-  { layout: '2-1', label: '2/3 + 1/3',    preview: '▭▭▭' },
+  { layout: '1', label: '1 column', preview: '▭' },
+  { layout: '2', label: '2 columns', preview: '▭▭' },
+  { layout: '3', label: '3 columns', preview: '▭▭▭' },
+  { layout: '4', label: '4 columns', preview: '▭▭▭▭' },
+  { layout: '1-2', label: '1/3 + 2/3', preview: '▭▭▭' },
+  { layout: '2-1', label: '2/3 + 1/3', preview: '▭▭▭' },
 ];
