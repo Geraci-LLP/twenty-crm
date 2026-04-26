@@ -58,7 +58,9 @@ export type EmailColumn = {
 export type EmailModule =
   | TextModule
   | ButtonModule
-  | ImageModule;
+  | ImageModule
+  | DividerModule
+  | SpacerModule;
 
 type ModuleBase = {
   id: string;
@@ -95,6 +97,19 @@ export type ImageModule = ModuleBase & {
   width: number;       // px
   alignment: 'left' | 'center' | 'right';
   href?: string;       // optional click-through link
+};
+
+export type DividerModule = ModuleBase & {
+  type: 'divider';
+  color: string;
+  thickness: number;       // px, typically 1-4
+  style: 'solid' | 'dashed' | 'dotted';
+  widthPercent: number;    // 1-100, divider's portion of the column
+};
+
+export type SpacerModule = ModuleBase & {
+  type: 'spacer';
+  height: number;          // px
 };
 
 export type EmailModuleType = EmailModule['type'];

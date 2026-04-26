@@ -10,7 +10,9 @@ import {
   SECTION_LAYOUT_LIBRARY,
 } from '@/campaign/email-builder/constants/EmailBuilderDefaults';
 import { ButtonModuleEditor } from '@/campaign/email-builder/components/modules/ButtonModuleEditor';
+import { DividerModuleEditor } from '@/campaign/email-builder/components/modules/DividerModuleEditor';
 import { ImageModuleEditor } from '@/campaign/email-builder/components/modules/ImageModuleEditor';
+import { SpacerModuleEditor } from '@/campaign/email-builder/components/modules/SpacerModuleEditor';
 import { TextModuleEditor } from '@/campaign/email-builder/components/modules/TextModuleEditor';
 import { migrateDesign } from '@/campaign/email-builder/render/migrateDesign';
 import { renderDesignToHtml } from '@/campaign/email-builder/render/renderDesignToHtml';
@@ -219,6 +221,10 @@ const moduleSummary = (m: EmailModule): string => {
       return m.label;
     case 'image':
       return m.alt || m.src.slice(-30);
+    case 'divider':
+      return `${m.style} ${m.thickness}px ${m.color}`;
+    case 'spacer':
+      return `${m.height}px tall`;
   }
 };
 
@@ -499,6 +505,18 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false }: 
                               )}
                               {m.type === 'image' && (
                                 <ImageModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'divider' && (
+                                <DividerModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'spacer' && (
+                                <SpacerModuleEditor
                                   module={m}
                                   onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
                                 />

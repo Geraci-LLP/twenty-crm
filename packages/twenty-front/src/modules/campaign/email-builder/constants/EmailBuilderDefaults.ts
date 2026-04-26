@@ -1,12 +1,14 @@
 import {
   type ButtonModule,
   type ColumnLayout,
+  type DividerModule,
   type EmailColumn,
   type EmailDesign,
   type EmailModule,
   type EmailModuleType,
   type EmailSection,
   type ImageModule,
+  type SpacerModule,
   type TextModule,
 } from '@/campaign/email-builder/types/CampaignDesign';
 
@@ -80,6 +82,23 @@ export const buildDefaultModule = (type: EmailModuleType): EmailModule => {
         width: 600,
         alignment: 'center',
       } satisfies ImageModule;
+    case 'divider':
+      return {
+        ...base,
+        type: 'divider',
+        color: '#e5e7eb',
+        thickness: 1,
+        style: 'solid',
+        widthPercent: 100,
+      } satisfies DividerModule;
+    case 'spacer':
+      return {
+        ...base,
+        type: 'spacer',
+        height: 24,
+        paddingTop: 0,
+        paddingBottom: 0,
+      } satisfies SpacerModule;
   }
 };
 
@@ -91,6 +110,8 @@ export const MODULE_LIBRARY: ReadonlyArray<{
   { type: 'text', label: 'Text', icon: 'T' },
   { type: 'button', label: 'Button', icon: '◼' },
   { type: 'image', label: 'Image', icon: '🖼' },
+  { type: 'divider', label: 'Divider', icon: '─' },
+  { type: 'spacer', label: 'Spacer', icon: '↕' },
 ];
 
 export const SECTION_LAYOUT_LIBRARY: ReadonlyArray<{

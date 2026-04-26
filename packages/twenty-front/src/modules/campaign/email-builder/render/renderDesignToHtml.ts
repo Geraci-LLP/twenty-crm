@@ -2,12 +2,14 @@ import { migrateDesign } from '@/campaign/email-builder/render/migrateDesign';
 import {
   type ButtonModule,
   COLUMN_WIDTHS,
+  type DividerModule,
   type EmailColumn,
   type EmailDesign,
   type EmailModule,
   type EmailSection,
   type EmailSettings,
   type ImageModule,
+  type SpacerModule,
   type TextModule,
 } from '@/campaign/email-builder/types/CampaignDesign';
 
@@ -66,11 +68,29 @@ const renderImageModule = (m: ImageModule): string => {
     </table>`;
 };
 
+const renderDividerModule = (m: DividerModule): string => `
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td style="padding:${m.paddingTop}px 0 ${m.paddingBottom}px 0;">
+        <div style="margin:0 auto;width:${m.widthPercent}%;border-top:${m.thickness}px ${m.style} ${m.color};font-size:0;line-height:0;">&nbsp;</div>
+      </td>
+    </tr>
+  </table>`;
+
+const renderSpacerModule = (m: SpacerModule): string => `
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td height="${m.height}" style="height:${m.height}px;font-size:0;line-height:0;">&nbsp;</td>
+    </tr>
+  </table>`;
+
 const renderModule = (m: EmailModule, settings: EmailSettings): string => {
   switch (m.type) {
-    case 'text':   return renderTextModule(m, settings);
-    case 'button': return renderButtonModule(m, settings);
-    case 'image':  return renderImageModule(m);
+    case 'text':    return renderTextModule(m, settings);
+    case 'button':  return renderButtonModule(m, settings);
+    case 'image':   return renderImageModule(m);
+    case 'divider': return renderDividerModule(m);
+    case 'spacer':  return renderSpacerModule(m);
   }
 };
 
