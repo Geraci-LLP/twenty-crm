@@ -1,5 +1,12 @@
 import { styled } from '@linaria/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   buildDefaultModule,
@@ -88,6 +95,38 @@ const StyledFontSelect = styled.select`
   color: ${themeCssVariables.font.color.primary};
   font-size: ${themeCssVariables.font.size.sm};
   padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+`;
+
+const StyledDesignSettingsSpacer = styled.div`
+  flex: 1;
+`;
+
+const StyledWidthInput = styled.input`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+  text-align: right;
+  width: 70px;
+`;
+
+const StyledDesignActionButton = styled.button`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  font-size: ${themeCssVariables.font.size.xs};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+  &:hover {
+    background: ${themeCssVariables.background.tertiary};
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `;
 
 // Email-safe font stacks. Gmail / Apple Mail / Outlook all reliably render
@@ -319,6 +358,13 @@ const StyledAddModuleButton = styled.button`
   }
 `;
 
+const StyledAddModuleSeparator = styled.div`
+  align-self: stretch;
+  background: ${themeCssVariables.border.color.light};
+  margin: 2px 4px;
+  width: 1px;
+`;
+
 const StyledAddSectionRow = styled.div`
   align-items: center;
   border: 1px dashed ${themeCssVariables.border.color.medium};
@@ -425,6 +471,14 @@ export const EmailBuilder = ({
     'desktop',
   );
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  // Undo/redo history. Each entry is a full design snapshot pushed by the
+  // commitDesign helper below — handlers that mutate the design call
+  // commitDesign instead of onChange directly so history bookkeeping is
+  // centralized. Cap to avoid unbounded memory growth on long sessions.
+  const HISTORY_LIMIT = 50;
+  const [pastDesigns, setPastDesigns] = useState<EmailDesign[]>([]);
+  const [futureDesigns, setFutureDesigns] = useState<EmailDesign[]>([]);
   const [clipboardModuleType, setClipboardModuleType] = useState<string | null>(
     () => readModuleFromClipboard()?.type ?? null,
   );
@@ -447,6 +501,71 @@ export const EmailBuilder = ({
   // Migrate on every read so older designs (v1) work seamlessly. The next
   // user edit writes the migrated v2 shape back to the record.
   const design = useMemo(() => migrateDesign(rawDesign), [rawDesign]);
+
+  // Centralized "edit happened" path. Pushes the current design to past,
+  // clears the future stack, and forwards to onChange. All handlers that
+  // mutate the design (updateSections, handleSettingsChange, import) go
+  // through this so undo/redo always works.
+  const commitDesign = useCallback(
+    (nextDesign: EmailDesign) => {
+      setPastDesigns((past) => {
+        const updated = [...past, design];
+        if (updated.length > HISTORY_LIMIT) updated.shift();
+        return updated;
+      });
+      setFutureDesigns([]);
+      onChange(nextDesign, renderDesignToHtml(nextDesign));
+    },
+    [design, onChange],
+  );
+
+  const canUndo = pastDesigns.length > 0;
+  const canRedo = futureDesigns.length > 0;
+
+  const handleUndo = useCallback(() => {
+    if (pastDesigns.length === 0) return;
+    const previous = pastDesigns[pastDesigns.length - 1];
+    setPastDesigns((p) => p.slice(0, -1));
+    setFutureDesigns((f) => [...f, design]);
+    onChange(previous, renderDesignToHtml(previous));
+  }, [pastDesigns, design, onChange]);
+
+  const handleRedo = useCallback(() => {
+    if (futureDesigns.length === 0) return;
+    const next = futureDesigns[futureDesigns.length - 1];
+    setFutureDesigns((f) => f.slice(0, -1));
+    setPastDesigns((p) => [...p, design]);
+    onChange(next, renderDesignToHtml(next));
+  }, [futureDesigns, design, onChange]);
+
+  // Cmd/Ctrl+Z = undo, Cmd/Ctrl+Shift+Z = redo. Skip when the user is
+  // typing in an input/textarea/contenteditable so we don't intercept
+  // their text-editing undo.
+  useEffect(() => {
+    if (readOnly) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey)) return;
+      if (e.key !== 'z' && e.key !== 'Z') return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName ?? '';
+      if (
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        target?.isContentEditable === true
+      ) {
+        return;
+      }
+      e.preventDefault();
+      if (e.shiftKey) {
+        handleRedo();
+      } else {
+        handleUndo();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [readOnly, handleUndo, handleRedo]);
   // Preview HTML includes the inbox-meta header. Saved HTML (passed to onChange)
   // does NOT — server stores only what gets sent.
   const previewHtml = useMemo(
@@ -457,9 +576,9 @@ export const EmailBuilder = ({
   const updateSections = useCallback(
     (next: EmailSection[]) => {
       const nextDesign: EmailDesign = { ...design, sections: next };
-      onChange(nextDesign, renderDesignToHtml(nextDesign));
+      commitDesign(nextDesign);
     },
-    [design, onChange],
+    [design, commitDesign],
   );
 
   const handleSettingsChange = useCallback(
@@ -468,9 +587,59 @@ export const EmailBuilder = ({
         ...design,
         settings: updater(design.settings),
       };
-      onChange(nextDesign, renderDesignToHtml(nextDesign));
+      commitDesign(nextDesign);
     },
-    [design, onChange],
+    [design, commitDesign],
+  );
+
+  // Export the current design as a downloadable JSON file. Useful for backing
+  // up a design, sharing with another workspace, or hand-editing the JSON
+  // outside the builder.
+  const handleExportJson = useCallback(() => {
+    const blob = new Blob([JSON.stringify(design, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `email-design-${Date.now()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [design]);
+
+  const importFileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImportJsonClick = useCallback(() => {
+    importFileInputRef.current?.click();
+  }, []);
+
+  const handleImportJsonFile = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      e.target.value = '';
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text) as EmailDesign;
+        // Light validation — must have version + sections to be a valid design.
+        if (
+          typeof parsed !== 'object' ||
+          parsed === null ||
+          !Array.isArray((parsed as EmailDesign).sections) ||
+          typeof (parsed as EmailDesign).version !== 'number'
+        ) {
+          window.alert('Invalid email design JSON.');
+          return;
+        }
+        const migrated = migrateDesign(parsed);
+        commitDesign(migrated);
+      } catch (error) {
+        window.alert(`Could not import: ${(error as Error).message}`);
+      }
+    },
+    [commitDesign],
   );
 
   const updateSection = useCallback(
@@ -781,6 +950,91 @@ export const EmailBuilder = ({
               )}
             </StyledFontSelect>
           </StyledDesignSettingLabel>
+          <StyledDesignSettingLabel>
+            Page bg
+            <ColorWithSwatches
+              value={design.settings.bodyBgColor}
+              onChange={(next) =>
+                handleSettingsChange((s) => ({ ...s, bodyBgColor: next }))
+              }
+              title="Outer page background"
+            />
+          </StyledDesignSettingLabel>
+          <StyledDesignSettingLabel>
+            Content bg
+            <ColorWithSwatches
+              value={design.settings.contentBgColor}
+              onChange={(next) =>
+                handleSettingsChange((s) => ({ ...s, contentBgColor: next }))
+              }
+              title="Background of the email content area"
+            />
+          </StyledDesignSettingLabel>
+          <StyledDesignSettingLabel>
+            Text
+            <ColorWithSwatches
+              value={design.settings.defaultTextColor}
+              onChange={(next) =>
+                handleSettingsChange((s) => ({ ...s, defaultTextColor: next }))
+              }
+              title="Default body text color (modules can override)"
+            />
+          </StyledDesignSettingLabel>
+          <StyledDesignSettingLabel>
+            Width (px)
+            <StyledWidthInput
+              type="number"
+              min={400}
+              max={900}
+              step={10}
+              value={design.settings.contentWidth}
+              onChange={(e) =>
+                handleSettingsChange((s) => ({
+                  ...s,
+                  contentWidth: Number(e.target.value),
+                }))
+              }
+              title="Content area width — most templates use 600–720"
+            />
+          </StyledDesignSettingLabel>
+          <StyledDesignSettingsSpacer />
+          <StyledDesignActionButton
+            type="button"
+            onClick={handleUndo}
+            disabled={!canUndo}
+            title="Undo (Ctrl/Cmd+Z)"
+          >
+            ↶ Undo
+          </StyledDesignActionButton>
+          <StyledDesignActionButton
+            type="button"
+            onClick={handleRedo}
+            disabled={!canRedo}
+            title="Redo (Ctrl/Cmd+Shift+Z)"
+          >
+            ↷ Redo
+          </StyledDesignActionButton>
+          <StyledDesignActionButton
+            type="button"
+            onClick={handleImportJsonClick}
+            title="Replace the current design with a previously-exported JSON file"
+          >
+            ⬆ Import
+          </StyledDesignActionButton>
+          <StyledDesignActionButton
+            type="button"
+            onClick={handleExportJson}
+            title="Download the current design as JSON"
+          >
+            ⬇ Export
+          </StyledDesignActionButton>
+          <input
+            ref={importFileInputRef}
+            type="file"
+            accept="application/json,.json"
+            style={{ display: 'none' }}
+            onChange={handleImportJsonFile}
+          />
         </StyledDesignSettingsRow>
       )}
       <StyledPreviewBar>
@@ -1185,32 +1439,48 @@ export const EmailBuilder = ({
                                   {droppableProvided.placeholder}
                                   {!readOnly && (
                                     <StyledAddModuleRow>
-                                      {MODULE_LIBRARY.map((entry) => (
-                                        <StyledAddModuleButton
-                                          key={entry.type}
-                                          onClick={() =>
-                                            handleModuleAdd(
-                                              section.id,
-                                              col.id,
-                                              entry.type,
-                                            )
-                                          }
-                                        >
-                                          + {entry.label}
-                                        </StyledAddModuleButton>
-                                      ))}
+                                      {MODULE_LIBRARY.map((entry, idx) => {
+                                        const prevCategory =
+                                          idx > 0
+                                            ? MODULE_LIBRARY[idx - 1].category
+                                            : entry.category;
+                                        const showSeparator =
+                                          idx > 0 &&
+                                          entry.category !== prevCategory;
+                                        return (
+                                          <Fragment key={entry.type}>
+                                            {showSeparator && (
+                                              <StyledAddModuleSeparator />
+                                            )}
+                                            <StyledAddModuleButton
+                                              onClick={() =>
+                                                handleModuleAdd(
+                                                  section.id,
+                                                  col.id,
+                                                  entry.type,
+                                                )
+                                              }
+                                            >
+                                              + {entry.label}
+                                            </StyledAddModuleButton>
+                                          </Fragment>
+                                        );
+                                      })}
                                       {clipboardModuleType !== null && (
-                                        <StyledAddModuleButton
-                                          onClick={() =>
-                                            handleModulePaste(
-                                              section.id,
-                                              col.id,
-                                            )
-                                          }
-                                          title={`Paste ${clipboardModuleType} from clipboard`}
-                                        >
-                                          📋 Paste
-                                        </StyledAddModuleButton>
+                                        <>
+                                          <StyledAddModuleSeparator />
+                                          <StyledAddModuleButton
+                                            onClick={() =>
+                                              handleModulePaste(
+                                                section.id,
+                                                col.id,
+                                              )
+                                            }
+                                            title={`Paste ${clipboardModuleType} from clipboard`}
+                                          >
+                                            📋 Paste
+                                          </StyledAddModuleButton>
+                                        </>
                                       )}
                                     </StyledAddModuleRow>
                                   )}

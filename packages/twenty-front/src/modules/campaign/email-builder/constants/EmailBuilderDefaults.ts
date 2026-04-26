@@ -161,20 +161,26 @@ export const buildDefaultModule = (type: EmailModuleType): EmailModule => {
   }
 };
 
+export type ModuleLibraryCategory = 'content' | 'layout' | 'embed';
+
 export const MODULE_LIBRARY: ReadonlyArray<{
   type: EmailModuleType;
   label: string;
   icon: string;
+  category: ModuleLibraryCategory;
 }> = [
-  { type: 'heading', label: 'Heading', icon: 'H' },
-  { type: 'text', label: 'Text', icon: 'T' },
-  { type: 'button', label: 'Button', icon: '◼' },
-  { type: 'image', label: 'Image', icon: '🖼' },
-  { type: 'divider', label: 'Divider', icon: '─' },
-  { type: 'spacer', label: 'Spacer', icon: '↕' },
-  { type: 'social', label: 'Social', icon: '◉' },
-  { type: 'footer', label: 'Footer', icon: 'F' },
-  { type: 'html', label: 'HTML', icon: '<>' },
+  // Content modules — what the recipient actually reads.
+  { type: 'heading', label: 'Heading', icon: 'H', category: 'content' },
+  { type: 'text', label: 'Text', icon: 'T', category: 'content' },
+  { type: 'button', label: 'Button', icon: '◼', category: 'content' },
+  { type: 'image', label: 'Image', icon: '🖼', category: 'content' },
+  // Layout modules — visual structure between content blocks.
+  { type: 'divider', label: 'Divider', icon: '─', category: 'layout' },
+  { type: 'spacer', label: 'Spacer', icon: '↕', category: 'layout' },
+  // Embed / footer / advanced — usually appears once per email.
+  { type: 'social', label: 'Social', icon: '◉', category: 'embed' },
+  { type: 'footer', label: 'Footer', icon: 'F', category: 'embed' },
+  { type: 'html', label: 'HTML', icon: '<>', category: 'embed' },
 ];
 
 export const SECTION_LAYOUT_LIBRARY: ReadonlyArray<{

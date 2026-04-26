@@ -2,6 +2,7 @@ import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
+import { ColorWithSwatches } from '@/campaign/email-builder/components/modules/ColorWithSwatches';
 import { EmailRichTextEditor } from '@/campaign/email-builder/components/modules/EmailRichTextEditor';
 import { type TextModule } from '@/campaign/email-builder/types/CampaignDesign';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
@@ -41,15 +42,6 @@ const StyledNumberInput = styled.input`
   font-size: ${themeCssVariables.font.size.sm};
   padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
   width: 70px;
-`;
-
-const StyledColorInput = styled.input`
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  cursor: pointer;
-  height: 32px;
-  padding: 2px;
-  width: 50px;
 `;
 
 type TextModuleEditorProps = {
@@ -101,10 +93,9 @@ export const TextModuleEditor = ({
         </StyledField>
         <StyledField>
           <StyledLabel>Color</StyledLabel>
-          <StyledColorInput
-            type="color"
+          <ColorWithSwatches
             value={module.textColor}
-            onChange={(e) => set('textColor', e.target.value)}
+            onChange={(next) => set('textColor', next)}
           />
         </StyledField>
       </StyledRow>

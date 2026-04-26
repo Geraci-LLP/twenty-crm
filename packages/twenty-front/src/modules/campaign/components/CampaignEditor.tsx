@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { currentUserState } from '@/auth/states/currentUserState';
 import { CampaignSaveAsTemplateButton } from '@/campaign/components/CampaignSaveAsTemplateButton';
 import { CampaignTemplateGallery } from '@/campaign/components/CampaignTemplateGallery';
+import { SendTestEmailModal } from '@/campaign/components/SendTestEmailModal';
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
 import { useSendTestEmail } from '@/campaign/hooks/useSendTestEmail';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
@@ -265,16 +266,16 @@ export const CampaignEditor = ({
 
   const currentUser = useAtomStateValue(currentUserState);
   const { sendTestEmail, loading: testSendLoading } = useSendTestEmail();
+  const [isTestSendOpen, setIsTestSendOpen] = useState(false);
 
-  const handleTestSend = useCallback(async () => {
-    if (!campaignId) return;
-    const defaultEmail = currentUser?.email ?? '';
-    const target = window.prompt('Send test email to:', defaultEmail);
-    if (target === null) return;
-    const trimmed = target.trim();
-    if (trimmed === '') return;
-    await sendTestEmail(campaignId, trimmed);
-  }, [campaignId, currentUser?.email, sendTestEmail]);
+  const handleTestSendSubmit = useCallback(
+    async (target: string) => {
+      if (!campaignId) return;
+      const ok = await sendTestEmail(campaignId, target);
+      if (ok) setIsTestSendOpen(false);
+    },
+    [campaignId, sendTestEmail],
+  );
 
   const initialDesign = useMemo(
     () => parseDesign(value.designJson),
@@ -446,6 +447,16 @@ export const CampaignEditor = ({
         )}
         {mode === 'design' ? (
           <>
+            {!readOnly && campaignId && (
+              <StyledToolbar>
+                <span />
+                <StyledTemplatesButton
+                  onClick={() => setIsTemplateGalleryOpen(true)}
+                >
+                  Templates
+                </StyledTemplatesButton>
+              </StyledToolbar>
+            )}
             {!readOnly && designLacksFooter && (
               <StyledWarningBanner>
                 Your email design has no Footer module. CAN-SPAM requires a
@@ -531,7 +542,7 @@ export const CampaignEditor = ({
         <StyledActionsRow>
           <StyledTestSendButton
             type="button"
-            onClick={handleTestSend}
+            onClick={() => setIsTestSendOpen(true)}
             disabled={testSendLoading}
             title="Send a test copy of this email to any address"
           >
@@ -539,6 +550,15 @@ export const CampaignEditor = ({
           </StyledTestSendButton>
           <CampaignSaveAsTemplateButton campaignId={campaignId} />
         </StyledActionsRow>
+      )}
+
+      {isTestSendOpen && campaignId && (
+        <SendTestEmailModal
+          defaultEmail={currentUser?.email}
+          loading={testSendLoading}
+          onSubmit={handleTestSendSubmit}
+          onClose={() => setIsTestSendOpen(false)}
+        />
       )}
 
       {isTemplateGalleryOpen && campaignId && (

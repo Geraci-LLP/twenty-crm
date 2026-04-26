@@ -1,6 +1,7 @@
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 
+import { ColorWithSwatches } from '@/campaign/email-builder/components/modules/ColorWithSwatches';
 import { type ButtonModule } from '@/campaign/email-builder/types/CampaignDesign';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
@@ -42,15 +43,6 @@ const StyledNumberInput = styled.input`
   width: 70px;
 `;
 
-const StyledColorInput = styled.input`
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  cursor: pointer;
-  height: 32px;
-  padding: 2px;
-  width: 50px;
-`;
-
 const StyledSelect = styled.select`
   background: ${themeCssVariables.background.primary};
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -76,7 +68,10 @@ export const ButtonModuleEditor = ({ module, onChange }: Props) => {
     <>
       <StyledField>
         <StyledLabel>Label</StyledLabel>
-        <StyledInput value={module.label} onChange={(e) => set('label', e.target.value)} />
+        <StyledInput
+          value={module.label}
+          onChange={(e) => set('label', e.target.value)}
+        />
       </StyledField>
       <StyledField>
         <StyledLabel>Link URL</StyledLabel>
@@ -90,18 +85,16 @@ export const ButtonModuleEditor = ({ module, onChange }: Props) => {
       <StyledRow>
         <StyledField>
           <StyledLabel>Background</StyledLabel>
-          <StyledColorInput
-            type="color"
+          <ColorWithSwatches
             value={module.bgColor}
-            onChange={(e) => set('bgColor', e.target.value)}
+            onChange={(next) => set('bgColor', next)}
           />
         </StyledField>
         <StyledField>
           <StyledLabel>Text</StyledLabel>
-          <StyledColorInput
-            type="color"
+          <ColorWithSwatches
             value={module.textColor}
-            onChange={(e) => set('textColor', e.target.value)}
+            onChange={(next) => set('textColor', next)}
           />
         </StyledField>
         <StyledField>
@@ -118,7 +111,9 @@ export const ButtonModuleEditor = ({ module, onChange }: Props) => {
           <StyledLabel>Alignment</StyledLabel>
           <StyledSelect
             value={module.alignment}
-            onChange={(e) => set('alignment', e.target.value as ButtonModule['alignment'])}
+            onChange={(e) =>
+              set('alignment', e.target.value as ButtonModule['alignment'])
+            }
           >
             <option value="left">Left</option>
             <option value="center">Center</option>

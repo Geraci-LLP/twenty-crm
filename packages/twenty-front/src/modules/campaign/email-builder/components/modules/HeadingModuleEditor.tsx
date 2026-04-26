@@ -1,6 +1,7 @@
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 
+import { ColorWithSwatches } from '@/campaign/email-builder/components/modules/ColorWithSwatches';
 import {
   type HeadingLevel,
   type HeadingModule,
@@ -41,15 +42,6 @@ const StyledInput = styled.input`
   width: 100%;
 `;
 
-const StyledColorInput = styled.input`
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  cursor: pointer;
-  height: 32px;
-  padding: 2px;
-  width: 50px;
-`;
-
 const StyledSelect = styled.select`
   background: ${themeCssVariables.background.primary};
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -85,7 +77,10 @@ export const HeadingModuleEditor = ({ module, onChange }: Props) => {
     <StyledStack>
       <StyledField>
         <StyledLabel>Heading</StyledLabel>
-        <StyledInput value={module.text} onChange={(e) => set('text', e.target.value)} />
+        <StyledInput
+          value={module.text}
+          onChange={(e) => set('text', e.target.value)}
+        />
       </StyledField>
       <StyledRow>
         <StyledField>
@@ -114,7 +109,9 @@ export const HeadingModuleEditor = ({ module, onChange }: Props) => {
           <StyledLabel>Alignment</StyledLabel>
           <StyledSelect
             value={module.alignment}
-            onChange={(e) => set('alignment', e.target.value as HeadingModule['alignment'])}
+            onChange={(e) =>
+              set('alignment', e.target.value as HeadingModule['alignment'])
+            }
           >
             <option value="left">Left</option>
             <option value="center">Center</option>
@@ -123,10 +120,9 @@ export const HeadingModuleEditor = ({ module, onChange }: Props) => {
         </StyledField>
         <StyledField>
           <StyledLabel>Color</StyledLabel>
-          <StyledColorInput
-            type="color"
+          <ColorWithSwatches
             value={module.textColor}
-            onChange={(e) => set('textColor', e.target.value)}
+            onChange={(next) => set('textColor', next)}
           />
         </StyledField>
       </StyledRow>

@@ -1,6 +1,7 @@
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 
+import { ColorWithSwatches } from '@/campaign/email-builder/components/modules/ColorWithSwatches';
 import { type DividerModule } from '@/campaign/email-builder/types/CampaignDesign';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
@@ -32,15 +33,6 @@ const StyledNumberInput = styled.input`
   width: 80px;
 `;
 
-const StyledColorInput = styled.input`
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  cursor: pointer;
-  height: 32px;
-  padding: 2px;
-  width: 50px;
-`;
-
 const StyledSelect = styled.select`
   background: ${themeCssVariables.background.primary};
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -66,10 +58,9 @@ export const DividerModuleEditor = ({ module, onChange }: Props) => {
     <StyledRow>
       <StyledField>
         <StyledLabel>Color</StyledLabel>
-        <StyledColorInput
-          type="color"
+        <ColorWithSwatches
           value={module.color}
-          onChange={(e) => set('color', e.target.value)}
+          onChange={(next) => set('color', next)}
         />
       </StyledField>
       <StyledField>
@@ -86,7 +77,9 @@ export const DividerModuleEditor = ({ module, onChange }: Props) => {
         <StyledLabel>Style</StyledLabel>
         <StyledSelect
           value={module.style}
-          onChange={(e) => set('style', e.target.value as DividerModule['style'])}
+          onChange={(e) =>
+            set('style', e.target.value as DividerModule['style'])
+          }
         >
           <option value="solid">Solid</option>
           <option value="dashed">Dashed</option>

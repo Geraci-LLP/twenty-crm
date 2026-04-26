@@ -1,6 +1,7 @@
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 
+import { ColorWithSwatches } from '@/campaign/email-builder/components/modules/ColorWithSwatches';
 import { type FooterModule } from '@/campaign/email-builder/types/CampaignDesign';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
@@ -52,15 +53,6 @@ const StyledInput = styled.input`
 
 const StyledNumberInput = styled(StyledInput)`
   width: 70px;
-`;
-
-const StyledColorInput = styled.input`
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  cursor: pointer;
-  height: 32px;
-  padding: 2px;
-  width: 50px;
 `;
 
 const StyledSelect = styled.select`
@@ -127,17 +119,18 @@ export const FooterModuleEditor = ({ module, onChange }: Props) => {
         </StyledField>
         <StyledField>
           <StyledLabel>Color</StyledLabel>
-          <StyledColorInput
-            type="color"
+          <ColorWithSwatches
             value={module.textColor}
-            onChange={(e) => set('textColor', e.target.value)}
+            onChange={(next) => set('textColor', next)}
           />
         </StyledField>
         <StyledField>
           <StyledLabel>Alignment</StyledLabel>
           <StyledSelect
             value={module.alignment}
-            onChange={(e) => set('alignment', e.target.value as FooterModule['alignment'])}
+            onChange={(e) =>
+              set('alignment', e.target.value as FooterModule['alignment'])
+            }
           >
             <option value="left">Left</option>
             <option value="center">Center</option>
@@ -146,9 +139,9 @@ export const FooterModuleEditor = ({ module, onChange }: Props) => {
         </StyledField>
       </StyledRow>
       <StyledNote>
-        Both link labels point to the per-recipient unsubscribe URL
-        (CAN-SPAM compliant). The token <code>{'{{unsubscribe_link}}'}</code> is
-        always rendered — keep at least one Footer module on every email.
+        Both link labels point to the per-recipient unsubscribe URL (CAN-SPAM
+        compliant). The token <code>{'{{unsubscribe_link}}'}</code> is always
+        rendered — keep at least one Footer module on every email.
       </StyledNote>
     </StyledStack>
   );
