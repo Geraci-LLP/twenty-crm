@@ -1,5 +1,8 @@
+import { migrateDesign } from '@/campaign/email-builder/render/migrateDesign';
 import {
   type ButtonModule,
+  COLUMN_WIDTHS,
+  type EmailColumn,
   type EmailDesign,
   type EmailModule,
   type EmailSection,
@@ -8,38 +11,24 @@ import {
   type TextModule,
 } from '@/campaign/email-builder/types/CampaignDesign';
 
-// Renders an EmailDesign into table-based, MSO-compatible HTML suitable for
-// SendGrid to send unchanged. Output goes into Campaign.bodyHtml and is what
-// the existing campaign-executor delivers — token substitution still happens
-// server-side via literal string replacement on `{{contact.X}}` etc.
-//
-// PR 1 keeps this as plain string templates (no @react-email/render in the
-// browser bundle) — table rows, inline styles, the Outlook-friendly basics.
+// Renders an EmailDesign into table-based, MSO-compatible HTML for SendGrid.
+// Output goes into Campaign.bodyHtml; the executor sends it as-is. Token
+// substitution happens server-side via literal string replacement on
+// {{contact.X}} etc. — we pass tokens through unchanged.
 
 const escapeHtml = (s: string): string =>
-  s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const escapeAttr = (s: string): string => escapeHtml(s);
 
-// Token literals in attribute/text positions are passed through unchanged so
-// the server-side executor's substitution can find them.
-const passThroughTokens = (html: string): string => html;
-
-const renderTextModule = (m: TextModule, settings: EmailSettings): string => {
-  const safeHtml = passThroughTokens(m.html || '');
-  return `
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-      <tr>
-        <td style="padding:${m.paddingTop}px 0 ${m.paddingBottom}px 0;text-align:${m.alignment};color:${m.textColor};font-family:${settings.fontFamily};font-size:${m.fontSize}px;line-height:1.5;">
-          ${safeHtml}
-        </td>
-      </tr>
-    </table>`;
-};
+const renderTextModule = (m: TextModule, settings: EmailSettings): string => `
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td style="padding:${m.paddingTop}px 0 ${m.paddingBottom}px 0;text-align:${m.alignment};color:${m.textColor};font-family:${settings.fontFamily};font-size:${m.fontSize}px;line-height:1.5;">
+        ${m.html || ''}
+      </td>
+    </tr>
+  </table>`;
 
 const renderButtonModule = (m: ButtonModule, settings: EmailSettings): string => {
   const label = escapeHtml(m.label || 'Button');
@@ -60,7 +49,7 @@ const renderButtonModule = (m: ButtonModule, settings: EmailSettings): string =>
     </table>`;
 };
 
-const renderImageModule = (m: ImageModule, _settings: EmailSettings): string => {
+const renderImageModule = (m: ImageModule): string => {
   const src = escapeAttr(m.src || '');
   const alt = escapeAttr(m.alt || '');
   const img = `<img src="${src}" alt="${alt}" width="${m.width}" style="display:block;width:${m.width}px;max-width:100%;height:auto;border:0;" />`;
@@ -79,28 +68,65 @@ const renderImageModule = (m: ImageModule, _settings: EmailSettings): string => 
 
 const renderModule = (m: EmailModule, settings: EmailSettings): string => {
   switch (m.type) {
-    case 'text': return renderTextModule(m, settings);
+    case 'text':   return renderTextModule(m, settings);
     case 'button': return renderButtonModule(m, settings);
-    case 'image': return renderImageModule(m, settings);
+    case 'image':  return renderImageModule(m);
+  }
+};
+
+const renderColumn = (col: EmailColumn, settings: EmailSettings): string =>
+  col.modules.map((m) => renderModule(m, settings)).join('\n');
+
+const verticalAlignAttr = (a: EmailSection['alignment']): string => {
+  switch (a) {
+    case 'top':    return 'top';
+    case 'center': return 'middle';
+    case 'bottom': return 'bottom';
   }
 };
 
 const renderSection = (s: EmailSection, settings: EmailSettings): string => {
-  const inner = s.modules.map((m) => renderModule(m, settings)).join('\n');
+  const widths = COLUMN_WIDTHS[s.layout];
+  const valign = verticalAlignAttr(s.alignment);
+  const cols = s.columns
+    .map((col, idx) => {
+      const w = widths[idx] ?? 100 / s.columns.length;
+      return `
+        <td valign="${valign}" width="${w}%" style="width:${w}%;padding:0 4px;">
+          ${renderColumn(col, settings)}
+        </td>`;
+    })
+    .join('');
+
   return `
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:${s.bgColor};">
       <tr>
-        <td style="padding:${s.paddingTop}px 16px ${s.paddingBottom}px 16px;">
-          ${inner}
+        <td style="padding:${s.paddingTop}px ${s.paddingRight}px ${s.paddingBottom}px ${s.paddingLeft}px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              ${cols}
+            </tr>
+          </table>
         </td>
       </tr>
     </table>`;
 };
 
-export const renderDesignToHtml = (design: EmailDesign): string => {
-  // Future versions: dispatch on design.version and migrate older designs.
-  // PR 1 only knows version 1.
-  const sections = design.sections.map((s) => renderSection(s, design.settings)).join('\n');
+export const renderDesignToHtml = (designIn: EmailDesign): string => {
+  const design = migrateDesign(designIn);
+  const sections = design.sections
+    .map((s) => renderSection(s, design.settings))
+    .join('\n');
+
+  // Mobile stacking: a media query that forces multi-column tables to stack.
+  // Targets cells inside our content table; max-width 600 covers most phones.
+  const mobileCss = `
+    <style>
+      @media only screen and (max-width: 600px) {
+        table[role="presentation"] td[width] { width: 100% !important; display: block !important; padding: 8px 0 !important; }
+      }
+    </style>`;
+
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -108,6 +134,7 @@ export const renderDesignToHtml = (design: EmailDesign): string => {
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="x-apple-disable-message-reformatting" />
   <title></title>
+  ${mobileCss}
   <!--[if mso]>
   <style>table, td { mso-table-lspace:0pt; mso-table-rspace:0pt; } a { text-underline-color:inherit; }</style>
   <![endif]-->

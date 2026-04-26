@@ -1,10 +1,13 @@
 // Block-tree representation of a marketing email. Stored on Campaign.designJson
 // and rendered to Campaign.bodyHtml at save time. Server reads bodyHtml only.
 //
-// Versioning: designVersion is incremented when the schema changes in a way that
-// requires migration. renderDesignToHtml dispatches by version.
+// Versioning: designVersion bumps when the schema changes in a way that
+// requires migration. migrateDesign() handles older versions on read.
+//
+// v1 (PR 1): Section { modules: EmailModule[] } — single implicit column
+// v2 (PR 2a): Section { columns: EmailColumn[]; layout; alignment; ... }
 
-export type EmailDesignVersion = 1;
+export type EmailDesignVersion = 1 | 2;
 
 export type EmailDesign = {
   version: EmailDesignVersion;
@@ -20,12 +23,35 @@ export type EmailSettings = {
   defaultTextColor: string;
 };
 
-// PR1: a Section is just a single column. Multi-column comes in PR 2a.
+export type ColumnLayout = '1' | '2' | '3' | '4' | '1-2' | '2-1';
+
+// Number of columns and their relative widths, in % of content width (after gutter).
+export const COLUMN_WIDTHS: Record<ColumnLayout, ReadonlyArray<number>> = {
+  '1':   [100],
+  '2':   [50, 50],
+  '3':   [33.33, 33.33, 33.33],
+  '4':   [25, 25, 25, 25],
+  '1-2': [33.33, 66.66],
+  '2-1': [66.66, 33.33],
+};
+
 export type EmailSection = {
   id: string;
+  layout: ColumnLayout;
+  alignment: 'top' | 'center' | 'bottom';   // vertical alignment within columns
   bgColor: string;
   paddingTop: number;
   paddingBottom: number;
+  paddingLeft: number;
+  paddingRight: number;
+  // PR 1 legacy field — readers should consult `columns` first via the
+  // migration. Kept here for backward compatibility on disk during reads.
+  modules?: EmailModule[];
+  columns: EmailColumn[];
+};
+
+export type EmailColumn = {
+  id: string;
   modules: EmailModule[];
 };
 
@@ -42,9 +68,8 @@ type ModuleBase = {
 
 export type TextModule = ModuleBase & {
   type: 'text';
-  // For PR1 we store HTML directly (with line breaks rendered as <br/>) and
-  // tokens as literal {{contact.X}} strings. PR 2 swaps in TipTap with a
-  // tokenChip extension and ProseMirror JSON content.
+  // Stored as HTML directly with tokens as literal {{contact.X}} strings. The
+  // server-side executor's substitute() expects literal token strings.
   html: string;
   alignment: 'left' | 'center' | 'right';
   fontSize: number;

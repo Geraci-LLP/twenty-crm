@@ -3,24 +3,32 @@ import { useCallback, useMemo, useState } from 'react';
 
 import {
   buildDefaultModule,
+  buildDefaultSection,
+  buildEmptyColumn,
   EMPTY_EMAIL_DESIGN,
   MODULE_LIBRARY,
+  SECTION_LAYOUT_LIBRARY,
 } from '@/campaign/email-builder/constants/EmailBuilderDefaults';
 import { ButtonModuleEditor } from '@/campaign/email-builder/components/modules/ButtonModuleEditor';
 import { ImageModuleEditor } from '@/campaign/email-builder/components/modules/ImageModuleEditor';
 import { TextModuleEditor } from '@/campaign/email-builder/components/modules/TextModuleEditor';
+import { migrateDesign } from '@/campaign/email-builder/render/migrateDesign';
 import { renderDesignToHtml } from '@/campaign/email-builder/render/renderDesignToHtml';
 import {
+  type ColumnLayout,
+  COLUMN_WIDTHS,
+  type EmailColumn,
   type EmailDesign,
   type EmailModule,
   type EmailModuleType,
+  type EmailSection,
 } from '@/campaign/email-builder/types/CampaignDesign';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledLayout = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: ${themeCssVariables.spacing[4]};
-  grid-template-columns: 1fr;
 `;
 
 const StyledPreviewFrame = styled.iframe`
@@ -31,41 +39,34 @@ const StyledPreviewFrame = styled.iframe`
   width: 100%;
 `;
 
-const StyledModuleList = styled.div`
+const StyledSectionList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${themeCssVariables.spacing[2]};
+  gap: ${themeCssVariables.spacing[3]};
 `;
 
-const StyledModuleRow = styled.div<{ selected: boolean }>`
-  background: ${(p) =>
-    p.selected
-      ? themeCssVariables.background.tertiary
-      : themeCssVariables.background.primary};
-  border: 1px solid
-    ${(p) =>
-      p.selected
-        ? themeCssVariables.color.blue
-        : themeCssVariables.border.color.medium};
+const StyledSectionCard = styled.div`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.sm};
   padding: ${themeCssVariables.spacing[2]};
 `;
 
-const StyledModuleHeader = styled.div`
+const StyledSectionHeader = styled.div`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: ${themeCssVariables.spacing[2]};
-  justify-content: space-between;
+  margin-bottom: ${themeCssVariables.spacing[2]};
 `;
 
-const StyledModuleHeaderLeft = styled.div`
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  flex: 1;
-  font-size: ${themeCssVariables.font.size.sm};
+const StyledSectionLabel = styled.span`
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: ${themeCssVariables.font.size.xs};
   font-weight: ${themeCssVariables.font.weight.medium};
-  gap: ${themeCssVariables.spacing[2]};
+  letter-spacing: 0.5px;
+  margin-right: auto;
+  text-transform: uppercase;
 `;
 
 const StyledIconButton = styled.button`
@@ -80,17 +81,110 @@ const StyledIconButton = styled.button`
   &:disabled { cursor: not-allowed; opacity: 0.4; }
 `;
 
-const StyledEditorPanel = styled.div`
+const StyledSelect = styled.select`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+`;
+
+const StyledColorInput = styled.input`
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  cursor: pointer;
+  height: 28px;
+  padding: 2px;
+  width: 36px;
+`;
+
+const StyledColumnsRow = styled.div`
+  display: grid;
+  gap: ${themeCssVariables.spacing[2]};
+`;
+
+const StyledColumn = styled.div`
   background: ${themeCssVariables.background.tertiary};
   border-radius: ${themeCssVariables.border.radius.sm};
   display: flex;
   flex-direction: column;
-  gap: ${themeCssVariables.spacing[2]};
-  margin-top: ${themeCssVariables.spacing[2]};
-  padding: ${themeCssVariables.spacing[3]};
+  gap: ${themeCssVariables.spacing[1]};
+  min-height: 80px;
+  padding: ${themeCssVariables.spacing[2]};
 `;
 
-const StyledAddRow = styled.div`
+const StyledColumnHeader = styled.div`
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: ${themeCssVariables.font.size.xs};
+  text-transform: uppercase;
+`;
+
+const StyledModuleRow = styled.div<{ selected: boolean }>`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid
+    ${(p) =>
+      p.selected
+        ? themeCssVariables.color.blue
+        : themeCssVariables.border.color.light};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+`;
+
+const StyledModuleHeader = styled.div`
+  align-items: center;
+  display: flex;
+  gap: ${themeCssVariables.spacing[1]};
+  justify-content: space-between;
+`;
+
+const StyledModuleHeaderLeft = styled.div`
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  font-size: ${themeCssVariables.font.size.xs};
+  gap: ${themeCssVariables.spacing[1]};
+  min-width: 0;
+`;
+
+const StyledModuleSummary = styled.span`
+  color: ${themeCssVariables.font.color.tertiary};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const StyledEditorPanel = styled.div`
+  background: ${themeCssVariables.background.transparent.lighter};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  display: flex;
+  flex-direction: column;
+  gap: ${themeCssVariables.spacing[2]};
+  margin-top: ${themeCssVariables.spacing[1]};
+  padding: ${themeCssVariables.spacing[2]};
+`;
+
+const StyledAddModuleRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${themeCssVariables.spacing[1]};
+  margin-top: auto;
+`;
+
+const StyledAddModuleButton = styled.button`
+  background: transparent;
+  border: 1px dashed ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.secondary};
+  cursor: pointer;
+  font-size: ${themeCssVariables.font.size.xs};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+  &:hover { background: ${themeCssVariables.background.primary}; color: ${themeCssVariables.font.color.primary}; }
+`;
+
+const StyledAddSectionRow = styled.div`
+  align-items: center;
   border: 1px dashed ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.sm};
   display: flex;
@@ -100,7 +194,7 @@ const StyledAddRow = styled.div`
   padding: ${themeCssVariables.spacing[3]};
 `;
 
-const StyledAddButton = styled.button`
+const StyledAddSectionButton = styled.button`
   background: ${themeCssVariables.background.primary};
   border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.sm};
@@ -120,70 +214,180 @@ type EmailBuilderProps = {
 const moduleSummary = (m: EmailModule): string => {
   switch (m.type) {
     case 'text':
-      return m.html.replace(/<[^>]+>/g, '').slice(0, 60) || '(empty text)';
+      return m.html.replace(/<[^>]+>/g, '').slice(0, 40) || '(empty text)';
     case 'button':
-      return `Button: ${m.label}`;
+      return m.label;
     case 'image':
-      return `Image: ${m.alt || m.src.slice(0, 60)}`;
+      return m.alt || m.src.slice(-30);
   }
 };
 
-// PR 1: single-section, single-column. Modules are added/removed/reordered
-// within sections[0].modules. Multi-section + columns come in PR 2a.
-export const EmailBuilder = ({ design, onChange, readOnly = false }: EmailBuilderProps) => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+// Re-shapes a section's columns when the layout changes — preserves modules
+// where possible, concatenates dropped columns' modules into the last kept one.
+const reshapeColumns = (
+  oldCols: EmailColumn[],
+  newCount: number,
+): EmailColumn[] => {
+  if (oldCols.length === newCount) return oldCols;
+  if (newCount > oldCols.length) {
+    const extras = Array.from(
+      { length: newCount - oldCols.length },
+      () => buildEmptyColumn(),
+    );
+    return [...oldCols, ...extras];
+  }
+  // newCount < oldCols.length — fold dropped columns into the last kept one.
+  const kept = oldCols.slice(0, newCount);
+  const dropped = oldCols.slice(newCount);
+  const lastIdx = kept.length - 1;
+  if (lastIdx >= 0) {
+    kept[lastIdx] = {
+      ...kept[lastIdx],
+      modules: [
+        ...kept[lastIdx].modules,
+        ...dropped.flatMap((c) => c.modules),
+      ],
+    };
+  }
+  return kept;
+};
 
-  const section = design.sections[0];
-  const modules = section?.modules ?? [];
+const COLUMN_COUNT_BY_LAYOUT: Record<ColumnLayout, number> = {
+  '1': 1, '2': 2, '3': 3, '4': 4, '1-2': 2, '2-1': 2,
+};
 
+export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false }: EmailBuilderProps) => {
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+
+  // Migrate on every read so older designs (v1) work seamlessly. The next
+  // user edit writes the migrated v2 shape back to the record.
+  const design = useMemo(() => migrateDesign(rawDesign), [rawDesign]);
   const renderedHtml = useMemo(() => renderDesignToHtml(design), [design]);
 
-  const updateModules = useCallback(
-    (next: EmailModule[]) => {
-      if (!section) return;
-      const nextDesign: EmailDesign = {
-        ...design,
-        sections: [{ ...section, modules: next }, ...design.sections.slice(1)],
-      };
+  const updateSections = useCallback(
+    (next: EmailSection[]) => {
+      const nextDesign: EmailDesign = { ...design, sections: next };
       onChange(nextDesign, renderDesignToHtml(nextDesign));
     },
-    [design, onChange, section],
+    [design, onChange],
+  );
+
+  const updateSection = useCallback(
+    (sectionId: string, updater: (s: EmailSection) => EmailSection) => {
+      updateSections(
+        design.sections.map((s) => (s.id === sectionId ? updater(s) : s)),
+      );
+    },
+    [design.sections, updateSections],
+  );
+
+  const handleSectionLayoutChange = useCallback(
+    (sectionId: string, layout: ColumnLayout) => {
+      updateSection(sectionId, (s) => ({
+        ...s,
+        layout,
+        columns: reshapeColumns(s.columns, COLUMN_COUNT_BY_LAYOUT[layout]),
+      }));
+    },
+    [updateSection],
+  );
+
+  const handleSectionColorChange = useCallback(
+    (sectionId: string, color: string) => {
+      updateSection(sectionId, (s) => ({ ...s, bgColor: color }));
+    },
+    [updateSection],
+  );
+
+  const handleSectionMove = useCallback(
+    (sectionId: string, direction: -1 | 1) => {
+      const idx = design.sections.findIndex((s) => s.id === sectionId);
+      const target = idx + direction;
+      if (idx < 0 || target < 0 || target >= design.sections.length) return;
+      const next = design.sections.slice();
+      [next[idx], next[target]] = [next[target], next[idx]];
+      updateSections(next);
+    },
+    [design.sections, updateSections],
+  );
+
+  const handleSectionDelete = useCallback(
+    (sectionId: string) => {
+      if (design.sections.length <= 1) return; // always keep at least one
+      updateSections(design.sections.filter((s) => s.id !== sectionId));
+    },
+    [design.sections, updateSections],
+  );
+
+  const handleSectionAdd = useCallback(
+    (layout: ColumnLayout) => {
+      updateSections([...design.sections, buildDefaultSection(layout)]);
+    },
+    [design.sections, updateSections],
+  );
+
+  const handleModuleAdd = useCallback(
+    (sectionId: string, columnId: string, type: EmailModuleType) => {
+      const newModule = buildDefaultModule(type);
+      updateSection(sectionId, (s) => ({
+        ...s,
+        columns: s.columns.map((c) =>
+          c.id === columnId ? { ...c, modules: [...c.modules, newModule] } : c,
+        ),
+      }));
+      setSelectedModuleId(newModule.id);
+    },
+    [updateSection],
   );
 
   const handleModuleChange = useCallback(
-    (id: string, next: EmailModule) => {
-      updateModules(modules.map((m) => (m.id === id ? next : m)));
+    (sectionId: string, columnId: string, moduleId: string, next: EmailModule) => {
+      updateSection(sectionId, (s) => ({
+        ...s,
+        columns: s.columns.map((c) =>
+          c.id === columnId
+            ? {
+                ...c,
+                modules: c.modules.map((m) => (m.id === moduleId ? next : m)),
+              }
+            : c,
+        ),
+      }));
     },
-    [modules, updateModules],
+    [updateSection],
   );
 
-  const handleDelete = useCallback(
-    (id: string) => {
-      if (selectedId === id) setSelectedId(null);
-      updateModules(modules.filter((m) => m.id !== id));
+  const handleModuleDelete = useCallback(
+    (sectionId: string, columnId: string, moduleId: string) => {
+      if (selectedModuleId === moduleId) setSelectedModuleId(null);
+      updateSection(sectionId, (s) => ({
+        ...s,
+        columns: s.columns.map((c) =>
+          c.id === columnId
+            ? { ...c, modules: c.modules.filter((m) => m.id !== moduleId) }
+            : c,
+        ),
+      }));
     },
-    [modules, selectedId, updateModules],
+    [selectedModuleId, updateSection],
   );
 
-  const handleMove = useCallback(
-    (id: string, direction: -1 | 1) => {
-      const idx = modules.findIndex((m) => m.id === id);
-      const target = idx + direction;
-      if (idx < 0 || target < 0 || target >= modules.length) return;
-      const next = modules.slice();
-      [next[idx], next[target]] = [next[target], next[idx]];
-      updateModules(next);
+  const handleModuleMove = useCallback(
+    (sectionId: string, columnId: string, moduleId: string, direction: -1 | 1) => {
+      updateSection(sectionId, (s) => ({
+        ...s,
+        columns: s.columns.map((c) => {
+          if (c.id !== columnId) return c;
+          const idx = c.modules.findIndex((m) => m.id === moduleId);
+          const target = idx + direction;
+          if (idx < 0 || target < 0 || target >= c.modules.length) return c;
+          const next = c.modules.slice();
+          [next[idx], next[target]] = [next[target], next[idx]];
+          return { ...c, modules: next };
+        }),
+      }));
     },
-    [modules, updateModules],
-  );
-
-  const handleAdd = useCallback(
-    (type: EmailModuleType) => {
-      const next = [...modules, buildDefaultModule(type)];
-      updateModules(next);
-      setSelectedId(next[next.length - 1].id);
-    },
-    [modules, updateModules],
+    [updateSection],
   );
 
   return (
@@ -194,74 +398,151 @@ export const EmailBuilder = ({ design, onChange, readOnly = false }: EmailBuilde
         sandbox="allow-same-origin"
       />
 
-      <StyledModuleList>
-        {modules.map((m, idx) => {
-          const isSelected = selectedId === m.id;
+      <StyledSectionList>
+        {design.sections.map((section, sectionIdx) => {
+          const widths = COLUMN_WIDTHS[section.layout];
           return (
-            <StyledModuleRow key={m.id} selected={isSelected}>
-              <StyledModuleHeader>
-                <StyledModuleHeaderLeft
-                  onClick={() => setSelectedId(isSelected ? null : m.id)}
-                >
-                  <span>{m.type.toUpperCase()}</span>
-                  <span style={{ color: 'var(--font-color-tertiary)' }}>
-                    {moduleSummary(m)}
-                  </span>
-                </StyledModuleHeaderLeft>
+            <StyledSectionCard key={section.id}>
+              <StyledSectionHeader>
+                <StyledSectionLabel>Section {sectionIdx + 1}</StyledSectionLabel>
                 {!readOnly && (
                   <>
+                    <StyledSelect
+                      value={section.layout}
+                      onChange={(e) =>
+                        handleSectionLayoutChange(section.id, e.target.value as ColumnLayout)
+                      }
+                      title="Column layout"
+                    >
+                      {SECTION_LAYOUT_LIBRARY.map((opt) => (
+                        <option key={opt.layout} value={opt.layout}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </StyledSelect>
+                    <StyledColorInput
+                      type="color"
+                      value={section.bgColor}
+                      onChange={(e) => handleSectionColorChange(section.id, e.target.value)}
+                      title="Section background"
+                    />
                     <StyledIconButton
-                      onClick={() => handleMove(m.id, -1)}
-                      disabled={idx === 0}
-                      title="Move up"
+                      onClick={() => handleSectionMove(section.id, -1)}
+                      disabled={sectionIdx === 0}
+                      title="Move section up"
                     >↑</StyledIconButton>
                     <StyledIconButton
-                      onClick={() => handleMove(m.id, +1)}
-                      disabled={idx === modules.length - 1}
-                      title="Move down"
+                      onClick={() => handleSectionMove(section.id, +1)}
+                      disabled={sectionIdx === design.sections.length - 1}
+                      title="Move section down"
                     >↓</StyledIconButton>
                     <StyledIconButton
-                      onClick={() => handleDelete(m.id)}
-                      title="Delete"
+                      onClick={() => handleSectionDelete(section.id)}
+                      disabled={design.sections.length <= 1}
+                      title="Delete section (keeps at least one)"
                     >✕</StyledIconButton>
                   </>
                 )}
-              </StyledModuleHeader>
-              {isSelected && !readOnly && (
-                <StyledEditorPanel>
-                  {m.type === 'text' && (
-                    <TextModuleEditor
-                      module={m}
-                      onChange={(next) => handleModuleChange(m.id, next)}
-                    />
-                  )}
-                  {m.type === 'button' && (
-                    <ButtonModuleEditor
-                      module={m}
-                      onChange={(next) => handleModuleChange(m.id, next)}
-                    />
-                  )}
-                  {m.type === 'image' && (
-                    <ImageModuleEditor
-                      module={m}
-                      onChange={(next) => handleModuleChange(m.id, next)}
-                    />
-                  )}
-                </StyledEditorPanel>
-              )}
-            </StyledModuleRow>
+              </StyledSectionHeader>
+
+              <StyledColumnsRow
+                style={{
+                  gridTemplateColumns: widths.map((w) => `${w}fr`).join(' '),
+                }}
+              >
+                {section.columns.map((col, colIdx) => (
+                  <StyledColumn key={col.id}>
+                    <StyledColumnHeader>Col {colIdx + 1}</StyledColumnHeader>
+                    {col.modules.map((m, moduleIdx) => {
+                      const isSelected = selectedModuleId === m.id;
+                      return (
+                        <StyledModuleRow key={m.id} selected={isSelected}>
+                          <StyledModuleHeader>
+                            <StyledModuleHeaderLeft
+                              onClick={() => setSelectedModuleId(isSelected ? null : m.id)}
+                            >
+                              <span style={{ fontWeight: 600 }}>{m.type[0].toUpperCase()}</span>
+                              <StyledModuleSummary>{moduleSummary(m)}</StyledModuleSummary>
+                            </StyledModuleHeaderLeft>
+                            {!readOnly && (
+                              <>
+                                <StyledIconButton
+                                  onClick={() => handleModuleMove(section.id, col.id, m.id, -1)}
+                                  disabled={moduleIdx === 0}
+                                  title="Up"
+                                >↑</StyledIconButton>
+                                <StyledIconButton
+                                  onClick={() => handleModuleMove(section.id, col.id, m.id, +1)}
+                                  disabled={moduleIdx === col.modules.length - 1}
+                                  title="Down"
+                                >↓</StyledIconButton>
+                                <StyledIconButton
+                                  onClick={() => handleModuleDelete(section.id, col.id, m.id)}
+                                  title="Delete"
+                                >✕</StyledIconButton>
+                              </>
+                            )}
+                          </StyledModuleHeader>
+                          {isSelected && !readOnly && (
+                            <StyledEditorPanel>
+                              {m.type === 'text' && (
+                                <TextModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'button' && (
+                                <ButtonModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'image' && (
+                                <ImageModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                            </StyledEditorPanel>
+                          )}
+                        </StyledModuleRow>
+                      );
+                    })}
+                    {!readOnly && (
+                      <StyledAddModuleRow>
+                        {MODULE_LIBRARY.map((entry) => (
+                          <StyledAddModuleButton
+                            key={entry.type}
+                            onClick={() => handleModuleAdd(section.id, col.id, entry.type)}
+                          >
+                            + {entry.label}
+                          </StyledAddModuleButton>
+                        ))}
+                      </StyledAddModuleRow>
+                    )}
+                  </StyledColumn>
+                ))}
+              </StyledColumnsRow>
+            </StyledSectionCard>
           );
         })}
-      </StyledModuleList>
+      </StyledSectionList>
 
       {!readOnly && (
-        <StyledAddRow>
-          {MODULE_LIBRARY.map((m) => (
-            <StyledAddButton key={m.type} onClick={() => handleAdd(m.type)}>
-              + {m.label}
-            </StyledAddButton>
+        <StyledAddSectionRow>
+          <span style={{ marginRight: 'auto', color: 'var(--font-color-tertiary)' }}>
+            Add section:
+          </span>
+          {SECTION_LAYOUT_LIBRARY.map((opt) => (
+            <StyledAddSectionButton
+              key={opt.layout}
+              onClick={() => handleSectionAdd(opt.layout)}
+              title={opt.label}
+            >
+              {opt.label}
+            </StyledAddSectionButton>
           ))}
-        </StyledAddRow>
+        </StyledAddSectionRow>
       )}
     </StyledLayout>
   );
@@ -271,16 +552,15 @@ export const buildEmptyDesign = (): EmailDesign => EMPTY_EMAIL_DESIGN;
 
 export const renderEmailDesign = renderDesignToHtml;
 
-// Renders an existing bodyHtml into a single-text-module design for upgrades from
-// legacy emails that have only HTML and no design tree.
-export const wrapHtmlAsDesign = (html: string): EmailDesign => ({
-  ...EMPTY_EMAIL_DESIGN,
-  sections: [
+// Wraps an existing bodyHtml into a single-text-module design — used when
+// upgrading legacy (no-design) emails on first switch to Design mode.
+export const wrapHtmlAsDesign = (html: string): EmailDesign => {
+  const seed = buildDefaultSection('1');
+  seed.paddingTop = 0;
+  seed.paddingBottom = 0;
+  seed.columns = [
     {
-      id: `section_legacy_${Date.now().toString(36)}`,
-      bgColor: '#ffffff',
-      paddingTop: 0,
-      paddingBottom: 0,
+      id: seed.columns[0].id,
       modules: [
         {
           id: `mod_legacy_${Date.now().toString(36)}`,
@@ -294,5 +574,6 @@ export const wrapHtmlAsDesign = (html: string): EmailDesign => ({
         },
       ],
     },
-  ],
-});
+  ];
+  return { ...EMPTY_EMAIL_DESIGN, sections: [seed] };
+};
