@@ -31,6 +31,22 @@ const UNSUBSCRIBE_FOOTER = `
   <p>If you no longer wish to receive these emails, you can <a href="{{unsubscribe_link}}" style="color: #666;">unsubscribe here</a>.</p>
 </div>`;
 
+// Front-end token dropdown historically emitted spaced tokens like
+// `{{ contact.firstName }}`, while SendGrid substitutions key on the
+// unspaced form `{{contact.firstName}}` (literal string match). Normalize
+// any whitespace-padded variants in the body to the canonical no-space
+// form before handing to SendGrid so the substitutions block matches.
+// Pattern targets any of our known token names plus `unsubscribe_link`.
+const KNOWN_TOKEN_INNER =
+  '(?:contact\\.(?:firstName|lastName|fullName|email|jobTitle|city|companyName)|unsubscribe_link)';
+const TOKEN_NORMALIZE_RE = new RegExp(
+  `\\{\\{\\s*(${KNOWN_TOKEN_INNER})\\s*\\}\\}`,
+  'g',
+);
+
+const normalizeTokensInHtml = (html: string): string =>
+  html.replace(TOKEN_NORMALIZE_RE, '{{$1}}');
+
 @Injectable()
 export class CampaignExecutorService {
   private readonly logger = new Logger(CampaignExecutorService.name);
@@ -94,10 +110,8 @@ export class CampaignExecutorService {
         );
       }
     }
-    const resolvedFromEmail =
-      campaign.fromEmail || mcDefaultFromEmail || '';
-    const resolvedFromName =
-      campaign.fromName || mcDefaultFromName || '';
+    const resolvedFromEmail = campaign.fromEmail || mcDefaultFromEmail || '';
+    const resolvedFromName = campaign.fromName || mcDefaultFromName || '';
 
     // Idempotency: skip if campaign already completed
     if (campaign.status === CampaignStatus.SENT) {
@@ -214,10 +228,15 @@ export class CampaignExecutorService {
 
       try {
         // Prepare email content with unsubscribe footer
-        let htmlContent = campaign.bodyHtml ?? '';
+        let htmlContent = normalizeTokensInHtml(campaign.bodyHtml ?? '');
 
-        // Append unsubscribe footer if not already present
-        if (!htmlContent.includes('{{unsubscribe_link}}')) {
+        // Append unsubscribe footer if not already present (any whitespace
+        // variant) — check both forms before normalization would have
+        // collapsed them so we don't double-append on legacy bodies.
+        if (
+          !htmlContent.includes('{{unsubscribe_link}}') &&
+          !/\{\{\s*unsubscribe_link\s*\}\}/.test(campaign.bodyHtml ?? '')
+        ) {
           htmlContent += UNSUBSCRIBE_FOOTER;
         }
 
