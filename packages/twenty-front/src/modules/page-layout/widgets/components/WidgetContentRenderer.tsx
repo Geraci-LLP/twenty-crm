@@ -10,6 +10,7 @@ import { FileWidget } from '@/page-layout/widgets/files/components/FileWidget';
 import { FormBuilderWidget } from '@/page-layout/widgets/form-builder/components/FormBuilderWidget';
 import { FrontComponentWidgetRenderer } from '@/page-layout/widgets/front-component/components/FrontComponentWidgetRenderer';
 import { LandingPageBuilderWidget } from '@/page-layout/widgets/landing-page-builder/components/LandingPageBuilderWidget';
+import { SequenceCadenceWidget } from '@/page-layout/widgets/sequence-cadence/components/SequenceCadenceWidget';
 import { GraphWidgetRenderer } from '@/page-layout/widgets/graph/components/GraphWidgetRenderer';
 import { IframeWidget } from '@/page-layout/widgets/iframe/components/IframeWidget';
 import { NoteWidget } from '@/page-layout/widgets/notes/components/NoteWidget';
@@ -94,6 +95,13 @@ export const WidgetContentRenderer = ({
       return <EmailThreadWidget widget={widget} />;
 
     default:
+      // Server enum (PR 32) added SEQUENCE_CADENCE; the generated frontend
+      // enum lags behind until codegen regenerates against the new schema,
+      // so handle it as a string fallback for now. Once codegen catches
+      // up, this can be promoted to `case WidgetType.SEQUENCE_CADENCE`.
+      if ((widget.type as string) === 'SEQUENCE_CADENCE') {
+        return <SequenceCadenceWidget />;
+      }
       return null;
   }
 };
