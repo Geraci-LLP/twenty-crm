@@ -7,7 +7,10 @@ import {
   type EmailModule,
   type EmailModuleType,
   type EmailSection,
+  type FooterModule,
+  type HtmlModule,
   type ImageModule,
+  type SocialModule,
   type SpacerModule,
   type TextModule,
 } from '@/campaign/email-builder/types/CampaignDesign';
@@ -99,6 +102,36 @@ export const buildDefaultModule = (type: EmailModuleType): EmailModule => {
         paddingTop: 0,
         paddingBottom: 0,
       } satisfies SpacerModule;
+    case 'html':
+      return {
+        ...base,
+        type: 'html',
+        rawHtml: '<!-- Custom HTML — may render inconsistently across email clients -->\n<p>Edit this raw HTML.</p>',
+      } satisfies HtmlModule;
+    case 'social':
+      return {
+        ...base,
+        type: 'social',
+        links: [
+          { platform: 'twitter', href: 'https://x.com/' },
+          { platform: 'linkedin', href: 'https://linkedin.com/' },
+          { platform: 'facebook', href: 'https://facebook.com/' },
+        ],
+        iconSize: 28,
+        spacing: 12,
+        alignment: 'center',
+      } satisfies SocialModule;
+    case 'footer':
+      return {
+        ...base,
+        type: 'footer',
+        address: 'Geraci LLP, 90 Discovery, Irvine, California 92618, United States, (949) 403-3488',
+        fontSize: 12,
+        textColor: '#8a8a85',
+        alignment: 'center',
+        unsubscribeLabel: 'Unsubscribe',
+        preferencesLabel: 'Manage preferences',
+      } satisfies FooterModule;
   }
 };
 
@@ -112,6 +145,9 @@ export const MODULE_LIBRARY: ReadonlyArray<{
   { type: 'image', label: 'Image', icon: '🖼' },
   { type: 'divider', label: 'Divider', icon: '─' },
   { type: 'spacer', label: 'Spacer', icon: '↕' },
+  { type: 'social', label: 'Social', icon: '◉' },
+  { type: 'footer', label: 'Footer', icon: 'F' },
+  { type: 'html', label: 'HTML', icon: '<>' },
 ];
 
 export const SECTION_LAYOUT_LIBRARY: ReadonlyArray<{

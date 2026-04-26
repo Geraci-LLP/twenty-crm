@@ -340,6 +340,12 @@ export const CampaignEditor = ({
             design={parseDesign(value.designJson) ?? buildEmptyDesign()}
             onChange={handleDesignChange}
             readOnly={readOnly}
+            meta={{
+              fromName: value.fromName,
+              fromEmail: value.fromEmail,
+              subject: value.subject,
+              previewText: value.previewText,
+            }}
           />
         ) : (
           <>

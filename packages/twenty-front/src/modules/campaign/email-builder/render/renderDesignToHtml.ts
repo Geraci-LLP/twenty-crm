@@ -8,7 +8,10 @@ import {
   type EmailModule,
   type EmailSection,
   type EmailSettings,
+  type FooterModule,
+  type HtmlModule,
   type ImageModule,
+  type SocialModule,
   type SpacerModule,
   type TextModule,
 } from '@/campaign/email-builder/types/CampaignDesign';
@@ -84,6 +87,61 @@ const renderSpacerModule = (m: SpacerModule): string => `
     </tr>
   </table>`;
 
+const renderHtmlModule = (m: HtmlModule): string => `
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td style="padding:${m.paddingTop}px 0 ${m.paddingBottom}px 0;">
+        ${m.rawHtml || ''}
+      </td>
+    </tr>
+  </table>`;
+
+// Inline-styled SVG icons embedded as data URIs would be more reliable across
+// clients, but most email clients (Gmail/Yahoo/Apple) handle plain remote
+// images fine — and Outlook ignores SVG entirely. Use simple text-styled
+// circles with the platform initial; clients always render text + bg color.
+const SOCIAL_LABELS: Record<SocialModule['links'][number]['platform'], string> = {
+  twitter: 'X', linkedin: 'in', facebook: 'f', instagram: 'IG', youtube: 'YT',
+};
+
+const renderSocialModule = (m: SocialModule, settings: EmailSettings): string => {
+  if (m.links.length === 0) return '';
+  const cells = m.links
+    .map((link) => {
+      const label = SOCIAL_LABELS[link.platform] ?? link.platform.slice(0, 2).toUpperCase();
+      return `
+        <td style="padding:0 ${m.spacing / 2}px;">
+          <a href="${escapeAttr(link.href)}" style="display:inline-block;width:${m.iconSize}px;height:${m.iconSize}px;line-height:${m.iconSize}px;text-align:center;background:#1a1a18;color:#ffffff;border-radius:50%;font-family:${settings.fontFamily};font-size:${Math.round(m.iconSize / 2)}px;font-weight:600;text-decoration:none;">${label}</a>
+        </td>`;
+    })
+    .join('');
+  return `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td align="${m.alignment}" style="padding:${m.paddingTop}px 0 ${m.paddingBottom}px 0;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+            <tr>${cells}</tr>
+          </table>
+        </td>
+      </tr>
+    </table>`;
+};
+
+const renderFooterModule = (m: FooterModule, settings: EmailSettings): string => {
+  const address = escapeHtml(m.address || '');
+  const unsub = escapeHtml(m.unsubscribeLabel || 'Unsubscribe');
+  const prefs = escapeHtml(m.preferencesLabel || 'Manage preferences');
+  return `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td align="${m.alignment}" style="padding:${m.paddingTop}px 0 ${m.paddingBottom}px 0;color:${m.textColor};font-family:${settings.fontFamily};font-size:${m.fontSize}px;line-height:1.5;">
+          ${address}<br/>
+          <a href="{{unsubscribe_link}}" style="color:${m.textColor};text-decoration:underline;">${unsub}</a> · <a href="{{unsubscribe_link}}" style="color:${m.textColor};text-decoration:underline;">${prefs}</a>
+        </td>
+      </tr>
+    </table>`;
+};
+
 const renderModule = (m: EmailModule, settings: EmailSettings): string => {
   switch (m.type) {
     case 'text':    return renderTextModule(m, settings);
@@ -91,6 +149,9 @@ const renderModule = (m: EmailModule, settings: EmailSettings): string => {
     case 'image':   return renderImageModule(m);
     case 'divider': return renderDividerModule(m);
     case 'spacer':  return renderSpacerModule(m);
+    case 'html':    return renderHtmlModule(m);
+    case 'social':  return renderSocialModule(m, settings);
+    case 'footer':  return renderFooterModule(m, settings);
   }
 };
 
@@ -132,11 +193,43 @@ const renderSection = (s: EmailSection, settings: EmailSettings): string => {
     </table>`;
 };
 
-export const renderDesignToHtml = (designIn: EmailDesign): string => {
+export type RenderMeta = {
+  fromName?: string;
+  fromEmail?: string;
+  subject?: string;
+  previewText?: string;
+};
+
+// Optional in-canvas email-meta header (From / To / Subject / Preview). Rendered
+// only when meta is provided AND showMeta is true — used for the editor preview.
+// Real send output (server) calls renderDesignToHtml WITHOUT meta so the
+// outgoing email doesn't have the simulated inbox chrome at the top.
+const renderMetaHeader = (meta: RenderMeta, settings: EmailSettings): string => {
+  const rows: string[] = [];
+  if (meta.fromName || meta.fromEmail) {
+    const left = meta.fromName ? escapeHtml(meta.fromName) : '';
+    const right = meta.fromEmail ? `<span style="color:#8a8a85;">${escapeHtml(meta.fromEmail)}</span>` : '';
+    rows.push(`<div style="margin:2px 0;"><b>From:</b> ${left} ${right}</div>`);
+  }
+  rows.push(`<div style="margin:2px 0;"><b>To:</b> <span style="color:#8a8a85;">{{contact.email}}</span></div>`);
+  if (meta.subject) {
+    rows.push(`<div style="margin:2px 0;"><b>Subject:</b> ${escapeHtml(meta.subject)}</div>`);
+  }
+  if (meta.previewText) {
+    rows.push(`<div style="margin:2px 0;"><b>Preview:</b> <span style="color:#8a8a85;">${escapeHtml(meta.previewText)}</span></div>`);
+  }
+  return `
+    <div style="background:#fafaf9;border-bottom:1px solid #e8e6e1;padding:12px 16px;font-family:${settings.fontFamily};font-size:12px;color:#1a1a18;">
+      ${rows.join('')}
+    </div>`;
+};
+
+export const renderDesignToHtml = (designIn: EmailDesign, meta?: RenderMeta): string => {
   const design = migrateDesign(designIn);
   const sections = design.sections
     .map((s) => renderSection(s, design.settings))
     .join('\n');
+  const metaHeader = meta ? renderMetaHeader(meta, design.settings) : '';
 
   // Mobile stacking: a media query that forces multi-column tables to stack.
   // Targets cells inside our content table; max-width 600 covers most phones.
@@ -164,6 +257,7 @@ export const renderDesignToHtml = (designIn: EmailDesign): string => {
     <tr>
       <td align="center" style="padding:24px 12px;">
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="${design.settings.contentWidth}" style="width:${design.settings.contentWidth}px;max-width:100%;background:${design.settings.contentBgColor};">
+          ${metaHeader ? `<tr><td>${metaHeader}</td></tr>` : ''}
           <tr>
             <td>
               ${sections}

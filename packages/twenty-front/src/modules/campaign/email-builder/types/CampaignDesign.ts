@@ -60,7 +60,10 @@ export type EmailModule =
   | ButtonModule
   | ImageModule
   | DividerModule
-  | SpacerModule;
+  | SpacerModule
+  | HtmlModule
+  | SocialModule
+  | FooterModule;
 
 type ModuleBase = {
   id: string;
@@ -110,6 +113,38 @@ export type DividerModule = ModuleBase & {
 export type SpacerModule = ModuleBase & {
   type: 'spacer';
   height: number;          // px
+};
+
+export type HtmlModule = ModuleBase & {
+  type: 'html';
+  rawHtml: string;
+};
+
+export type SocialPlatform = 'twitter' | 'linkedin' | 'facebook' | 'instagram' | 'youtube';
+
+export type SocialLink = {
+  platform: SocialPlatform;
+  href: string;
+};
+
+export type SocialModule = ModuleBase & {
+  type: 'social';
+  links: SocialLink[];
+  iconSize: number;        // px
+  spacing: number;         // px between icons
+  alignment: 'left' | 'center' | 'right';
+};
+
+export type FooterModule = ModuleBase & {
+  type: 'footer';
+  address: string;
+  fontSize: number;
+  textColor: string;
+  alignment: 'left' | 'center' | 'right';
+  unsubscribeLabel: string;
+  preferencesLabel: string;
+  // Always renders {{unsubscribe_link}} so the server-side executor's
+  // suppression-list contract works; do not strip the token from output.
 };
 
 export type EmailModuleType = EmailModule['type'];

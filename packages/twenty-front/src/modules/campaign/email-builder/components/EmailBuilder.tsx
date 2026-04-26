@@ -11,11 +11,17 @@ import {
 } from '@/campaign/email-builder/constants/EmailBuilderDefaults';
 import { ButtonModuleEditor } from '@/campaign/email-builder/components/modules/ButtonModuleEditor';
 import { DividerModuleEditor } from '@/campaign/email-builder/components/modules/DividerModuleEditor';
+import { FooterModuleEditor } from '@/campaign/email-builder/components/modules/FooterModuleEditor';
+import { HtmlModuleEditor } from '@/campaign/email-builder/components/modules/HtmlModuleEditor';
 import { ImageModuleEditor } from '@/campaign/email-builder/components/modules/ImageModuleEditor';
+import { SocialModuleEditor } from '@/campaign/email-builder/components/modules/SocialModuleEditor';
 import { SpacerModuleEditor } from '@/campaign/email-builder/components/modules/SpacerModuleEditor';
 import { TextModuleEditor } from '@/campaign/email-builder/components/modules/TextModuleEditor';
 import { migrateDesign } from '@/campaign/email-builder/render/migrateDesign';
-import { renderDesignToHtml } from '@/campaign/email-builder/render/renderDesignToHtml';
+import {
+  type RenderMeta,
+  renderDesignToHtml,
+} from '@/campaign/email-builder/render/renderDesignToHtml';
 import {
   type ColumnLayout,
   COLUMN_WIDTHS,
@@ -211,6 +217,10 @@ type EmailBuilderProps = {
   design: EmailDesign;
   onChange: (next: EmailDesign, renderedHtml: string) => void;
   readOnly?: boolean;
+  // Optional preview-only inbox-meta header (From/To/Subject/Preview) shown
+  // above the rendered design in the iframe. NOT included in the saved/sent
+  // body — server calls renderDesignToHtml without meta when sending.
+  meta?: RenderMeta;
 };
 
 const moduleSummary = (m: EmailModule): string => {
@@ -225,6 +235,12 @@ const moduleSummary = (m: EmailModule): string => {
       return `${m.style} ${m.thickness}px ${m.color}`;
     case 'spacer':
       return `${m.height}px tall`;
+    case 'html':
+      return m.rawHtml.replace(/<[^>]+>/g, '').slice(0, 40) || '(custom HTML)';
+    case 'social':
+      return `${m.links.length} link${m.links.length === 1 ? '' : 's'}`;
+    case 'footer':
+      return m.address.slice(0, 40) || 'Footer';
   }
 };
 
@@ -262,13 +278,15 @@ const COLUMN_COUNT_BY_LAYOUT: Record<ColumnLayout, number> = {
   '1': 1, '2': 2, '3': 3, '4': 4, '1-2': 2, '2-1': 2,
 };
 
-export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false }: EmailBuilderProps) => {
+export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, meta }: EmailBuilderProps) => {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
 
   // Migrate on every read so older designs (v1) work seamlessly. The next
   // user edit writes the migrated v2 shape back to the record.
   const design = useMemo(() => migrateDesign(rawDesign), [rawDesign]);
-  const renderedHtml = useMemo(() => renderDesignToHtml(design), [design]);
+  // Preview HTML includes the inbox-meta header. Saved HTML (passed to onChange)
+  // does NOT — server stores only what gets sent.
+  const previewHtml = useMemo(() => renderDesignToHtml(design, meta), [design, meta]);
 
   const updateSections = useCallback(
     (next: EmailSection[]) => {
@@ -400,7 +418,7 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false }: 
     <StyledLayout>
       <StyledPreviewFrame
         title="Email preview"
-        srcDoc={renderedHtml}
+        srcDoc={previewHtml}
         sandbox="allow-same-origin"
       />
 
@@ -517,6 +535,24 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false }: 
                               )}
                               {m.type === 'spacer' && (
                                 <SpacerModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'html' && (
+                                <HtmlModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'social' && (
+                                <SocialModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'footer' && (
+                                <FooterModuleEditor
                                   module={m}
                                   onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
                                 />
