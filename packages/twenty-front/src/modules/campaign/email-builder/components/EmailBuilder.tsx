@@ -12,12 +12,16 @@ import {
 import { ButtonModuleEditor } from '@/campaign/email-builder/components/modules/ButtonModuleEditor';
 import { DividerModuleEditor } from '@/campaign/email-builder/components/modules/DividerModuleEditor';
 import { FooterModuleEditor } from '@/campaign/email-builder/components/modules/FooterModuleEditor';
+import { HeadingModuleEditor } from '@/campaign/email-builder/components/modules/HeadingModuleEditor';
 import { HtmlModuleEditor } from '@/campaign/email-builder/components/modules/HtmlModuleEditor';
 import { ImageModuleEditor } from '@/campaign/email-builder/components/modules/ImageModuleEditor';
 import { SocialModuleEditor } from '@/campaign/email-builder/components/modules/SocialModuleEditor';
 import { SpacerModuleEditor } from '@/campaign/email-builder/components/modules/SpacerModuleEditor';
 import { TextModuleEditor } from '@/campaign/email-builder/components/modules/TextModuleEditor';
 import { migrateDesign } from '@/campaign/email-builder/render/migrateDesign';
+import { DraggableItem } from '@/ui/layout/draggable-list/components/DraggableItem';
+import { DraggableList } from '@/ui/layout/draggable-list/components/DraggableList';
+import { type DropResult } from '@hello-pangea/dnd';
 import {
   type RenderMeta,
   renderDesignToHtml,
@@ -39,12 +43,52 @@ const StyledLayout = styled.div`
   gap: ${themeCssVariables.spacing[4]};
 `;
 
+const StyledPreviewBar = styled.div`
+  align-items: center;
+  display: flex;
+  gap: ${themeCssVariables.spacing[2]};
+  justify-content: flex-end;
+`;
+
+const StyledPreviewToggle = styled.button<{ active: boolean }>`
+  background: ${(p) =>
+    p.active
+      ? themeCssVariables.background.tertiary
+      : themeCssVariables.background.primary};
+  border: 1px solid
+    ${(p) =>
+      p.active
+        ? themeCssVariables.color.blue
+        : themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${(p) =>
+    p.active
+      ? themeCssVariables.font.color.primary
+      : themeCssVariables.font.color.secondary};
+  cursor: pointer;
+  font-size: ${themeCssVariables.font.size.xs};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
+`;
+
+const StyledPreviewWrap = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const StyledPreviewFrame = styled.iframe`
   background: ${themeCssVariables.background.tertiary};
   border: 1px solid ${themeCssVariables.border.color.medium};
   border-radius: ${themeCssVariables.border.radius.sm};
   height: 480px;
   width: 100%;
+`;
+
+const StyledPreviewFrameMobile = styled.iframe`
+  background: ${themeCssVariables.background.tertiary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: 24px;
+  height: 600px;
+  width: 375px;
 `;
 
 const StyledSectionList = styled.div`
@@ -227,6 +271,8 @@ const moduleSummary = (m: EmailModule): string => {
   switch (m.type) {
     case 'text':
       return m.html.replace(/<[^>]+>/g, '').slice(0, 40) || '(empty text)';
+    case 'heading':
+      return `${m.level.toUpperCase()}: ${m.text.slice(0, 40)}` || `(empty ${m.level})`;
     case 'button':
       return m.label;
     case 'image':
@@ -280,6 +326,7 @@ const COLUMN_COUNT_BY_LAYOUT: Record<ColumnLayout, number> = {
 
 export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, meta }: EmailBuilderProps) => {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
 
   // Migrate on every read so older designs (v1) work seamlessly. The next
   // user edit writes the migrated v2 shape back to the record.
@@ -323,13 +370,15 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
     [updateSection],
   );
 
-  const handleSectionMove = useCallback(
-    (sectionId: string, direction: -1 | 1) => {
-      const idx = design.sections.findIndex((s) => s.id === sectionId);
-      const target = idx + direction;
-      if (idx < 0 || target < 0 || target >= design.sections.length) return;
+  const handleSectionsDragEnd = useCallback(
+    (result: DropResult) => {
+      if (!result.destination) return;
+      const from = result.source.index;
+      const to = result.destination.index;
+      if (from === to) return;
       const next = design.sections.slice();
-      [next[idx], next[target]] = [next[target], next[idx]];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
       updateSections(next);
     },
     [design.sections, updateSections],
@@ -416,19 +465,56 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
 
   return (
     <StyledLayout>
-      <StyledPreviewFrame
-        title="Email preview"
-        srcDoc={previewHtml}
-        sandbox="allow-same-origin"
-      />
+      <StyledPreviewBar>
+        <StyledPreviewToggle
+          active={previewMode === 'desktop'}
+          onClick={() => setPreviewMode('desktop')}
+          type="button"
+        >
+          Desktop
+        </StyledPreviewToggle>
+        <StyledPreviewToggle
+          active={previewMode === 'mobile'}
+          onClick={() => setPreviewMode('mobile')}
+          type="button"
+        >
+          Mobile
+        </StyledPreviewToggle>
+      </StyledPreviewBar>
 
-      <StyledSectionList>
-        {design.sections.map((section, sectionIdx) => {
-          const widths = COLUMN_WIDTHS[section.layout];
-          return (
-            <StyledSectionCard key={section.id}>
+      <StyledPreviewWrap>
+        {previewMode === 'desktop' ? (
+          <StyledPreviewFrame
+            title="Email preview (desktop)"
+            srcDoc={previewHtml}
+            sandbox="allow-same-origin"
+          />
+        ) : (
+          <StyledPreviewFrameMobile
+            title="Email preview (mobile)"
+            srcDoc={previewHtml}
+            sandbox="allow-same-origin"
+          />
+        )}
+      </StyledPreviewWrap>
+
+      <DraggableList
+        onDragEnd={handleSectionsDragEnd}
+        draggableItems={
+          <StyledSectionList>
+            {design.sections.map((section, sectionIdx) => {
+              const widths = COLUMN_WIDTHS[section.layout];
+              return (
+                <DraggableItem
+                  key={section.id}
+                  draggableId={section.id}
+                  index={sectionIdx}
+                  isDragDisabled={readOnly}
+                  draggableComponentStyles={{ marginBottom: 8 }}
+                  itemComponent={() => (
+            <StyledSectionCard>
               <StyledSectionHeader>
-                <StyledSectionLabel>Section {sectionIdx + 1}</StyledSectionLabel>
+                <StyledSectionLabel>≡ Section {sectionIdx + 1}</StyledSectionLabel>
                 {!readOnly && (
                   <>
                     <StyledSelect
@@ -450,16 +536,6 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
                       onChange={(e) => handleSectionColorChange(section.id, e.target.value)}
                       title="Section background"
                     />
-                    <StyledIconButton
-                      onClick={() => handleSectionMove(section.id, -1)}
-                      disabled={sectionIdx === 0}
-                      title="Move section up"
-                    >↑</StyledIconButton>
-                    <StyledIconButton
-                      onClick={() => handleSectionMove(section.id, +1)}
-                      disabled={sectionIdx === design.sections.length - 1}
-                      title="Move section down"
-                    >↓</StyledIconButton>
                     <StyledIconButton
                       onClick={() => handleSectionDelete(section.id)}
                       disabled={design.sections.length <= 1}
@@ -511,6 +587,12 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
                             <StyledEditorPanel>
                               {m.type === 'text' && (
                                 <TextModuleEditor
+                                  module={m}
+                                  onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
+                                />
+                              )}
+                              {m.type === 'heading' && (
+                                <HeadingModuleEditor
                                   module={m}
                                   onChange={(next) => handleModuleChange(section.id, col.id, m.id, next)}
                                 />
@@ -578,9 +660,13 @@ export const EmailBuilder = ({ design: rawDesign, onChange, readOnly = false, me
                 ))}
               </StyledColumnsRow>
             </StyledSectionCard>
-          );
-        })}
-      </StyledSectionList>
+                  )}
+                />
+              );
+            })}
+          </StyledSectionList>
+        }
+      />
 
       {!readOnly && (
         <StyledAddSectionRow>

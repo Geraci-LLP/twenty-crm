@@ -57,6 +57,7 @@ export type EmailColumn = {
 
 export type EmailModule =
   | TextModule
+  | HeadingModule
   | ButtonModule
   | ImageModule
   | DividerModule
@@ -79,6 +80,17 @@ export type TextModule = ModuleBase & {
   alignment: 'left' | 'center' | 'right';
   fontSize: number;
   textColor: string;
+};
+
+export type HeadingLevel = 'h1' | 'h2' | 'h3';
+
+export type HeadingModule = ModuleBase & {
+  type: 'heading';
+  text: string;
+  level: HeadingLevel;
+  alignment: 'left' | 'center' | 'right';
+  textColor: string;
+  fontWeight: number;        // 400-800
 };
 
 export type ButtonModule = ModuleBase & {

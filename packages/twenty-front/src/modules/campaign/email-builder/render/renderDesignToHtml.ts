@@ -9,6 +9,7 @@ import {
   type EmailSection,
   type EmailSettings,
   type FooterModule,
+  type HeadingModule,
   type HtmlModule,
   type ImageModule,
   type SocialModule,
@@ -34,6 +35,23 @@ const renderTextModule = (m: TextModule, settings: EmailSettings): string => `
       </td>
     </tr>
   </table>`;
+
+const HEADING_FONT_SIZE: Record<HeadingModule['level'], number> = {
+  h1: 28, h2: 22, h3: 18,
+};
+
+const renderHeadingModule = (m: HeadingModule, settings: EmailSettings): string => {
+  const fs = HEADING_FONT_SIZE[m.level];
+  const text = escapeHtml(m.text || '');
+  return `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td style="padding:${m.paddingTop}px 0 ${m.paddingBottom}px 0;text-align:${m.alignment};color:${m.textColor};font-family:${settings.fontFamily};font-size:${fs}px;line-height:1.25;font-weight:${m.fontWeight};">
+          ${text}
+        </td>
+      </tr>
+    </table>`;
+};
 
 const renderButtonModule = (m: ButtonModule, settings: EmailSettings): string => {
   const label = escapeHtml(m.label || 'Button');
@@ -145,6 +163,7 @@ const renderFooterModule = (m: FooterModule, settings: EmailSettings): string =>
 const renderModule = (m: EmailModule, settings: EmailSettings): string => {
   switch (m.type) {
     case 'text':    return renderTextModule(m, settings);
+    case 'heading': return renderHeadingModule(m, settings);
     case 'button':  return renderButtonModule(m, settings);
     case 'image':   return renderImageModule(m);
     case 'divider': return renderDividerModule(m);

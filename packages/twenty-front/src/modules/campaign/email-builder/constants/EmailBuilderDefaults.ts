@@ -8,6 +8,7 @@ import {
   type EmailModuleType,
   type EmailSection,
   type FooterModule,
+  type HeadingModule,
   type HtmlModule,
   type ImageModule,
   type SocialModule,
@@ -63,6 +64,16 @@ export const buildDefaultModule = (type: EmailModuleType): EmailModule => {
         fontSize: 16,
         textColor: '#1f2937',
       } satisfies TextModule;
+    case 'heading':
+      return {
+        ...base,
+        type: 'heading',
+        text: 'Heading',
+        level: 'h2',
+        alignment: 'left',
+        textColor: '#1a1a18',
+        fontWeight: 700,
+      } satisfies HeadingModule;
     case 'button':
       return {
         ...base,
@@ -140,6 +151,7 @@ export const MODULE_LIBRARY: ReadonlyArray<{
   label: string;
   icon: string;
 }> = [
+  { type: 'heading', label: 'Heading', icon: 'H' },
   { type: 'text', label: 'Text', icon: 'T' },
   { type: 'button', label: 'Button', icon: '◼' },
   { type: 'image', label: 'Image', icon: '🖼' },
