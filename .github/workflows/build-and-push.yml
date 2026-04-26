@@ -86,21 +86,28 @@ jobs:
   trigger-railway-deploy:
     needs: build-railway
     runs-on: ubuntu-latest
-    # No-op if RAILWAY_DEPLOY_WEBHOOK secret isn't set, so this won't fail the
-    # workflow on repos that don't use Railway. Set the secret in
-    # Settings → Secrets → Actions to a webhook URL from
-    # Railway → service → Settings → Webhooks.
-    if: ${{ vars.RAILWAY_DEPLOY_WEBHOOK_ENABLED == 'true' || github.repository_owner == 'Geraci-LLP' }}
+    # Safe no-op when RAILWAY_TOKEN isn't set, so this works on forks too.
+    # To enable: in Railway, generate a project-scoped token at
+    #   Account → Tokens → Create Token (scoped to the twenty-crm project)
+    # then add it as RAILWAY_TOKEN in
+    #   GitHub → Settings → Secrets and variables → Actions
+    # Set RAILWAY_SERVICE_ID similarly (find in Railway service URL or via
+    # `railway service` after running `railway link`).
+    if: github.repository_owner == 'Geraci-LLP'
     steps:
       - name: Trigger Railway redeploy
         env:
-          WEBHOOK: ${{ secrets.RAILWAY_DEPLOY_WEBHOOK }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
         run: |
-          if [ -z "$WEBHOOK" ]; then
-            echo "RAILWAY_DEPLOY_WEBHOOK secret not set — skipping. Add it in Settings → Secrets → Actions."
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "RAILWAY_TOKEN not set — skipping. Add it in GitHub Settings → Secrets → Actions."
             exit 0
           fi
-          curl -fsSL -X POST "$WEBHOOK" \
-            -H "Content-Type: application/json" \
-            --data '{"trigger":"github-actions","sha":"${{ github.sha }}"}'
+          if [ -z "$RAILWAY_SERVICE_ID" ]; then
+            echo "RAILWAY_SERVICE_ID not set — skipping."
+            exit 0
+          fi
+          npm install -g @railway/cli@latest
+          railway redeploy --service "$RAILWAY_SERVICE_ID" --yes
           echo "Railway redeploy triggered for ${{ github.sha }}"
