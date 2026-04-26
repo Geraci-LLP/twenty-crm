@@ -212,9 +212,14 @@ export const CampaignEditor = ({
     useState<CampaignPersonalizationToken>(CAMPAIGN_PERSONALIZATION_TOKENS[0]);
   const [isTemplateGalleryOpen, setIsTemplateGalleryOpen] = useState(false);
 
-  const initialDesign = useMemo(() => parseDesign(value.designJson), [value.designJson]);
+  const initialDesign = useMemo(
+    () => parseDesign(value.designJson),
+    [value.designJson],
+  );
   // Default to Design mode if a design exists; otherwise Code mode (legacy / new).
-  const [mode, setMode] = useState<EditorMode>(initialDesign ? 'design' : 'code');
+  const [mode, setMode] = useState<EditorMode>(
+    initialDesign ? 'design' : 'code',
+  );
 
   const handleFieldChange = useCallback(
     (field: keyof CampaignEditorData, fieldValue: string) => {
@@ -240,9 +245,7 @@ export const CampaignEditor = ({
     if (initialDesign) return;
     // Convert legacy HTML body to a single-text-module design so no content is
     // lost. Save happens on next user edit; switching modes alone doesn't write.
-    const seed = value.body
-      ? wrapHtmlAsDesign(value.body)
-      : buildEmptyDesign();
+    const seed = value.body ? wrapHtmlAsDesign(value.body) : buildEmptyDesign();
     onChange({
       ...value,
       designJson: seed,
@@ -316,6 +319,19 @@ export const CampaignEditor = ({
       </StyledFieldGroup>
 
       <StyledFieldGroup>
+        <StyledLabel>Preview text</StyledLabel>
+        <StyledInput
+          type="text"
+          placeholder="Inbox preview shown after the subject (recommended ~90 chars)"
+          value={value.previewText}
+          onChange={(event) =>
+            handleFieldChange('previewText', event.target.value)
+          }
+          readOnly={readOnly}
+        />
+      </StyledFieldGroup>
+
+      <StyledFieldGroup>
         <StyledLabel>Body</StyledLabel>
         {!readOnly && (
           <StyledModeTabs>
@@ -349,58 +365,62 @@ export const CampaignEditor = ({
           />
         ) : (
           <>
-        {!readOnly && (
-          <StyledToolbar>
-            <StyledTokenRow>
-              <StyledTokenSelect
-                value={selectedToken.value}
-                onChange={(event) => {
-                  const token = CAMPAIGN_PERSONALIZATION_TOKENS.find(
-                    (personalizationToken) =>
-                      personalizationToken.value === event.target.value,
-                  );
+            {!readOnly && (
+              <StyledToolbar>
+                <StyledTokenRow>
+                  <StyledTokenSelect
+                    value={selectedToken.value}
+                    onChange={(event) => {
+                      const token = CAMPAIGN_PERSONALIZATION_TOKENS.find(
+                        (personalizationToken) =>
+                          personalizationToken.value === event.target.value,
+                      );
 
-                  if (token) {
-                    setSelectedToken(token);
-                  }
-                }}
-              >
-                {CAMPAIGN_PERSONALIZATION_TOKENS.map((personalizationToken) => (
-                  <option
-                    key={personalizationToken.value}
-                    value={personalizationToken.value}
+                      if (token) {
+                        setSelectedToken(token);
+                      }
+                    }}
                   >
-                    {personalizationToken.label}
-                  </option>
-                ))}
-              </StyledTokenSelect>
-              <StyledInsertButton onClick={handleInsertToken}>
-                Insert Token
-              </StyledInsertButton>
-            </StyledTokenRow>
-            {campaignId && (
-              <StyledTemplatesButton
-                onClick={() => setIsTemplateGalleryOpen(true)}
-              >
-                Templates
-              </StyledTemplatesButton>
+                    {CAMPAIGN_PERSONALIZATION_TOKENS.map(
+                      (personalizationToken) => (
+                        <option
+                          key={personalizationToken.value}
+                          value={personalizationToken.value}
+                        >
+                          {personalizationToken.label}
+                        </option>
+                      ),
+                    )}
+                  </StyledTokenSelect>
+                  <StyledInsertButton onClick={handleInsertToken}>
+                    Insert Token
+                  </StyledInsertButton>
+                </StyledTokenRow>
+                {campaignId && (
+                  <StyledTemplatesButton
+                    onClick={() => setIsTemplateGalleryOpen(true)}
+                  >
+                    Templates
+                  </StyledTemplatesButton>
+                )}
+              </StyledToolbar>
             )}
-          </StyledToolbar>
-        )}
-        <StyledTextArea
-          ref={bodyTextAreaRef}
-          placeholder="Write your email content here..."
-          value={value.body}
-          onChange={(event) => handleFieldChange('body', event.target.value)}
-          readOnly={readOnly}
-        />
-        {!value.body.includes('{{unsubscribe_link}}') && (
-          <StyledWarningBanner>
-            Your email does not include an unsubscribe link. An unsubscribe
-            footer will be automatically appended. Use the &quot;Unsubscribe
-            Link&quot; personalization token for a custom placement.
-          </StyledWarningBanner>
-        )}
+            <StyledTextArea
+              ref={bodyTextAreaRef}
+              placeholder="Write your email content here..."
+              value={value.body}
+              onChange={(event) =>
+                handleFieldChange('body', event.target.value)
+              }
+              readOnly={readOnly}
+            />
+            {!value.body.includes('{{unsubscribe_link}}') && (
+              <StyledWarningBanner>
+                Your email does not include an unsubscribe link. An unsubscribe
+                footer will be automatically appended. Use the &quot;Unsubscribe
+                Link&quot; personalization token for a custom placement.
+              </StyledWarningBanner>
+            )}
           </>
         )}
       </StyledFieldGroup>
