@@ -82,3 +82,33 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:railway
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  trigger-railway-deploy:
+    needs: build-railway
+    runs-on: ubuntu-latest
+    # Triggers a Railway redeploy after the new ghcr.io image is pushed, so
+    # the Railway service auto-pulls the latest :railway tag.
+    #
+    # Setup needed once on the repo (under Settings → Secrets → Actions):
+    #   RAILWAY_TOKEN       — Railway → Account → Tokens → Create Token
+    #                         (project-scoped to twenty-crm is safest)
+    #   RAILWAY_SERVICE_ID  — the twenty-crm service's UUID
+    #                         (in the service URL, or `railway service`)
+    #
+    # Step is a safe no-op if either secret is unset, so the workflow won't
+    # break unaffiliated forks.
+    if: github.repository_owner == 'Geraci-LLP'
+    steps:
+      - name: Trigger Railway redeploy
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ] || [ -z "$RAILWAY_SERVICE_ID" ]; then
+            echo "RAILWAY_TOKEN or RAILWAY_SERVICE_ID not set — skipping."
+            echo "Add both in GitHub Settings → Secrets and variables → Actions."
+            exit 0
+          fi
+          npm install -g @railway/cli@latest
+          railway redeploy --service "$RAILWAY_SERVICE_ID" --yes
+          echo "Railway redeploy triggered for ${{ github.sha }}"
