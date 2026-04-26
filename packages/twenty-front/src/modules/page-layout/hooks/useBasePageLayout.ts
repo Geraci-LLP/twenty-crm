@@ -7,6 +7,10 @@ import { DEFAULT_FORM_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/Default
 import { DEFAULT_FORM_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultFormRecordPageLayoutId';
 import { DEFAULT_LANDING_PAGE_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultLandingPageRecordPageLayout';
 import { DEFAULT_LANDING_PAGE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultLandingPageRecordPageLayoutId';
+import { DEFAULT_MARKETING_CAMPAIGN_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultMarketingCampaignRecordPageLayout';
+import { DEFAULT_MARKETING_CAMPAIGN_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultMarketingCampaignRecordPageLayoutId';
+import { DEFAULT_SEQUENCE_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultSequenceRecordPageLayout';
+import { DEFAULT_SEQUENCE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultSequenceRecordPageLayoutId';
 import { DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCompanyRecordPageLayoutId';
 import { DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT } from '@/page-layout/constants/DefaultMessageThreadRecordPageLayout';
 import { DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultMessageThreadRecordPageLayoutId';
@@ -46,6 +50,10 @@ const getDefaultLayoutById = (layoutId: string): PageLayout => {
       return DEFAULT_FORM_RECORD_PAGE_LAYOUT;
     case DEFAULT_LANDING_PAGE_RECORD_PAGE_LAYOUT_ID:
       return DEFAULT_LANDING_PAGE_RECORD_PAGE_LAYOUT;
+    case DEFAULT_SEQUENCE_RECORD_PAGE_LAYOUT_ID:
+      return DEFAULT_SEQUENCE_RECORD_PAGE_LAYOUT;
+    case DEFAULT_MARKETING_CAMPAIGN_RECORD_PAGE_LAYOUT_ID:
+      return DEFAULT_MARKETING_CAMPAIGN_RECORD_PAGE_LAYOUT;
     case DEFAULT_PERSON_RECORD_PAGE_LAYOUT_ID:
       return DEFAULT_PERSON_RECORD_PAGE_LAYOUT;
     case DEFAULT_OPPORTUNITY_RECORD_PAGE_LAYOUT_ID:
@@ -75,6 +83,8 @@ const isDefaultLayoutId = (layoutId: string): boolean =>
   layoutId === DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_FORM_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_LANDING_PAGE_RECORD_PAGE_LAYOUT_ID ||
+  layoutId === DEFAULT_SEQUENCE_RECORD_PAGE_LAYOUT_ID ||
+  layoutId === DEFAULT_MARKETING_CAMPAIGN_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_PERSON_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_OPPORTUNITY_RECORD_PAGE_LAYOUT_ID ||
   layoutId === DEFAULT_NOTE_RECORD_PAGE_LAYOUT_ID ||

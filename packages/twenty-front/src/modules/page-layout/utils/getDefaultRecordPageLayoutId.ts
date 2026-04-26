@@ -2,6 +2,8 @@ import { CoreObjectNameSingular } from 'twenty-shared/types';
 import { DEFAULT_CAMPAIGN_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCampaignRecordPageLayoutId';
 import { DEFAULT_FORM_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultFormRecordPageLayoutId';
 import { DEFAULT_LANDING_PAGE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultLandingPageRecordPageLayoutId';
+import { DEFAULT_MARKETING_CAMPAIGN_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultMarketingCampaignRecordPageLayoutId';
+import { DEFAULT_SEQUENCE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultSequenceRecordPageLayoutId';
 import { DEFAULT_CAMPAIGN_TEMPLATE_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCampaignTemplateRecordPageLayoutId';
 import { DEFAULT_COMPANY_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultCompanyRecordPageLayoutId';
 import { DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT_ID } from '@/page-layout/constants/DefaultMessageThreadRecordPageLayoutId';
@@ -33,6 +35,11 @@ const OBJECT_NAME_TO_DEFAULT_LAYOUT_ID: Record<string, string> = {
   [CoreObjectNameSingular.WorkflowRun]: DEFAULT_WORKFLOW_RUN_PAGE_LAYOUT_ID,
   [CoreObjectNameSingular.MessageThread]:
     DEFAULT_MESSAGE_THREAD_RECORD_PAGE_LAYOUT_ID,
+  // Sequence + MarketingCampaign objects were added via metadata-API in
+  // earlier marketing work and aren't in CoreObjectNameSingular yet, so
+  // use string literals matching their objectNameSingular values.
+  sequence: DEFAULT_SEQUENCE_RECORD_PAGE_LAYOUT_ID,
+  marketingCampaign: DEFAULT_MARKETING_CAMPAIGN_RECORD_PAGE_LAYOUT_ID,
 };
 
 export const getDefaultRecordPageLayoutId = ({
