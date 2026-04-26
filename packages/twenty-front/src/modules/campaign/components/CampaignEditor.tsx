@@ -1,9 +1,12 @@
 import { styled } from '@linaria/react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
+import { currentUserState } from '@/auth/states/currentUserState';
 import { CampaignSaveAsTemplateButton } from '@/campaign/components/CampaignSaveAsTemplateButton';
 import { CampaignTemplateGallery } from '@/campaign/components/CampaignTemplateGallery';
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
+import { useSendTestEmail } from '@/campaign/hooks/useSendTestEmail';
+import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import {
   EmailBuilder,
   buildEmptyDesign,
@@ -177,6 +180,31 @@ const StyledModeTabs = styled.div`
   gap: ${themeCssVariables.spacing[1]};
 `;
 
+const StyledActionsRow = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${themeCssVariables.spacing[2]};
+`;
+
+const StyledTestSendButton = styled.button`
+  background: ${themeCssVariables.background.tertiary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  font-family: ${themeCssVariables.font.family};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[3]};
+  &:hover {
+    background: ${themeCssVariables.background.transparent.lighter};
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+
 const StyledModeTab = styled.button<{ active: boolean }>`
   background: transparent;
   border: none;
@@ -234,6 +262,19 @@ export const CampaignEditor = ({
   const [selectedToken, setSelectedToken] =
     useState<CampaignPersonalizationToken>(CAMPAIGN_PERSONALIZATION_TOKENS[0]);
   const [isTemplateGalleryOpen, setIsTemplateGalleryOpen] = useState(false);
+
+  const currentUser = useAtomStateValue(currentUserState);
+  const { sendTestEmail, loading: testSendLoading } = useSendTestEmail();
+
+  const handleTestSend = useCallback(async () => {
+    if (!campaignId) return;
+    const defaultEmail = currentUser?.email ?? '';
+    const target = window.prompt('Send test email to:', defaultEmail);
+    if (target === null) return;
+    const trimmed = target.trim();
+    if (trimmed === '') return;
+    await sendTestEmail(campaignId, trimmed);
+  }, [campaignId, currentUser?.email, sendTestEmail]);
 
   const initialDesign = useMemo(
     () => parseDesign(value.designJson),
@@ -487,7 +528,17 @@ export const CampaignEditor = ({
       </StyledFieldGroup>
 
       {!readOnly && campaignId && (
-        <CampaignSaveAsTemplateButton campaignId={campaignId} />
+        <StyledActionsRow>
+          <StyledTestSendButton
+            type="button"
+            onClick={handleTestSend}
+            disabled={testSendLoading}
+            title="Send a test copy of this email to any address"
+          >
+            {testSendLoading ? 'Sending…' : '✉️ Send test'}
+          </StyledTestSendButton>
+          <CampaignSaveAsTemplateButton campaignId={campaignId} />
+        </StyledActionsRow>
       )}
 
       {isTemplateGalleryOpen && campaignId && (
