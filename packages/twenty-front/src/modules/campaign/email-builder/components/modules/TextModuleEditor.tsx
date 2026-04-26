@@ -1,16 +1,16 @@
 import { styled } from '@linaria/react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback } from 'react';
 
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
+import { EmailRichTextEditor } from '@/campaign/email-builder/components/modules/EmailRichTextEditor';
 import { type TextModule } from '@/campaign/email-builder/types/CampaignDesign';
-import { type CampaignPersonalizationToken } from '@/campaign/types/CampaignTypes';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const StyledRow = styled.div`
+  align-items: flex-end;
   display: flex;
   flex-wrap: wrap;
   gap: ${themeCssVariables.spacing[2]};
-  align-items: flex-end;
 `;
 
 const StyledField = styled.div`
@@ -24,19 +24,6 @@ const StyledLabel = styled.label`
   font-size: ${themeCssVariables.font.size.sm};
 `;
 
-const StyledTextArea = styled.textarea`
-  background: ${themeCssVariables.background.primary};
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  color: ${themeCssVariables.font.color.primary};
-  font-family: ${themeCssVariables.font.family};
-  font-size: ${themeCssVariables.font.size.md};
-  min-height: 120px;
-  padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
-  resize: vertical;
-  width: 100%;
-`;
-
 const StyledSelect = styled.select`
   background: ${themeCssVariables.background.primary};
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -44,17 +31,6 @@ const StyledSelect = styled.select`
   color: ${themeCssVariables.font.color.primary};
   font-size: ${themeCssVariables.font.size.sm};
   padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
-`;
-
-const StyledButton = styled.button`
-  background: ${themeCssVariables.background.tertiary};
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  color: ${themeCssVariables.font.color.secondary};
-  cursor: pointer;
-  font-size: ${themeCssVariables.font.size.sm};
-  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
-  &:hover { background: ${themeCssVariables.background.transparent.lighter}; }
 `;
 
 const StyledNumberInput = styled.input`
@@ -76,16 +52,15 @@ const StyledColorInput = styled.input`
   width: 50px;
 `;
 
-type Props = {
+type TextModuleEditorProps = {
   module: TextModule;
   onChange: (next: TextModule) => void;
 };
 
-export const TextModuleEditor = ({ module, onChange }: Props) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [selectedToken, setSelectedToken] =
-    useState<CampaignPersonalizationToken>(CAMPAIGN_PERSONALIZATION_TOKENS[0]);
-
+export const TextModuleEditor = ({
+  module,
+  onChange,
+}: TextModuleEditorProps) => {
   const set = useCallback(
     <K extends keyof TextModule>(key: K, value: TextModule[K]) => {
       onChange({ ...module, [key]: value });
@@ -93,48 +68,21 @@ export const TextModuleEditor = ({ module, onChange }: Props) => {
     [module, onChange],
   );
 
-  const insertToken = useCallback(() => {
-    const ta = textAreaRef.current;
-    if (!ta) return;
-    const start = ta.selectionStart;
-    const end = ta.selectionEnd;
-    const next = module.html.slice(0, start) + selectedToken.value + module.html.slice(end);
-    set('html', next);
-    requestAnimationFrame(() => {
-      const cursor = start + selectedToken.value.length;
-      ta.focus();
-      ta.setSelectionRange(cursor, cursor);
-    });
-  }, [module.html, selectedToken, set]);
-
   return (
     <>
-      <StyledRow>
-        <StyledSelect
-          value={selectedToken.value}
-          onChange={(e) => {
-            const t = CAMPAIGN_PERSONALIZATION_TOKENS.find((x) => x.value === e.target.value);
-            if (t) setSelectedToken(t);
-          }}
-        >
-          {CAMPAIGN_PERSONALIZATION_TOKENS.map((t) => (
-            <option key={t.value} value={t.value}>{t.label}</option>
-          ))}
-        </StyledSelect>
-        <StyledButton onClick={insertToken}>Insert Token</StyledButton>
-      </StyledRow>
-      <StyledTextArea
-        ref={textAreaRef}
+      <EmailRichTextEditor
         value={module.html}
-        onChange={(e) => set('html', e.target.value)}
-        placeholder="Write your text. HTML allowed. Use {{contact.firstName}} etc."
+        onChange={(html) => set('html', html)}
+        tokens={CAMPAIGN_PERSONALIZATION_TOKENS}
       />
       <StyledRow>
         <StyledField>
           <StyledLabel>Alignment</StyledLabel>
           <StyledSelect
             value={module.alignment}
-            onChange={(e) => set('alignment', e.target.value as TextModule['alignment'])}
+            onChange={(e) =>
+              set('alignment', e.target.value as TextModule['alignment'])
+            }
           >
             <option value="left">Left</option>
             <option value="center">Center</option>
