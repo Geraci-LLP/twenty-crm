@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { useRouter } from 'next/navigation';
 import { CREATE_DASHBOARD, FIND_DASHBOARDS } from '../lib/queries';
 import { Dashboard } from '../lib/types';
@@ -22,7 +22,7 @@ const HomePage = () => {
   const handleCreate = async () => {
     const result = await createDashboard({
       variables: {
-        data: { name: 'Untitled Dashboard' },
+        data: { title: 'Untitled Dashboard' },
       },
     });
     const created = result.data?.createDashboard;
@@ -92,12 +92,7 @@ const HomePage = () => {
               }}
               onClick={() => router.push(`/dashboard/${dashboard.id}`)}
             >
-              <strong>{dashboard.name}</strong>
-              {dashboard.description ? (
-                <p style={{ margin: '4px 0 0', color: '#666' }}>
-                  {dashboard.description}
-                </p>
-              ) : null}
+              <strong>{dashboard.title ?? 'Untitled Dashboard'}</strong>
             </li>
           ))}
         </ul>

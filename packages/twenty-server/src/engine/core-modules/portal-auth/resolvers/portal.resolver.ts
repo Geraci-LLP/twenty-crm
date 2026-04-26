@@ -8,6 +8,8 @@ import {
   Args,
   Context,
   Field,
+  Float,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -41,10 +43,10 @@ class PortalProfileDto {
   @Field()
   email: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   personId?: string;
 
   @Field()
@@ -56,28 +58,28 @@ class PortalCompanyDto {
   @Field()
   id: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   domainName?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   address?: string;
 }
 
 @ObjectType('PortalQuoteContact')
 class PortalQuoteContactDto {
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   email?: string;
 }
 
 @ObjectType('PortalQuoteCompany')
 class PortalQuoteCompanyDto {
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 }
 
@@ -86,25 +88,25 @@ class PortalQuoteLineItemDto {
   @Field()
   id: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   description?: string;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   quantity?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   unitPrice?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   discount?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   total?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   position?: number;
 }
 
@@ -113,61 +115,61 @@ class PortalQuoteDto {
   @Field()
   id: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   quoteNumber?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   status?: string;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   total?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   subtotal?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   taxAmount?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   discount?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   taxRate?: number;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   currency?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   notes?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   terms?: string;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   issueDate?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   expiryDate?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   acceptedAt?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   rejectedAt?: Date;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   rejectionReason?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   clientSignature?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   workspaceId?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   slug?: string;
 
   @Field(() => [PortalQuoteLineItemDto], { nullable: true })
@@ -185,16 +187,16 @@ class PortalDocumentDto {
   @Field()
   id: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   status?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   sharingLinkId?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   slug?: string;
 }
 
@@ -203,16 +205,16 @@ class PortalOpportunityDto {
   @Field()
   id: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   stage?: string;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   amount?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   closeDate?: Date;
 }
 
@@ -477,7 +479,7 @@ export class PortalResolver {
 
   @Query(() => PortalQuoteDto, { nullable: true })
   async myQuote(
-    @Args('id') id: string,
+    @Args('id', { type: () => String }) id: string,
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalQuoteDto | null> {
     const auth = this.getAuth(context);
@@ -607,8 +609,9 @@ export class PortalResolver {
 
   @Mutation(() => PortalQuoteDto)
   async acceptMyQuote(
-    @Args('id') id: string,
-    @Args('signatureText', { nullable: true }) signatureText: string | null,
+    @Args('id', { type: () => String }) id: string,
+    @Args('signatureText', { type: () => String, nullable: true })
+    signatureText: string | null,
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalQuoteDto> {
     const auth = this.getAuth(context);
@@ -655,8 +658,9 @@ export class PortalResolver {
 
   @Mutation(() => PortalQuoteDto)
   async rejectMyQuote(
-    @Args('id') id: string,
-    @Args('reason', { nullable: true }) reason: string | null,
+    @Args('id', { type: () => String }) id: string,
+    @Args('reason', { type: () => String, nullable: true })
+    reason: string | null,
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalQuoteDto> {
     const auth = this.getAuth(context);

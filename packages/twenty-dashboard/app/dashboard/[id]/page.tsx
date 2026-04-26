@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { WidgetRenderer } from '../../../components/widgets/WidgetRenderer';
@@ -38,7 +38,7 @@ const DashboardViewPage = () => {
 
   const dashboard = data.dashboard;
   const widgets =
-    dashboard.pageLayoutWidgets?.edges.map((edge) => edge.node) ?? [];
+    dashboard.pageLayoutWidgets?.edges?.map((edge) => edge.node) ?? [];
 
   return (
     <main style={{ padding: 32, maxWidth: 1280, margin: '0 auto' }}>
@@ -54,7 +54,9 @@ const DashboardViewPage = () => {
           <Link href="/" style={{ color: '#666', fontSize: 14 }}>
             &larr; Dashboards
           </Link>
-          <h1 style={{ margin: '4px 0 0' }}>{dashboard.name}</h1>
+          <h1 style={{ margin: '4px 0 0' }}>
+            {dashboard.title ?? 'Untitled Dashboard'}
+          </h1>
         </div>
         <Link
           href={`/dashboard/${dashboard.id}/edit`}

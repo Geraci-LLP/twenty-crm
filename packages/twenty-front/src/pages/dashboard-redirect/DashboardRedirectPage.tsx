@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { currentUserState } from '@/auth/states/currentUserState';
@@ -40,6 +40,10 @@ export const DashboardRedirectPage = () => {
   );
   // Guard against StrictMode / effect re-runs firing the mutation twice.
   const hasDispatchedRef = useRef(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [statusMsg, setStatusMsg] = useState<string>(
+    'Resolving dashboard handoff...',
+  );
 
   useEffect(() => {
     const rawReturnTo = searchParams.get('returnTo');
@@ -48,14 +52,22 @@ export const DashboardRedirectPage = () => {
     // from session storage (post-login continuation).
     const returnTo = rawReturnTo ?? sessionStorage.getItem(SESSION_KEY) ?? null;
 
-    if (!returnTo || !isAllowedReturnTo(returnTo)) {
-      window.location.href = '/';
+    if (!returnTo) {
+      setErrorMsg(
+        'Missing returnTo parameter. Expected ?returnTo=<dashboard-url>.',
+      );
+      return;
+    }
+
+    if (!isAllowedReturnTo(returnTo)) {
+      setErrorMsg(`returnTo URL not allowed by whitelist: ${returnTo}`);
       return;
     }
 
     if (!currentUser || !tokenPair) {
       // Not logged in — stash returnTo and send the user to login
       sessionStorage.setItem(SESSION_KEY, returnTo);
+      setStatusMsg('Not signed in, redirecting to login...');
       window.location.href = AppPath.SignInUp;
       return;
     }
@@ -64,23 +76,21 @@ export const DashboardRedirectPage = () => {
       return;
     }
     hasDispatchedRef.current = true;
+    setStatusMsg('Minting dashboard token...');
 
-    // Mint a short-lived, audience-scoped JWT for the dashboard app.
-    // This replaces the old behaviour of forwarding the full CRM access
-    // token, which gave dash.geracillp.com implicit full CRM permissions.
     const handoff = async () => {
       try {
         const result = await generateDashboardToken();
         const dashboardToken = result.data?.generateDashboardToken.token;
 
         if (!dashboardToken) {
-          // Fail closed — send the user home rather than forwarding the
-          // session-level access token.
-          window.location.href = '/';
+          setErrorMsg(
+            'generateDashboardToken mutation returned no token. Response: ' +
+              JSON.stringify(result),
+          );
           return;
         }
 
-        // Clear the stash once we've consumed it
         sessionStorage.removeItem(SESSION_KEY);
 
         const separator = returnTo.includes('?') ? '&' : '?';
@@ -88,9 +98,12 @@ export const DashboardRedirectPage = () => {
           ? `${returnTo}auth-callback`
           : `${returnTo}/auth-callback`;
 
-        window.location.href = `${callbackUrl}${separator}token=${encodeURIComponent(dashboardToken)}`;
-      } catch {
-        window.location.href = '/';
+        const target = `${callbackUrl}${separator}token=${encodeURIComponent(dashboardToken)}`;
+        setStatusMsg(`Redirecting to ${callbackUrl}...`);
+        window.location.href = target;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        setErrorMsg(`generateDashboardToken failed: ${message}`);
       }
     };
 
@@ -104,9 +117,33 @@ export const DashboardRedirectPage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100vh',
+        flexDirection: 'column',
+        gap: 16,
+        padding: 24,
       }}
     >
-      <p>Redirecting to dashboard...</p>
+      {errorMsg ? (
+        <>
+          <p style={{ color: '#d00', fontWeight: 600 }}>
+            Dashboard redirect failed
+          </p>
+          <pre
+            style={{
+              maxWidth: 600,
+              whiteSpace: 'pre-wrap',
+              background: '#fff1f0',
+              padding: 12,
+              borderRadius: 4,
+              border: '1px solid #ffa39e',
+            }}
+          >
+            {errorMsg}
+          </pre>
+          <a href="/">Back to CRM</a>
+        </>
+      ) : (
+        <p>{statusMsg}</p>
+      )}
     </div>
   );
 };

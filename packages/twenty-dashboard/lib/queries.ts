@@ -6,8 +6,7 @@ import { gql } from '@apollo/client';
 const DASHBOARD_FRAGMENT = gql`
   fragment DashboardFields on Dashboard {
     id
-    name
-    description
+    title
     pageLayoutId
     createdAt
     updatedAt

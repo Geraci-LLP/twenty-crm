@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -78,8 +78,10 @@ const DashboardEditPage = () => {
   );
 
   useEffect(() => {
+    // pageLayoutWidgets can be null for a freshly-created dashboard with no
+    // widgets yet — guard every step of the chain.
     const fetched =
-      data?.dashboard?.pageLayoutWidgets.edges.map((edge) => edge.node) ?? [];
+      data?.dashboard?.pageLayoutWidgets?.edges?.map((edge) => edge.node) ?? [];
     setWidgets(fetched);
   }, [data]);
 

@@ -30,8 +30,8 @@ export type PageLayoutWidget = {
 
 export type Dashboard = {
   id: string;
-  name: string;
-  description?: string | null;
+  title: string | null;
+  pageLayoutId: string | null;
   createdAt?: string;
   updatedAt?: string;
   pageLayoutWidgets?: PageLayoutWidget[];

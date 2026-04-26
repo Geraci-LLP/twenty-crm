@@ -42,7 +42,7 @@ export class PortalUserEntity {
     }
   }
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true, type: 'varchar' })
   name: string | null;
 
@@ -50,13 +50,13 @@ export class PortalUserEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @Column({ nullable: true, type: 'timestamptz' })
   lastLoginAt: Date | null;
 
   // Logical FK to the workspace-schema `person` table.
   // Cross-schema, so not enforced at the DB level.
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true, type: 'uuid' })
   personId: string | null;
 
@@ -78,7 +78,7 @@ export class PortalUserEntity {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @Field({ nullable: true })
+  @Field(() => Date, { nullable: true })
   @DeleteDateColumn({ type: 'timestamptz' })
   deletedAt: Date | null;
 }

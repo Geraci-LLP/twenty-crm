@@ -56,8 +56,9 @@ export class QuoteSharingResolver {
 
   @Mutation(() => QuoteSharingLinkDto)
   async createQuoteSharingLink(
-    @Args('quoteId') quoteId: string,
-    @Args('recipientEmail', { nullable: true }) recipientEmail: string | null,
+    @Args('quoteId', { type: () => String }) quoteId: string,
+    @Args('recipientEmail', { type: () => String, nullable: true })
+    recipientEmail: string | null,
     @AuthWorkspace() workspace: WorkspaceEntity,
   ): Promise<QuoteSharingLinkDto> {
     const workspaceId = workspace.id;

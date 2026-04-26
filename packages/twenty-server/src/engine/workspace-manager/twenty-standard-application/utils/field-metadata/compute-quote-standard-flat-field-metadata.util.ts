@@ -200,6 +200,9 @@ export const buildQuoteStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // quoteNumber is unique, so it cannot carry a default value — Twenty rejects
+  // that combination at metadata validation. QuoteNumberService generates the
+  // value atomically (via a Postgres sequence) at record creation time.
   quoteNumber: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
@@ -211,7 +214,6 @@ export const buildQuoteStandardFlatFieldMetadatas = ({
       icon: 'IconHash',
       isNullable: false,
       isUnique: true,
-      defaultValue: "''",
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

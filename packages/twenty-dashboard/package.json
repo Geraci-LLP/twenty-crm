@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "nx": "NX_DEFAULT_PROJECT=twenty-dashboard node ../../node_modules/nx/bin/nx.js",
-    "dev": "npx next dev",
+    "dev": "npx next dev -p 3002",
     "build": "npx next build",
     "start": "npx next start",
     "lint": "npx next lint"

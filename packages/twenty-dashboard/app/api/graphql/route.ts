@@ -46,6 +46,25 @@ const proxy = async (request: NextRequest) => {
   });
 
   const bodyText = await upstream.text();
+
+  // Dev-only: log upstream errors so we can diagnose 401/403 loops and
+  // GraphQL error bodies without digging into browser devtools.
+  if (process.env.NODE_ENV !== 'production') {
+    try {
+      const parsed = JSON.parse(bodyText);
+      if (parsed.errors) {
+        console.log(
+          '[dashboard-proxy] upstream status',
+          upstream.status,
+          'errors:',
+          JSON.stringify(parsed.errors),
+        );
+      }
+    } catch {
+      /* non-JSON body, ignore */
+    }
+  }
+
   return new NextResponse(bodyText, {
     status: upstream.status,
     headers: {

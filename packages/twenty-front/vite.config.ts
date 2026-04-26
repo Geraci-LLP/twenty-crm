@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
 
   const {
     REACT_APP_SERVER_BASE_URL,
+    REACT_APP_DASHBOARD_URL,
     VITE_BUILD_SOURCEMAP,
     VITE_HOST,
     SSL_CERT_PATH,
@@ -233,9 +234,11 @@ export default defineConfig(({ mode }) => {
     define: {
       _env_: {
         REACT_APP_SERVER_BASE_URL,
+        REACT_APP_DASHBOARD_URL,
       },
       'process.env': {
         REACT_APP_SERVER_BASE_URL,
+        REACT_APP_DASHBOARD_URL,
         IS_DEBUG_MODE,
         IS_DEV_ENV: mode === 'development' ? 'true' : 'false',
       },
