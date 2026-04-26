@@ -4044,6 +4044,9 @@ export const STANDARD_OBJECTS = {
       confirmationEmailBody: {
         universalIdentifier: '183bb2d0-deff-46c0-8b28-82a1a6a35ae0',
       },
+      autoCreatePerson: {
+        universalIdentifier: 'b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e',
+      },
       formSubmissions: {
         universalIdentifier: 'd4fc6edb-094e-457a-9050-091fd88fa25b',
       },

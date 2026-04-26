@@ -410,6 +410,25 @@ export const buildFormStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  autoCreatePerson: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'autoCreatePerson',
+      type: FieldMetadataType.BOOLEAN,
+      label: i18nLabel(msg`Auto-create Person on submission`),
+      description: i18nLabel(
+        msg`Whether to auto-create a Person record when this form is submitted (uses email + name fields if present)`,
+      ),
+      icon: 'IconUserPlus',
+      isNullable: false,
+      defaultValue: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   searchVector: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,

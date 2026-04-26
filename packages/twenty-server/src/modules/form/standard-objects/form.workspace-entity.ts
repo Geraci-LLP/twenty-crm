@@ -33,6 +33,7 @@ export class FormWorkspaceEntity extends BaseWorkspaceEntity {
   sendConfirmationEmail: boolean;
   confirmationEmailSubject: string | null;
   confirmationEmailBody: string | null;
+  autoCreatePerson: boolean;
   formSubmissions: EntityRelation<FormSubmissionWorkspaceEntity[]>;
   searchVector: string;
 }

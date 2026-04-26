@@ -174,25 +174,33 @@ export class FormPublicController {
 
           // Auto-create Person from submission. Convention-based field mapping —
           // any submitted value whose key looks like an email/name/phone/etc. flows
-          // into a LeadInput. No-op if no email field present.
-          const submissionValues: Record<string, unknown> = {
-            ...(body.fields ?? {}),
-            ...(body.submitterEmail ? { email: body.submitterEmail } : {}),
-            ...(body.submitterName ? { firstName: body.submitterName } : {}),
-          };
-          const leadInput = mapFieldsToLeadInput(submissionValues);
+          // into a LeadInput. Gated on the per-form `autoCreatePerson` flag
+          // (default true) so a workspace can opt specific forms out of lead
+          // auto-creation. The flag was added in PR 30; defaults to true for
+          // existing rows so behavior is unchanged unless the user opts out.
+          const autoCreatePerson =
+            (form as { autoCreatePerson?: boolean | null }).autoCreatePerson ??
+            true;
           let personId: string | null = null;
-          if (leadInput) {
-            try {
-              const lead = await this.leadCreationService.findOrCreatePerson(
-                workspaceId,
-                { ...leadInput, source: leadInput.source ?? 'FORM' },
-              );
-              personId = lead.personId;
-            } catch (error) {
-              this.logger.error(
-                `Form ${formId}: lead auto-create failed — ${(error as Error).message}`,
-              );
+          if (autoCreatePerson) {
+            const submissionValues: Record<string, unknown> = {
+              ...(body.fields ?? {}),
+              ...(body.submitterEmail ? { email: body.submitterEmail } : {}),
+              ...(body.submitterName ? { firstName: body.submitterName } : {}),
+            };
+            const leadInput = mapFieldsToLeadInput(submissionValues);
+            if (leadInput) {
+              try {
+                const lead = await this.leadCreationService.findOrCreatePerson(
+                  workspaceId,
+                  { ...leadInput, source: leadInput.source ?? 'FORM' },
+                );
+                personId = lead.personId;
+              } catch (error) {
+                this.logger.error(
+                  `Form ${formId}: lead auto-create failed — ${(error as Error).message}`,
+                );
+              }
             }
           }
 
