@@ -82,3 +82,25 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:railway
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  trigger-railway-deploy:
+    needs: build-railway
+    runs-on: ubuntu-latest
+    # No-op if RAILWAY_DEPLOY_WEBHOOK secret isn't set, so this won't fail the
+    # workflow on repos that don't use Railway. Set the secret in
+    # Settings → Secrets → Actions to a webhook URL from
+    # Railway → service → Settings → Webhooks.
+    if: ${{ vars.RAILWAY_DEPLOY_WEBHOOK_ENABLED == 'true' || github.repository_owner == 'Geraci-LLP' }}
+    steps:
+      - name: Trigger Railway redeploy
+        env:
+          WEBHOOK: ${{ secrets.RAILWAY_DEPLOY_WEBHOOK }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "RAILWAY_DEPLOY_WEBHOOK secret not set — skipping. Add it in Settings → Secrets → Actions."
+            exit 0
+          fi
+          curl -fsSL -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            --data '{"trigger":"github-actions","sha":"${{ github.sha }}"}'
+          echo "Railway redeploy triggered for ${{ github.sha }}"
