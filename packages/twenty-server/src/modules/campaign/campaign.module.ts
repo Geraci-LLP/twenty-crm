@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { JwtModule } from 'src/engine/core-modules/jwt/jwt.module';
+import { TwentyConfigModule } from 'src/engine/core-modules/twenty-config/twenty-config.module';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { FieldMetadataEntity } from 'src/engine/metadata-modules/field-metadata/field-metadata.entity';
 import { ViewFilterEntity } from 'src/engine/metadata-modules/view-filter/entities/view-filter.entity';
 import { CampaignScheduleSendCronCommand } from 'src/modules/campaign/crons/commands/campaign-schedule-send.cron.command';
 import { CampaignScheduleSendCronJob } from 'src/modules/campaign/crons/jobs/campaign-schedule-send.cron.job';
+import { CampaignPublicController } from 'src/modules/campaign/controllers/campaign-public.controller';
 import { CampaignWebhookController } from 'src/modules/campaign/controllers/campaign-webhook.controller';
 import { CampaignSendJob } from 'src/modules/campaign/jobs/campaign-send.job';
 import { CampaignActionResolver } from 'src/modules/campaign/resolvers/campaign-action.resolver';
@@ -26,8 +29,10 @@ import { SendGridDriverService } from 'src/modules/campaign/services/sendgrid-dr
       ViewFilterEntity,
       FieldMetadataEntity,
     ]),
+    JwtModule,
+    TwentyConfigModule,
   ],
-  controllers: [CampaignWebhookController],
+  controllers: [CampaignWebhookController, CampaignPublicController],
   providers: [
     CampaignExecutorService,
     CampaignRecipientService,

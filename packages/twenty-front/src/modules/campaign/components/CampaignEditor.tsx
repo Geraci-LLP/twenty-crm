@@ -6,8 +6,10 @@ import { CampaignSaveAsTemplateButton } from '@/campaign/components/CampaignSave
 import { CampaignTemplateGallery } from '@/campaign/components/CampaignTemplateGallery';
 import { SendTestEmailModal } from '@/campaign/components/SendTestEmailModal';
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
+import { useGenerateCampaignPreviewLink } from '@/campaign/hooks/useGenerateCampaignPreviewLink';
 import { useSendTestEmail } from '@/campaign/hooks/useSendTestEmail';
 import { checkCampaignPreflight } from '@/campaign/utils/checkCampaignPreflight';
+import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 import {
   EmailBuilder,
@@ -290,6 +292,33 @@ export const CampaignEditor = ({
   const currentUser = useAtomStateValue(currentUserState);
   const { sendTestEmail, loading: testSendLoading } = useSendTestEmail();
   const [isTestSendOpen, setIsTestSendOpen] = useState(false);
+  const { generate: generatePreviewLink, loading: previewLinkLoading } =
+    useGenerateCampaignPreviewLink();
+  const { enqueueSuccessSnackBar, enqueueErrorSnackBar } = useSnackBar();
+
+  const handleSharePreview = useCallback(async () => {
+    if (!campaignId) return;
+    const url = await generatePreviewLink(campaignId);
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      enqueueSuccessSnackBar({
+        message: 'Preview link copied to clipboard.',
+      });
+    } catch {
+      // Clipboard API may be unavailable (e.g. insecure context); fall
+      // back to a prompt so the user can manually copy.
+      window.prompt('Preview link (copy this):', url);
+      enqueueErrorSnackBar({
+        message: "Couldn't auto-copy — link shown in the prompt.",
+      });
+    }
+  }, [
+    campaignId,
+    generatePreviewLink,
+    enqueueSuccessSnackBar,
+    enqueueErrorSnackBar,
+  ]);
 
   const handleTestSendSubmit = useCallback(
     async (target: string) => {
@@ -584,6 +613,14 @@ export const CampaignEditor = ({
             title="Send a test copy of this email to any address"
           >
             {testSendLoading ? 'Sending…' : '✉️ Send test'}
+          </StyledTestSendButton>
+          <StyledTestSendButton
+            type="button"
+            onClick={handleSharePreview}
+            disabled={previewLinkLoading}
+            title="Generate a public link that anyone can open to preview this draft"
+          >
+            {previewLinkLoading ? 'Generating…' : '🔗 Share preview'}
           </StyledTestSendButton>
           <CampaignSaveAsTemplateButton campaignId={campaignId} />
         </StyledActionsRow>

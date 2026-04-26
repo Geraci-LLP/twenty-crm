@@ -13,6 +13,8 @@ import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 import { WorkspaceAuthGuard } from 'src/engine/guards/workspace-auth.guard';
 import { GlobalWorkspaceOrmManager } from 'src/engine/twenty-orm/global-workspace-datasource/global-workspace-orm.manager';
 import { CampaignActionOutputDTO } from 'src/modules/campaign/dtos/campaign-action-output.dto';
+import { CampaignPreviewLinkOutputDTO } from 'src/modules/campaign/dtos/campaign-preview-link-output.dto';
+import { GenerateCampaignPreviewLinkInput } from 'src/modules/campaign/dtos/generate-campaign-preview-link.input';
 import { PauseCampaignInput } from 'src/modules/campaign/dtos/pause-campaign.input';
 import { ResolveRecipientsOutputDTO } from 'src/modules/campaign/dtos/resolve-recipients-output.dto';
 import {
@@ -28,6 +30,8 @@ import {
   type CampaignSendJobData,
 } from 'src/modules/campaign/jobs/campaign-send.job';
 import { CampaignRecipientService } from 'src/modules/campaign/services/campaign-recipient.service';
+import { JwtWrapperService } from 'src/engine/core-modules/jwt/services/jwt-wrapper.service';
+import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { CampaignValidationService } from 'src/modules/campaign/services/campaign-validation.service';
 import { SendGridDriverService } from 'src/modules/campaign/services/sendgrid-driver.service';
 import {
@@ -49,6 +53,8 @@ export class CampaignActionResolver {
     private readonly campaignRecipientService: CampaignRecipientService,
     private readonly campaignValidationService: CampaignValidationService,
     private readonly sendGridDriverService: SendGridDriverService,
+    private readonly jwtWrapperService: JwtWrapperService,
+    private readonly twentyConfigService: TwentyConfigService,
   ) {}
 
   @Mutation(() => CampaignActionOutputDTO)
@@ -425,6 +431,57 @@ export class CampaignActionResolver {
           error instanceof Error
             ? error.message
             : 'Failed to resolve recipients',
+      };
+    }
+  }
+
+  // Mints a short-lived JWT for the campaign-public web preview endpoint
+  // (see CampaignPublicController). The frontend shows the returned URL
+  // to the user so they can share an auth-free preview of a draft email
+  // with a stakeholder. Token expires in 7 days — long enough for review
+  // cycles, short enough to limit blast radius if leaked.
+  @Mutation(() => CampaignPreviewLinkOutputDTO)
+  async generateCampaignPreviewLink(
+    @Args('input') input: GenerateCampaignPreviewLinkInput,
+    @AuthWorkspace() workspace: WorkspaceEntity,
+  ): Promise<CampaignPreviewLinkOutputDTO> {
+    try {
+      const campaignRepository =
+        await this.globalWorkspaceOrmManager.getRepository<CampaignWorkspaceEntity>(
+          workspace.id,
+          'campaign',
+          { shouldBypassPermissionChecks: true },
+        );
+      const campaign = await campaignRepository.findOne({
+        where: { id: input.campaignId },
+      });
+      if (!campaign) {
+        return { success: false, error: 'Campaign not found' };
+      }
+
+      const token = this.jwtWrapperService.sign(
+        {
+          sub: 'campaign-preview',
+          workspaceId: workspace.id,
+          campaignId: input.campaignId,
+        },
+        { expiresIn: '7d' },
+      );
+
+      const baseUrl = this.twentyConfigService.get('SERVER_URL') ?? '';
+      const url = `${baseUrl}/campaigns/preview/${workspace.id}/${input.campaignId}?token=${encodeURIComponent(token)}`;
+
+      return { success: true, url };
+    } catch (error) {
+      this.logger.error(
+        `Failed to generate preview link for campaign ${input.campaignId}: ${(error as Error).message}`,
+      );
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to generate preview link',
       };
     }
   }
