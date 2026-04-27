@@ -164,6 +164,34 @@ const runAction = (actionKey: string): boolean => {
   return false;
 };
 
+// Toggle pin state in the same localStorage map the sidebar uses.
+// Returns true if the record is now pinned, false if it was unpinned.
+const togglePinInStorage = (
+  objectNameSingular: string,
+  recordId: string,
+): boolean => {
+  try {
+    const raw = window.localStorage.getItem('twenty.marketingSidebar.pinned');
+    const map =
+      raw === null ? {} : (JSON.parse(raw) as Record<string, string[]>);
+    const list = map[objectNameSingular] ?? [];
+    const wasPinned = list.includes(recordId);
+    map[objectNameSingular] = wasPinned
+      ? list.filter((x) => x !== recordId)
+      : [recordId, ...list];
+    window.localStorage.setItem(
+      'twenty.marketingSidebar.pinned',
+      JSON.stringify(map),
+    );
+    // Storage events don't fire in the same tab, so dispatch a synthetic
+    // event for any sidebar in this tab to pick up.
+    window.dispatchEvent(new StorageEvent('storage'));
+    return !wasPinned;
+  } catch {
+    return false;
+  }
+};
+
 /* oxlint-disable twenty/no-hardcoded-colors */
 const StyledBackdrop = styled.div`
   align-items: flex-start;
@@ -378,7 +406,7 @@ type SearchHit = {
   href: string;
   label: string;
   badge: string;
-  group: 'visits' | 'actions' | 'navigation' | 'records';
+  group: 'today' | 'visits' | 'actions' | 'navigation' | 'records';
   // Optional record metadata so the row can render a star when the
   // record is pinned in the sidebar.
   recordObject?: string;
@@ -450,7 +478,13 @@ export const MarketingQuickSwitcher = () => {
   // order without waiting for a focus/storage event. Bounded to 8 so
   // the list stays scannable.
   const [visits, setVisits] = useState<
-    { id: string; name: string | null; objectNameSingular: string }[]
+    {
+      id: string;
+      name: string | null;
+      objectNameSingular: string;
+      visitedAt: number;
+      visitCount: number;
+    }[]
   >([]);
 
   // Recent searches mirror what the sidebar tracks. Surfaced as quick-
@@ -521,6 +555,8 @@ export const MarketingQuickSwitcher = () => {
           id: v.id,
           name: v.name,
           objectNameSingular: v.objectNameSingular,
+          visitedAt: v.visitedAt,
+          visitCount: v.visitCount ?? 1,
         })),
     );
     setSavedSearches(readRecentSearchesFromStorage());
@@ -532,6 +568,10 @@ export const MarketingQuickSwitcher = () => {
 
   const queryActive = text.trim().length >= 2;
   const queryPattern = `%${text.trim()}%`;
+  // "Today's records" group: 24h-window of recently-visited records,
+  // shown when the input is empty as a complement to "Recently visited"
+  // which is unbounded. Uses the same in-memory visits snapshot.
+  const dayCutoff = Date.now() - 24 * 60 * 60 * 1000;
 
   const xCampaigns = useFindManyRecords<RecentRecord>({
     objectNameSingular: 'campaign',
@@ -628,12 +668,31 @@ export const MarketingQuickSwitcher = () => {
   // they're a "what was I just doing" surface, not a search result.
   // Filter out any visit whose name doesn't match the current filter
   // text so a typed query still narrows them.
+  // Today-only visit hits — shown when the input is empty as a "what
+  // I touched today" surface. Filter applies as text narrows the list.
+  const todayHits: SearchHit[] =
+    text === ''
+      ? visits
+          .filter((v) => v.visitedAt >= dayCutoff)
+          .slice(0, 5)
+          .map<SearchHit>((v) => ({
+            key: `today:${v.objectNameSingular}-${v.id}`,
+            href: `/object/${v.objectNameSingular}/${v.id}`,
+            label: v.name ?? '(unnamed)',
+            badge: badgeForVisitObject(v.objectNameSingular),
+            group: 'today',
+            recordObject: v.objectNameSingular,
+            recordId: v.id,
+          }))
+      : [];
+
   const visitHits: SearchHit[] = visits
     .filter(
       (v) =>
         text === '' ||
         (v.name ?? '').toLowerCase().includes(text.toLowerCase()),
     )
+    .sort((a, b) => b.visitedAt - a.visitedAt)
     .map<SearchHit>((v) => ({
       key: `v:${v.objectNameSingular}-${v.id}`,
       href: `/object/${v.objectNameSingular}/${v.id}`,
@@ -661,8 +720,14 @@ export const MarketingQuickSwitcher = () => {
           group: 'actions',
         }));
 
+  // Today's hits go above visits so the "what was I working on today"
+  // mental model is the first thing the user sees.
+  const dedupedVisitHits = visitHits.filter(
+    (v) => !todayHits.some((t) => t.key.replace('today:', 'v:') === v.key),
+  );
   const allHits: SearchHit[] = [
-    ...visitHits,
+    ...todayHits,
+    ...dedupedVisitHits,
     ...actionHits,
     ...navigationHits,
     ...recordHits,
@@ -687,6 +752,37 @@ export const MarketingQuickSwitcher = () => {
   };
 
   const onInputKey = (e: ReactKeyboardEvent<HTMLInputElement>) => {
+    // Cmd+P / Ctrl+P toggles pin on the currently highlighted record
+    // hit (records and visits are pinnable; sections / actions aren't).
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'p') {
+      const target = allHits[Math.max(safeIndex, 0)];
+      if (
+        target !== undefined &&
+        target.recordObject !== undefined &&
+        target.recordId !== undefined
+      ) {
+        e.preventDefault();
+        const nowPinned = togglePinInStorage(
+          target.recordObject,
+          target.recordId,
+        );
+        setPinnedMap(readPinnedFromStorage());
+        // Visual feedback in the input — placeholder briefly hints what
+        // happened. Cleared on next render anyway.
+        if (nowPinned) {
+          // no-op: the ★ rendering will reflect the new state
+        }
+        return;
+      }
+    }
+    // Cmd+Backspace clears the entire input in one keystroke (common
+    // OS-level shortcut for "delete word" / "clear").
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Backspace') {
+      e.preventDefault();
+      setText('');
+      setHighlightedIndex(0);
+      return;
+    }
     // Backspace on an empty input is a quick "close" shortcut — common
     // pattern in command palettes (Linear, Raycast, GitHub).
     if (e.key === 'Backspace' && text === '') {
@@ -736,6 +832,21 @@ export const MarketingQuickSwitcher = () => {
       }
       setHighlightedIndex((i) => indexOfNextGroupStart(Math.max(i, 0)));
       return;
+    }
+    if (e.key === '+') {
+      // "+" on a highlighted Section creates a new record there. The
+      // Sections group's hrefs all live under /objects/<plural>, so
+      // we infer the create action from the URL.
+      const target = allHits[Math.max(safeIndex, 0)];
+      if (target !== undefined && target.group === 'navigation') {
+        const m = target.href.match(/^\/objects\/([^/?#]+)/);
+        if (m !== null) {
+          e.preventDefault();
+          navigate(`/objects/${m[1]}?create=1`);
+          setIsOpen(false);
+          return;
+        }
+      }
     }
     if (e.key === 'Enter') {
       if (allHits.length === 0) return;
@@ -831,10 +942,43 @@ export const MarketingQuickSwitcher = () => {
                 for one-click return.
               </StyledEmpty>
             )}
-          {visitHits.length > 0 && (
+          {todayHits.length > 0 && (
+            <>
+              <StyledSectionLabel>Today</StyledSectionLabel>
+              {todayHits.map((hit) => (
+                <StyledResultRow
+                  key={hit.key}
+                  type="button"
+                  isHighlighted={highlightedKey === hit.key}
+                  onClick={() => {
+                    navigate(hit.href);
+                    setIsOpen(false);
+                  }}
+                >
+                  <StyledBadge>{hit.badge}</StyledBadge>
+                  {hit.recordObject !== undefined &&
+                    hit.recordId !== undefined &&
+                    (pinnedMap[hit.recordObject] ?? []).includes(
+                      hit.recordId,
+                    ) && (
+                      <StyledPinStar
+                        aria-label="pinned"
+                        title="Pinned in sidebar"
+                      >
+                        ★
+                      </StyledPinStar>
+                    )}
+                  <StyledLabel>
+                    {renderHighlighted(hit.label, text)}
+                  </StyledLabel>
+                </StyledResultRow>
+              ))}
+            </>
+          )}
+          {dedupedVisitHits.length > 0 && (
             <>
               <StyledSectionLabel>Recently visited</StyledSectionLabel>
-              {visitHits.map((hit) => (
+              {dedupedVisitHits.map((hit) => (
                 <StyledResultRow
                   key={hit.key}
                   type="button"
@@ -953,10 +1097,12 @@ export const MarketingQuickSwitcher = () => {
           )}
         </StyledResultsScroll>
         <StyledFooter>
-          <span>↑↓ navigate</span>
+          <span>↑↓ nav</span>
           <span>Tab group</span>
           <span>↵ open</span>
-          <span>⇧↵ new tab</span>
+          <span>⇧↵ tab</span>
+          <span>⌘P pin</span>
+          <span>+ new</span>
           <span>⌫ close</span>
           <span style={{ marginLeft: 'auto' }}>
             {allHits.length} result{allHits.length === 1 ? '' : 's'}

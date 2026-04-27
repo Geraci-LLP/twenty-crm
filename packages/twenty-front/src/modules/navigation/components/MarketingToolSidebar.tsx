@@ -952,6 +952,14 @@ const SHORTCUTS: Shortcut[] = [
   { keys: '1 – 9', description: 'Jump to pinned record at that position' },
   { keys: 'z', description: 'Open shortcut help (alternate to ?)' },
   { keys: '⌘ ,', description: 'Open Settings' },
+  { keys: 'm', description: 'Go to marketing analytics' },
+  { keys: 'f', description: 'Focus filter (alternate to /)' },
+  { keys: 'g g', description: 'Scroll sidebar to top' },
+  { keys: '⇧ G', description: 'Scroll sidebar to bottom' },
+  { keys: 'Tab', description: 'From filter, jump to first row' },
+  { keys: '⌘ 1 – 6', description: 'Direct section jump (any route)' },
+  { keys: '⌘ P', description: 'Pin/unpin highlighted (in Cmd+K)' },
+  { keys: '⌫', description: 'On empty Cmd+K input: close' },
   { keys: 'Esc', description: 'Close dialogs / cancel forms' },
 ];
 
@@ -1276,6 +1284,24 @@ export const MarketingToolSidebar = () => {
     setHighlightedIndex(-1);
   }, [filterText]);
 
+  // Scroll the active record into view when the route changes — same UX
+  // as IDE file trees that auto-scroll to the active file when you open
+  // it. Skipped when collapsed since the rows aren't rendered. We
+  // re-derive the record id from pathname inside the effect so it can
+  // run before the more-elaborate currentRecordId computation below.
+  useEffect(() => {
+    if (config === null || isCollapsed) return;
+    const recId = getCurrentRecordId(location.pathname, config.showPath);
+    if (recId === null) return;
+    const id = window.setTimeout(() => {
+      const el = document.querySelector<HTMLDivElement>(
+        `[data-sidebar-row-key="pinned:${CSS.escape(recId)}"], [data-sidebar-row-key="recent:${CSS.escape(recId)}"]`,
+      );
+      el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, 50);
+    return () => window.clearTimeout(id);
+  }, [config, location.pathname, isCollapsed]);
+
   // Scroll the currently-highlighted row into view on each arrow step.
   // The render below stamps data-highlighted="true" on the highlighted
   // row; we look it up here after paint and call scrollIntoView with
@@ -1417,7 +1443,10 @@ export const MarketingToolSidebar = () => {
         return;
       }
       if (isTypingInForm(e.target)) return;
-      if (e.key === '/') {
+      if (
+        e.key === '/' ||
+        (e.key === 'f' && !e.shiftKey && !e.metaKey && !e.ctrlKey)
+      ) {
         e.preventDefault();
         // If sidebar is collapsed, expand it first so the input mounts;
         // the focus has to wait for the next paint via setTimeout(0).
@@ -1507,6 +1536,35 @@ export const MarketingToolSidebar = () => {
         setToast(wasPinned ? 'Unpinned' : 'Pinned');
         return;
       }
+      // "G" (shift+g) scrolls the sidebar to the bottom — vim-like.
+      // "g g" (two unmodified g presses within 600ms) scrolls to top.
+      if (e.key === 'G' && e.shiftKey) {
+        e.preventDefault();
+        const aside = document.querySelector<HTMLElement>(
+          'aside[data-marketing-sidebar="true"]',
+        );
+        if (aside !== null) {
+          aside.scrollTo({ top: aside.scrollHeight, behavior: 'smooth' });
+        }
+        return;
+      }
+      if (e.key === 'g' && !e.shiftKey) {
+        const now = Date.now();
+        const last =
+          (window as unknown as { __twentyLastG?: number }).__twentyLastG ?? 0;
+        if (now - last < 600) {
+          e.preventDefault();
+          const aside = document.querySelector<HTMLElement>(
+            'aside[data-marketing-sidebar="true"]',
+          );
+          if (aside !== null) {
+            aside.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+          (window as unknown as { __twentyLastG?: number }).__twentyLastG = 0;
+          return;
+        }
+        (window as unknown as { __twentyLastG?: number }).__twentyLastG = now;
+      }
       // "n" / "b" walk through pinned records of the current section.
       // Useful for review-style workflows where you want to step through
       // your pinned items without using the mouse.
@@ -1539,6 +1597,14 @@ export const MarketingToolSidebar = () => {
           navigate(`${config.showPath}/${list[idx]}`);
           return;
         }
+      }
+      if (e.key === 'm' && !e.shiftKey) {
+        // "m" jumps to the marketing analytics page from any marketing
+        // route. Quick "metrics" overview without needing to navigate
+        // through the drawer.
+        e.preventDefault();
+        navigate('/marketing/analytics');
+        return;
       }
       if (e.key === 'y' && !e.shiftKey) {
         // Yank (copy) the current record's link to the clipboard.
@@ -1881,7 +1947,11 @@ export const MarketingToolSidebar = () => {
       : null;
 
   return (
-    <StyledSidebar collapsed={isCollapsed} widthPx={sidebarWidthPx}>
+    <StyledSidebar
+      collapsed={isCollapsed}
+      widthPx={sidebarWidthPx}
+      data-marketing-sidebar="true"
+    >
       {contextMenu !== null && (
         <StyledContextMenu
           style={{ left: contextMenu.x, top: contextMenu.y }}
@@ -1927,6 +1997,55 @@ export const MarketingToolSidebar = () => {
               }}
             >
               {contextMenu.source === 'pinned' ? '☆ Unpin' : '★ Pin'}
+            </StyledContextMenuItem>
+          )}
+          {contextMenu.source === 'pinned' && (
+            <StyledContextMenuItem
+              type="button"
+              onClick={() => {
+                // Move to top of pinned list — a common shortcut for
+                // promoting a record to "primary".
+                const next = { ...pinnedMap };
+                const list = next[config.objectNameSingular] ?? [];
+                next[config.objectNameSingular] = [
+                  contextMenu.recordId,
+                  ...list.filter((x) => x !== contextMenu.recordId),
+                ];
+                setPinnedMap(next);
+                writePinned(next);
+                setToast('Moved to top');
+                setContextMenu(null);
+              }}
+            >
+              ⤴ Move to top
+            </StyledContextMenuItem>
+          )}
+          {contextMenu.source === 'visit' && (
+            <StyledContextMenuItem
+              type="button"
+              onClick={() => {
+                // Remove just this entry from visit history.
+                const remaining = recentVisits.filter(
+                  (v) =>
+                    !(
+                      v.objectNameSingular === contextMenu.objectNameSingular &&
+                      v.id === contextMenu.recordId
+                    ),
+                );
+                try {
+                  window.localStorage.setItem(
+                    'twenty.lastVisited',
+                    JSON.stringify(remaining),
+                  );
+                } catch {
+                  // ignore
+                }
+                setRecentVisits(remaining);
+                setToast('Removed from history');
+                setContextMenu(null);
+              }}
+            >
+              🗑 Remove from history
             </StyledContextMenuItem>
           )}
         </StyledContextMenu>
@@ -2051,6 +2170,32 @@ export const MarketingToolSidebar = () => {
                   </StyledCountChip>
                 )}
               </StyledTitle>
+              {currentRecordId !== null && (
+                <StyledHelpTriggerButton
+                  type="button"
+                  onClick={() => {
+                    togglePin(currentRecordId);
+                    setToast(
+                      pinnedIds.includes(currentRecordId)
+                        ? 'Unpinned'
+                        : 'Pinned',
+                    );
+                  }}
+                  title={
+                    pinnedIds.includes(currentRecordId)
+                      ? 'Unpin this page (p)'
+                      : 'Pin this page (p)'
+                  }
+                  aria-label="Pin / unpin current page"
+                  style={{
+                    color: pinnedIds.includes(currentRecordId)
+                      ? themeCssVariables.color.orange
+                      : undefined,
+                  }}
+                >
+                  {pinnedIds.includes(currentRecordId) ? '★' : '☆'}
+                </StyledHelpTriggerButton>
+              )}
               <StyledHelpTriggerButton
                 type="button"
                 onClick={() => setIsHelpOpen(true)}
@@ -2183,6 +2328,18 @@ export const MarketingToolSidebar = () => {
                     return;
                   }
                   setHighlightedIndex(-1);
+                  searchInputEl?.blur();
+                  return;
+                }
+                if (e.key === 'Tab' && !e.shiftKey) {
+                  // Tab from the filter input pushes highlight to the
+                  // first match and unfocuses the input, so subsequent
+                  // arrow keys / Enter continue from there. Lets a
+                  // user move into the result list without removing
+                  // their hand from the keyboard.
+                  if (flatItems.length === 0) return;
+                  e.preventDefault();
+                  setHighlightedIndex(0);
                   searchInputEl?.blur();
                   return;
                 }
@@ -2344,6 +2501,15 @@ export const MarketingToolSidebar = () => {
                   </StyledItemLink>
                 </StyledItemRow>
               ))}
+            </StyledSection>
+          )}
+
+          {pinnedIds.length === 0 && (
+            <StyledSection>
+              <StyledSectionLabel>Pinned</StyledSectionLabel>
+              <StyledEmpty>
+                Press <kbd>p</kbd> on any record to pin it for quick access.
+              </StyledEmpty>
             </StyledSection>
           )}
 
@@ -2637,7 +2803,25 @@ export const MarketingToolSidebar = () => {
           )}
 
           <StyledSection>
-            <StyledSectionLabel>Recent</StyledSectionLabel>
+            <StyledSectionLabelRow>
+              <StyledSectionLabel>Recent</StyledSectionLabel>
+              {recentRecords.length > 0 && (
+                <StyledSectionAction
+                  type="button"
+                  title="Refresh"
+                  onClick={() => {
+                    // Fire a custom event so any listening Apollo
+                    // components can refetch. Soft-no-op otherwise.
+                    window.dispatchEvent(
+                      new CustomEvent('marketing-sidebar:refresh'),
+                    );
+                    setToast('Refreshing…');
+                  }}
+                >
+                  ↻
+                </StyledSectionAction>
+              )}
+            </StyledSectionLabelRow>
             {recentLoading && recentRecords.length === 0 ? (
               <StyledEmpty>Loading…</StyledEmpty>
             ) : recentRecords.length === 0 ? (
@@ -2654,46 +2838,80 @@ export const MarketingToolSidebar = () => {
                 </StyledEmptyCtaButton>
               </StyledEmptyCta>
             ) : filteredRecent.length === 0 && filterText !== '' ? null : (
-              filteredRecent.map((record) => (
-                <StyledItemRow
-                  key={record.id}
-                  data-sidebar-row-key={`recent:${record.id}`}
-                  data-highlighted={
-                    highlightedKey === `recent:${record.id}`
-                      ? 'true'
-                      : undefined
-                  }
-                  active={currentRecordId === record.id}
-                  isHighlighted={highlightedKey === `recent:${record.id}`}
-                  onContextMenu={(e) =>
-                    openContextMenu(e, {
-                      href: `${config.showPath}/${record.id}`,
-                      objectNameSingular: config.objectNameSingular,
-                      recordId: record.id,
-                      label: record.name ?? '(unnamed)',
-                      source: 'recent',
-                    })
-                  }
-                >
-                  <StyledItemLink
-                    to={`${config.showPath}/${record.id}`}
-                    title={record.name ?? '(unnamed)'}
+              filteredRecent.map((record) => {
+                // Visit count from the recently-visited store, if any.
+                // Surfaced on Recent rows so users can spot frequently-
+                // visited records they might want to pin.
+                const recentVisit = recentVisits.find(
+                  (v) =>
+                    v.objectNameSingular === config.objectNameSingular &&
+                    v.id === record.id,
+                );
+                const visitCount = recentVisit?.visitCount ?? 0;
+                return (
+                  <StyledItemRow
+                    key={record.id}
+                    data-sidebar-row-key={`recent:${record.id}`}
+                    data-highlighted={
+                      highlightedKey === `recent:${record.id}`
+                        ? 'true'
+                        : undefined
+                    }
+                    active={currentRecordId === record.id}
+                    isHighlighted={highlightedKey === `recent:${record.id}`}
+                    onContextMenu={(e) =>
+                      openContextMenu(e, {
+                        href: `${config.showPath}/${record.id}`,
+                        objectNameSingular: config.objectNameSingular,
+                        recordId: record.id,
+                        label: record.name ?? '(unnamed)',
+                        source: 'recent',
+                      })
+                    }
                   >
-                    <StyledItemLabel>
-                      {record.name ?? '(unnamed)'}
+                    <StyledItemLink
+                      to={`${config.showPath}/${record.id}`}
+                      title={
+                        visitCount > 0
+                          ? `${record.name ?? '(unnamed)'} — ${visitCount}× visits`
+                          : (record.name ?? '(unnamed)')
+                      }
+                    >
+                      <StyledItemLabel>
+                        {record.name ?? '(unnamed)'}
+                      </StyledItemLabel>
+                      {visitCount >= 2 && (
+                        <StyledItemTimestamp>{visitCount}×</StyledItemTimestamp>
+                      )}
+                    </StyledItemLink>
+                    <StyledPinButton
+                      pinned={false}
+                      onClick={() => togglePin(record.id)}
+                      title="Pin"
+                      type="button"
+                    >
+                      ☆
+                    </StyledPinButton>
+                  </StyledItemRow>
+                );
+              })
+            )}
+            {typeof sectionTotalCount === 'number' &&
+              sectionTotalCount > recentRecords.length &&
+              !recentLoading && (
+                <StyledItemRow>
+                  <StyledItemLink to={indexPath}>
+                    <StyledItemLabel
+                      style={{
+                        color: themeCssVariables.font.color.tertiary,
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      → View all {sectionTotalCount} in table
                     </StyledItemLabel>
                   </StyledItemLink>
-                  <StyledPinButton
-                    pinned={false}
-                    onClick={() => togglePin(record.id)}
-                    title="Pin"
-                    type="button"
-                  >
-                    ☆
-                  </StyledPinButton>
                 </StyledItemRow>
-              ))
-            )}
+              )}
           </StyledSection>
         </>
       )}
