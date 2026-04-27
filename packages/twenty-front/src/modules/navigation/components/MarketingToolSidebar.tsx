@@ -711,6 +711,7 @@ const StyledHelpHint = styled.div`
 type Shortcut = { keys: string; description: string };
 const SHORTCUTS: Shortcut[] = [
   { keys: '?', description: 'Open this shortcut help' },
+  { keys: '⌘ K', description: 'Open quick switcher (any route)' },
   { keys: '/', description: 'Focus the sidebar filter' },
   { keys: '↑ ↓', description: 'Walk filtered results' },
   { keys: 'Enter', description: 'Open highlighted / first match' },

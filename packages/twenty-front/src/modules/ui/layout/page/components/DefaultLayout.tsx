@@ -7,6 +7,7 @@ import { InformationBannerIsImpersonating } from '@/information-banner/component
 import { KeyboardShortcutMenu } from '@/keyboard-shortcut-menu/components/KeyboardShortcutMenu';
 import { LayoutCustomizationBar } from '@/layout-customization/components/LayoutCustomizationBar';
 import { AppNavigationDrawer } from '@/navigation/components/AppNavigationDrawer';
+import { MarketingQuickSwitcher } from '@/navigation/components/MarketingQuickSwitcher';
 import { MarketingToolSidebar } from '@/navigation/components/MarketingToolSidebar';
 import { MobileNavigationBar } from '@/navigation/components/MobileNavigationBar';
 import { PageDragDropProvider } from '@/navigation-menu-item/display/dnd/providers/PageDragDropProvider';
@@ -124,6 +125,7 @@ export const DefaultLayout = () => {
                     <AppErrorBoundary FallbackComponent={AppPageErrorFallback}>
                       <Outlet />
                     </AppErrorBoundary>
+                    <MarketingQuickSwitcher />
                   </StyledMainContainer>
                 )}
               </PageDragDropProvider>
