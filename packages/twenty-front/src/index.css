@@ -1,8 +1,16 @@
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family:
+    'Geist',
+    'Inter',
+    system-ui,
+    -apple-system,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   background: var(--t-background-tertiary);
 }
 
@@ -21,4 +29,39 @@ form {
 /* https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge */
 .grecaptcha-badge {
   visibility: hidden !important;
+}
+
+/* ============================================================
+ * Geraci CRM — design-pass theme overrides (Phase 1)
+ *
+ * Nudges Twenty's default palette toward the warmer HubSpot /
+ * Geist design mock without touching any component code. The
+ * variables below are set by the generated theme-light /
+ * theme-dark CSS files; we override them after the fact so the
+ * cascade lands on top of Twenty's defaults.
+ *
+ * Drop this block to revert to vanilla Twenty.
+ * ============================================================ */
+.light {
+  /* Cooler page background closer to the mock's slate palette;
+   * inner-card surfaces stay light so record show-page contrast
+   * is unaffected. */
+  --t-background-tertiary: #f5f8fa;
+  --t-background-quaternary: #eaf0f6;
+
+  /* Geraci brand orange — applied to any accent that already
+   * used Twenty's `color.orange` (workflows, callouts). The
+   * primary blue stays untouched so button affordances are
+   * familiar. */
+  --t-color-orange: #ff7a59;
+
+  /* Slightly warmer rules so the UI feels less wireframe-y. */
+  --t-border-color-light: #eef2f7;
+  --t-border-color-medium: #e5eaf1;
+}
+
+.dark {
+  /* Map orange to the same brand value so accents stay
+   * consistent across light and dark themes. */
+  --t-color-orange: #ff7a59;
 }
