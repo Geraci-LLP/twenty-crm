@@ -371,16 +371,41 @@ const StyledSectionLabel = styled.div`
   text-transform: uppercase;
 `;
 
-const StyledItemRow = styled.div<{ active?: boolean }>`
+const StyledItemRow = styled.div<{
+  active?: boolean;
+  isDragging?: boolean;
+  isDropTarget?: boolean;
+}>`
   align-items: center;
   background: ${(p) =>
     p.active === true
       ? themeCssVariables.background.transparent.lighter
       : 'transparent'};
   border-radius: ${themeCssVariables.border.radius.sm};
+  border-top: 2px solid
+    ${(p) =>
+      p.isDropTarget === true ? themeCssVariables.color.orange : 'transparent'};
   display: flex;
+  opacity: ${(p) => (p.isDragging === true ? 0.4 : 1)};
   &:hover {
     background: ${themeCssVariables.background.transparent.lighter};
+  }
+`;
+
+const StyledDragHandle = styled.span`
+  color: ${themeCssVariables.font.color.tertiary};
+  cursor: grab;
+  flex-shrink: 0;
+  font-size: 12px;
+  letter-spacing: -1px;
+  line-height: 1;
+  padding: 0 4px 0 6px;
+  user-select: none;
+  &:active {
+    cursor: grabbing;
+  }
+  &:hover {
+    color: ${themeCssVariables.font.color.primary};
   }
 `;
 
@@ -594,6 +619,13 @@ export const MarketingToolSidebar = () => {
   // close button. Independent of the collapse state so the user can
   // discover shortcuts even when the sidebar is collapsed.
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  // Drag-to-reorder state for pinned items. We hold the dragged record's
+  // id and the id of the row currently under the pointer (drop target)
+  // so we can render the orange insertion indicator. Both are reset on
+  // drop / dragend.
+  const [draggingPinId, setDraggingPinId] = useState<string | null>(null);
+  const [dropTargetPinId, setDropTargetPinId] = useState<string | null>(null);
 
   // Browser-history-style recently-visited tracker. Mirrors localStorage
   // into component state so re-renders pick up new visits and so
@@ -891,6 +923,37 @@ export const MarketingToolSidebar = () => {
     writePinned(next);
   };
 
+  // Move a pinned id within the current section's pinned list. The
+  // dragged id is removed from its current position and re-inserted
+  // immediately *before* the target id; if target is null the item moves
+  // to the end. Persists to localStorage so the order survives reloads.
+  const reorderPinned = (sourceId: string, targetId: string | null) => {
+    const list = pinnedMap[config.objectNameSingular] ?? [];
+    if (!list.includes(sourceId)) return;
+    if (sourceId === targetId) return;
+    const without = list.filter((x) => x !== sourceId);
+    const insertAt =
+      targetId === null
+        ? without.length
+        : without.findIndex((x) => x === targetId);
+    const safeIndex = insertAt === -1 ? without.length : insertAt;
+    const reordered = [
+      ...without.slice(0, safeIndex),
+      sourceId,
+      ...without.slice(safeIndex),
+    ];
+    const nextMap = { ...pinnedMap, [config.objectNameSingular]: reordered };
+    setPinnedMap(nextMap);
+    writePinned(nextMap);
+  };
+
+  // The pinned records query returns rows in arbitrary order (filter
+  // {id: {in: [...]}} doesn't preserve list order). Reorder the loaded
+  // records to match pinnedIds so the UI reflects the user's drag order.
+  const orderedPinnedRecords: RecentRecord[] = pinnedIds
+    .map((id) => filteredPinned.find((r) => r.id === id))
+    .filter((r): r is RecentRecord => r !== undefined);
+
   return (
     <StyledSidebar collapsed={isCollapsed}>
       {isHelpOpen && (
@@ -1081,14 +1144,67 @@ export const MarketingToolSidebar = () => {
             </StyledSection>
           )}
 
-          {pinnedIds.length > 0 && filteredPinned.length > 0 && (
-            <StyledSection>
+          {pinnedIds.length > 0 && orderedPinnedRecords.length > 0 && (
+            <StyledSection
+              onDragOver={(e) => {
+                // Allow drop into empty space at the bottom of the section
+                // by clearing the per-row target when the pointer leaves
+                // any specific row.
+                if (draggingPinId !== null) e.preventDefault();
+              }}
+              onDrop={(e) => {
+                if (draggingPinId === null) return;
+                e.preventDefault();
+                // If the drop target is unset (pointer in section gap),
+                // append to the end.
+                reorderPinned(draggingPinId, dropTargetPinId);
+                setDraggingPinId(null);
+                setDropTargetPinId(null);
+              }}
+            >
               <StyledSectionLabel>Pinned</StyledSectionLabel>
-              {filteredPinned.map((record) => (
+              {orderedPinnedRecords.map((record) => (
                 <StyledItemRow
                   key={record.id}
                   active={currentRecordId === record.id}
+                  isDragging={draggingPinId === record.id}
+                  isDropTarget={
+                    dropTargetPinId === record.id && draggingPinId !== record.id
+                  }
+                  draggable
+                  onDragStart={(e) => {
+                    setDraggingPinId(record.id);
+                    e.dataTransfer.effectAllowed = 'move';
+                    // Some browsers require setData for drag to start.
+                    e.dataTransfer.setData('text/plain', record.id);
+                  }}
+                  onDragEnter={() => {
+                    if (draggingPinId !== null && draggingPinId !== record.id) {
+                      setDropTargetPinId(record.id);
+                    }
+                  }}
+                  onDragOver={(e) => {
+                    if (draggingPinId !== null) {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                    }
+                  }}
+                  onDrop={(e) => {
+                    if (draggingPinId === null) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    reorderPinned(draggingPinId, record.id);
+                    setDraggingPinId(null);
+                    setDropTargetPinId(null);
+                  }}
+                  onDragEnd={() => {
+                    setDraggingPinId(null);
+                    setDropTargetPinId(null);
+                  }}
                 >
+                  <StyledDragHandle title="Drag to reorder" aria-hidden="true">
+                    ⋮⋮
+                  </StyledDragHandle>
                   <StyledItemLink
                     to={`${config.showPath}/${record.id}`}
                     title={record.name ?? '(unnamed)'}
