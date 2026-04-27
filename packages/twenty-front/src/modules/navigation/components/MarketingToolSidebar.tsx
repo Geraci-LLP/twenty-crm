@@ -1,17 +1,25 @@
 import { styled } from '@linaria/react';
-import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
+import { useObjectMetadataItem } from '@/object-metadata/hooks/useObjectMetadataItem';
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
+import { useAtomFamilySelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilySelectorValue';
+import { viewsByObjectMetadataIdFamilySelector } from '@/views/states/selectors/viewsByObjectMetadataIdFamilySelector';
 
-// Contextual second-column sidebar for marketing routes. Mirrors the
-// design mock's ToolSidebar but drops the "filter views" idea (Twenty's
-// RecordIndexPage doesn't read query-string filters; wiring through
-// view-state would be a separate piece of work). Instead the sidebar
-// surfaces a live list of the 5 most-recent records in the current
-// section so the user can jump back to whatever they were last working
-// on without scrolling through the full index.
+// Contextual second-column sidebar for marketing routes. Layout:
+//   - Title + subtitle
+//   - "+ New" button → section's index page (Twenty's existing create
+//     UI is on the index page; we don't try to spawn the side panel
+//     directly because that integration is heavier than it should be
+//     for this PR)
+//   - Views: saved views for the section's object, navigates with
+//     ?viewId=<uuid> which Twenty's RecordIndexPage already reads
+//   - Pinned: localStorage-backed favorites, persists across sessions
+//   - Recent: top 5 most-recent records, click to open, star to pin
 //
 // Self-detects the current route via useLocation. Returns null for
 // non-marketing routes — DefaultLayout renders it unconditionally
@@ -25,6 +33,7 @@ type SectionConfig = {
   title: string;
   subtitle: string;
   objectNameSingular: string;
+  objectNamePlural: string;
   showPath: string;
 };
 
@@ -34,6 +43,7 @@ const getConfigForPath = (pathname: string): SectionConfig | null => {
       title: 'Email Campaigns',
       subtitle: 'One-off and scheduled marketing emails',
       objectNameSingular: 'campaign',
+      objectNamePlural: 'campaigns',
       showPath: '/object/campaign',
     };
   }
@@ -42,6 +52,7 @@ const getConfigForPath = (pathname: string): SectionConfig | null => {
       title: 'Marketing Campaigns',
       subtitle: 'Campaign-level groupings',
       objectNameSingular: 'marketingCampaign',
+      objectNamePlural: 'marketingCampaigns',
       showPath: '/object/marketingCampaign',
     };
   }
@@ -50,6 +61,7 @@ const getConfigForPath = (pathname: string): SectionConfig | null => {
       title: 'Sequences',
       subtitle: 'Multi-step automated cadences',
       objectNameSingular: 'sequence',
+      objectNamePlural: 'sequences',
       showPath: '/object/sequence',
     };
   }
@@ -58,6 +70,7 @@ const getConfigForPath = (pathname: string): SectionConfig | null => {
       title: 'Forms',
       subtitle: 'Lead-capture forms and embeds',
       objectNameSingular: 'form',
+      objectNamePlural: 'forms',
       showPath: '/object/form',
     };
   }
@@ -66,10 +79,38 @@ const getConfigForPath = (pathname: string): SectionConfig | null => {
       title: 'Analytics',
       subtitle: 'Marketing performance',
       objectNameSingular: 'campaign',
+      objectNamePlural: 'campaigns',
       showPath: '/object/campaign',
     };
   }
   return null;
+};
+
+// Pinned records are localStorage-only — no server roundtrip. Keyed by
+// objectNameSingular so a user's pinned campaigns don't bleed into their
+// pinned sequences.
+const PINNED_STORAGE_KEY = 'twenty.marketingSidebar.pinned';
+
+type PinnedMap = Record<string, string[]>;
+
+const readPinned = (): PinnedMap => {
+  try {
+    const raw = window.localStorage.getItem(PINNED_STORAGE_KEY);
+    if (raw === null || raw === '') return {};
+    const parsed = JSON.parse(raw) as PinnedMap;
+    if (typeof parsed !== 'object' || parsed === null) return {};
+    return parsed;
+  } catch {
+    return {};
+  }
+};
+
+const writePinned = (next: PinnedMap): void => {
+  try {
+    window.localStorage.setItem(PINNED_STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    // ignore quota / disabled storage
+  }
 };
 
 const StyledSidebar = styled.aside`
@@ -79,6 +120,7 @@ const StyledSidebar = styled.aside`
   flex-direction: column;
   flex-shrink: 0;
   min-width: 0;
+  overflow-y: auto;
   width: 240px;
 `;
 
@@ -102,6 +144,32 @@ const StyledSubtitle = styled.div`
   font-size: 12px;
 `;
 
+const StyledNewButtonRow = styled.div`
+  padding: 12px 12px 4px;
+`;
+
+/* oxlint-disable-next-line twenty/no-hardcoded-colors */
+const StyledNewButton = styled(Link)`
+  align-items: center;
+  background: ${themeCssVariables.color.orange};
+  border: 0;
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 13px;
+  font-weight: ${themeCssVariables.font.weight.medium};
+  gap: 6px;
+  justify-content: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  width: 100%;
+  &:hover {
+    filter: brightness(0.95);
+  }
+`;
+
 const StyledSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -118,30 +186,55 @@ const StyledSectionLabel = styled.div`
   text-transform: uppercase;
 `;
 
-const StyledItem = styled(Link)`
+const StyledItemRow = styled.div<{ active?: boolean }>`
   align-items: center;
-  background: transparent;
-  border: 0;
+  background: ${(p) =>
+    p.active === true
+      ? themeCssVariables.background.transparent.lighter
+      : 'transparent'};
   border-radius: ${themeCssVariables.border.radius.sm};
-  color: ${themeCssVariables.font.color.primary};
-  cursor: pointer;
   display: flex;
-  font-family: ${themeCssVariables.font.family};
-  font-size: 13px;
-  gap: 10px;
-  padding: 7px 10px;
-  text-align: left;
-  text-decoration: none;
-  width: 100%;
   &:hover {
     background: ${themeCssVariables.background.transparent.lighter};
   }
+`;
+
+const StyledItemLink = styled(Link)`
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 13px;
+  gap: 10px;
+  min-width: 0;
+  padding: 7px 10px;
+  text-align: left;
+  text-decoration: none;
 `;
 
 const StyledItemLabel = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+const StyledPinButton = styled.button<{ pinned: boolean }>`
+  background: transparent;
+  border: 0;
+  color: ${(p) =>
+    p.pinned
+      ? themeCssVariables.color.orange
+      : themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  &:hover {
+    color: ${themeCssVariables.color.orange};
+  }
 `;
 
 const StyledEmpty = styled.div`
@@ -152,26 +245,76 @@ const StyledEmpty = styled.div`
 
 export const MarketingToolSidebar = () => {
   const location = useLocation();
-
+  const [searchParams] = useSearchParams();
   const config = getConfigForPath(location.pathname);
 
-  // Always call the hook (rules of hooks) but skip the network when
-  // there's no config to drive it.
-  const { records, loading } = useFindManyRecords<RecentRecord>({
+  // Object metadata — needed to resolve the views family selector. The
+  // hook works even when called with a missing/invalid name (it returns
+  // a stub), so we always call it, then guard usage.
+  const { objectMetadataItem } = useObjectMetadataItem({
     objectNameSingular: config?.objectNameSingular ?? 'campaign',
-    limit: 5,
-    orderBy: [{ createdAt: 'DescNullsLast' }],
-    recordGqlFields: { id: true, name: true },
-    skip: !config,
   });
+
+  const viewsByObjectMetadataIdFamily = useAtomFamilySelectorValue(
+    viewsByObjectMetadataIdFamilySelector,
+    objectMetadataItem.id,
+  );
+  const views = viewsByObjectMetadataIdFamily;
+
+  // Recent records — top 5 by createdAt desc.
+  const { records: recentRecords, loading: recentLoading } =
+    useFindManyRecords<RecentRecord>({
+      objectNameSingular: config?.objectNameSingular ?? 'campaign',
+      limit: 5,
+      orderBy: [{ createdAt: 'DescNullsLast' }],
+      recordGqlFields: { id: true, name: true },
+      skip: !config,
+    });
+
+  // Pinned records — fetch by id once we know which ids are pinned for
+  // the current section. Pin state is in localStorage; useState mirrors
+  // it for re-render on toggle.
+  const [pinnedMap, setPinnedMap] = useState<PinnedMap>(() => readPinned());
+  const pinnedIds = config ? (pinnedMap[config.objectNameSingular] ?? []) : [];
+
+  const { records: pinnedRecords } = useFindManyRecords<RecentRecord>({
+    objectNameSingular: config?.objectNameSingular ?? 'campaign',
+    limit: 25,
+    filter:
+      pinnedIds.length > 0
+        ? { id: { in: pinnedIds } }
+        : { id: { eq: 'no-match' } },
+    recordGqlFields: { id: true, name: true },
+    skip: !config || pinnedIds.length === 0,
+  });
+
+  // Re-read pinned map on focus + storage event so toggling in one tab
+  // updates other tabs.
+  useEffect(() => {
+    const refresh = () => setPinnedMap(readPinned());
+    window.addEventListener('focus', refresh);
+    window.addEventListener('storage', refresh);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, []);
 
   if (!config) return null;
 
-  // Twenty's record list path is /objects/<plural> — the Form/Sequence/
-  // Campaign route names are pluralized as +s. MarketingCampaigns uses
-  // the same simple +s rule. If a section ever needs an irregular
-  // plural we'd extend the SectionConfig with an explicit indexPath.
-  const indexPath = `/objects/${config.objectNameSingular}s`;
+  const indexPath = `/objects/${config.objectNamePlural}`;
+  const currentViewId = searchParams.get('viewId');
+  const isPinned = (id: string): boolean => pinnedIds.includes(id);
+
+  const togglePin = (id: string) => {
+    const next = { ...pinnedMap };
+    const list = next[config.objectNameSingular] ?? [];
+    next[config.objectNameSingular] = list.includes(id)
+      ? list.filter((x) => x !== id)
+      : [...list, id];
+    setPinnedMap(next);
+    writePinned(next);
+  };
 
   return (
     <StyledSidebar>
@@ -179,28 +322,92 @@ export const MarketingToolSidebar = () => {
         <StyledTitle>{config.title}</StyledTitle>
         <StyledSubtitle>{config.subtitle}</StyledSubtitle>
       </StyledHeader>
+
+      <StyledNewButtonRow>
+        <StyledNewButton to={indexPath}>+ New</StyledNewButton>
+      </StyledNewButtonRow>
+
       <StyledSection>
         <StyledSectionLabel>Section</StyledSectionLabel>
-        <StyledItem to={indexPath}>
-          <StyledItemLabel>All {config.title.toLowerCase()}</StyledItemLabel>
-        </StyledItem>
+        <StyledItemRow active={!isDefined(currentViewId)}>
+          <StyledItemLink to={indexPath}>
+            <StyledItemLabel>All {config.title.toLowerCase()}</StyledItemLabel>
+          </StyledItemLink>
+        </StyledItemRow>
       </StyledSection>
+
+      {views.length > 0 && (
+        <StyledSection>
+          <StyledSectionLabel>Views</StyledSectionLabel>
+          {views.map((view) => (
+            <StyledItemRow key={view.id} active={currentViewId === view.id}>
+              <StyledItemLink to={`${indexPath}?viewId=${view.id}`}>
+                <StyledItemLabel>{view.name}</StyledItemLabel>
+              </StyledItemLink>
+            </StyledItemRow>
+          ))}
+        </StyledSection>
+      )}
+
+      {pinnedIds.length > 0 && (
+        <StyledSection>
+          <StyledSectionLabel>Pinned</StyledSectionLabel>
+          {pinnedRecords.length === 0 ? (
+            <StyledEmpty>Loading…</StyledEmpty>
+          ) : (
+            pinnedRecords.map((record) => (
+              <StyledItemRow key={record.id}>
+                <StyledItemLink
+                  to={`${config.showPath}/${record.id}`}
+                  title={record.name ?? '(unnamed)'}
+                >
+                  <StyledItemLabel>
+                    {record.name ?? '(unnamed)'}
+                  </StyledItemLabel>
+                </StyledItemLink>
+                <StyledPinButton
+                  pinned={true}
+                  onClick={() => togglePin(record.id)}
+                  title="Unpin"
+                  type="button"
+                >
+                  ★
+                </StyledPinButton>
+              </StyledItemRow>
+            ))
+          )}
+        </StyledSection>
+      )}
+
       <StyledSection>
         <StyledSectionLabel>Recent</StyledSectionLabel>
-        {loading && records.length === 0 ? (
+        {recentLoading && recentRecords.length === 0 ? (
           <StyledEmpty>Loading…</StyledEmpty>
-        ) : records.length === 0 ? (
+        ) : recentRecords.length === 0 ? (
           <StyledEmpty>No records yet</StyledEmpty>
         ) : (
-          records.map((record) => (
-            <StyledItem
-              key={record.id}
-              to={`${config.showPath}/${record.id}`}
-              title={record.name ?? '(unnamed)'}
-            >
-              <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
-            </StyledItem>
-          ))
+          recentRecords
+            .filter((r) => !isPinned(r.id))
+            .map((record) => (
+              <StyledItemRow key={record.id}>
+                <StyledItemLink
+                  to={`${config.showPath}/${record.id}`}
+                  title={record.name ?? '(unnamed)'}
+                >
+                  <StyledItemLabel>
+                    {record.name ?? '(unnamed)'}
+                  </StyledItemLabel>
+                </StyledItemLink>
+                <StyledPinButton
+                  pinned={false}
+                  onClick={() => togglePin(record.id)}
+                  title="Pin"
+                  type="button"
+                >
+                  ☆
+                </StyledPinButton>
+              </StyledItemRow>
+            ))
         )}
       </StyledSection>
     </StyledSidebar>
