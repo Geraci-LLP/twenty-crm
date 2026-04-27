@@ -137,6 +137,58 @@ const getCurrentRecordId = (
 // pinned sequences.
 const PINNED_STORAGE_KEY = 'twenty.marketingSidebar.pinned';
 
+// Recent search history. Capped at 5 entries; newest first; case-
+// preserved as the user typed it. Used to surface quick-select chips
+// when the filter input is empty.
+const RECENT_SEARCHES_STORAGE_KEY = 'twenty.marketingSidebar.recentSearches';
+const MAX_RECENT_SEARCHES = 5;
+
+const readRecentSearches = (): string[] => {
+  try {
+    const raw = window.localStorage.getItem(RECENT_SEARCHES_STORAGE_KEY);
+    if (raw === null || raw === '') return [];
+    const parsed = JSON.parse(raw) as string[];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((s): s is string => typeof s === 'string')
+      .slice(0, 10);
+  } catch {
+    return [];
+  }
+};
+
+const writeRecentSearches = (next: string[]): void => {
+  try {
+    window.localStorage.setItem(
+      RECENT_SEARCHES_STORAGE_KEY,
+      JSON.stringify(next),
+    );
+  } catch {
+    // ignore quota / disabled storage
+  }
+};
+
+const pushRecentSearch = (term: string): string[] => {
+  const trimmed = term.trim();
+  if (trimmed.length < 2) return readRecentSearches();
+  const existing = readRecentSearches();
+  // Case-insensitive dedupe so "Test" and "test" don't both clutter the
+  // chip strip; keep the casing from the most recent entry.
+  const without = existing.filter(
+    (s) => s.toLowerCase() !== trimmed.toLowerCase(),
+  );
+  const next = [trimmed, ...without].slice(0, MAX_RECENT_SEARCHES);
+  writeRecentSearches(next);
+  return next;
+};
+
+const removeRecentSearch = (term: string): string[] => {
+  const existing = readRecentSearches();
+  const next = existing.filter((s) => s.toLowerCase() !== term.toLowerCase());
+  writeRecentSearches(next);
+  return next;
+};
+
 type PinnedMap = Record<string, string[]>;
 
 const readPinned = (): PinnedMap => {
@@ -360,6 +412,46 @@ const StyledSection = styled.div`
   flex-direction: column;
   gap: 1px;
   padding: 12px 12px 4px;
+`;
+
+const StyledChipRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 12px 8px;
+`;
+
+const StyledChip = styled.button`
+  align-items: center;
+  background: ${themeCssVariables.background.transparent.lighter};
+  border: 1px solid ${themeCssVariables.border.color.light};
+  border-radius: 12px;
+  color: ${themeCssVariables.font.color.secondary};
+  cursor: pointer;
+  display: inline-flex;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11px;
+  gap: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 3px 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    background: ${themeCssVariables.background.transparent.medium};
+    color: ${themeCssVariables.font.color.primary};
+  }
+`;
+
+const StyledChipRemove = styled.span`
+  color: ${themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  padding-left: 2px;
+  &:hover {
+    color: ${themeCssVariables.color.orange};
+  }
 `;
 
 const StyledSectionLabel = styled.div`
@@ -643,6 +735,18 @@ export const MarketingToolSidebar = () => {
   // opens it. -1 means "no highlight, fall back to first match" so an
   // empty filter or untouched search still has the original behavior.
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+
+  // Recent searches — surfaced as quick-select chips when the filter is
+  // empty. Persisted to localStorage so chips survive reloads. The
+  // storage event listener keeps tabs in sync.
+  const [recentSearches, setRecentSearches] = useState<string[]>(() =>
+    readRecentSearches(),
+  );
+  useEffect(() => {
+    const refresh = () => setRecentSearches(readRecentSearches());
+    window.addEventListener('storage', refresh);
+    return () => window.removeEventListener('storage', refresh);
+  }, []);
 
   // Reset highlight whenever the filter text changes so a new query
   // doesn't keep the previous query's highlight pointing at a row that
@@ -1294,6 +1398,12 @@ export const MarketingToolSidebar = () => {
                   target = flatItems[0].to;
                 }
                 if (target !== null) {
+                  // Persist the term to recent-searches before clearing.
+                  // Skip if the filter was empty (Enter on a blank input
+                  // shouldn't pollute history).
+                  if (filterText.trim().length >= 2) {
+                    setRecentSearches(pushRecentSearch(filterText));
+                  }
                   navigate(target);
                   setFilterText('');
                   setHighlightedIndex(-1);
@@ -1302,6 +1412,34 @@ export const MarketingToolSidebar = () => {
               aria-label="Filter sidebar"
             />
           </StyledSearchRow>
+
+          {filterText === '' && recentSearches.length > 0 && (
+            <StyledChipRow>
+              {recentSearches.map((term) => (
+                <StyledChip
+                  key={term}
+                  type="button"
+                  onClick={() => {
+                    setFilterText(term);
+                    searchInputEl?.focus();
+                  }}
+                  title={`Re-run search for "${term}"`}
+                >
+                  <span>{term}</span>
+                  <StyledChipRemove
+                    role="button"
+                    aria-label={`Remove "${term}" from recent searches`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setRecentSearches(removeRecentSearch(term));
+                    }}
+                  >
+                    ×
+                  </StyledChipRemove>
+                </StyledChip>
+              ))}
+            </StyledChipRow>
+          )}
 
           <StyledSection>
             <StyledSectionLabel>Section</StyledSectionLabel>
