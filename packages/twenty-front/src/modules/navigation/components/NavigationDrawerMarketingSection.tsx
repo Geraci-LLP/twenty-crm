@@ -1,11 +1,14 @@
 import { useLingui } from '@lingui/react/macro';
-import { SettingsPath } from 'twenty-shared/types';
-import { IconHelpCircle, IconSettings } from 'twenty-ui/display';
+import { AppPath } from 'twenty-shared/types';
+import {
+  IconChartBar,
+  IconFileText,
+  IconLayoutKanban,
+  IconMail,
+  IconSend,
+  IconTargetArrow,
+} from 'twenty-ui/display';
 import { AnimatedExpandableContainer } from 'twenty-ui/layout';
-
-import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
-import { getDocumentationUrl } from '@/support/utils/getDocumentationUrl';
-import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
 
 import { NavigationDrawerAnimatedCollapseWrapper } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerAnimatedCollapseWrapper';
 import { NavigationDrawerItem } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerItem';
@@ -14,28 +17,29 @@ import { NavigationDrawerSectionTitle } from '@/ui/navigation/navigation-drawer/
 import { useNavigationSection } from '@/ui/navigation/navigation-drawer/hooks/useNavigationSection';
 import { isNavigationSectionOpenFamilyState } from '@/ui/navigation/navigation-drawer/states/isNavigationSectionOpenFamilyState';
 import { useAtomFamilyStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilyStateValue';
-import { useNavigateSettings } from '~/hooks/useNavigateSettings';
 
-export const NavigationDrawerOtherSection = () => {
+// Marketing section in the main navigation drawer. Groups every marketing
+// surface — Email (campaigns), Sequences, Forms, MarketingCampaign,
+// Marketing Analytics — into one collapsible section so the user doesn't
+// have to hunt for them in the flat workspace-objects list.
+//
+// Each item navigates to the existing route. The Marketing Campaign and
+// Email links go to the auto-generated record list pages; Marketing
+// Analytics goes to the dedicated /marketing/analytics page.
+export const NavigationDrawerMarketingSection = () => {
   const { t } = useLingui();
-  const navigateSettings = useNavigateSettings();
-  const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
 
-  const { toggleNavigationSection } = useNavigationSection('Other');
+  const { toggleNavigationSection } = useNavigationSection('Marketing');
   const isNavigationSectionOpen = useAtomFamilyStateValue(
     isNavigationSectionOpenFamilyState,
-    'Other',
+    'Marketing',
   );
-
-  const handleSettingsClick = () => {
-    navigateSettings(SettingsPath.ProfilePage);
-  };
 
   return (
     <NavigationDrawerSection>
       <NavigationDrawerAnimatedCollapseWrapper>
         <NavigationDrawerSectionTitle
-          label={t`Other`}
+          label={t`Marketing`}
           onClick={toggleNavigationSection}
           isOpen={isNavigationSectionOpen}
         />
@@ -48,16 +52,34 @@ export const NavigationDrawerOtherSection = () => {
         initial={false}
       >
         <NavigationDrawerItem
-          label={t`Settings`}
-          Icon={IconSettings}
-          onClick={handleSettingsClick}
+          label={t`Email Campaigns`}
+          to="/objects/campaigns"
+          Icon={IconMail}
         />
         <NavigationDrawerItem
-          label={t`Documentation`}
-          to={getDocumentationUrl({
-            locale: currentWorkspaceMember?.locale,
-          })}
-          Icon={IconHelpCircle}
+          label={t`Marketing Campaigns`}
+          to="/objects/marketingCampaigns"
+          Icon={IconLayoutKanban}
+        />
+        <NavigationDrawerItem
+          label={t`Sequences`}
+          to="/objects/sequences"
+          Icon={IconSend}
+        />
+        <NavigationDrawerItem
+          label={t`Forms`}
+          to="/objects/forms"
+          Icon={IconFileText}
+        />
+        <NavigationDrawerItem
+          label={t`Analytics`}
+          to={AppPath.MarketingAnalytics}
+          Icon={IconChartBar}
+        />
+        <NavigationDrawerItem
+          label={t`Audiences`}
+          to="/objects/people"
+          Icon={IconTargetArrow}
         />
       </AnimatedExpandableContainer>
     </NavigationDrawerSection>
