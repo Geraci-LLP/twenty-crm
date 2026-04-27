@@ -27,6 +27,7 @@ type MarketingCampaignRecord = ObjectRecord & {
 type CampaignRecord = ObjectRecord & {
   name: string | null;
   marketingCampaignId: string | null;
+  additionalMarketingCampaignIds: string[] | null;
   sentCount: number | null;
   openCount: number | null;
   clickCount: number | null;
@@ -184,6 +185,7 @@ export const MarketingAnalyticsPage = () => {
         id: true,
         name: true,
         marketingCampaignId: true,
+        additionalMarketingCampaignIds: true,
         sentCount: true,
         openCount: true,
         clickCount: true,
@@ -215,12 +217,24 @@ export const MarketingAnalyticsPage = () => {
   }, [campaigns]);
 
   const rows = useMemo<MarketingCampaignRow[]>(() => {
+    // A campaign can belong to MULTIPLE marketing campaigns now (PR 38):
+    //   - primary marketingCampaignId FK (single, original m2o)
+    //   - additionalMarketingCampaignIds string[] (many)
+    // Group the campaign under every MC id it links to. Rolled-up totals
+    // can therefore double-count a single email across MCs by design —
+    // that's the point of cross-campaign membership.
     const byMcId = new Map<string, CampaignRecord[]>();
     for (const c of campaigns) {
-      if (c.marketingCampaignId === null) continue;
-      const list = byMcId.get(c.marketingCampaignId) ?? [];
-      list.push(c);
-      byMcId.set(c.marketingCampaignId, list);
+      const allMcIds = new Set<string>();
+      if (c.marketingCampaignId !== null) allMcIds.add(c.marketingCampaignId);
+      for (const id of c.additionalMarketingCampaignIds ?? []) {
+        allMcIds.add(id);
+      }
+      for (const mcId of allMcIds) {
+        const list = byMcId.get(mcId) ?? [];
+        list.push(c);
+        byMcId.set(mcId, list);
+      }
     }
     return marketingCampaigns
       .map<MarketingCampaignRow>((mc) => {

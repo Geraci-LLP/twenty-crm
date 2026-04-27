@@ -513,4 +513,24 @@ export const buildSequenceStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // Many-to-many: any number of additional MarketingCampaign IDs this
+  // sequence belongs to (beyond the primary marketingCampaignId FK).
+  additionalMarketingCampaignIds: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'additionalMarketingCampaignIds',
+      type: FieldMetadataType.ARRAY,
+      label: i18nLabel(msg`Additional Marketing Campaigns`),
+      description: i18nLabel(
+        msg`UUIDs of additional MarketingCampaign records this sequence belongs to (beyond the primary FK).`,
+      ),
+      icon: 'IconCirclesRelation',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
 });

@@ -3675,6 +3675,9 @@ export const STANDARD_OBJECTS = {
       attachments: {
         universalIdentifier: 'a02d9bf3-abca-401c-a9f3-1a0f0a36050b',
       },
+      additionalMarketingCampaignIds: {
+        universalIdentifier: 'c5d6e7f8-1234-4567-890a-bcdef0123456',
+      },
       searchVector: {
         universalIdentifier: '33423631-ff9c-4843-bf9c-212fa966387f',
       },
@@ -4046,6 +4049,9 @@ export const STANDARD_OBJECTS = {
       },
       autoCreatePerson: {
         universalIdentifier: 'b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e',
+      },
+      additionalMarketingCampaignIds: {
+        universalIdentifier: 'e7f8a9b0-3456-4567-902c-bcdef2345678',
       },
       formSubmissions: {
         universalIdentifier: 'd4fc6edb-094e-457a-9050-091fd88fa25b',
@@ -4996,6 +5002,9 @@ export const STANDARD_OBJECTS = {
       },
       attachments: {
         universalIdentifier: 'c6657c7c-2757-4b97-a5ed-5cf7954f7430',
+      },
+      additionalMarketingCampaignIds: {
+        universalIdentifier: 'd6e7f8a9-2345-4567-901b-bcdef1234567',
       },
     },
     indexes: {

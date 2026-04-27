@@ -12,6 +12,8 @@ import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
 // clickCount, etc.) that the per-campaign stats card does, just summed.
 
 type CampaignWithStats = ObjectRecord & {
+  marketingCampaignId: string | null;
+  additionalMarketingCampaignIds: string[] | null;
   sentCount: number | null;
   openCount: number | null;
   clickCount: number | null;
@@ -40,18 +42,38 @@ type MarketingCampaignStatsProps = {
 export const MarketingCampaignStats = ({
   marketingCampaignId,
 }: MarketingCampaignStatsProps) => {
-  const { records, loading } = useFindManyRecords<CampaignWithStats>({
-    objectNameSingular: 'campaign',
-    filter: { marketingCampaignId: { eq: marketingCampaignId } },
-    recordGqlFields: {
-      id: true,
-      sentCount: true,
-      openCount: true,
-      clickCount: true,
-      bounceCount: true,
-      unsubscribeCount: true,
-    },
-  });
+  // Fetch all campaigns and filter client-side: a campaign belongs to
+  // this MarketingCampaign if its primary FK matches OR its additional
+  // m2m array contains the id. Twenty's filter operators don't have a
+  // direct "array contains" we can rely on across all backends, so the
+  // safer move is fetch + filter in JS at the typical workspace scale.
+  const { records: allCampaigns, loading } =
+    useFindManyRecords<CampaignWithStats>({
+      objectNameSingular: 'campaign',
+      limit: 200,
+      recordGqlFields: {
+        id: true,
+        marketingCampaignId: true,
+        additionalMarketingCampaignIds: true,
+        sentCount: true,
+        openCount: true,
+        clickCount: true,
+        bounceCount: true,
+        unsubscribeCount: true,
+      },
+    });
+
+  const records = useMemo(
+    () =>
+      allCampaigns.filter(
+        (c) =>
+          c.marketingCampaignId === marketingCampaignId ||
+          (c.additionalMarketingCampaignIds ?? []).includes(
+            marketingCampaignId,
+          ),
+      ),
+    [allCampaigns, marketingCampaignId],
+  );
 
   const aggregated = useMemo(() => {
     let sent = 0;

@@ -429,6 +429,26 @@ export const buildFormStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // Many-to-many: any number of additional MarketingCampaign IDs this
+  // form belongs to (beyond the primary marketingCampaignId FK).
+  additionalMarketingCampaignIds: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'additionalMarketingCampaignIds',
+      type: FieldMetadataType.ARRAY,
+      label: i18nLabel(msg`Additional Marketing Campaigns`),
+      description: i18nLabel(
+        msg`UUIDs of additional MarketingCampaign records this form belongs to (beyond the primary FK).`,
+      ),
+      icon: 'IconCirclesRelation',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   searchVector: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
