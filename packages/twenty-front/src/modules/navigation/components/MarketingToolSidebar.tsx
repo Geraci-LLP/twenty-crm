@@ -10,6 +10,7 @@ import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 import { useObjectMetadataItem } from '@/object-metadata/hooks/useObjectMetadataItem';
+import { useCreateOneRecord } from '@/object-record/hooks/useCreateOneRecord';
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
 import { useAtomFamilySelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilySelectorValue';
@@ -42,11 +43,9 @@ type SectionConfig = {
   showPath: string;
 };
 
-// All marketing surfaces, indexed by both their list route prefix AND
-// their show route prefix. So when the user is viewing a specific
-// campaign at /object/campaign/<id>, the sidebar still shows the
-// Email Campaigns context (pinned, recent, views) instead of
-// disappearing.
+// All sections that get the contextual sidebar. Marketing was where
+// this started; people + companies join because the same nav UX is
+// useful for any record-list section the user lives in.
 const SECTION_CONFIGS: SectionConfig[] = [
   {
     title: 'Email Campaigns',
@@ -75,6 +74,20 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNameSingular: 'form',
     objectNamePlural: 'forms',
     showPath: '/object/form',
+  },
+  {
+    title: 'People',
+    subtitle: 'Contacts and audience members',
+    objectNameSingular: 'person',
+    objectNamePlural: 'people',
+    showPath: '/object/person',
+  },
+  {
+    title: 'Companies',
+    subtitle: 'Organizations and accounts',
+    objectNameSingular: 'company',
+    objectNamePlural: 'companies',
+    showPath: '/object/company',
   },
 ];
 
@@ -176,8 +189,8 @@ const StyledNewButtonRow = styled.div`
   padding: 12px 12px 4px;
 `;
 
-/* oxlint-disable-next-line twenty/no-hardcoded-colors */
-const StyledNewButton = styled(Link)`
+/* oxlint-disable twenty/no-hardcoded-colors */
+const StyledNewButton = styled.button`
   align-items: center;
   background: ${themeCssVariables.color.orange};
   border: 0;
@@ -196,7 +209,62 @@ const StyledNewButton = styled(Link)`
   &:hover {
     filter: brightness(0.95);
   }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 `;
+
+const StyledCreateForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+`;
+
+const StyledCreateInput = styled.input`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-family: ${themeCssVariables.font.family};
+  font-size: 12px;
+  padding: 6px 10px;
+  &:focus {
+    border-color: ${themeCssVariables.color.orange};
+    outline: 0;
+  }
+`;
+
+const StyledCreateRow = styled.div`
+  display: flex;
+  gap: 6px;
+`;
+
+const StyledCreateActionButton = styled.button<{ primary?: boolean }>`
+  background: ${(p) =>
+    p.primary === true
+      ? themeCssVariables.color.orange
+      : themeCssVariables.background.transparent.lighter};
+  border: 1px solid
+    ${(p) =>
+      p.primary === true
+        ? themeCssVariables.color.orange
+        : themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${(p) =>
+    p.primary === true ? '#ffffff' : themeCssVariables.font.color.primary};
+  cursor: pointer;
+  flex: 1;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11.5px;
+  padding: 5px 10px;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+/* oxlint-enable twenty/no-hardcoded-colors */
 
 const StyledSearchRow = styled.div`
   padding: 0 12px 4px;
@@ -272,6 +340,18 @@ const StyledItemLabel = styled.span`
   white-space: nowrap;
 `;
 
+const StyledItemBadge = styled.span`
+  background: ${themeCssVariables.background.transparent.lighter};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.tertiary};
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: ${themeCssVariables.font.weight.medium};
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  text-transform: uppercase;
+`;
+
 const StyledPinButton = styled.button<{ pinned: boolean }>`
   background: transparent;
   border: 0;
@@ -308,6 +388,53 @@ export const MarketingToolSidebar = () => {
   const [searchInputEl, setSearchInputEl] = useState<HTMLInputElement | null>(
     null,
   );
+
+  // Inline create form state. Click "+ New" → opens a small form below
+  // with a name input + create button. On submit creates the record
+  // via Twenty's useCreateOneRecord and navigates to its show page.
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+
+  // Create-one hook for the current section's object. Always call with
+  // a fallback name so the hook list stays stable across renders.
+  const { createOneRecord } = useCreateOneRecord<RecentRecord>({
+    objectNameSingular: config?.objectNameSingular ?? 'campaign',
+    shouldMatchRootQueryFilter: true,
+  });
+
+  // Cross-section recent feed shown on /marketing/analytics. Skipped on
+  // every other route. Queries the four marketing record types in
+  // parallel; we merge + sort below by updatedAt.
+  const isOnAnalytics = location.pathname.startsWith('/marketing/analytics');
+  const xRecentCampaigns = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'campaign',
+    limit: 5,
+    orderBy: [{ updatedAt: 'DescNullsLast' }],
+    recordGqlFields: { id: true, name: true, updatedAt: true },
+    skip: !isOnAnalytics,
+  });
+  const xRecentMcs = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'marketingCampaign',
+    limit: 5,
+    orderBy: [{ updatedAt: 'DescNullsLast' }],
+    recordGqlFields: { id: true, name: true, updatedAt: true },
+    skip: !isOnAnalytics,
+  });
+  const xRecentSequences = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'sequence',
+    limit: 5,
+    orderBy: [{ updatedAt: 'DescNullsLast' }],
+    recordGqlFields: { id: true, name: true, updatedAt: true },
+    skip: !isOnAnalytics,
+  });
+  const xRecentForms = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'form',
+    limit: 5,
+    orderBy: [{ updatedAt: 'DescNullsLast' }],
+    recordGqlFields: { id: true, name: true, updatedAt: true },
+    skip: !isOnAnalytics,
+  });
 
   // Press "/" anywhere on a marketing route to focus the sidebar
   // search. Skip if the user is already typing somewhere (input,
@@ -412,6 +539,61 @@ export const MarketingToolSidebar = () => {
   const filteredRecent = recentRecords
     .filter((r) => !isPinned(r.id))
     .filter((r) => matchesFilter(r.name));
+
+  // Merge the four cross-section recent queries into one updatedAt-
+  // sorted feed. Each entry remembers its source object so we can
+  // route to the right show page and stamp the right badge.
+  type CrossRecord = {
+    id: string;
+    name: string | null;
+    updatedAt: string | null;
+    objectNameSingular: string;
+    showPath: string;
+    badge: string;
+  };
+  const crossRecent: CrossRecord[] = isOnAnalytics
+    ? [
+        ...xRecentCampaigns.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt:
+            (r as RecentRecord & { updatedAt?: string }).updatedAt ?? null,
+          objectNameSingular: 'campaign',
+          showPath: '/object/campaign',
+          badge: 'Email',
+        })),
+        ...xRecentMcs.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt:
+            (r as RecentRecord & { updatedAt?: string }).updatedAt ?? null,
+          objectNameSingular: 'marketingCampaign',
+          showPath: '/object/marketingCampaign',
+          badge: 'MC',
+        })),
+        ...xRecentSequences.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt:
+            (r as RecentRecord & { updatedAt?: string }).updatedAt ?? null,
+          objectNameSingular: 'sequence',
+          showPath: '/object/sequence',
+          badge: 'Seq',
+        })),
+        ...xRecentForms.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt:
+            (r as RecentRecord & { updatedAt?: string }).updatedAt ?? null,
+          objectNameSingular: 'form',
+          showPath: '/object/form',
+          badge: 'Form',
+        })),
+      ]
+        .sort((a, b) => (b.updatedAt ?? '').localeCompare(a.updatedAt ?? ''))
+        .slice(0, 8)
+    : [];
+  const filteredCrossRecent = crossRecent.filter((r) => matchesFilter(r.name));
   const hasAnyResults =
     filteredViews.length > 0 ||
     filteredPinned.length > 0 ||
@@ -435,7 +617,66 @@ export const MarketingToolSidebar = () => {
       </StyledHeader>
 
       <StyledNewButtonRow>
-        <StyledNewButton to={indexPath}>+ New</StyledNewButton>
+        {isCreateOpen ? (
+          <StyledCreateForm
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const trimmed = newName.trim();
+              if (trimmed === '' || isCreating) return;
+              setIsCreating(true);
+              try {
+                const created = await createOneRecord({
+                  name: trimmed,
+                } as Partial<RecentRecord>);
+                setIsCreateOpen(false);
+                setNewName('');
+                if (isDefined(created?.id)) {
+                  navigate(`${config.showPath}/${created.id}`);
+                }
+              } finally {
+                setIsCreating(false);
+              }
+            }}
+          >
+            <StyledCreateInput
+              autoFocus
+              type="text"
+              placeholder={`New ${config.title.replace(/s$/, '').toLowerCase()} name`}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setIsCreateOpen(false);
+                  setNewName('');
+                }
+              }}
+              disabled={isCreating}
+            />
+            <StyledCreateRow>
+              <StyledCreateActionButton
+                type="button"
+                onClick={() => {
+                  setIsCreateOpen(false);
+                  setNewName('');
+                }}
+                disabled={isCreating}
+              >
+                Cancel
+              </StyledCreateActionButton>
+              <StyledCreateActionButton
+                primary
+                type="submit"
+                disabled={isCreating || newName.trim() === ''}
+              >
+                {isCreating ? 'Creating…' : 'Create'}
+              </StyledCreateActionButton>
+            </StyledCreateRow>
+          </StyledCreateForm>
+        ) : (
+          <StyledNewButton type="button" onClick={() => setIsCreateOpen(true)}>
+            + New {config.title.replace(/s$/, '').toLowerCase()}
+          </StyledNewButton>
+        )}
       </StyledNewButtonRow>
 
       <StyledSearchRow>
@@ -517,6 +758,23 @@ export const MarketingToolSidebar = () => {
               >
                 ★
               </StyledPinButton>
+            </StyledItemRow>
+          ))}
+        </StyledSection>
+      )}
+
+      {isOnAnalytics && filteredCrossRecent.length > 0 && (
+        <StyledSection>
+          <StyledSectionLabel>Recently updated</StyledSectionLabel>
+          {filteredCrossRecent.map((record) => (
+            <StyledItemRow key={`${record.objectNameSingular}-${record.id}`}>
+              <StyledItemLink
+                to={`${record.showPath}/${record.id}`}
+                title={record.name ?? '(unnamed)'}
+              >
+                <StyledItemBadge>{record.badge}</StyledItemBadge>
+                <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
+              </StyledItemLink>
             </StyledItemRow>
           ))}
         </StyledSection>

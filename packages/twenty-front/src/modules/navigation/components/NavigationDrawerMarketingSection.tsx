@@ -1,4 +1,6 @@
 import { useLingui } from '@lingui/react/macro';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppPath } from 'twenty-shared/types';
 import {
   IconChartBar,
@@ -43,8 +45,55 @@ const formatCount = (n: number | undefined): string | undefined => {
   return String(n);
 };
 
+// Two-key chord for jumping between marketing sections — press "g"
+// then a digit within 1s. Inspired by GitHub's g+i / g+p shortcuts.
+const MARKETING_HOTKEYS: Record<string, string> = {
+  '1': '/objects/campaigns',
+  '2': '/objects/marketingCampaigns',
+  '3': '/objects/sequences',
+  '4': '/objects/forms',
+  '5': AppPath.MarketingAnalytics,
+  '6': '/objects/people',
+};
+
 export const NavigationDrawerMarketingSection = () => {
   const { t } = useLingui();
+  // oxlint-disable-next-line twenty/no-navigate-prefer-link -- chord
+  // shortcut destinations are dynamic, not static link targets.
+  const navigate = useNavigate();
+  const [chordPrimed, setChordPrimed] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName ?? '';
+      if (
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        target?.isContentEditable === true
+      ) {
+        return;
+      }
+      if (chordPrimed) {
+        const dest = MARKETING_HOTKEYS[e.key];
+        setChordPrimed(false);
+        if (dest !== undefined) {
+          e.preventDefault();
+          navigate(dest);
+        }
+        return;
+      }
+      if (e.key === 'g') {
+        setChordPrimed(true);
+        // Auto-clear the chord state after 1s if no follow-up.
+        window.setTimeout(() => setChordPrimed(false), 1000);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [chordPrimed, navigate]);
 
   const { toggleNavigationSection } = useNavigationSection('Marketing');
   const isNavigationSectionOpen = useAtomFamilyStateValue(
