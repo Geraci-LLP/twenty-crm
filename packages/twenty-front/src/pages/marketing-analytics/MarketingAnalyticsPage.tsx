@@ -17,6 +17,10 @@ import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
 // not millions). If a workspace needs higher-scale analytics, a server
 // aggregation resolver would be a follow-up.
 
+/* oxlint-disable twenty/no-hardcoded-colors */
+// The KPI card shadow is intentionally a fixed dark navy alpha to match
+// the design mock — same rationale used in the email-builder PreviewModal.
+
 const PAGE_SIZE = 200;
 
 type MarketingCampaignRecord = ObjectRecord & {
@@ -95,32 +99,44 @@ const StyledTopStatsGrid = styled.div`
 `;
 
 const StyledTopStatCard = styled.div`
-  background: ${themeCssVariables.background.secondary};
-  border: 1px solid ${themeCssVariables.border.color.medium};
-  border-radius: ${themeCssVariables.border.radius.md};
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.light};
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(45, 62, 80, 0.06);
   display: flex;
   flex-direction: column;
-  gap: ${themeCssVariables.spacing[1]};
-  padding: ${themeCssVariables.spacing[4]};
+  gap: 6px;
+  padding: 22px 20px;
+  transition: box-shadow 0.15s;
+  &:hover {
+    box-shadow: 0 4px 12px rgba(45, 62, 80, 0.08);
+  }
 `;
 
 const StyledStatLabel = styled.span`
   color: ${themeCssVariables.font.color.tertiary};
-  font-size: ${themeCssVariables.font.size.sm};
-  font-weight: ${themeCssVariables.font.weight.medium};
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 `;
 
 const StyledStatValue = styled.span`
   color: ${themeCssVariables.font.color.primary};
-  font-size: ${themeCssVariables.font.size.xxl};
-  font-weight: ${themeCssVariables.font.weight.semiBold};
+  font-feature-settings: 'tnum';
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 `;
 
 const StyledStatRate = styled.span`
-  color: ${themeCssVariables.color.blue};
-  font-size: ${themeCssVariables.font.size.xxl};
-  font-weight: ${themeCssVariables.font.weight.semiBold};
+  color: ${themeCssVariables.color.orange};
+  font-feature-settings: 'tnum';
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 `;
 
 const StyledTable = styled.table`

@@ -65,3 +65,51 @@ form {
    * consistent across light and dark themes. */
   --t-color-orange: #ff7a59;
 }
+
+/* ============================================================
+ * Phase 2 — dark rail navigation drawer
+ *
+ * The drawer's child components read color/background tokens
+ * from CSS custom properties. Re-scoping those variables
+ * inside the drawer flips every nested styled component to
+ * light-on-navy without editing any component code.
+ *
+ * Active highlight is the brand orange tint instead of a grey
+ * transparent — same approach the design mock uses.
+ * ============================================================ */
+[data-click-outside-id='navigation-drawer'] {
+  background: #1b2733;
+
+  /* Light text for default + active states, lighter for tertiary
+   * labels. Twenty's theme cascade resolves these where every
+   * descendant component reads them. */
+  --t-font-color-primary: #ffffff;
+  --t-font-color-secondary: #c8d3df;
+  --t-font-color-tertiary: #7c8da3;
+  --t-font-color-light: #5b6b80;
+
+  /* Hover + active item backgrounds become orange-tinted instead
+   * of grey-tinted. transparent.light is what NavigationDrawerItem
+   * uses for both states. */
+  --t-background-transparent-light: rgba(255, 122, 89, 0.18);
+  --t-background-transparent-lighter: rgba(255, 255, 255, 0.04);
+  --t-background-transparent-medium: rgba(255, 255, 255, 0.08);
+
+  /* The drawer's nested surfaces (header, search input, etc.)
+   * inherit their bg from these. Make them blend with navy. */
+  --t-background-primary: #1b2733;
+  --t-background-secondary: #243240;
+  --t-background-tertiary: #243240;
+  --t-background-quaternary: #2d3e50;
+
+  /* Border color so dividers between sections stay visible
+   * but soft. */
+  --t-border-color-light: rgba(255, 255, 255, 0.06);
+  --t-border-color-medium: rgba(255, 255, 255, 0.1);
+}
+
+/* The native body background was set to the cool slate above; the
+ * drawer's actual rendering surface is the StyledAnimatedContainer
+ * inside data-click-outside-id. That element doesn't paint its own
+ * background by default, so cascade-down from the data attribute
+ * is what colors it. The selector above handles that. */
