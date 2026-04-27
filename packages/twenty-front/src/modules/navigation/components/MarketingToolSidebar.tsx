@@ -159,7 +159,7 @@ const writePinned = (next: PinnedMap): void => {
   }
 };
 
-const StyledSidebar = styled.aside`
+const StyledSidebar = styled.aside<{ collapsed: boolean }>`
   background: ${themeCssVariables.background.primary};
   border-right: 1px solid ${themeCssVariables.border.color.light};
   display: flex;
@@ -167,7 +167,41 @@ const StyledSidebar = styled.aside`
   flex-shrink: 0;
   min-width: 0;
   overflow-y: auto;
-  width: 240px;
+  position: relative;
+  transition: width 0.18s;
+  width: ${(p) => (p.collapsed ? '24px' : '240px')};
+`;
+
+const StyledCollapseToggle = styled.button<{ collapsed: boolean }>`
+  align-items: center;
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.light};
+  border-radius: 50%;
+  color: ${themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  display: flex;
+  font-size: 11px;
+  height: 18px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: -9px;
+  top: 14px;
+  width: 18px;
+  z-index: 1;
+  &:hover {
+    color: ${themeCssVariables.font.color.primary};
+  }
+`;
+
+const StyledCollapsedHint = styled.div`
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding-top: 40px;
+  text-align: center;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
 `;
 
 const StyledHeader = styled.div`
@@ -400,6 +434,32 @@ export const MarketingToolSidebar = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+
+  // Sidebar collapse state, persisted to localStorage so the user's
+  // preference survives reloads.
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
+    try {
+      return (
+        window.localStorage.getItem('twenty.marketingSidebar.collapsed') === '1'
+      );
+    } catch {
+      return false;
+    }
+  });
+  const toggleCollapsed = () => {
+    setIsCollapsed((c) => {
+      const next = !c;
+      try {
+        window.localStorage.setItem(
+          'twenty.marketingSidebar.collapsed',
+          next ? '1' : '0',
+        );
+      } catch {
+        // ignore quota / disabled storage
+      }
+      return next;
+    });
+  };
 
   // Browser-history-style recently-visited tracker. Mirrors localStorage
   // into component state so re-renders pick up new visits and so
@@ -669,225 +729,252 @@ export const MarketingToolSidebar = () => {
   };
 
   return (
-    <StyledSidebar>
-      <StyledHeader>
-        <StyledTitle>{config.title}</StyledTitle>
-        <StyledSubtitle>{config.subtitle}</StyledSubtitle>
-      </StyledHeader>
+    <StyledSidebar collapsed={isCollapsed}>
+      <StyledCollapseToggle
+        collapsed={isCollapsed}
+        onClick={toggleCollapsed}
+        title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        type="button"
+      >
+        {isCollapsed ? '›' : '‹'}
+      </StyledCollapseToggle>
+      {isCollapsed ? (
+        <StyledCollapsedHint>{config.title}</StyledCollapsedHint>
+      ) : (
+        <>
+          <StyledHeader>
+            <StyledTitle>{config.title}</StyledTitle>
+            <StyledSubtitle>{config.subtitle}</StyledSubtitle>
+          </StyledHeader>
 
-      <StyledNewButtonRow>
-        {isCreateOpen ? (
-          <StyledCreateForm
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const trimmed = newName.trim();
-              if (trimmed === '' || isCreating) return;
-              setIsCreating(true);
-              try {
-                const created = await createOneRecord({
-                  name: trimmed,
-                } as Partial<RecentRecord>);
-                setIsCreateOpen(false);
-                setNewName('');
-                if (isDefined(created?.id)) {
-                  navigate(`${config.showPath}/${created.id}`);
-                }
-              } finally {
-                setIsCreating(false);
-              }
-            }}
-          >
-            <StyledCreateInput
-              autoFocus
-              type="text"
-              placeholder={`New ${config.title.replace(/s$/, '').toLowerCase()} name`}
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
+          <StyledNewButtonRow>
+            {isCreateOpen ? (
+              <StyledCreateForm
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const trimmed = newName.trim();
+                  if (trimmed === '' || isCreating) return;
+                  setIsCreating(true);
+                  try {
+                    const created = await createOneRecord({
+                      name: trimmed,
+                    } as Partial<RecentRecord>);
+                    setIsCreateOpen(false);
+                    setNewName('');
+                    if (isDefined(created?.id)) {
+                      navigate(`${config.showPath}/${created.id}`);
+                    }
+                  } finally {
+                    setIsCreating(false);
+                  }
+                }}
+              >
+                <StyledCreateInput
+                  autoFocus
+                  type="text"
+                  placeholder={`New ${config.title.replace(/s$/, '').toLowerCase()} name`}
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      setIsCreateOpen(false);
+                      setNewName('');
+                    }
+                  }}
+                  disabled={isCreating}
+                />
+                <StyledCreateRow>
+                  <StyledCreateActionButton
+                    type="button"
+                    onClick={() => {
+                      setIsCreateOpen(false);
+                      setNewName('');
+                    }}
+                    disabled={isCreating}
+                  >
+                    Cancel
+                  </StyledCreateActionButton>
+                  <StyledCreateActionButton
+                    primary
+                    type="submit"
+                    disabled={isCreating || newName.trim() === ''}
+                  >
+                    {isCreating ? 'Creating…' : 'Create'}
+                  </StyledCreateActionButton>
+                </StyledCreateRow>
+              </StyledCreateForm>
+            ) : (
+              <StyledNewButton
+                type="button"
+                onClick={() => setIsCreateOpen(true)}
+              >
+                + New {config.title.replace(/s$/, '').toLowerCase()}
+              </StyledNewButton>
+            )}
+          </StyledNewButtonRow>
+
+          <StyledSearchRow>
+            <StyledSearchInput
+              ref={setSearchInputEl}
+              type="search"
+              placeholder="Filter — / to focus, Enter to open"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  setIsCreateOpen(false);
-                  setNewName('');
+                if (e.key !== 'Enter') return;
+                // Jump to the first match across views → pinned → recent
+                // in priority order. Empty filter or no matches: do nothing.
+                if (filterText === '') return;
+                let target: string | null = null;
+                if (filteredViews.length > 0) {
+                  target = `${indexPath}?viewId=${filteredViews[0].id}`;
+                } else if (filteredPinned.length > 0) {
+                  target = `${config.showPath}/${filteredPinned[0].id}`;
+                } else if (filteredRecent.length > 0) {
+                  target = `${config.showPath}/${filteredRecent[0].id}`;
+                }
+                if (target !== null) {
+                  navigate(target);
+                  setFilterText('');
                 }
               }}
-              disabled={isCreating}
+              aria-label="Filter sidebar"
             />
-            <StyledCreateRow>
-              <StyledCreateActionButton
-                type="button"
-                onClick={() => {
-                  setIsCreateOpen(false);
-                  setNewName('');
-                }}
-                disabled={isCreating}
-              >
-                Cancel
-              </StyledCreateActionButton>
-              <StyledCreateActionButton
-                primary
-                type="submit"
-                disabled={isCreating || newName.trim() === ''}
-              >
-                {isCreating ? 'Creating…' : 'Create'}
-              </StyledCreateActionButton>
-            </StyledCreateRow>
-          </StyledCreateForm>
-        ) : (
-          <StyledNewButton type="button" onClick={() => setIsCreateOpen(true)}>
-            + New {config.title.replace(/s$/, '').toLowerCase()}
-          </StyledNewButton>
-        )}
-      </StyledNewButtonRow>
+          </StyledSearchRow>
 
-      <StyledSearchRow>
-        <StyledSearchInput
-          ref={setSearchInputEl}
-          type="search"
-          placeholder="Filter — / to focus, Enter to open"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key !== 'Enter') return;
-            // Jump to the first match across views → pinned → recent
-            // in priority order. Empty filter or no matches: do nothing.
-            if (filterText === '') return;
-            let target: string | null = null;
-            if (filteredViews.length > 0) {
-              target = `${indexPath}?viewId=${filteredViews[0].id}`;
-            } else if (filteredPinned.length > 0) {
-              target = `${config.showPath}/${filteredPinned[0].id}`;
-            } else if (filteredRecent.length > 0) {
-              target = `${config.showPath}/${filteredRecent[0].id}`;
-            }
-            if (target !== null) {
-              navigate(target);
-              setFilterText('');
-            }
-          }}
-          aria-label="Filter sidebar"
-        />
-      </StyledSearchRow>
-
-      <StyledSection>
-        <StyledSectionLabel>Section</StyledSectionLabel>
-        <StyledItemRow active={isOnIndex}>
-          <StyledItemLink to={indexPath}>
-            <StyledItemLabel>All {config.title.toLowerCase()}</StyledItemLabel>
-          </StyledItemLink>
-        </StyledItemRow>
-      </StyledSection>
-
-      {filterText !== '' && !hasAnyResults && (
-        <StyledSection>
-          <StyledEmpty>No matches for &quot;{filterText}&quot;</StyledEmpty>
-        </StyledSection>
-      )}
-
-      {filteredViews.length > 0 && (
-        <StyledSection>
-          <StyledSectionLabel>Views</StyledSectionLabel>
-          {filteredViews.map((view) => (
-            <StyledItemRow key={view.id} active={currentViewId === view.id}>
-              <StyledItemLink to={`${indexPath}?viewId=${view.id}`}>
-                <StyledItemLabel>{view.name}</StyledItemLabel>
+          <StyledSection>
+            <StyledSectionLabel>Section</StyledSectionLabel>
+            <StyledItemRow active={isOnIndex}>
+              <StyledItemLink to={indexPath}>
+                <StyledItemLabel>
+                  All {config.title.toLowerCase()}
+                </StyledItemLabel>
               </StyledItemLink>
             </StyledItemRow>
-          ))}
-        </StyledSection>
-      )}
+          </StyledSection>
 
-      {pinnedIds.length > 0 && filteredPinned.length > 0 && (
-        <StyledSection>
-          <StyledSectionLabel>Pinned</StyledSectionLabel>
-          {filteredPinned.map((record) => (
-            <StyledItemRow
-              key={record.id}
-              active={currentRecordId === record.id}
-            >
-              <StyledItemLink
-                to={`${config.showPath}/${record.id}`}
-                title={record.name ?? '(unnamed)'}
-              >
-                <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
-              </StyledItemLink>
-              <StyledPinButton
-                pinned={true}
-                onClick={() => togglePin(record.id)}
-                title="Unpin"
-                type="button"
-              >
-                ★
-              </StyledPinButton>
-            </StyledItemRow>
-          ))}
-        </StyledSection>
-      )}
+          {filterText !== '' && !hasAnyResults && (
+            <StyledSection>
+              <StyledEmpty>No matches for &quot;{filterText}&quot;</StyledEmpty>
+            </StyledSection>
+          )}
 
-      {filteredVisits.length > 0 && (
-        <StyledSection>
-          <StyledSectionLabel>Last visited</StyledSectionLabel>
-          {filteredVisits.map((v) => (
-            <StyledItemRow key={`${v.objectNameSingular}-${v.id}`}>
-              <StyledItemLink
-                to={`/object/${v.objectNameSingular}/${v.id}`}
-                title={v.name ?? '(unnamed)'}
-              >
-                <StyledItemBadge>
-                  {badgeForObject(v.objectNameSingular)}
-                </StyledItemBadge>
-                <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
-              </StyledItemLink>
-            </StyledItemRow>
-          ))}
-        </StyledSection>
-      )}
+          {filteredViews.length > 0 && (
+            <StyledSection>
+              <StyledSectionLabel>Views</StyledSectionLabel>
+              {filteredViews.map((view) => (
+                <StyledItemRow key={view.id} active={currentViewId === view.id}>
+                  <StyledItemLink to={`${indexPath}?viewId=${view.id}`}>
+                    <StyledItemLabel>{view.name}</StyledItemLabel>
+                  </StyledItemLink>
+                </StyledItemRow>
+              ))}
+            </StyledSection>
+          )}
 
-      {isOnAnalytics && filteredCrossRecent.length > 0 && (
-        <StyledSection>
-          <StyledSectionLabel>Recently updated</StyledSectionLabel>
-          {filteredCrossRecent.map((record) => (
-            <StyledItemRow key={`${record.objectNameSingular}-${record.id}`}>
-              <StyledItemLink
-                to={`${record.showPath}/${record.id}`}
-                title={record.name ?? '(unnamed)'}
-              >
-                <StyledItemBadge>{record.badge}</StyledItemBadge>
-                <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
-              </StyledItemLink>
-            </StyledItemRow>
-          ))}
-        </StyledSection>
-      )}
+          {pinnedIds.length > 0 && filteredPinned.length > 0 && (
+            <StyledSection>
+              <StyledSectionLabel>Pinned</StyledSectionLabel>
+              {filteredPinned.map((record) => (
+                <StyledItemRow
+                  key={record.id}
+                  active={currentRecordId === record.id}
+                >
+                  <StyledItemLink
+                    to={`${config.showPath}/${record.id}`}
+                    title={record.name ?? '(unnamed)'}
+                  >
+                    <StyledItemLabel>
+                      {record.name ?? '(unnamed)'}
+                    </StyledItemLabel>
+                  </StyledItemLink>
+                  <StyledPinButton
+                    pinned={true}
+                    onClick={() => togglePin(record.id)}
+                    title="Unpin"
+                    type="button"
+                  >
+                    ★
+                  </StyledPinButton>
+                </StyledItemRow>
+              ))}
+            </StyledSection>
+          )}
 
-      <StyledSection>
-        <StyledSectionLabel>Recent</StyledSectionLabel>
-        {recentLoading && recentRecords.length === 0 ? (
-          <StyledEmpty>Loading…</StyledEmpty>
-        ) : recentRecords.length === 0 ? (
-          <StyledEmpty>No records yet</StyledEmpty>
-        ) : filteredRecent.length === 0 && filterText !== '' ? null : (
-          filteredRecent.map((record) => (
-            <StyledItemRow
-              key={record.id}
-              active={currentRecordId === record.id}
-            >
-              <StyledItemLink
-                to={`${config.showPath}/${record.id}`}
-                title={record.name ?? '(unnamed)'}
-              >
-                <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
-              </StyledItemLink>
-              <StyledPinButton
-                pinned={false}
-                onClick={() => togglePin(record.id)}
-                title="Pin"
-                type="button"
-              >
-                ☆
-              </StyledPinButton>
-            </StyledItemRow>
-          ))
-        )}
-      </StyledSection>
+          {filteredVisits.length > 0 && (
+            <StyledSection>
+              <StyledSectionLabel>Last visited</StyledSectionLabel>
+              {filteredVisits.map((v) => (
+                <StyledItemRow key={`${v.objectNameSingular}-${v.id}`}>
+                  <StyledItemLink
+                    to={`/object/${v.objectNameSingular}/${v.id}`}
+                    title={v.name ?? '(unnamed)'}
+                  >
+                    <StyledItemBadge>
+                      {badgeForObject(v.objectNameSingular)}
+                    </StyledItemBadge>
+                    <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
+                  </StyledItemLink>
+                </StyledItemRow>
+              ))}
+            </StyledSection>
+          )}
+
+          {isOnAnalytics && filteredCrossRecent.length > 0 && (
+            <StyledSection>
+              <StyledSectionLabel>Recently updated</StyledSectionLabel>
+              {filteredCrossRecent.map((record) => (
+                <StyledItemRow
+                  key={`${record.objectNameSingular}-${record.id}`}
+                >
+                  <StyledItemLink
+                    to={`${record.showPath}/${record.id}`}
+                    title={record.name ?? '(unnamed)'}
+                  >
+                    <StyledItemBadge>{record.badge}</StyledItemBadge>
+                    <StyledItemLabel>
+                      {record.name ?? '(unnamed)'}
+                    </StyledItemLabel>
+                  </StyledItemLink>
+                </StyledItemRow>
+              ))}
+            </StyledSection>
+          )}
+
+          <StyledSection>
+            <StyledSectionLabel>Recent</StyledSectionLabel>
+            {recentLoading && recentRecords.length === 0 ? (
+              <StyledEmpty>Loading…</StyledEmpty>
+            ) : recentRecords.length === 0 ? (
+              <StyledEmpty>No records yet</StyledEmpty>
+            ) : filteredRecent.length === 0 && filterText !== '' ? null : (
+              filteredRecent.map((record) => (
+                <StyledItemRow
+                  key={record.id}
+                  active={currentRecordId === record.id}
+                >
+                  <StyledItemLink
+                    to={`${config.showPath}/${record.id}`}
+                    title={record.name ?? '(unnamed)'}
+                  >
+                    <StyledItemLabel>
+                      {record.name ?? '(unnamed)'}
+                    </StyledItemLabel>
+                  </StyledItemLink>
+                  <StyledPinButton
+                    pinned={false}
+                    onClick={() => togglePin(record.id)}
+                    title="Pin"
+                    type="button"
+                  >
+                    ☆
+                  </StyledPinButton>
+                </StyledItemRow>
+              ))
+            )}
+          </StyledSection>
+        </>
+      )}
     </StyledSidebar>
   );
 };
