@@ -9,6 +9,7 @@ import {
   IconMail,
   IconSend,
   IconTargetArrow,
+  IconWorld,
 } from 'twenty-ui/display';
 import { AnimatedExpandableContainer } from 'twenty-ui/layout';
 
@@ -54,6 +55,7 @@ const MARKETING_HOTKEYS: Record<string, string> = {
   '4': '/objects/forms',
   '5': AppPath.MarketingAnalytics,
   '6': '/objects/people',
+  '7': '/objects/landingPages',
 };
 
 export const NavigationDrawerMarketingSection = () => {
@@ -106,6 +108,7 @@ export const NavigationDrawerMarketingSection = () => {
   const sequenceCount = useObjectCount('sequence');
   const formCount = useObjectCount('form');
   const personCount = useObjectCount('person');
+  const landingPageCount = useObjectCount('landingPage');
 
   return (
     <NavigationDrawerSection>
@@ -146,6 +149,12 @@ export const NavigationDrawerMarketingSection = () => {
           to="/objects/forms"
           Icon={IconFileText}
           secondaryLabel={formatCount(formCount)}
+        />
+        <NavigationDrawerItem
+          label={t`Landing Pages`}
+          to="/objects/landingPages"
+          Icon={IconWorld}
+          secondaryLabel={formatCount(landingPageCount)}
         />
         <NavigationDrawerItem
           label={t`Analytics`}

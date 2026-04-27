@@ -82,6 +82,12 @@ const SECTION_NAV: SectionNavItem[] = [
   },
   { label: 'Forms', href: '/objects/forms', hint: 'g 4', badge: 'Form' },
   {
+    label: 'Landing Pages',
+    href: '/objects/landingPages',
+    hint: '',
+    badge: 'Page',
+  },
+  {
     label: 'Marketing Analytics',
     href: '/marketing/analytics',
     hint: 'g 5',
@@ -135,6 +141,12 @@ const ACTION_COMMANDS: ActionCommand[] = [
     label: 'New Form',
     badge: 'Action',
     keywords: 'create new form lead capture embed',
+  },
+  {
+    key: 'action:new-landing-page',
+    label: 'New Landing Page',
+    badge: 'Action',
+    keywords: 'create new landing page lp web public',
   },
   {
     key: 'action:settings',
@@ -423,6 +435,8 @@ const hrefForAction = (actionKey: string): string => {
     return '/objects/marketingCampaigns?create=1';
   if (actionKey === 'action:new-sequence') return '/objects/sequences?create=1';
   if (actionKey === 'action:new-form') return '/objects/forms?create=1';
+  if (actionKey === 'action:new-landing-page')
+    return '/objects/landingPages?create=1';
   if (actionKey === 'action:settings') return '/settings/profile';
   return '/';
 };
@@ -458,6 +472,7 @@ const badgeForVisitObject = (objectNameSingular: string): string => {
   if (objectNameSingular === 'marketingCampaign') return 'MC';
   if (objectNameSingular === 'sequence') return 'Seq';
   if (objectNameSingular === 'form') return 'Form';
+  if (objectNameSingular === 'landingPage') return 'Page';
   if (objectNameSingular === 'person') return 'Person';
   if (objectNameSingular === 'company') return 'Co';
   return objectNameSingular;
@@ -625,6 +640,17 @@ export const MarketingQuickSwitcher = () => {
     recordGqlFields: { id: true, name: true },
     skip: !queryActive,
   });
+  // Landing pages use `title` instead of `name` for their human label.
+  // Same ilike filter pattern, just on the appropriate field.
+  const xLandingPages = useFindManyRecords<RecentRecord & { title?: string }>({
+    objectNameSingular: 'landingPage',
+    limit: 5,
+    filter: queryActive
+      ? { title: { ilike: queryPattern } }
+      : { id: { eq: 'no-match' } },
+    recordGqlFields: { id: true, title: true },
+    skip: !queryActive,
+  });
 
   if (!isOpen) return null;
 
@@ -675,6 +701,15 @@ export const MarketingQuickSwitcher = () => {
           badge: 'Form',
           group: 'records',
           recordObject: 'form',
+          recordId: r.id,
+        })),
+        ...xLandingPages.records.map<SearchHit>((r) => ({
+          key: `r:lp-${r.id}`,
+          href: `/object/landingPage/${r.id}`,
+          label: (r as { title?: string }).title ?? '(untitled)',
+          badge: 'Page',
+          group: 'records',
+          recordObject: 'landingPage',
           recordId: r.id,
         })),
       ].slice(0, 16)

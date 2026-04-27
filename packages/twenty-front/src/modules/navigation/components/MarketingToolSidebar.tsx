@@ -17,6 +17,7 @@ import {
   IconMail,
   IconSend,
   IconUser,
+  IconWorld,
   type TablerIconsProps,
 } from 'twenty-ui/display';
 
@@ -98,6 +99,14 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNamePlural: 'forms',
     showPath: '/object/form',
     Icon: IconFileText,
+  },
+  {
+    title: 'Landing Pages',
+    subtitle: 'Public marketing pages with sections + modules',
+    objectNameSingular: 'landingPage',
+    objectNamePlural: 'landingPages',
+    showPath: '/object/landingPage',
+    Icon: IconWorld,
   },
   {
     title: 'People',
