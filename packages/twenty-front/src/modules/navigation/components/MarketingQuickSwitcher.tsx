@@ -9,6 +9,7 @@ import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
+import { readVisits } from '@/navigation/utils/recentlyVisitedStore';
 
 // Global Cmd/Ctrl+K command palette. Available on every route — not
 // just marketing sections — so the user can jump anywhere without
@@ -191,7 +192,20 @@ type SearchHit = {
   href: string;
   label: string;
   badge: string;
-  group: 'navigation' | 'records';
+  group: 'visits' | 'navigation' | 'records';
+};
+
+// Map a recently-visited record's objectNameSingular into a short
+// uppercase badge that matches the convention used by the marketing
+// sidebar's "Last visited" group.
+const badgeForVisitObject = (objectNameSingular: string): string => {
+  if (objectNameSingular === 'campaign') return 'Email';
+  if (objectNameSingular === 'marketingCampaign') return 'MC';
+  if (objectNameSingular === 'sequence') return 'Seq';
+  if (objectNameSingular === 'form') return 'Form';
+  if (objectNameSingular === 'person') return 'Person';
+  if (objectNameSingular === 'company') return 'Co';
+  return objectNameSingular;
 };
 
 export const MarketingQuickSwitcher = () => {
@@ -203,6 +217,14 @@ export const MarketingQuickSwitcher = () => {
   const [text, setText] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [inputEl, setInputEl] = useState<HTMLInputElement | null>(null);
+
+  // Snapshot of visits read on each open. Held in component state so a
+  // re-open after the user clicked into a record reflects the new visit
+  // order without waiting for a focus/storage event. Bounded to 8 so
+  // the list stays scannable.
+  const [visits, setVisits] = useState<
+    { id: string; name: string | null; objectNameSingular: string }[]
+  >([]);
 
   // Global Cmd/Ctrl+K to open. Esc to close. Any other key while closed
   // is ignored. We intentionally don't filter by INPUT focus — Cmd+K
@@ -225,11 +247,21 @@ export const MarketingQuickSwitcher = () => {
   }, [isOpen]);
 
   // Reset state on every open so a fresh open isn't pre-populated with
-  // the previous query / highlight.
+  // the previous query / highlight. Re-read visits each time so the
+  // top of the list reflects the user's most recent activity.
   useEffect(() => {
     if (!isOpen) return;
     setText('');
     setHighlightedIndex(0);
+    setVisits(
+      readVisits()
+        .slice(0, 8)
+        .map((v) => ({
+          id: v.id,
+          name: v.name,
+          objectNameSingular: v.objectNameSingular,
+        })),
+    );
     // Defer focus to the next paint so the modal has actually mounted.
     const id = window.setTimeout(() => inputEl?.focus(), 0);
     return () => window.clearTimeout(id);
@@ -321,7 +353,25 @@ export const MarketingQuickSwitcher = () => {
       ].slice(0, 16)
     : [];
 
-  const allHits: SearchHit[] = [...navigationHits, ...recordHits];
+  // Visits are only useful when the user hasn't started typing yet —
+  // they're a "what was I just doing" surface, not a search result.
+  // Filter out any visit whose name doesn't match the current filter
+  // text so a typed query still narrows them.
+  const visitHits: SearchHit[] = visits
+    .filter(
+      (v) =>
+        text === '' ||
+        (v.name ?? '').toLowerCase().includes(text.toLowerCase()),
+    )
+    .map<SearchHit>((v) => ({
+      key: `v:${v.objectNameSingular}-${v.id}`,
+      href: `/object/${v.objectNameSingular}/${v.id}`,
+      label: v.name ?? '(unnamed)',
+      badge: badgeForVisitObject(v.objectNameSingular),
+      group: 'visits',
+    }));
+
+  const allHits: SearchHit[] = [...visitHits, ...navigationHits, ...recordHits];
   const safeIndex =
     allHits.length === 0
       ? -1
@@ -373,6 +423,25 @@ export const MarketingQuickSwitcher = () => {
         <StyledResultsScroll>
           {allHits.length === 0 && queryActive && (
             <StyledEmpty>No matches for &quot;{text}&quot;</StyledEmpty>
+          )}
+          {visitHits.length > 0 && (
+            <>
+              <StyledSectionLabel>Recently visited</StyledSectionLabel>
+              {visitHits.map((hit) => (
+                <StyledResultRow
+                  key={hit.key}
+                  type="button"
+                  isHighlighted={highlightedKey === hit.key}
+                  onClick={() => {
+                    navigate(hit.href);
+                    setIsOpen(false);
+                  }}
+                >
+                  <StyledBadge>{hit.badge}</StyledBadge>
+                  <StyledLabel>{hit.label}</StyledLabel>
+                </StyledResultRow>
+              ))}
+            </>
           )}
           {navigationHits.length > 0 && (
             <>
