@@ -1,6 +1,11 @@
 import { styled } from '@linaria/react';
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
@@ -291,6 +296,10 @@ const StyledEmpty = styled.div`
 export const MarketingToolSidebar = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  // oxlint-disable-next-line twenty/no-navigate-prefer-link -- jumping
+  // to the first match on Enter is dynamic navigation, not a static
+  // link destination.
+  const navigate = useNavigate();
   const config = getConfigForPath(location.pathname);
   const [filterText, setFilterText] = useState('');
 
@@ -400,9 +409,27 @@ export const MarketingToolSidebar = () => {
       <StyledSearchRow>
         <StyledSearchInput
           type="search"
-          placeholder="Filter views, pinned, recent…"
+          placeholder="Filter — Enter to open first match"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter') return;
+            // Jump to the first match across views → pinned → recent
+            // in priority order. Empty filter or no matches: do nothing.
+            if (filterText === '') return;
+            let target: string | null = null;
+            if (filteredViews.length > 0) {
+              target = `${indexPath}?viewId=${filteredViews[0].id}`;
+            } else if (filteredPinned.length > 0) {
+              target = `${config.showPath}/${filteredPinned[0].id}`;
+            } else if (filteredRecent.length > 0) {
+              target = `${config.showPath}/${filteredRecent[0].id}`;
+            }
+            if (target !== null) {
+              navigate(target);
+              setFilterText('');
+            }
+          }}
           aria-label="Filter sidebar"
         />
       </StyledSearchRow>
