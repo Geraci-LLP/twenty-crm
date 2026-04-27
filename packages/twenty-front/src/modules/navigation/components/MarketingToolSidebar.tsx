@@ -155,8 +155,8 @@ const getCurrentRecordId = (
 };
 
 // Compact relative-time formatter for visit timestamps. Returns short
-// labels ("now", "5m", "2h", "3d", "Apr 24") so the strings fit on a
-// single sidebar row without truncating the record name. Ms input.
+// labels ("now", "5m", "2h", "yesterday", "3d", "Apr 24") so the strings
+// fit on a single sidebar row without truncating the record name.
 const formatRelativeShort = (ms: number): string => {
   const diff = Date.now() - ms;
   if (diff < 0) return 'now';
@@ -166,11 +166,22 @@ const formatRelativeShort = (ms: number): string => {
   if (min < 60) return `${min}m`;
   const hr = Math.floor(min / 60);
   if (hr < 24) return `${hr}h`;
+  // "yesterday" reads more naturally than "1d" for the previous day —
+  // matches the way most users describe a single-day-old visit.
+  const visitedDate = new Date(ms);
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  if (
+    visitedDate.getFullYear() === yesterday.getFullYear() &&
+    visitedDate.getMonth() === yesterday.getMonth() &&
+    visitedDate.getDate() === yesterday.getDate()
+  ) {
+    return 'yest';
+  }
   const day = Math.floor(hr / 24);
   if (day < 7) return `${day}d`;
-  // For older entries, use a short "Mon DD" — avoids the full year and
-  // keeps the chip small. en-US locale by design (no i18n on this UI).
-  return new Date(ms).toLocaleDateString('en-US', {
+  return visitedDate.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
   });
@@ -180,6 +191,31 @@ const formatRelativeShort = (ms: number): string => {
 // objectNameSingular so a user's pinned campaigns don't bleed into their
 // pinned sequences.
 const PINNED_STORAGE_KEY = 'twenty.marketingSidebar.pinned';
+
+// Optional per-record alias map. Lets the user rename a pinned record's
+// label in-place (double-click on a pinned row) without touching the
+// underlying record name. Keyed by `${objectNameSingular}:${recordId}`
+// so it works across all sections.
+const PIN_ALIAS_STORAGE_KEY = 'twenty.marketingSidebar.pinAliases';
+type AliasMap = Record<string, string>;
+const readPinAliases = (): AliasMap => {
+  try {
+    const raw = window.localStorage.getItem(PIN_ALIAS_STORAGE_KEY);
+    if (raw === null || raw === '') return {};
+    const parsed = JSON.parse(raw) as AliasMap;
+    if (typeof parsed !== 'object' || parsed === null) return {};
+    return parsed;
+  } catch {
+    return {};
+  }
+};
+const writePinAliases = (next: AliasMap): void => {
+  try {
+    window.localStorage.setItem(PIN_ALIAS_STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    // ignore
+  }
+};
 
 // Recent search history. Capped at 5 entries; newest first; case-
 // preserved as the user typed it. Used to surface quick-select chips
@@ -325,11 +361,15 @@ const StyledCollapsedHint = styled.button`
 `;
 
 const StyledHeader = styled.div`
+  background: ${themeCssVariables.background.primary};
   border-bottom: 1px solid ${themeCssVariables.border.color.light};
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: 18px 20px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 `;
 
 const StyledTitleRow = styled.div`
@@ -906,6 +946,12 @@ const SHORTCUTS: Shortcut[] = [
   { keys: 'g 6', description: 'Go to Audiences (People)' },
   { keys: 'c', description: 'Create a new record in this section' },
   { keys: 'p', description: 'Pin / unpin the current record' },
+  { keys: 'y', description: 'Yank (copy) the current record link' },
+  { keys: 'j / k', description: 'Next / previous marketing section' },
+  { keys: 'n / b', description: 'Next / previous pinned record' },
+  { keys: '1 – 9', description: 'Jump to pinned record at that position' },
+  { keys: 'z', description: 'Open shortcut help (alternate to ?)' },
+  { keys: '⌘ ,', description: 'Open Settings' },
   { keys: 'Esc', description: 'Close dialogs / cancel forms' },
 ];
 
@@ -917,13 +963,63 @@ export const MarketingToolSidebar = () => {
   // link destination.
   const navigate = useNavigate();
   const config = getConfigForPath(location.pathname);
-  // Filter text is initialized from the ?q= URL param so a shared link
-  // arrives pre-filtered. The param doesn't persist back to the URL on
-  // every keystroke (it'd pollute history); we only stamp it explicitly
-  // via the "Copy filter link" affordance below.
-  const [filterText, setFilterText] = useState<string>(
-    () => searchParams.get('q') ?? '',
-  );
+  // Filter text initial value priority:
+  //   1. ?q= URL param (shared-link wins)
+  //   2. last filter saved for this section in localStorage
+  //   3. empty
+  // Persisting per-section means navigating away and back keeps your
+  // filter without polluting history with a query string on every key.
+  const [filterText, setFilterText] = useState<string>(() => {
+    const param = searchParams.get('q');
+    if (param !== null && param !== '') return param;
+    if (config !== null) {
+      try {
+        const saved = window.localStorage.getItem(
+          `twenty.marketingSidebar.filter.${config.objectNameSingular}`,
+        );
+        if (saved !== null) return saved;
+      } catch {
+        // ignore
+      }
+    }
+    return '';
+  });
+  // Persist filter changes to per-section localStorage so they survive
+  // navigation away / back. Skipped if config is null.
+  useEffect(() => {
+    if (config === null) return;
+    try {
+      window.localStorage.setItem(
+        `twenty.marketingSidebar.filter.${config.objectNameSingular}`,
+        filterText,
+      );
+    } catch {
+      // ignore quota / disabled storage
+    }
+  }, [filterText, config]);
+
+  // When the section changes (user navigates marketing → people, etc.),
+  // load that section's last filter. This is the counterpart to the
+  // persistence effect above; together they let each section remember
+  // its own filter independently.
+  useEffect(() => {
+    if (config === null) return;
+    try {
+      const saved = window.localStorage.getItem(
+        `twenty.marketingSidebar.filter.${config.objectNameSingular}`,
+      );
+      if (saved !== null) {
+        setFilterText(saved);
+      } else {
+        setFilterText('');
+      }
+    } catch {
+      // ignore
+    }
+    // Intentionally only re-runs when the section changes, not on every
+    // filterText keystroke — the persistence effect above handles writes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config?.objectNameSingular]);
   // Sync param → state on navigation. If the user lands on a new ?q=
   // URL while the sidebar is mounted (e.g. clicks a shared link in a
   // sibling tab), reflect the new filter. We deliberately don't write
@@ -1067,11 +1163,13 @@ export const MarketingToolSidebar = () => {
   // the user might have collapsed it deliberately, and we want their
   // explicit click via the toggle / "[" / Cmd+K to win on re-open.
   // Threshold of 1100px chosen to match where Twenty's table view also
-  // gets cramped.
+  // gets cramped. Toast lets the user know the sidebar auto-collapsed
+  // — they might think a click went missing otherwise.
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth < 1100 && !isCollapsed) {
         toggleCollapsed();
+        setToast('Sidebar auto-collapsed (narrow window)');
       }
     };
     window.addEventListener('resize', onResize);
@@ -1086,6 +1184,19 @@ export const MarketingToolSidebar = () => {
   // drop / dragend.
   const [draggingPinId, setDraggingPinId] = useState<string | null>(null);
   const [dropTargetPinId, setDropTargetPinId] = useState<string | null>(null);
+
+  // Pinned alias map — id-prefixed key to allow per-section aliases.
+  const [pinAliases, setPinAliases] = useState<AliasMap>(() =>
+    readPinAliases(),
+  );
+  const [aliasEditingId, setAliasEditingId] = useState<string | null>(null);
+  const [aliasDraft, setAliasDraft] = useState<string>('');
+  const aliasKey = (id: string) => `${config?.objectNameSingular ?? ''}:${id}`;
+  const labelForPinned = (record: RecentRecord): string => {
+    const alias = pinAliases[aliasKey(record.id)];
+    if (typeof alias === 'string' && alias.trim().length > 0) return alias;
+    return record.name ?? '(unnamed)';
+  };
 
   // Keyboard navigation through filtered results. Pressing ArrowDown /
   // ArrowUp inside the search input walks the highlighted item; Enter
@@ -1332,8 +1443,9 @@ export const MarketingToolSidebar = () => {
         return;
       }
       // "?" is shift+/ on US layouts; check the literal key so we catch
-      // any layout that produces the glyph.
-      if (e.key === '?') {
+      // any layout that produces the glyph. "z" is an unmodified alias
+      // for keyboards/layouts where "?" isn't easily reachable.
+      if (e.key === '?' || (e.key === 'z' && !e.shiftKey)) {
         e.preventDefault();
         setIsHelpOpen((open) => !open);
         return;
@@ -1351,6 +1463,33 @@ export const MarketingToolSidebar = () => {
         setIsCreateOpen(true);
         return;
       }
+      if (e.key === 'j' && !e.shiftKey) {
+        // Walk to the next marketing section's index page. Wraps from
+        // last to first.
+        e.preventDefault();
+        const idx = SECTION_CONFIGS.findIndex(
+          (s) => s.objectNameSingular === config.objectNameSingular,
+        );
+        const safeIdx = idx === -1 ? 0 : idx;
+        const nextCfg = SECTION_CONFIGS[(safeIdx + 1) % SECTION_CONFIGS.length];
+        navigate(`/objects/${nextCfg.objectNamePlural}`);
+        return;
+      }
+      if (e.key === 'k' && !e.shiftKey) {
+        // Walk to the previous marketing section's index page. Wraps
+        // from first to last.
+        e.preventDefault();
+        const idx = SECTION_CONFIGS.findIndex(
+          (s) => s.objectNameSingular === config.objectNameSingular,
+        );
+        const safeIdx = idx === -1 ? 0 : idx;
+        const prevCfg =
+          SECTION_CONFIGS[
+            (safeIdx - 1 + SECTION_CONFIGS.length) % SECTION_CONFIGS.length
+          ];
+        navigate(`/objects/${prevCfg.objectNamePlural}`);
+        return;
+      }
       if (e.key === 'p' && !e.shiftKey) {
         // Pin/unpin the currently-viewed record. Only meaningful on a
         // show page; index pages get no-op.
@@ -1362,10 +1501,57 @@ export const MarketingToolSidebar = () => {
         const next = { ...pinnedMap };
         next[config.objectNameSingular] = wasPinned
           ? list.filter((x) => x !== rec)
-          : [...list, rec];
+          : [rec, ...list];
         setPinnedMap(next);
         writePinned(next);
         setToast(wasPinned ? 'Unpinned' : 'Pinned');
+        return;
+      }
+      // "n" / "b" walk through pinned records of the current section.
+      // Useful for review-style workflows where you want to step through
+      // your pinned items without using the mouse.
+      if ((e.key === 'n' || e.key === 'b') && !e.shiftKey) {
+        const list = pinnedMap[config.objectNameSingular] ?? [];
+        if (list.length === 0) return;
+        e.preventDefault();
+        const cur = getCurrentRecordId(location.pathname, config.showPath);
+        const idx = cur === null ? -1 : list.indexOf(cur);
+        const nextIdx =
+          e.key === 'n'
+            ? (idx + 1 + list.length) % list.length
+            : (idx - 1 + list.length) % list.length;
+        navigate(`${config.showPath}/${list[nextIdx]}`);
+        return;
+      }
+      // Digit 1-9 (no shift, no modifier) jumps to the pinned record at
+      // that position in the current section. Out-of-range digits are
+      // silently ignored. Skipped if pinned list is empty so digits
+      // remain free for any future global digit shortcuts.
+      if (
+        /^[1-9]$/.test(e.key) &&
+        !e.shiftKey &&
+        (pinnedMap[config.objectNameSingular] ?? []).length > 0
+      ) {
+        const idx = parseInt(e.key, 10) - 1;
+        const list = pinnedMap[config.objectNameSingular] ?? [];
+        if (idx < list.length) {
+          e.preventDefault();
+          navigate(`${config.showPath}/${list[idx]}`);
+          return;
+        }
+      }
+      if (e.key === 'y' && !e.shiftKey) {
+        // Yank (copy) the current record's link to the clipboard.
+        // Vim-derived shortcut — same affordance as the right-click
+        // context menu's "Copy link", but without the menu round-trip.
+        const rec = getCurrentRecordId(location.pathname, config.showPath);
+        if (rec === null) return;
+        e.preventDefault();
+        const absolute = `${window.location.origin}${config.showPath}/${rec}`;
+        navigator.clipboard
+          .writeText(absolute)
+          .then(() => setToast('Link copied'))
+          .catch(() => setToast('Could not copy link'));
       }
     };
     window.addEventListener('keydown', onKey);
@@ -1615,9 +1801,13 @@ export const MarketingToolSidebar = () => {
   const togglePin = (id: string) => {
     const next = { ...pinnedMap };
     const list = next[config.objectNameSingular] ?? [];
+    // Newly-pinned records go to the top, not the bottom — that's where
+    // most users expect to see "the thing I just pinned" given how
+    // muscle-memory thinks about pinning. The drag-handle still lets
+    // them re-order afterwards if they want a different position.
     next[config.objectNameSingular] = list.includes(id)
       ? list.filter((x) => x !== id)
-      : [...list, id];
+      : [id, ...list];
     setPinnedMap(next);
     writePinned(next);
   };
@@ -1870,7 +2060,23 @@ export const MarketingToolSidebar = () => {
                 ?
               </StyledHelpTriggerButton>
             </StyledTitleRow>
-            <StyledSubtitle>{config.subtitle}</StyledSubtitle>
+            <StyledSubtitle>
+              {(() => {
+                // On a record show page, prefer a breadcrumb-style
+                // subtitle that names the section + record so the
+                // sidebar's header doubles as breadcrumb context.
+                if (currentRecordId !== null) {
+                  const fromList =
+                    pinnedRecords.find((r) => r.id === currentRecordId)?.name ??
+                    recentRecords.find((r) => r.id === currentRecordId)?.name ??
+                    null;
+                  if (fromList !== null && fromList !== '') {
+                    return `${config.title} › ${fromList}`;
+                  }
+                }
+                return config.subtitle;
+              })()}
+            </StyledSubtitle>
           </StyledHeader>
 
           <StyledNewButtonRow>
@@ -2159,13 +2365,30 @@ export const MarketingToolSidebar = () => {
                 setDropTargetPinId(null);
               }}
             >
-              <StyledSectionLabel>
-                Pinned
-                {orderedPinnedRecords.length > 0
-                  ? ` · ${orderedPinnedRecords.length}`
-                  : ''}
-              </StyledSectionLabel>
-              {orderedPinnedRecords.map((record) => (
+              <StyledSectionLabelRow>
+                <StyledSectionLabel>
+                  Pinned
+                  {orderedPinnedRecords.length > 0
+                    ? ` · ${orderedPinnedRecords.length}`
+                    : ''}
+                </StyledSectionLabel>
+                {orderedPinnedRecords.length > 1 && (
+                  <StyledSectionAction
+                    type="button"
+                    title="Unpin all"
+                    onClick={() => {
+                      const next = { ...pinnedMap };
+                      next[config.objectNameSingular] = [];
+                      setPinnedMap(next);
+                      writePinned(next);
+                      setToast('Cleared pinned');
+                    }}
+                  >
+                    Clear
+                  </StyledSectionAction>
+                )}
+              </StyledSectionLabelRow>
+              {orderedPinnedRecords.map((record, pinnedIdx) => (
                 <StyledItemRow
                   key={record.id}
                   data-sidebar-row-key={`pinned:${record.id}`}
@@ -2223,14 +2446,62 @@ export const MarketingToolSidebar = () => {
                   <StyledDragHandle title="Drag to reorder" aria-hidden="true">
                     ⋮⋮
                   </StyledDragHandle>
-                  <StyledItemLink
-                    to={`${config.showPath}/${record.id}`}
-                    title={record.name ?? '(unnamed)'}
-                  >
-                    <StyledItemLabel>
-                      {record.name ?? '(unnamed)'}
-                    </StyledItemLabel>
-                  </StyledItemLink>
+                  {aliasEditingId === record.id ? (
+                    <StyledCreateInput
+                      autoFocus
+                      style={{ flex: 1, marginLeft: 4 }}
+                      type="text"
+                      value={aliasDraft}
+                      onChange={(e) => setAliasDraft(e.target.value)}
+                      onBlur={() => {
+                        const next = { ...pinAliases };
+                        const trimmed = aliasDraft.trim();
+                        const k = aliasKey(record.id);
+                        if (trimmed === '' || trimmed === record.name) {
+                          delete next[k];
+                        } else {
+                          next[k] = trimmed;
+                        }
+                        setPinAliases(next);
+                        writePinAliases(next);
+                        setAliasEditingId(null);
+                        setAliasDraft('');
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter')
+                          (e.target as HTMLInputElement).blur();
+                        if (e.key === 'Escape') {
+                          setAliasEditingId(null);
+                          setAliasDraft('');
+                        }
+                      }}
+                    />
+                  ) : (
+                    <StyledItemLink
+                      to={`${config.showPath}/${record.id}`}
+                      title={
+                        pinnedIdx < 9
+                          ? `${labelForPinned(record)} — press ${pinnedIdx + 1} to jump here, double-click to rename`
+                          : `${labelForPinned(record)} — double-click to rename`
+                      }
+                      onDoubleClick={(e) => {
+                        e.preventDefault();
+                        setAliasEditingId(record.id);
+                        setAliasDraft(labelForPinned(record));
+                      }}
+                    >
+                      {pinnedIdx < 9 && (
+                        <StyledItemBadge
+                          style={{ minWidth: 14, padding: '1px 4px' }}
+                        >
+                          {pinnedIdx + 1}
+                        </StyledItemBadge>
+                      )}
+                      <StyledItemLabel>
+                        {labelForPinned(record)}
+                      </StyledItemLabel>
+                    </StyledItemLink>
+                  )}
                   <StyledPinButton
                     pinned={true}
                     onClick={() => togglePin(record.id)}

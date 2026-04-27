@@ -458,16 +458,43 @@ export const MarketingQuickSwitcher = () => {
   const [savedSearches, setSavedSearches] = useState<string[]>([]);
   const [pinnedMap, setPinnedMap] = useState<Record<string, string[]>>({});
 
-  // Global Cmd/Ctrl+K to open. Esc to close. Any other key while closed
-  // is ignored. We intentionally don't filter by INPUT focus — Cmd+K
-  // should work even from inside a text field, matching how Linear,
-  // Notion, GitHub, and similar apps behave.
+  // Global Cmd/Ctrl+K to open. Shift+Cmd+K opens with the last query
+  // pre-filled — quick re-execute of a previous search. Cmd+, jumps
+  // straight to Settings (the OS-conventional shortcut). Esc to close.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
+        if (e.shiftKey && !isOpen) {
+          // Shift modifier on open recalls the most recent query.
+          try {
+            const last = window.localStorage.getItem(
+              'twenty.quickSwitcher.lastQuery',
+            );
+            if (last !== null && last !== '') setText(last);
+          } catch {
+            // ignore
+          }
+        }
         setIsOpen((v) => !v);
         return;
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault();
+        navigate('/settings/profile');
+        return;
+      }
+      // Cmd+1..6 jumps to the corresponding marketing section without
+      // even opening the switcher — the fast path for users who know
+      // exactly where they want to go.
+      if ((e.metaKey || e.ctrlKey) && /^[1-6]$/.test(e.key) && !e.altKey) {
+        const idx = parseInt(e.key, 10) - 1;
+        if (idx >= 0 && idx < SECTION_NAV.length) {
+          e.preventDefault();
+          navigate(SECTION_NAV[idx].href);
+          if (isOpen) setIsOpen(false);
+          return;
+        }
       }
       if (e.key === 'Escape' && isOpen) {
         e.preventDefault();
@@ -476,6 +503,8 @@ export const MarketingQuickSwitcher = () => {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+    // navigate is stable; safe to omit from deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Reset state on every open so a fresh open isn't pre-populated with
@@ -658,6 +687,13 @@ export const MarketingQuickSwitcher = () => {
   };
 
   const onInputKey = (e: ReactKeyboardEvent<HTMLInputElement>) => {
+    // Backspace on an empty input is a quick "close" shortcut — common
+    // pattern in command palettes (Linear, Raycast, GitHub).
+    if (e.key === 'Backspace' && text === '') {
+      e.preventDefault();
+      setIsOpen(false);
+      return;
+    }
     if (e.key === 'ArrowDown') {
       if (allHits.length === 0) return;
       e.preventDefault();
@@ -673,6 +709,31 @@ export const MarketingQuickSwitcher = () => {
     if (e.key === 'Tab') {
       if (allHits.length === 0) return;
       e.preventDefault();
+      // Shift+Tab walks backwards: find the previous group's first
+      // item by scanning the wrap-around list in reverse.
+      if (e.shiftKey) {
+        setHighlightedIndex((i) => {
+          const safeI = Math.max(i, 0);
+          const currentGroup = allHits[safeI]?.group ?? null;
+          for (let j = 1; j <= allHits.length; j++) {
+            const probe = (safeI - j + allHits.length) % allHits.length;
+            if (allHits[probe].group !== currentGroup) {
+              // Walk backward through the same group to find its first
+              // member, so Shift+Tab feels symmetric with Tab.
+              let firstOfGroup = probe;
+              while (
+                firstOfGroup > 0 &&
+                allHits[firstOfGroup - 1].group === allHits[probe].group
+              ) {
+                firstOfGroup -= 1;
+              }
+              return firstOfGroup;
+            }
+          }
+          return safeI;
+        });
+        return;
+      }
       setHighlightedIndex((i) => indexOfNextGroupStart(Math.max(i, 0)));
       return;
     }
@@ -680,6 +741,18 @@ export const MarketingQuickSwitcher = () => {
       if (allHits.length === 0) return;
       e.preventDefault();
       const target = allHits[Math.max(safeIndex, 0)];
+      // Persist the query so Shift+Cmd+K can recall it next time.
+      // Empty queries don't pollute history.
+      if (text.trim().length >= 2) {
+        try {
+          window.localStorage.setItem(
+            'twenty.quickSwitcher.lastQuery',
+            text.trim(),
+          );
+        } catch {
+          // ignore
+        }
+      }
       // Shift+Enter opens in a new tab (only meaningful for href-based
       // hits — actions still run in-place).
       if (e.shiftKey && target.group !== 'actions') {
@@ -716,7 +789,7 @@ export const MarketingQuickSwitcher = () => {
           <StyledInput
             ref={setInputEl}
             type="text"
-            placeholder="Jump to a section or search by name…"
+            placeholder="Search records, sections, actions…"
             value={text}
             onChange={(e) => {
               setText(e.target.value);
@@ -821,6 +894,7 @@ export const MarketingQuickSwitcher = () => {
               <StyledSectionLabel>Sections</StyledSectionLabel>
               {navigationHits.map((hit) => {
                 const navItem = SECTION_NAV.find((n) => n.href === hit.href);
+                const isCurrent = location.pathname.startsWith(hit.href);
                 return (
                   <StyledResultRow
                     key={hit.key}
@@ -835,6 +909,7 @@ export const MarketingQuickSwitcher = () => {
                     <StyledLabel>
                       {renderHighlighted(hit.label, text)}
                     </StyledLabel>
+                    {isCurrent && <StyledHint>current</StyledHint>}
                     {navItem !== undefined && navItem.hint !== '' && (
                       <StyledHint>{navItem.hint}</StyledHint>
                     )}
@@ -879,10 +954,13 @@ export const MarketingQuickSwitcher = () => {
         </StyledResultsScroll>
         <StyledFooter>
           <span>↑↓ navigate</span>
-          <span>Tab next group</span>
+          <span>Tab group</span>
           <span>↵ open</span>
           <span>⇧↵ new tab</span>
-          <span>Esc close</span>
+          <span>⌫ close</span>
+          <span style={{ marginLeft: 'auto' }}>
+            {allHits.length} result{allHits.length === 1 ? '' : 's'}
+          </span>
         </StyledFooter>
       </StyledCard>
     </StyledBackdrop>

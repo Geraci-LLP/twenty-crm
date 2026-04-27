@@ -5,6 +5,10 @@
 
 const STORAGE_KEY = 'twenty.lastVisited';
 const MAX_ENTRIES = 20;
+// Visits older than this never appear in the list. Anything stale by
+// 30 days is dropped on the next read, so the sidebar's "Last visited"
+// section never shows a record the user genuinely forgot about.
+const MAX_VISIT_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
 export type Visit = {
   objectNameSingular: string;
@@ -22,7 +26,15 @@ export const readVisits = (): Visit[] => {
     if (raw === null || raw === '') return [];
     const parsed = JSON.parse(raw) as Visit[];
     if (!Array.isArray(parsed)) return [];
-    return parsed;
+    // Auto-prune entries older than the cutoff. The pruned array isn't
+    // written back unless something actually changed — avoids writing
+    // on every read.
+    const cutoff = Date.now() - MAX_VISIT_AGE_MS;
+    const pruned = parsed.filter((v) => v.visitedAt >= cutoff);
+    if (pruned.length !== parsed.length) {
+      writeVisits(pruned);
+    }
+    return pruned;
   } catch {
     return [];
   }
