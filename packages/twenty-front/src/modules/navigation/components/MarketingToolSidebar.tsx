@@ -1,108 +1,72 @@
 import { styled } from '@linaria/react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
-// Contextual second-column sidebar for marketing routes. Mirrors the
-// design mock's ToolSidebar: shows a section title + a list of saved
-// views / filter shortcuts so the user can flip between "All / Active /
-// Drafts / etc." in one click instead of opening the filter pill.
-//
-// The sidebar self-detects the current route via useLocation and
-// returns null for non-marketing routes — DefaultLayout can render
-// it unconditionally and pay nothing on routes that don't need it.
+import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
+import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
 
-type SidebarItem = {
-  id: string;
-  label: string;
-  search?: string;
-  count?: string;
+// Contextual second-column sidebar for marketing routes. Mirrors the
+// design mock's ToolSidebar but drops the "filter views" idea (Twenty's
+// RecordIndexPage doesn't read query-string filters; wiring through
+// view-state would be a separate piece of work). Instead the sidebar
+// surfaces a live list of the 5 most-recent records in the current
+// section so the user can jump back to whatever they were last working
+// on without scrolling through the full index.
+//
+// Self-detects the current route via useLocation. Returns null for
+// non-marketing routes — DefaultLayout renders it unconditionally
+// but pays nothing on routes that don't need it.
+
+type RecentRecord = ObjectRecord & {
+  name?: string | null;
 };
 
-type SidebarConfig = {
+type SectionConfig = {
   title: string;
   subtitle: string;
-  items: SidebarItem[];
+  objectNameSingular: string;
+  showPath: string;
 };
 
-// Match the section by URL prefix. Anything matching maps to a config;
-// anything else returns null and the sidebar doesn't render.
-const getConfigForPath = (
-  pathname: string,
-): { route: string; config: SidebarConfig } | null => {
+const getConfigForPath = (pathname: string): SectionConfig | null => {
   if (pathname.startsWith('/objects/campaigns')) {
     return {
-      route: '/objects/campaigns',
-      config: {
-        title: 'Email Campaigns',
-        subtitle: 'One-off and scheduled marketing emails',
-        items: [
-          { id: 'all', label: 'All campaigns' },
-          { id: 'draft', label: 'Drafts', search: 'status=DRAFT' },
-          { id: 'scheduled', label: 'Scheduled', search: 'status=SCHEDULED' },
-          { id: 'sending', label: 'Sending', search: 'status=SENDING' },
-          { id: 'sent', label: 'Sent', search: 'status=SENT' },
-          { id: 'paused', label: 'Paused', search: 'status=PAUSED' },
-        ],
-      },
+      title: 'Email Campaigns',
+      subtitle: 'One-off and scheduled marketing emails',
+      objectNameSingular: 'campaign',
+      showPath: '/object/campaign',
     };
   }
   if (pathname.startsWith('/objects/marketingCampaigns')) {
     return {
-      route: '/objects/marketingCampaigns',
-      config: {
-        title: 'Marketing Campaigns',
-        subtitle: 'Campaign-level groupings',
-        items: [
-          { id: 'all', label: 'All marketing campaigns' },
-          { id: 'active', label: 'Active', search: 'status=ACTIVE' },
-          { id: 'draft', label: 'Drafts', search: 'status=DRAFT' },
-          { id: 'completed', label: 'Completed', search: 'status=COMPLETED' },
-          { id: 'archived', label: 'Archived', search: 'status=ARCHIVED' },
-        ],
-      },
+      title: 'Marketing Campaigns',
+      subtitle: 'Campaign-level groupings',
+      objectNameSingular: 'marketingCampaign',
+      showPath: '/object/marketingCampaign',
     };
   }
   if (pathname.startsWith('/objects/sequences')) {
     return {
-      route: '/objects/sequences',
-      config: {
-        title: 'Sequences',
-        subtitle: 'Multi-step automated cadences',
-        items: [
-          { id: 'all', label: 'All sequences' },
-          { id: 'active', label: 'Active', search: 'status=ACTIVE' },
-          { id: 'paused', label: 'Paused', search: 'status=PAUSED' },
-          { id: 'archived', label: 'Archived', search: 'status=ARCHIVED' },
-        ],
-      },
+      title: 'Sequences',
+      subtitle: 'Multi-step automated cadences',
+      objectNameSingular: 'sequence',
+      showPath: '/object/sequence',
     };
   }
   if (pathname.startsWith('/objects/forms')) {
     return {
-      route: '/objects/forms',
-      config: {
-        title: 'Forms',
-        subtitle: 'Lead-capture forms and embeds',
-        items: [
-          { id: 'all', label: 'All forms' },
-          { id: 'published', label: 'Published', search: 'status=PUBLISHED' },
-          { id: 'draft', label: 'Drafts', search: 'status=DRAFT' },
-          { id: 'archived', label: 'Archived', search: 'status=ARCHIVED' },
-        ],
-      },
+      title: 'Forms',
+      subtitle: 'Lead-capture forms and embeds',
+      objectNameSingular: 'form',
+      showPath: '/object/form',
     };
   }
   if (pathname.startsWith('/marketing/analytics')) {
     return {
-      route: '/marketing/analytics',
-      config: {
-        title: 'Analytics',
-        subtitle: 'Marketing performance',
-        items: [
-          { id: 'overview', label: 'Workspace overview' },
-          { id: 'by-campaign', label: 'By marketing campaign' },
-        ],
-      },
+      title: 'Analytics',
+      subtitle: 'Marketing performance',
+      objectNameSingular: 'campaign',
+      showPath: '/object/campaign',
     };
   }
   return null;
@@ -154,55 +118,60 @@ const StyledSectionLabel = styled.div`
   text-transform: uppercase;
 `;
 
-const StyledItem = styled.button<{ active: boolean }>`
+const StyledItem = styled(Link)`
   align-items: center;
-  background: ${(p) =>
-    p.active
-      ? themeCssVariables.background.transparent.lighter
-      : 'transparent'};
+  background: transparent;
   border: 0;
   border-radius: ${themeCssVariables.border.radius.sm};
-  color: ${(p) =>
-    p.active
-      ? themeCssVariables.color.orange
-      : themeCssVariables.font.color.primary};
+  color: ${themeCssVariables.font.color.primary};
   cursor: pointer;
   display: flex;
   font-family: ${themeCssVariables.font.family};
   font-size: 13px;
-  font-weight: ${(p) =>
-    p.active
-      ? themeCssVariables.font.weight.medium
-      : themeCssVariables.font.weight.regular};
   gap: 10px;
   padding: 7px 10px;
   text-align: left;
+  text-decoration: none;
   width: 100%;
   &:hover {
     background: ${themeCssVariables.background.transparent.lighter};
   }
 `;
 
+const StyledItemLabel = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const StyledEmpty = styled.div`
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: 12px;
+  padding: 6px 10px;
+`;
+
 export const MarketingToolSidebar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
-  const match = getConfigForPath(location.pathname);
-  if (!match) return null;
-  const { route, config } = match;
+  const config = getConfigForPath(location.pathname);
 
-  // Active item is the one whose `search` matches the current URL's
-  // query string. The "all" item is active when there's no filter.
-  const currentSearch = searchParams.toString();
-  const activeId =
-    config.items.find((it) => (it.search ?? '') === currentSearch)?.id ??
-    (currentSearch === '' ? 'all' : null);
+  // Always call the hook (rules of hooks) but skip the network when
+  // there's no config to drive it.
+  const { records, loading } = useFindManyRecords<RecentRecord>({
+    objectNameSingular: config?.objectNameSingular ?? 'campaign',
+    limit: 5,
+    orderBy: [{ createdAt: 'DescNullsLast' }],
+    recordGqlFields: { id: true, name: true },
+    skip: !config,
+  });
 
-  const handleClick = (item: SidebarItem) => {
-    const target = item.search ? `${route}?${item.search}` : route;
-    navigate(target);
-  };
+  if (!config) return null;
+
+  // Twenty's record list path is /objects/<plural> — the Form/Sequence/
+  // Campaign route names are pluralized as +s. MarketingCampaigns uses
+  // the same simple +s rule. If a section ever needs an irregular
+  // plural we'd extend the SectionConfig with an explicit indexPath.
+  const indexPath = `/objects/${config.objectNameSingular}s`;
 
   return (
     <StyledSidebar>
@@ -211,17 +180,28 @@ export const MarketingToolSidebar = () => {
         <StyledSubtitle>{config.subtitle}</StyledSubtitle>
       </StyledHeader>
       <StyledSection>
-        <StyledSectionLabel>Views</StyledSectionLabel>
-        {config.items.map((item) => (
-          <StyledItem
-            key={item.id}
-            active={activeId === item.id}
-            onClick={() => handleClick(item)}
-            type="button"
-          >
-            {item.label}
-          </StyledItem>
-        ))}
+        <StyledSectionLabel>Section</StyledSectionLabel>
+        <StyledItem to={indexPath}>
+          <StyledItemLabel>All {config.title.toLowerCase()}</StyledItemLabel>
+        </StyledItem>
+      </StyledSection>
+      <StyledSection>
+        <StyledSectionLabel>Recent</StyledSectionLabel>
+        {loading && records.length === 0 ? (
+          <StyledEmpty>Loading…</StyledEmpty>
+        ) : records.length === 0 ? (
+          <StyledEmpty>No records yet</StyledEmpty>
+        ) : (
+          records.map((record) => (
+            <StyledItem
+              key={record.id}
+              to={`${config.showPath}/${record.id}`}
+              title={record.name ?? '(unnamed)'}
+            >
+              <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
+            </StyledItem>
+          ))
+        )}
       </StyledSection>
     </StyledSidebar>
   );
