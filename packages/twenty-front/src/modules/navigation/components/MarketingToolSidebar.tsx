@@ -718,6 +718,52 @@ export const MarketingToolSidebar = () => {
     skip: !isOnAnalytics,
   });
 
+  // Cross-section name search: when the filter text is >=2 chars, fire
+  // ilike queries on the four marketing object types so results from
+  // *other* sections show up at the top of the sidebar. Person and
+  // Company are excluded because their "name" is a structured object
+  // (firstName/lastName / domainName) and would need a different filter
+  // shape — out of scope for the cross-section pattern here.
+  const xSearchActive = filterText.trim().length >= 2 && config !== null;
+  const xSearchPattern = `%${filterText.trim()}%`;
+  const currentObjectNameSingular = config?.objectNameSingular ?? '';
+  const xSearchCampaigns = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'campaign',
+    limit: 5,
+    filter: xSearchActive
+      ? { name: { ilike: xSearchPattern } }
+      : { id: { eq: 'no-match' } },
+    recordGqlFields: { id: true, name: true },
+    skip: !xSearchActive || currentObjectNameSingular === 'campaign',
+  });
+  const xSearchMcs = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'marketingCampaign',
+    limit: 5,
+    filter: xSearchActive
+      ? { name: { ilike: xSearchPattern } }
+      : { id: { eq: 'no-match' } },
+    recordGqlFields: { id: true, name: true },
+    skip: !xSearchActive || currentObjectNameSingular === 'marketingCampaign',
+  });
+  const xSearchSequences = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'sequence',
+    limit: 5,
+    filter: xSearchActive
+      ? { name: { ilike: xSearchPattern } }
+      : { id: { eq: 'no-match' } },
+    recordGqlFields: { id: true, name: true },
+    skip: !xSearchActive || currentObjectNameSingular === 'sequence',
+  });
+  const xSearchForms = useFindManyRecords<RecentRecord>({
+    objectNameSingular: 'form',
+    limit: 5,
+    filter: xSearchActive
+      ? { name: { ilike: xSearchPattern } }
+      : { id: { eq: 'no-match' } },
+    recordGqlFields: { id: true, name: true },
+    skip: !xSearchActive || currentObjectNameSingular === 'form',
+  });
+
   // Global keyboard shortcuts on marketing routes:
   //   "/"   focus sidebar filter
   //   "?"   open shortcut help overlay
@@ -925,6 +971,46 @@ export const MarketingToolSidebar = () => {
     : [];
   const filteredCrossRecent = crossRecent.filter((r) => matchesFilter(r.name));
 
+  // Cross-section ilike search results — merged from the four xSearch
+  // queries when the filter is active. Same CrossRecord shape so the
+  // existing badge/show-path machinery works without extra plumbing.
+  const crossSearch: CrossRecord[] = xSearchActive
+    ? [
+        ...xSearchCampaigns.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt: null,
+          objectNameSingular: 'campaign',
+          showPath: '/object/campaign',
+          badge: 'Email',
+        })),
+        ...xSearchMcs.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt: null,
+          objectNameSingular: 'marketingCampaign',
+          showPath: '/object/marketingCampaign',
+          badge: 'MC',
+        })),
+        ...xSearchSequences.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt: null,
+          objectNameSingular: 'sequence',
+          showPath: '/object/sequence',
+          badge: 'Seq',
+        })),
+        ...xSearchForms.records.map<CrossRecord>((r) => ({
+          id: r.id,
+          name: r.name ?? null,
+          updatedAt: null,
+          objectNameSingular: 'form',
+          showPath: '/object/form',
+          badge: 'Form',
+        })),
+      ].slice(0, 12)
+    : [];
+
   // Map visit objectNameSingular → short badge for the "Last visited"
   // list. Anything not in this map shows the singular as-is.
   const badgeForObject = (objectNameSingular: string): string => {
@@ -948,7 +1034,8 @@ export const MarketingToolSidebar = () => {
   const hasAnyResults =
     filteredViews.length > 0 ||
     filteredPinned.length > 0 ||
-    filteredRecent.length > 0;
+    filteredRecent.length > 0 ||
+    crossSearch.length > 0;
 
   const togglePin = (id: string) => {
     const next = { ...pinnedMap };
@@ -998,6 +1085,10 @@ export const MarketingToolSidebar = () => {
   // itself against the highlighted entry without index-counting drift.
   type FlatItem = { key: string; to: string };
   const flatItems: FlatItem[] = [
+    ...crossSearch.map<FlatItem>((r) => ({
+      key: `xsearch:${r.objectNameSingular}-${r.id}`,
+      to: `${r.showPath}/${r.id}`,
+    })),
     ...filteredViews.map<FlatItem>((v) => ({
       key: `view:${v.id}`,
       to: `${indexPath}?viewId=${v.id}`,
@@ -1226,6 +1317,35 @@ export const MarketingToolSidebar = () => {
           {filterText !== '' && !hasAnyResults && (
             <StyledSection>
               <StyledEmpty>No matches for &quot;{filterText}&quot;</StyledEmpty>
+            </StyledSection>
+          )}
+
+          {crossSearch.length > 0 && (
+            <StyledSection>
+              <StyledSectionLabel>Across sections</StyledSectionLabel>
+              {crossSearch.map((record) => {
+                const xKey = `xsearch:${record.objectNameSingular}-${record.id}`;
+                return (
+                  <StyledItemRow
+                    key={xKey}
+                    data-sidebar-row-key={xKey}
+                    data-highlighted={
+                      highlightedKey === xKey ? 'true' : undefined
+                    }
+                    isHighlighted={highlightedKey === xKey}
+                  >
+                    <StyledItemLink
+                      to={`${record.showPath}/${record.id}`}
+                      title={record.name ?? '(unnamed)'}
+                    >
+                      <StyledItemBadge>{record.badge}</StyledItemBadge>
+                      <StyledItemLabel>
+                        {record.name ?? '(unnamed)'}
+                      </StyledItemLabel>
+                    </StyledItemLink>
+                  </StyledItemRow>
+                );
+              })}
             </StyledSection>
           )}
 
