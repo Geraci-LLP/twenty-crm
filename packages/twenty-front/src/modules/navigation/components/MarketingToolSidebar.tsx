@@ -212,11 +212,39 @@ const StyledHeader = styled.div`
   padding: 18px 20px 14px;
 `;
 
+const StyledTitleRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+`;
+
 const StyledTitle = styled.div`
   color: ${themeCssVariables.font.color.primary};
   font-size: 16px;
   font-weight: ${themeCssVariables.font.weight.semiBold};
   letter-spacing: -0.01em;
+`;
+
+const StyledHelpTriggerButton = styled.button`
+  align-items: center;
+  background: ${themeCssVariables.background.transparent.lighter};
+  border: 1px solid ${themeCssVariables.border.color.light};
+  border-radius: 50%;
+  color: ${themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11px;
+  font-weight: ${themeCssVariables.font.weight.medium};
+  height: 18px;
+  justify-content: center;
+  padding: 0;
+  width: 18px;
+  &:hover {
+    color: ${themeCssVariables.font.color.primary};
+  }
 `;
 
 const StyledSubtitle = styled.div`
@@ -412,6 +440,107 @@ const StyledEmpty = styled.div`
   padding: 6px 10px;
 `;
 
+// Help overlay — fixed full-screen dimmer with a centered card listing
+// every keyboard shortcut the sidebar reacts to. Triggered by "?" and
+// closed by Escape, click-outside, or the close button.
+/* oxlint-disable twenty/no-hardcoded-colors */
+const StyledHelpBackdrop = styled.div`
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 9999;
+`;
+
+const StyledHelpCard = styled.div`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.md};
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+  padding: 22px 24px;
+  width: 90%;
+`;
+/* oxlint-enable twenty/no-hardcoded-colors */
+
+const StyledHelpHeader = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StyledHelpTitle = styled.div`
+  color: ${themeCssVariables.font.color.primary};
+  font-size: 15px;
+  font-weight: ${themeCssVariables.font.weight.semiBold};
+`;
+
+const StyledHelpClose = styled.button`
+  background: transparent;
+  border: 0;
+  color: ${themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 8px;
+  &:hover {
+    color: ${themeCssVariables.font.color.primary};
+  }
+`;
+
+const StyledHelpRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 4px 0;
+`;
+
+const StyledHelpDescription = styled.span`
+  color: ${themeCssVariables.font.color.secondary};
+  font-size: 12.5px;
+`;
+
+const StyledHelpKey = styled.kbd`
+  background: ${themeCssVariables.background.transparent.lighter};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11px;
+  font-weight: ${themeCssVariables.font.weight.medium};
+  padding: 2px 7px;
+  white-space: nowrap;
+`;
+
+const StyledHelpHint = styled.div`
+  border-top: 1px solid ${themeCssVariables.border.color.light};
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: 11px;
+  margin-top: 4px;
+  padding-top: 10px;
+`;
+
+type Shortcut = { keys: string; description: string };
+const SHORTCUTS: Shortcut[] = [
+  { keys: '?', description: 'Open this shortcut help' },
+  { keys: '/', description: 'Focus the sidebar filter' },
+  { keys: 'Enter', description: 'Open first match in filter' },
+  { keys: '[', description: 'Collapse / expand sidebar' },
+  { keys: 'g 1', description: 'Go to Email Campaigns' },
+  { keys: 'g 2', description: 'Go to Marketing Campaigns' },
+  { keys: 'g 3', description: 'Go to Sequences' },
+  { keys: 'g 4', description: 'Go to Forms' },
+  { keys: 'g 5', description: 'Go to Analytics' },
+  { keys: 'g 6', description: 'Go to Audiences (People)' },
+  { keys: 'Esc', description: 'Close dialogs / cancel forms' },
+];
+
 export const MarketingToolSidebar = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -460,6 +589,11 @@ export const MarketingToolSidebar = () => {
       return next;
     });
   };
+
+  // Help overlay state. Opens on "?", closes on Escape / backdrop click /
+  // close button. Independent of the collapse state so the user can
+  // discover shortcuts even when the sidebar is collapsed.
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   // Browser-history-style recently-visited tracker. Mirrors localStorage
   // into component state so re-renders pick up new visits and so
@@ -515,31 +649,60 @@ export const MarketingToolSidebar = () => {
     skip: !isOnAnalytics,
   });
 
-  // Press "/" anywhere on a marketing route to focus the sidebar
-  // search. Skip if the user is already typing somewhere (input,
-  // textarea, contenteditable, the rich-text email editor) so we
-  // don't intercept their text.
+  // Global keyboard shortcuts on marketing routes:
+  //   "/"   focus sidebar filter
+  //   "?"   open shortcut help overlay
+  //   "["   toggle sidebar collapse
+  //   Esc   close help overlay (when open)
+  // All skip when the user is already typing in a form/contenteditable
+  // element so we don't intercept their input.
   useEffect(() => {
     if (!config) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
-      const target = e.target as HTMLElement | null;
-      const tag = target?.tagName ?? '';
-      if (
+    const isTypingInForm = (target: EventTarget | null): boolean => {
+      const el = target as HTMLElement | null;
+      const tag = el?.tagName ?? '';
+      return (
         tag === 'INPUT' ||
         tag === 'TEXTAREA' ||
         tag === 'SELECT' ||
-        target?.isContentEditable === true
-      ) {
+        el?.isContentEditable === true
+      );
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Escape always closes the help overlay regardless of focus.
+      if (e.key === 'Escape' && isHelpOpen) {
+        e.preventDefault();
+        setIsHelpOpen(false);
         return;
       }
-      e.preventDefault();
-      searchInputEl?.focus();
-      searchInputEl?.select();
+      if (isTypingInForm(e.target)) return;
+      if (e.key === '/') {
+        e.preventDefault();
+        searchInputEl?.focus();
+        searchInputEl?.select();
+        return;
+      }
+      // "?" is shift+/ on US layouts; check the literal key so we catch
+      // any layout that produces the glyph.
+      if (e.key === '?') {
+        e.preventDefault();
+        setIsHelpOpen((open) => !open);
+        return;
+      }
+      if (e.key === '[') {
+        e.preventDefault();
+        toggleCollapsed();
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [config, searchInputEl]);
+    // toggleCollapsed and setIsHelpOpen are stable across renders;
+    // intentionally only re-bind on config / input element / overlay-state
+    // changes so the listener captures the freshest values without
+    // re-creating itself on every keystroke.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config, searchInputEl, isHelpOpen]);
 
   // Object metadata — needed to resolve the views family selector. The
   // hook works even when called with a missing/invalid name (it returns
@@ -730,6 +893,42 @@ export const MarketingToolSidebar = () => {
 
   return (
     <StyledSidebar collapsed={isCollapsed}>
+      {isHelpOpen && (
+        <StyledHelpBackdrop
+          onClick={() => setIsHelpOpen(false)}
+          role="presentation"
+        >
+          <StyledHelpCard
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="marketing-sidebar-help-title"
+          >
+            <StyledHelpHeader>
+              <StyledHelpTitle id="marketing-sidebar-help-title">
+                Keyboard shortcuts
+              </StyledHelpTitle>
+              <StyledHelpClose
+                type="button"
+                onClick={() => setIsHelpOpen(false)}
+                aria-label="Close shortcut help"
+              >
+                ×
+              </StyledHelpClose>
+            </StyledHelpHeader>
+            {SHORTCUTS.map((s) => (
+              <StyledHelpRow key={s.keys}>
+                <StyledHelpDescription>{s.description}</StyledHelpDescription>
+                <StyledHelpKey>{s.keys}</StyledHelpKey>
+              </StyledHelpRow>
+            ))}
+            <StyledHelpHint>
+              Tip: shortcuts ignore key presses while you&apos;re typing in a
+              form or text editor.
+            </StyledHelpHint>
+          </StyledHelpCard>
+        </StyledHelpBackdrop>
+      )}
       <StyledCollapseToggle
         collapsed={isCollapsed}
         onClick={toggleCollapsed}
@@ -743,7 +942,17 @@ export const MarketingToolSidebar = () => {
       ) : (
         <>
           <StyledHeader>
-            <StyledTitle>{config.title}</StyledTitle>
+            <StyledTitleRow>
+              <StyledTitle>{config.title}</StyledTitle>
+              <StyledHelpTriggerButton
+                type="button"
+                onClick={() => setIsHelpOpen(true)}
+                title="Keyboard shortcuts (?)"
+                aria-label="Show keyboard shortcuts"
+              >
+                ?
+              </StyledHelpTriggerButton>
+            </StyledTitleRow>
             <StyledSubtitle>{config.subtitle}</StyledSubtitle>
           </StyledHeader>
 
