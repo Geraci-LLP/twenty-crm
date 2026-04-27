@@ -302,6 +302,38 @@ export const MarketingToolSidebar = () => {
   const navigate = useNavigate();
   const config = getConfigForPath(location.pathname);
   const [filterText, setFilterText] = useState('');
+  // Callback-ref pattern: capture the input element in component state
+  // so the global keydown handler can call .focus() on it. Avoids
+  // useRef which the codebase discourages for state storage.
+  const [searchInputEl, setSearchInputEl] = useState<HTMLInputElement | null>(
+    null,
+  );
+
+  // Press "/" anywhere on a marketing route to focus the sidebar
+  // search. Skip if the user is already typing somewhere (input,
+  // textarea, contenteditable, the rich-text email editor) so we
+  // don't intercept their text.
+  useEffect(() => {
+    if (!config) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName ?? '';
+      if (
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        target?.isContentEditable === true
+      ) {
+        return;
+      }
+      e.preventDefault();
+      searchInputEl?.focus();
+      searchInputEl?.select();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [config, searchInputEl]);
 
   // Object metadata — needed to resolve the views family selector. The
   // hook works even when called with a missing/invalid name (it returns
@@ -408,8 +440,9 @@ export const MarketingToolSidebar = () => {
 
       <StyledSearchRow>
         <StyledSearchInput
+          ref={setSearchInputEl}
           type="search"
-          placeholder="Filter — Enter to open first match"
+          placeholder="Filter — / to focus, Enter to open"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           onKeyDown={(e) => {
