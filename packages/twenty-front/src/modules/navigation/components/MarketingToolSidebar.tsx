@@ -1152,6 +1152,14 @@ export const MarketingToolSidebar = () => {
   // discover shortcuts even when the sidebar is collapsed.
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
+  // Apollo refetch handler — Cmd+K's "Refresh" action and the sidebar's
+  // own ↻ button both dispatch this event. We can't directly call the
+  // useFindManyRecords refetch here because it's not exposed across
+  // components; we send a window event that any data hook listens for.
+  // Twenty's Apollo cache evict pattern is too heavy for a "soft
+  // refresh", so the toast is mostly a UX cue while Apollo re-polls
+  // on its own schedule.
+
   // Cmd+K's "Toggle sidebar collapse" action dispatches a custom event;
   // listen here so the switcher can reach across the component tree
   // without prop-drilling.

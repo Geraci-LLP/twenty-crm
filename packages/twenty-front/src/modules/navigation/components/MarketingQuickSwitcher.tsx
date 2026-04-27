@@ -287,6 +287,7 @@ const StyledResultRow = styled.button<{ isHighlighted?: boolean }>`
   font-size: 13px;
   gap: 10px;
   padding: 8px 16px;
+  scroll-margin: 60px;
   text-align: left;
   width: 100%;
   &:hover {
@@ -566,6 +567,21 @@ export const MarketingQuickSwitcher = () => {
     return () => window.clearTimeout(id);
   }, [isOpen, inputEl]);
 
+  // Auto-scroll the highlighted Cmd+K row into view as the user walks
+  // up / down with arrow keys. Same pattern as the sidebar's filter
+  // navigation: data-attribute on the highlighted row, querySelector +
+  // scrollIntoView in an effect.
+  useEffect(() => {
+    if (highlightedIndex < 0 || !isOpen) return;
+    const id = window.setTimeout(() => {
+      const el = document.querySelector<HTMLButtonElement>(
+        '[data-cmdk-highlighted="true"]',
+      );
+      el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [highlightedIndex, isOpen]);
+
   const queryActive = text.trim().length >= 2;
   const queryPattern = `%${text.trim()}%`;
   // "Today's records" group: 24h-window of recently-visited records,
@@ -802,6 +818,30 @@ export const MarketingQuickSwitcher = () => {
       setHighlightedIndex((i) => (i - 1 + allHits.length) % allHits.length);
       return;
     }
+    if (e.key === 'PageDown') {
+      if (allHits.length === 0) return;
+      e.preventDefault();
+      setHighlightedIndex((i) => Math.min(i + 5, allHits.length - 1));
+      return;
+    }
+    if (e.key === 'PageUp') {
+      if (allHits.length === 0) return;
+      e.preventDefault();
+      setHighlightedIndex((i) => Math.max(i - 5, 0));
+      return;
+    }
+    if (e.key === 'Home') {
+      if (allHits.length === 0) return;
+      e.preventDefault();
+      setHighlightedIndex(0);
+      return;
+    }
+    if (e.key === 'End') {
+      if (allHits.length === 0) return;
+      e.preventDefault();
+      setHighlightedIndex(allHits.length - 1);
+      return;
+    }
     if (e.key === 'Tab') {
       if (allHits.length === 0) return;
       e.preventDefault();
@@ -945,67 +985,81 @@ export const MarketingQuickSwitcher = () => {
           {todayHits.length > 0 && (
             <>
               <StyledSectionLabel>Today</StyledSectionLabel>
-              {todayHits.map((hit) => (
-                <StyledResultRow
-                  key={hit.key}
-                  type="button"
-                  isHighlighted={highlightedKey === hit.key}
-                  onClick={() => {
-                    navigate(hit.href);
-                    setIsOpen(false);
-                  }}
-                >
-                  <StyledBadge>{hit.badge}</StyledBadge>
-                  {hit.recordObject !== undefined &&
-                    hit.recordId !== undefined &&
-                    (pinnedMap[hit.recordObject] ?? []).includes(
-                      hit.recordId,
-                    ) && (
-                      <StyledPinStar
-                        aria-label="pinned"
-                        title="Pinned in sidebar"
-                      >
-                        ★
-                      </StyledPinStar>
-                    )}
-                  <StyledLabel>
-                    {renderHighlighted(hit.label, text)}
-                  </StyledLabel>
-                </StyledResultRow>
-              ))}
+              {todayHits.map((hit) => {
+                const isCurrent = location.pathname === hit.href;
+                return (
+                  <StyledResultRow
+                    key={hit.key}
+                    type="button"
+                    isHighlighted={highlightedKey === hit.key}
+                    data-cmdk-highlighted={
+                      highlightedKey === hit.key ? 'true' : undefined
+                    }
+                    onClick={() => {
+                      navigate(hit.href);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <StyledBadge>{hit.badge}</StyledBadge>
+                    {hit.recordObject !== undefined &&
+                      hit.recordId !== undefined &&
+                      (pinnedMap[hit.recordObject] ?? []).includes(
+                        hit.recordId,
+                      ) && (
+                        <StyledPinStar
+                          aria-label="pinned"
+                          title="Pinned in sidebar"
+                        >
+                          ★
+                        </StyledPinStar>
+                      )}
+                    <StyledLabel>
+                      {renderHighlighted(hit.label, text)}
+                    </StyledLabel>
+                    {isCurrent && <StyledHint>current</StyledHint>}
+                  </StyledResultRow>
+                );
+              })}
             </>
           )}
           {dedupedVisitHits.length > 0 && (
             <>
               <StyledSectionLabel>Recently visited</StyledSectionLabel>
-              {dedupedVisitHits.map((hit) => (
-                <StyledResultRow
-                  key={hit.key}
-                  type="button"
-                  isHighlighted={highlightedKey === hit.key}
-                  onClick={() => {
-                    navigate(hit.href);
-                    setIsOpen(false);
-                  }}
-                >
-                  <StyledBadge>{hit.badge}</StyledBadge>
-                  {hit.recordObject !== undefined &&
-                    hit.recordId !== undefined &&
-                    (pinnedMap[hit.recordObject] ?? []).includes(
-                      hit.recordId,
-                    ) && (
-                      <StyledPinStar
-                        aria-label="pinned"
-                        title="Pinned in sidebar"
-                      >
-                        ★
-                      </StyledPinStar>
-                    )}
-                  <StyledLabel>
-                    {renderHighlighted(hit.label, text)}
-                  </StyledLabel>
-                </StyledResultRow>
-              ))}
+              {dedupedVisitHits.map((hit) => {
+                const isCurrent = location.pathname === hit.href;
+                return (
+                  <StyledResultRow
+                    key={hit.key}
+                    type="button"
+                    isHighlighted={highlightedKey === hit.key}
+                    data-cmdk-highlighted={
+                      highlightedKey === hit.key ? 'true' : undefined
+                    }
+                    onClick={() => {
+                      navigate(hit.href);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <StyledBadge>{hit.badge}</StyledBadge>
+                    {hit.recordObject !== undefined &&
+                      hit.recordId !== undefined &&
+                      (pinnedMap[hit.recordObject] ?? []).includes(
+                        hit.recordId,
+                      ) && (
+                        <StyledPinStar
+                          aria-label="pinned"
+                          title="Pinned in sidebar"
+                        >
+                          ★
+                        </StyledPinStar>
+                      )}
+                    <StyledLabel>
+                      {renderHighlighted(hit.label, text)}
+                    </StyledLabel>
+                    {isCurrent && <StyledHint>current</StyledHint>}
+                  </StyledResultRow>
+                );
+              })}
             </>
           )}
           {actionHits.length > 0 && (
@@ -1016,6 +1070,9 @@ export const MarketingQuickSwitcher = () => {
                   key={hit.key}
                   type="button"
                   isHighlighted={highlightedKey === hit.key}
+                  data-cmdk-highlighted={
+                    highlightedKey === hit.key ? 'true' : undefined
+                  }
                   onClick={() => {
                     if (runAction(hit.key)) {
                       setIsOpen(false);
@@ -1044,6 +1101,9 @@ export const MarketingQuickSwitcher = () => {
                     key={hit.key}
                     type="button"
                     isHighlighted={highlightedKey === hit.key}
+                    data-cmdk-highlighted={
+                      highlightedKey === hit.key ? 'true' : undefined
+                    }
                     onClick={() => {
                       navigate(hit.href);
                       setIsOpen(false);
@@ -1070,6 +1130,9 @@ export const MarketingQuickSwitcher = () => {
                   key={hit.key}
                   type="button"
                   isHighlighted={highlightedKey === hit.key}
+                  data-cmdk-highlighted={
+                    highlightedKey === hit.key ? 'true' : undefined
+                  }
                   onClick={() => {
                     navigate(hit.href);
                     setIsOpen(false);
