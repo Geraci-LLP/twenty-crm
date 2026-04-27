@@ -306,14 +306,22 @@ const StyledCollapseToggle = styled.button<{ collapsed: boolean }>`
   }
 `;
 
-const StyledCollapsedHint = styled.div`
+const StyledCollapsedHint = styled.button`
+  background: transparent;
+  border: 0;
   color: ${themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  font-family: ${themeCssVariables.font.family};
   font-size: 10px;
   letter-spacing: 0.08em;
-  padding-top: 40px;
+  padding: 40px 0 0;
   text-align: center;
   text-transform: uppercase;
+  width: 100%;
   writing-mode: vertical-rl;
+  &:hover {
+    color: ${themeCssVariables.font.color.primary};
+  }
 `;
 
 const StyledHeader = styled.div`
@@ -341,16 +349,22 @@ const StyledTitle = styled.div`
   letter-spacing: -0.01em;
 `;
 
-const StyledTitleIcon = styled.span`
+const StyledTitleIcon = styled.button`
   align-items: center;
   background: ${themeCssVariables.background.transparent.lighter};
+  border: 0;
   border-radius: ${themeCssVariables.border.radius.sm};
   color: ${themeCssVariables.color.orange};
+  cursor: pointer;
   display: flex;
   flex-shrink: 0;
   height: 22px;
   justify-content: center;
+  padding: 0;
   width: 22px;
+  &:hover {
+    filter: brightness(0.95);
+  }
 `;
 
 const StyledCountChip = styled.span`
@@ -881,6 +895,8 @@ const SHORTCUTS: Shortcut[] = [
   { keys: '/', description: 'Focus the sidebar filter' },
   { keys: '↑ ↓', description: 'Walk filtered results' },
   { keys: 'Enter', description: 'Open highlighted / first match' },
+  { keys: '⇧ Enter', description: 'Open in new tab (Cmd+K)' },
+  { keys: 'Tab', description: 'Jump to next group (Cmd+K)' },
   { keys: '[', description: 'Collapse / expand sidebar' },
   { keys: 'g 1', description: 'Go to Email Campaigns' },
   { keys: 'g 2', description: 'Go to Marketing Campaigns' },
@@ -888,6 +904,8 @@ const SHORTCUTS: Shortcut[] = [
   { keys: 'g 4', description: 'Go to Forms' },
   { keys: 'g 5', description: 'Go to Analytics' },
   { keys: 'g 6', description: 'Go to Audiences (People)' },
+  { keys: 'c', description: 'Create a new record in this section' },
+  { keys: 'p', description: 'Pin / unpin the current record' },
   { keys: 'Esc', description: 'Close dialogs / cancel forms' },
 ];
 
@@ -1323,6 +1341,31 @@ export const MarketingToolSidebar = () => {
       if (e.key === '[') {
         e.preventDefault();
         toggleCollapsed();
+        return;
+      }
+      if (e.key === 'c' && !e.shiftKey) {
+        // Quick-create shortcut. Expand the sidebar first if needed so
+        // the form actually mounts visibly.
+        e.preventDefault();
+        if (isCollapsed) toggleCollapsed();
+        setIsCreateOpen(true);
+        return;
+      }
+      if (e.key === 'p' && !e.shiftKey) {
+        // Pin/unpin the currently-viewed record. Only meaningful on a
+        // show page; index pages get no-op.
+        const rec = getCurrentRecordId(location.pathname, config.showPath);
+        if (rec === null) return;
+        e.preventDefault();
+        const list = pinnedMap[config.objectNameSingular] ?? [];
+        const wasPinned = list.includes(rec);
+        const next = { ...pinnedMap };
+        next[config.objectNameSingular] = wasPinned
+          ? list.filter((x) => x !== rec)
+          : [...list, rec];
+        setPinnedMap(next);
+        writePinned(next);
+        setToast(wasPinned ? 'Unpinned' : 'Pinned');
       }
     };
     window.addEventListener('keydown', onKey);
@@ -1551,6 +1594,18 @@ export const MarketingToolSidebar = () => {
     .filter((v) => v.id !== currentRecordId)
     .filter((v) => matchesFilter(v.name))
     .slice(0, 8);
+
+  // Most-visited records of the *current* section. Sorted by visit
+  // count descending; only included if a record has been visited 3+
+  // times so the section doesn't show every recent visit twice.
+  const mostVisitedInSection = recentVisits
+    .filter((v) => v.objectNameSingular === config.objectNameSingular)
+    .filter((v) => (v.visitCount ?? 1) >= 3)
+    .filter((v) => !pinnedIds.includes(v.id))
+    .filter((v) => v.id !== currentRecordId)
+    .filter((v) => matchesFilter(v.name))
+    .sort((a, b) => (b.visitCount ?? 1) - (a.visitCount ?? 1))
+    .slice(0, 3);
   const hasAnyResults =
     filteredViews.length > 0 ||
     filteredPinned.length > 0 ||
@@ -1760,7 +1815,12 @@ export const MarketingToolSidebar = () => {
         />
       )}
       {isCollapsed ? (
-        <StyledCollapsedHint>
+        <StyledCollapsedHint
+          type="button"
+          onClick={toggleCollapsed}
+          aria-label="Expand sidebar"
+          title="Click to expand sidebar"
+        >
           {(() => {
             // When viewing a record, surface its name in the vertical
             // hint so the user has context without expanding the
@@ -1782,7 +1842,12 @@ export const MarketingToolSidebar = () => {
           <StyledHeader>
             <StyledTitleRow>
               <StyledTitle>
-                <StyledTitleIcon aria-hidden="true">
+                <StyledTitleIcon
+                  type="button"
+                  onClick={toggleCollapsed}
+                  aria-label="Collapse sidebar"
+                  title="Collapse sidebar"
+                >
                   <config.Icon size={14} />
                 </StyledTitleIcon>
                 {config.title}
@@ -2179,6 +2244,38 @@ export const MarketingToolSidebar = () => {
             </StyledSection>
           )}
 
+          {mostVisitedInSection.length > 0 && (
+            <StyledSection>
+              <StyledSectionLabel>
+                Frequently visited · {mostVisitedInSection.length}
+              </StyledSectionLabel>
+              {mostVisitedInSection.map((v) => (
+                <StyledItemRow
+                  key={`mv-${v.id}`}
+                  active={currentRecordId === v.id}
+                >
+                  <StyledItemLink
+                    to={`${config.showPath}/${v.id}`}
+                    title={`${v.name ?? '(unnamed)'} — ${v.visitCount ?? 1}× visits`}
+                  >
+                    <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
+                    <StyledItemTimestamp>
+                      {v.visitCount ?? 1}×
+                    </StyledItemTimestamp>
+                  </StyledItemLink>
+                  <StyledPinButton
+                    pinned={false}
+                    onClick={() => togglePin(v.id)}
+                    title="Pin"
+                    type="button"
+                  >
+                    ☆
+                  </StyledPinButton>
+                </StyledItemRow>
+              ))}
+            </StyledSection>
+          )}
+
           {filteredVisits.length > 0 && (
             <StyledSection>
               <StyledSectionLabelRow>
@@ -2221,14 +2318,16 @@ export const MarketingToolSidebar = () => {
                   >
                     <StyledItemLink
                       to={`/object/${v.objectNameSingular}/${v.id}`}
-                      title={`${v.name ?? '(unnamed)'} — visited ${new Date(v.visitedAt).toLocaleString()}`}
+                      title={`${v.name ?? '(unnamed)'} — visited ${new Date(v.visitedAt).toLocaleString()}${(v.visitCount ?? 1) > 1 ? ` (${v.visitCount}× total)` : ''}`}
                     >
                       <StyledItemBadge>
                         {badgeForObject(v.objectNameSingular)}
                       </StyledItemBadge>
                       <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
                       <StyledItemTimestamp>
-                        {formatRelativeShort(v.visitedAt)}
+                        {(v.visitCount ?? 1) > 1
+                          ? `${v.visitCount}× ${formatRelativeShort(v.visitedAt)}`
+                          : formatRelativeShort(v.visitedAt)}
                       </StyledItemTimestamp>
                     </StyledItemLink>
                   </StyledItemRow>

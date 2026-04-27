@@ -12,6 +12,37 @@ import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
 import { readVisits } from '@/navigation/utils/recentlyVisitedStore';
 
+// Read the marketing sidebar's pinned map so we can star result rows
+// for records the user has pinned. Same shape and storage key the
+// sidebar uses (Record<objectNameSingular, recordId[]>).
+const readPinnedFromStorage = (): Record<string, string[]> => {
+  try {
+    const raw = window.localStorage.getItem('twenty.marketingSidebar.pinned');
+    if (raw === null || raw === '') return {};
+    const parsed = JSON.parse(raw) as Record<string, string[]>;
+    if (typeof parsed !== 'object' || parsed === null) return {};
+    return parsed;
+  } catch {
+    return {};
+  }
+};
+
+// Read the marketing sidebar's recent-search list. Stored under the
+// same localStorage key the sidebar uses so the lists stay in sync.
+const readRecentSearchesFromStorage = (): string[] => {
+  try {
+    const raw = window.localStorage.getItem(
+      'twenty.marketingSidebar.recentSearches',
+    );
+    if (raw === null || raw === '') return [];
+    const parsed = JSON.parse(raw) as string[];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((s): s is string => typeof s === 'string').slice(0, 5);
+  } catch {
+    return [];
+  }
+};
+
 // Global Cmd/Ctrl+K command palette. Available on every route — not
 // just marketing sections — so the user can jump anywhere without
 // reaching for the sidebar. Shows section-navigation shortcuts at the
@@ -247,6 +278,12 @@ const StyledBadge = styled.span`
   text-transform: uppercase;
 `;
 
+const StyledPinStar = styled.span`
+  color: ${themeCssVariables.color.orange};
+  flex-shrink: 0;
+  font-size: 11px;
+`;
+
 const StyledLabel = styled.span`
   flex: 1;
   overflow: hidden;
@@ -299,6 +336,28 @@ const StyledHint = styled.span`
   letter-spacing: 0.04em;
 `;
 
+const StyledRecentSearchRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 18px 4px;
+`;
+
+const StyledRecentSearchChip = styled.button`
+  background: ${themeCssVariables.background.transparent.lighter};
+  border: 1px solid ${themeCssVariables.border.color.light};
+  border-radius: 12px;
+  color: ${themeCssVariables.font.color.secondary};
+  cursor: pointer;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11px;
+  padding: 3px 9px;
+  &:hover {
+    background: ${themeCssVariables.background.transparent.medium};
+    color: ${themeCssVariables.font.color.primary};
+  }
+`;
+
 const StyledFooter = styled.div`
   border-top: 1px solid ${themeCssVariables.border.color.light};
   color: ${themeCssVariables.font.color.tertiary};
@@ -320,6 +379,10 @@ type SearchHit = {
   label: string;
   badge: string;
   group: 'visits' | 'actions' | 'navigation' | 'records';
+  // Optional record metadata so the row can render a star when the
+  // record is pinned in the sidebar.
+  recordObject?: string;
+  recordId?: string;
 };
 
 // Map an action key to the route that triggers it. The "create" routes
@@ -390,6 +453,11 @@ export const MarketingQuickSwitcher = () => {
     { id: string; name: string | null; objectNameSingular: string }[]
   >([]);
 
+  // Recent searches mirror what the sidebar tracks. Surfaced as quick-
+  // select chips when the input is empty.
+  const [savedSearches, setSavedSearches] = useState<string[]>([]);
+  const [pinnedMap, setPinnedMap] = useState<Record<string, string[]>>({});
+
   // Global Cmd/Ctrl+K to open. Esc to close. Any other key while closed
   // is ignored. We intentionally don't filter by INPUT focus — Cmd+K
   // should work even from inside a text field, matching how Linear,
@@ -426,6 +494,8 @@ export const MarketingQuickSwitcher = () => {
           objectNameSingular: v.objectNameSingular,
         })),
     );
+    setSavedSearches(readRecentSearchesFromStorage());
+    setPinnedMap(readPinnedFromStorage());
     // Defer focus to the next paint so the modal has actually mounted.
     const id = window.setTimeout(() => inputEl?.focus(), 0);
     return () => window.clearTimeout(id);
@@ -492,6 +562,8 @@ export const MarketingQuickSwitcher = () => {
           label: r.name ?? '(unnamed)',
           badge: 'Email',
           group: 'records',
+          recordObject: 'campaign',
+          recordId: r.id,
         })),
         ...xMcs.records.map<SearchHit>((r) => ({
           key: `r:mc-${r.id}`,
@@ -499,6 +571,8 @@ export const MarketingQuickSwitcher = () => {
           label: r.name ?? '(unnamed)',
           badge: 'MC',
           group: 'records',
+          recordObject: 'marketingCampaign',
+          recordId: r.id,
         })),
         ...xSequences.records.map<SearchHit>((r) => ({
           key: `r:seq-${r.id}`,
@@ -506,6 +580,8 @@ export const MarketingQuickSwitcher = () => {
           label: r.name ?? '(unnamed)',
           badge: 'Seq',
           group: 'records',
+          recordObject: 'sequence',
+          recordId: r.id,
         })),
         ...xForms.records.map<SearchHit>((r) => ({
           key: `r:form-${r.id}`,
@@ -513,6 +589,8 @@ export const MarketingQuickSwitcher = () => {
           label: r.name ?? '(unnamed)',
           badge: 'Form',
           group: 'records',
+          recordObject: 'form',
+          recordId: r.id,
         })),
       ].slice(0, 16)
     : [];
@@ -533,6 +611,8 @@ export const MarketingQuickSwitcher = () => {
       label: v.name ?? '(unnamed)',
       badge: badgeForVisitObject(v.objectNameSingular),
       group: 'visits',
+      recordObject: v.objectNameSingular,
+      recordId: v.id,
     }));
 
   // Actions surface only when the user has typed something — keeping the
@@ -650,6 +730,34 @@ export const MarketingQuickSwitcher = () => {
           {allHits.length === 0 && queryActive && (
             <StyledEmpty>No matches for &quot;{text}&quot;</StyledEmpty>
           )}
+          {text === '' && savedSearches.length > 0 && (
+            <>
+              <StyledSectionLabel>Recent searches</StyledSectionLabel>
+              <StyledRecentSearchRow>
+                {savedSearches.map((s) => (
+                  <StyledRecentSearchChip
+                    key={s}
+                    type="button"
+                    onClick={() => {
+                      setText(s);
+                      setHighlightedIndex(0);
+                      inputEl?.focus();
+                    }}
+                  >
+                    {s}
+                  </StyledRecentSearchChip>
+                ))}
+              </StyledRecentSearchRow>
+            </>
+          )}
+          {text === '' &&
+            visitHits.length === 0 &&
+            savedSearches.length === 0 && (
+              <StyledEmpty>
+                No recent visits yet — open a record and it&apos;ll show up here
+                for one-click return.
+              </StyledEmpty>
+            )}
           {visitHits.length > 0 && (
             <>
               <StyledSectionLabel>Recently visited</StyledSectionLabel>
@@ -664,6 +772,18 @@ export const MarketingQuickSwitcher = () => {
                   }}
                 >
                   <StyledBadge>{hit.badge}</StyledBadge>
+                  {hit.recordObject !== undefined &&
+                    hit.recordId !== undefined &&
+                    (pinnedMap[hit.recordObject] ?? []).includes(
+                      hit.recordId,
+                    ) && (
+                      <StyledPinStar
+                        aria-label="pinned"
+                        title="Pinned in sidebar"
+                      >
+                        ★
+                      </StyledPinStar>
+                    )}
                   <StyledLabel>
                     {renderHighlighted(hit.label, text)}
                   </StyledLabel>
@@ -737,6 +857,18 @@ export const MarketingQuickSwitcher = () => {
                   }}
                 >
                   <StyledBadge>{hit.badge}</StyledBadge>
+                  {hit.recordObject !== undefined &&
+                    hit.recordId !== undefined &&
+                    (pinnedMap[hit.recordObject] ?? []).includes(
+                      hit.recordId,
+                    ) && (
+                      <StyledPinStar
+                        aria-label="pinned"
+                        title="Pinned in sidebar"
+                      >
+                        ★
+                      </StyledPinStar>
+                    )}
                   <StyledLabel>
                     {renderHighlighted(hit.label, text)}
                   </StyledLabel>

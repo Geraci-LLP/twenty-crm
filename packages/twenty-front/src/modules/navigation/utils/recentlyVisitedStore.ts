@@ -11,6 +11,9 @@ export type Visit = {
   id: string;
   name: string | null;
   visitedAt: number;
+  // Optional cumulative visit count. Older entries written before this
+  // field was introduced may omit it; readers should default to 1.
+  visitCount?: number;
 };
 
 export const readVisits = (): Visit[] => {
@@ -33,16 +36,24 @@ export const writeVisits = (visits: Visit[]): void => {
   }
 };
 
-export const logVisit = (visit: Omit<Visit, 'visitedAt'>): void => {
+export const logVisit = (
+  visit: Omit<Visit, 'visitedAt' | 'visitCount'>,
+): void => {
   const existing = readVisits();
+  // Carry over the previous visit's count so re-visits accumulate.
+  const prior = existing.find(
+    (v) =>
+      v.objectNameSingular === visit.objectNameSingular && v.id === visit.id,
+  );
   // Drop any prior entry for the same record so the new one moves to
   // the front; uniqueness key is (objectNameSingular, id).
   const filtered = existing.filter(
     (v) =>
       !(v.objectNameSingular === visit.objectNameSingular && v.id === visit.id),
   );
+  const visitCount = (prior?.visitCount ?? 0) + 1;
   const next: Visit[] = [
-    { ...visit, visitedAt: Date.now() },
+    { ...visit, visitedAt: Date.now(), visitCount },
     ...filtered,
   ].slice(0, MAX_ENTRIES);
   writeVisits(next);
