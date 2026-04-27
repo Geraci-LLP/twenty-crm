@@ -1,5 +1,5 @@
 import { styled } from '@linaria/react';
-import { useEffect, useState } from 'react';
+import { type MouseEvent as ReactMouseEvent, useEffect, useState } from 'react';
 import {
   Link,
   useLocation,
@@ -454,6 +454,61 @@ const StyledChipRemove = styled.span`
   }
 `;
 
+// Right-click context menu — fixed position so it can escape the
+// sidebar's overflow:auto. Sits above the help overlay's z-index by
+// design so a context menu opened over an open help overlay still
+// works (rare edge case but harmless).
+/* oxlint-disable twenty/no-hardcoded-colors */
+const StyledContextMenu = styled.div`
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  padding: 4px;
+  position: fixed;
+  z-index: 10000;
+`;
+/* oxlint-enable twenty/no-hardcoded-colors */
+
+const StyledContextMenuItem = styled.button`
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  display: flex;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 12.5px;
+  gap: 8px;
+  padding: 6px 10px;
+  text-align: left;
+  width: 100%;
+  &:hover {
+    background: ${themeCssVariables.background.transparent.lighter};
+  }
+`;
+
+/* oxlint-disable twenty/no-hardcoded-colors */
+const StyledContextMenuToast = styled.div`
+  background: ${themeCssVariables.color.orange};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  bottom: 24px;
+  color: #ffffff;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 12px;
+  left: 50%;
+  padding: 8px 14px;
+  pointer-events: none;
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 10001;
+`;
+/* oxlint-enable twenty/no-hardcoded-colors */
+
 const StyledSectionLabel = styled.div`
   color: ${themeCssVariables.font.color.tertiary};
   font-size: 11px;
@@ -747,6 +802,59 @@ export const MarketingToolSidebar = () => {
     window.addEventListener('storage', refresh);
     return () => window.removeEventListener('storage', refresh);
   }, []);
+
+  // Right-click context menu state. Tracks pointer position (clamped on
+  // render so the menu can't render off-screen), the record's url + id,
+  // and the row's source (so we know whether "Pin" or "Unpin" applies).
+  type ContextMenuState = {
+    x: number;
+    y: number;
+    href: string;
+    objectNameSingular: string;
+    recordId: string;
+    label: string;
+    source: 'pinned' | 'recent' | 'visit' | 'cross';
+  };
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  // Auto-dismiss the toast after a brief moment.
+  useEffect(() => {
+    if (toast === null) return;
+    const id = window.setTimeout(() => setToast(null), 1800);
+    return () => window.clearTimeout(id);
+  }, [toast]);
+
+  // Close the context menu on any click outside or on Escape.
+  useEffect(() => {
+    if (contextMenu === null) return;
+    const close = () => setContextMenu(null);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close();
+    };
+    window.addEventListener('click', close);
+    window.addEventListener('contextmenu', close);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('click', close);
+      window.removeEventListener('contextmenu', close);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [contextMenu]);
+
+  const openContextMenu = (
+    e: ReactMouseEvent,
+    state: Omit<ContextMenuState, 'x' | 'y'>,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Clamp so the menu stays within the viewport (rough estimate; the
+    // actual width depends on the longest label but 200px is a safe upper
+    // bound for our 4 menu items).
+    const x = Math.min(e.clientX, window.innerWidth - 200);
+    const y = Math.min(e.clientY, window.innerHeight - 180);
+    setContextMenu({ ...state, x, y });
+  };
 
   // Reset highlight whenever the filter text changes so a new query
   // doesn't keep the previous query's highlight pointing at a row that
@@ -1221,6 +1329,58 @@ export const MarketingToolSidebar = () => {
 
   return (
     <StyledSidebar collapsed={isCollapsed}>
+      {contextMenu !== null && (
+        <StyledContextMenu
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+          onClick={(e) => e.stopPropagation()}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <StyledContextMenuItem
+            type="button"
+            onClick={() => {
+              window.open(contextMenu.href, '_blank', 'noopener,noreferrer');
+              setContextMenu(null);
+            }}
+          >
+            ↗ Open in new tab
+          </StyledContextMenuItem>
+          <StyledContextMenuItem
+            type="button"
+            onClick={async () => {
+              const absolute = `${window.location.origin}${contextMenu.href}`;
+              try {
+                await navigator.clipboard.writeText(absolute);
+                setToast(`Copied link to ${contextMenu.label}`);
+              } catch {
+                setToast('Could not copy link');
+              }
+              setContextMenu(null);
+            }}
+          >
+            ⎘ Copy link
+          </StyledContextMenuItem>
+          {(contextMenu.source === 'pinned' ||
+            contextMenu.source === 'recent') && (
+            <StyledContextMenuItem
+              type="button"
+              onClick={() => {
+                togglePin(contextMenu.recordId);
+                setToast(
+                  contextMenu.source === 'pinned'
+                    ? `Unpinned ${contextMenu.label}`
+                    : `Pinned ${contextMenu.label}`,
+                );
+                setContextMenu(null);
+              }}
+            >
+              {contextMenu.source === 'pinned' ? '☆ Unpin' : '★ Pin'}
+            </StyledContextMenuItem>
+          )}
+        </StyledContextMenu>
+      )}
+      {toast !== null && (
+        <StyledContextMenuToast>{toast}</StyledContextMenuToast>
+      )}
       {isHelpOpen && (
         <StyledHelpBackdrop
           onClick={() => setIsHelpOpen(false)}
@@ -1471,6 +1631,15 @@ export const MarketingToolSidebar = () => {
                       highlightedKey === xKey ? 'true' : undefined
                     }
                     isHighlighted={highlightedKey === xKey}
+                    onContextMenu={(e) =>
+                      openContextMenu(e, {
+                        href: `${record.showPath}/${record.id}`,
+                        objectNameSingular: record.objectNameSingular,
+                        recordId: record.id,
+                        label: record.name ?? '(unnamed)',
+                        source: 'cross',
+                      })
+                    }
                   >
                     <StyledItemLink
                       to={`${record.showPath}/${record.id}`}
@@ -1542,6 +1711,15 @@ export const MarketingToolSidebar = () => {
                     dropTargetPinId === record.id && draggingPinId !== record.id
                   }
                   isHighlighted={highlightedKey === `pinned:${record.id}`}
+                  onContextMenu={(e) =>
+                    openContextMenu(e, {
+                      href: `${config.showPath}/${record.id}`,
+                      objectNameSingular: config.objectNameSingular,
+                      recordId: record.id,
+                      label: record.name ?? '(unnamed)',
+                      source: 'pinned',
+                    })
+                  }
                   draggable
                   onDragStart={(e) => {
                     setDraggingPinId(record.id);
@@ -1610,6 +1788,15 @@ export const MarketingToolSidebar = () => {
                       highlightedKey === visitKey ? 'true' : undefined
                     }
                     isHighlighted={highlightedKey === visitKey}
+                    onContextMenu={(e) =>
+                      openContextMenu(e, {
+                        href: `/object/${v.objectNameSingular}/${v.id}`,
+                        objectNameSingular: v.objectNameSingular,
+                        recordId: v.id,
+                        label: v.name ?? '(unnamed)',
+                        source: 'visit',
+                      })
+                    }
                   >
                     <StyledItemLink
                       to={`/object/${v.objectNameSingular}/${v.id}`}
@@ -1673,6 +1860,15 @@ export const MarketingToolSidebar = () => {
                   }
                   active={currentRecordId === record.id}
                   isHighlighted={highlightedKey === `recent:${record.id}`}
+                  onContextMenu={(e) =>
+                    openContextMenu(e, {
+                      href: `${config.showPath}/${record.id}`,
+                      objectNameSingular: config.objectNameSingular,
+                      recordId: record.id,
+                      label: record.name ?? '(unnamed)',
+                      source: 'recent',
+                    })
+                  }
                 >
                   <StyledItemLink
                     to={`${config.showPath}/${record.id}`}
