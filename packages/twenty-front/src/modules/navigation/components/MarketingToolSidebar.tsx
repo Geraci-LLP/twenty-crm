@@ -375,18 +375,28 @@ const StyledItemRow = styled.div<{
   active?: boolean;
   isDragging?: boolean;
   isDropTarget?: boolean;
+  isHighlighted?: boolean;
 }>`
   align-items: center;
-  background: ${(p) =>
-    p.active === true
-      ? themeCssVariables.background.transparent.lighter
-      : 'transparent'};
+  background: ${(p) => {
+    if (p.isHighlighted === true)
+      return themeCssVariables.background.transparent.medium;
+    if (p.active === true)
+      return themeCssVariables.background.transparent.lighter;
+    return 'transparent';
+  }};
+  border-left: 2px solid
+    ${(p) =>
+      p.isHighlighted === true
+        ? themeCssVariables.color.orange
+        : 'transparent'};
   border-radius: ${themeCssVariables.border.radius.sm};
   border-top: 2px solid
     ${(p) =>
       p.isDropTarget === true ? themeCssVariables.color.orange : 'transparent'};
   display: flex;
   opacity: ${(p) => (p.isDragging === true ? 0.4 : 1)};
+  scroll-margin: 60px;
   &:hover {
     background: ${themeCssVariables.background.transparent.lighter};
   }
@@ -555,7 +565,8 @@ type Shortcut = { keys: string; description: string };
 const SHORTCUTS: Shortcut[] = [
   { keys: '?', description: 'Open this shortcut help' },
   { keys: '/', description: 'Focus the sidebar filter' },
-  { keys: 'Enter', description: 'Open first match in filter' },
+  { keys: '↑ ↓', description: 'Walk filtered results' },
+  { keys: 'Enter', description: 'Open highlighted / first match' },
   { keys: '[', description: 'Collapse / expand sidebar' },
   { keys: 'g 1', description: 'Go to Email Campaigns' },
   { keys: 'g 2', description: 'Go to Marketing Campaigns' },
@@ -626,6 +637,32 @@ export const MarketingToolSidebar = () => {
   // drop / dragend.
   const [draggingPinId, setDraggingPinId] = useState<string | null>(null);
   const [dropTargetPinId, setDropTargetPinId] = useState<string | null>(null);
+
+  // Keyboard navigation through filtered results. Pressing ArrowDown /
+  // ArrowUp inside the search input walks the highlighted item; Enter
+  // opens it. -1 means "no highlight, fall back to first match" so an
+  // empty filter or untouched search still has the original behavior.
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+
+  // Reset highlight whenever the filter text changes so a new query
+  // doesn't keep the previous query's highlight pointing at a row that
+  // may now be off-screen / out of the filtered list.
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [filterText]);
+
+  // Scroll the currently-highlighted row into view on each arrow step.
+  // The render below stamps data-highlighted="true" on the highlighted
+  // row; we look it up here after paint and call scrollIntoView with
+  // block:'nearest' so the row settles inside the sidebar's overflow
+  // area without yanking the page itself.
+  useEffect(() => {
+    if (highlightedIndex < 0) return;
+    const el = document.querySelector<HTMLDivElement>(
+      '[data-highlighted="true"]',
+    );
+    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [highlightedIndex]);
 
   // Browser-history-style recently-visited tracker. Mirrors localStorage
   // into component state so re-renders pick up new visits and so
@@ -954,6 +991,39 @@ export const MarketingToolSidebar = () => {
     .map((id) => filteredPinned.find((r) => r.id === id))
     .filter((r): r is RecentRecord => r !== undefined);
 
+  // Flat list of all clickable items in current render order. Used for
+  // arrow-key keyboard navigation: highlightedIndex points into this
+  // list, ArrowDown/Up walks it, Enter opens flatItems[highlightedIndex].
+  // Each entry carries a unique React-style key so the row can match
+  // itself against the highlighted entry without index-counting drift.
+  type FlatItem = { key: string; to: string };
+  const flatItems: FlatItem[] = [
+    ...filteredViews.map<FlatItem>((v) => ({
+      key: `view:${v.id}`,
+      to: `${indexPath}?viewId=${v.id}`,
+    })),
+    ...orderedPinnedRecords.map<FlatItem>((r) => ({
+      key: `pinned:${r.id}`,
+      to: `${config.showPath}/${r.id}`,
+    })),
+    ...filteredVisits.map<FlatItem>((v) => ({
+      key: `visit:${v.objectNameSingular}-${v.id}`,
+      to: `/object/${v.objectNameSingular}/${v.id}`,
+    })),
+    ...filteredCrossRecent.map<FlatItem>((r) => ({
+      key: `cross:${r.objectNameSingular}-${r.id}`,
+      to: `${r.showPath}/${r.id}`,
+    })),
+    ...filteredRecent.map<FlatItem>((r) => ({
+      key: `recent:${r.id}`,
+      to: `${config.showPath}/${r.id}`,
+    })),
+  ];
+  const highlightedKey =
+    highlightedIndex >= 0 && highlightedIndex < flatItems.length
+      ? flatItems[highlightedIndex].key
+      : null;
+
   return (
     <StyledSidebar collapsed={isCollapsed}>
       {isHelpOpen && (
@@ -1089,25 +1159,53 @@ export const MarketingToolSidebar = () => {
             <StyledSearchInput
               ref={setSearchInputEl}
               type="search"
-              placeholder="Filter — / to focus, Enter to open"
+              placeholder="Filter — / focus · ↑↓ pick · Enter open"
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
               onKeyDown={(e) => {
+                // Arrow-key walk through filtered results.
+                if (e.key === 'ArrowDown') {
+                  if (flatItems.length === 0) return;
+                  e.preventDefault();
+                  setHighlightedIndex(
+                    (i) => (i + 1) % Math.max(flatItems.length, 1),
+                  );
+                  return;
+                }
+                if (e.key === 'ArrowUp') {
+                  if (flatItems.length === 0) return;
+                  e.preventDefault();
+                  setHighlightedIndex(
+                    (i) =>
+                      (i - 1 + flatItems.length) %
+                      Math.max(flatItems.length, 1),
+                  );
+                  return;
+                }
+                if (e.key === 'Escape') {
+                  // Clear highlight and unfocus so subsequent "/" can re-
+                  // focus cleanly. Don't blow away the filter text — user
+                  // may still want to refine.
+                  setHighlightedIndex(-1);
+                  searchInputEl?.blur();
+                  return;
+                }
                 if (e.key !== 'Enter') return;
-                // Jump to the first match across views → pinned → recent
-                // in priority order. Empty filter or no matches: do nothing.
-                if (filterText === '') return;
+                e.preventDefault();
+                // Highlighted item wins; otherwise fall back to first match.
                 let target: string | null = null;
-                if (filteredViews.length > 0) {
-                  target = `${indexPath}?viewId=${filteredViews[0].id}`;
-                } else if (filteredPinned.length > 0) {
-                  target = `${config.showPath}/${filteredPinned[0].id}`;
-                } else if (filteredRecent.length > 0) {
-                  target = `${config.showPath}/${filteredRecent[0].id}`;
+                if (
+                  highlightedIndex >= 0 &&
+                  highlightedIndex < flatItems.length
+                ) {
+                  target = flatItems[highlightedIndex].to;
+                } else if (filterText !== '' && flatItems.length > 0) {
+                  target = flatItems[0].to;
                 }
                 if (target !== null) {
                   navigate(target);
                   setFilterText('');
+                  setHighlightedIndex(-1);
                 }
               }}
               aria-label="Filter sidebar"
@@ -1135,7 +1233,15 @@ export const MarketingToolSidebar = () => {
             <StyledSection>
               <StyledSectionLabel>Views</StyledSectionLabel>
               {filteredViews.map((view) => (
-                <StyledItemRow key={view.id} active={currentViewId === view.id}>
+                <StyledItemRow
+                  key={view.id}
+                  data-sidebar-row-key={`view:${view.id}`}
+                  data-highlighted={
+                    highlightedKey === `view:${view.id}` ? 'true' : undefined
+                  }
+                  active={currentViewId === view.id}
+                  isHighlighted={highlightedKey === `view:${view.id}`}
+                >
                   <StyledItemLink to={`${indexPath}?viewId=${view.id}`}>
                     <StyledItemLabel>{view.name}</StyledItemLabel>
                   </StyledItemLink>
@@ -1166,11 +1272,18 @@ export const MarketingToolSidebar = () => {
               {orderedPinnedRecords.map((record) => (
                 <StyledItemRow
                   key={record.id}
+                  data-sidebar-row-key={`pinned:${record.id}`}
+                  data-highlighted={
+                    highlightedKey === `pinned:${record.id}`
+                      ? 'true'
+                      : undefined
+                  }
                   active={currentRecordId === record.id}
                   isDragging={draggingPinId === record.id}
                   isDropTarget={
                     dropTargetPinId === record.id && draggingPinId !== record.id
                   }
+                  isHighlighted={highlightedKey === `pinned:${record.id}`}
                   draggable
                   onDragStart={(e) => {
                     setDraggingPinId(record.id);
@@ -1229,40 +1342,58 @@ export const MarketingToolSidebar = () => {
           {filteredVisits.length > 0 && (
             <StyledSection>
               <StyledSectionLabel>Last visited</StyledSectionLabel>
-              {filteredVisits.map((v) => (
-                <StyledItemRow key={`${v.objectNameSingular}-${v.id}`}>
-                  <StyledItemLink
-                    to={`/object/${v.objectNameSingular}/${v.id}`}
-                    title={v.name ?? '(unnamed)'}
+              {filteredVisits.map((v) => {
+                const visitKey = `visit:${v.objectNameSingular}-${v.id}`;
+                return (
+                  <StyledItemRow
+                    key={`${v.objectNameSingular}-${v.id}`}
+                    data-sidebar-row-key={visitKey}
+                    data-highlighted={
+                      highlightedKey === visitKey ? 'true' : undefined
+                    }
+                    isHighlighted={highlightedKey === visitKey}
                   >
-                    <StyledItemBadge>
-                      {badgeForObject(v.objectNameSingular)}
-                    </StyledItemBadge>
-                    <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
-                  </StyledItemLink>
-                </StyledItemRow>
-              ))}
+                    <StyledItemLink
+                      to={`/object/${v.objectNameSingular}/${v.id}`}
+                      title={v.name ?? '(unnamed)'}
+                    >
+                      <StyledItemBadge>
+                        {badgeForObject(v.objectNameSingular)}
+                      </StyledItemBadge>
+                      <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
+                    </StyledItemLink>
+                  </StyledItemRow>
+                );
+              })}
             </StyledSection>
           )}
 
           {isOnAnalytics && filteredCrossRecent.length > 0 && (
             <StyledSection>
               <StyledSectionLabel>Recently updated</StyledSectionLabel>
-              {filteredCrossRecent.map((record) => (
-                <StyledItemRow
-                  key={`${record.objectNameSingular}-${record.id}`}
-                >
-                  <StyledItemLink
-                    to={`${record.showPath}/${record.id}`}
-                    title={record.name ?? '(unnamed)'}
+              {filteredCrossRecent.map((record) => {
+                const crossKey = `cross:${record.objectNameSingular}-${record.id}`;
+                return (
+                  <StyledItemRow
+                    key={`${record.objectNameSingular}-${record.id}`}
+                    data-sidebar-row-key={crossKey}
+                    data-highlighted={
+                      highlightedKey === crossKey ? 'true' : undefined
+                    }
+                    isHighlighted={highlightedKey === crossKey}
                   >
-                    <StyledItemBadge>{record.badge}</StyledItemBadge>
-                    <StyledItemLabel>
-                      {record.name ?? '(unnamed)'}
-                    </StyledItemLabel>
-                  </StyledItemLink>
-                </StyledItemRow>
-              ))}
+                    <StyledItemLink
+                      to={`${record.showPath}/${record.id}`}
+                      title={record.name ?? '(unnamed)'}
+                    >
+                      <StyledItemBadge>{record.badge}</StyledItemBadge>
+                      <StyledItemLabel>
+                        {record.name ?? '(unnamed)'}
+                      </StyledItemLabel>
+                    </StyledItemLink>
+                  </StyledItemRow>
+                );
+              })}
             </StyledSection>
           )}
 
@@ -1276,7 +1407,14 @@ export const MarketingToolSidebar = () => {
               filteredRecent.map((record) => (
                 <StyledItemRow
                   key={record.id}
+                  data-sidebar-row-key={`recent:${record.id}`}
+                  data-highlighted={
+                    highlightedKey === `recent:${record.id}`
+                      ? 'true'
+                      : undefined
+                  }
                   active={currentRecordId === record.id}
+                  isHighlighted={highlightedKey === `recent:${record.id}`}
                 >
                   <StyledItemLink
                     to={`${config.showPath}/${record.id}`}
