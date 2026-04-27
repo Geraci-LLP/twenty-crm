@@ -37,43 +37,53 @@ type SectionConfig = {
   showPath: string;
 };
 
+// All marketing surfaces, indexed by both their list route prefix AND
+// their show route prefix. So when the user is viewing a specific
+// campaign at /object/campaign/<id>, the sidebar still shows the
+// Email Campaigns context (pinned, recent, views) instead of
+// disappearing.
+const SECTION_CONFIGS: SectionConfig[] = [
+  {
+    title: 'Email Campaigns',
+    subtitle: 'One-off and scheduled marketing emails',
+    objectNameSingular: 'campaign',
+    objectNamePlural: 'campaigns',
+    showPath: '/object/campaign',
+  },
+  {
+    title: 'Marketing Campaigns',
+    subtitle: 'Campaign-level groupings',
+    objectNameSingular: 'marketingCampaign',
+    objectNamePlural: 'marketingCampaigns',
+    showPath: '/object/marketingCampaign',
+  },
+  {
+    title: 'Sequences',
+    subtitle: 'Multi-step automated cadences',
+    objectNameSingular: 'sequence',
+    objectNamePlural: 'sequences',
+    showPath: '/object/sequence',
+  },
+  {
+    title: 'Forms',
+    subtitle: 'Lead-capture forms and embeds',
+    objectNameSingular: 'form',
+    objectNamePlural: 'forms',
+    showPath: '/object/form',
+  },
+];
+
 const getConfigForPath = (pathname: string): SectionConfig | null => {
-  if (pathname.startsWith('/objects/campaigns')) {
-    return {
-      title: 'Email Campaigns',
-      subtitle: 'One-off and scheduled marketing emails',
-      objectNameSingular: 'campaign',
-      objectNamePlural: 'campaigns',
-      showPath: '/object/campaign',
-    };
+  // Record-list routes: /objects/<plural>
+  for (const cfg of SECTION_CONFIGS) {
+    if (pathname.startsWith(`/objects/${cfg.objectNamePlural}`)) return cfg;
   }
-  if (pathname.startsWith('/objects/marketingCampaigns')) {
-    return {
-      title: 'Marketing Campaigns',
-      subtitle: 'Campaign-level groupings',
-      objectNameSingular: 'marketingCampaign',
-      objectNamePlural: 'marketingCampaigns',
-      showPath: '/object/marketingCampaign',
-    };
+  // Record-show routes: /object/<singular>/<id>
+  for (const cfg of SECTION_CONFIGS) {
+    if (pathname.startsWith(`${cfg.showPath}/`)) return cfg;
   }
-  if (pathname.startsWith('/objects/sequences')) {
-    return {
-      title: 'Sequences',
-      subtitle: 'Multi-step automated cadences',
-      objectNameSingular: 'sequence',
-      objectNamePlural: 'sequences',
-      showPath: '/object/sequence',
-    };
-  }
-  if (pathname.startsWith('/objects/forms')) {
-    return {
-      title: 'Forms',
-      subtitle: 'Lead-capture forms and embeds',
-      objectNameSingular: 'form',
-      objectNamePlural: 'forms',
-      showPath: '/object/form',
-    };
-  }
+  // Marketing analytics page — uses Email Campaigns as the context so
+  // pinned/recent emails are still one click away.
   if (pathname.startsWith('/marketing/analytics')) {
     return {
       title: 'Analytics',
@@ -84,6 +94,19 @@ const getConfigForPath = (pathname: string): SectionConfig | null => {
     };
   }
   return null;
+};
+
+// Extract the record id from a /object/<singular>/<id>[/<rest>] URL.
+// Returns null if the current path isn't a show-page route for the
+// given section.
+const getCurrentRecordId = (
+  pathname: string,
+  showPath: string,
+): string | null => {
+  if (!pathname.startsWith(`${showPath}/`)) return null;
+  const after = pathname.slice(showPath.length + 1);
+  const id = after.split('/')[0];
+  return id !== '' ? id : null;
 };
 
 // Pinned records are localStorage-only — no server roundtrip. Keyed by
@@ -304,6 +327,13 @@ export const MarketingToolSidebar = () => {
 
   const indexPath = `/objects/${config.objectNamePlural}`;
   const currentViewId = searchParams.get('viewId');
+  const currentRecordId = getCurrentRecordId(
+    location.pathname,
+    config.showPath,
+  );
+  const isOnIndex =
+    location.pathname.startsWith(`/objects/${config.objectNamePlural}`) &&
+    !isDefined(currentViewId);
   const isPinned = (id: string): boolean => pinnedIds.includes(id);
 
   const togglePin = (id: string) => {
@@ -329,7 +359,7 @@ export const MarketingToolSidebar = () => {
 
       <StyledSection>
         <StyledSectionLabel>Section</StyledSectionLabel>
-        <StyledItemRow active={!isDefined(currentViewId)}>
+        <StyledItemRow active={isOnIndex}>
           <StyledItemLink to={indexPath}>
             <StyledItemLabel>All {config.title.toLowerCase()}</StyledItemLabel>
           </StyledItemLink>
@@ -356,7 +386,10 @@ export const MarketingToolSidebar = () => {
             <StyledEmpty>Loading…</StyledEmpty>
           ) : (
             pinnedRecords.map((record) => (
-              <StyledItemRow key={record.id}>
+              <StyledItemRow
+                key={record.id}
+                active={currentRecordId === record.id}
+              >
                 <StyledItemLink
                   to={`${config.showPath}/${record.id}`}
                   title={record.name ?? '(unnamed)'}
@@ -389,7 +422,10 @@ export const MarketingToolSidebar = () => {
           recentRecords
             .filter((r) => !isPinned(r.id))
             .map((record) => (
-              <StyledItemRow key={record.id}>
+              <StyledItemRow
+                key={record.id}
+                active={currentRecordId === record.id}
+              >
                 <StyledItemLink
                   to={`${config.showPath}/${record.id}`}
                   title={record.name ?? '(unnamed)'}
