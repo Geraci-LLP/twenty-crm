@@ -193,6 +193,28 @@ const StyledNewButton = styled(Link)`
   }
 `;
 
+const StyledSearchRow = styled.div`
+  padding: 0 12px 4px;
+`;
+
+const StyledSearchInput = styled.input`
+  background: ${themeCssVariables.background.transparent.lighter};
+  border: 1px solid ${themeCssVariables.border.color.light};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-family: ${themeCssVariables.font.family};
+  font-size: 12px;
+  padding: 6px 10px;
+  width: 100%;
+  &:focus {
+    border-color: ${themeCssVariables.color.orange};
+    outline: 0;
+  }
+  &::placeholder {
+    color: ${themeCssVariables.font.color.tertiary};
+  }
+`;
+
 const StyledSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -270,6 +292,7 @@ export const MarketingToolSidebar = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const config = getConfigForPath(location.pathname);
+  const [filterText, setFilterText] = useState('');
 
   // Object metadata — needed to resolve the views family selector. The
   // hook works even when called with a missing/invalid name (it returns
@@ -336,6 +359,23 @@ export const MarketingToolSidebar = () => {
     !isDefined(currentViewId);
   const isPinned = (id: string): boolean => pinnedIds.includes(id);
 
+  // Lower-case substring match used for the sidebar's search input.
+  // Matches against the record/view name; empty filter passes everything.
+  const matchesFilter = (name: string | null | undefined): boolean => {
+    if (filterText === '') return true;
+    return (name ?? '').toLowerCase().includes(filterText.toLowerCase());
+  };
+
+  const filteredViews = views.filter((v) => matchesFilter(v.name));
+  const filteredPinned = pinnedRecords.filter((r) => matchesFilter(r.name));
+  const filteredRecent = recentRecords
+    .filter((r) => !isPinned(r.id))
+    .filter((r) => matchesFilter(r.name));
+  const hasAnyResults =
+    filteredViews.length > 0 ||
+    filteredPinned.length > 0 ||
+    filteredRecent.length > 0;
+
   const togglePin = (id: string) => {
     const next = { ...pinnedMap };
     const list = next[config.objectNameSingular] ?? [];
@@ -357,6 +397,16 @@ export const MarketingToolSidebar = () => {
         <StyledNewButton to={indexPath}>+ New</StyledNewButton>
       </StyledNewButtonRow>
 
+      <StyledSearchRow>
+        <StyledSearchInput
+          type="search"
+          placeholder="Filter views, pinned, recent…"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          aria-label="Filter sidebar"
+        />
+      </StyledSearchRow>
+
       <StyledSection>
         <StyledSectionLabel>Section</StyledSectionLabel>
         <StyledItemRow active={isOnIndex}>
@@ -366,10 +416,16 @@ export const MarketingToolSidebar = () => {
         </StyledItemRow>
       </StyledSection>
 
-      {views.length > 0 && (
+      {filterText !== '' && !hasAnyResults && (
+        <StyledSection>
+          <StyledEmpty>No matches for &quot;{filterText}&quot;</StyledEmpty>
+        </StyledSection>
+      )}
+
+      {filteredViews.length > 0 && (
         <StyledSection>
           <StyledSectionLabel>Views</StyledSectionLabel>
-          {views.map((view) => (
+          {filteredViews.map((view) => (
             <StyledItemRow key={view.id} active={currentViewId === view.id}>
               <StyledItemLink to={`${indexPath}?viewId=${view.id}`}>
                 <StyledItemLabel>{view.name}</StyledItemLabel>
@@ -379,36 +435,30 @@ export const MarketingToolSidebar = () => {
         </StyledSection>
       )}
 
-      {pinnedIds.length > 0 && (
+      {pinnedIds.length > 0 && filteredPinned.length > 0 && (
         <StyledSection>
           <StyledSectionLabel>Pinned</StyledSectionLabel>
-          {pinnedRecords.length === 0 ? (
-            <StyledEmpty>Loading…</StyledEmpty>
-          ) : (
-            pinnedRecords.map((record) => (
-              <StyledItemRow
-                key={record.id}
-                active={currentRecordId === record.id}
+          {filteredPinned.map((record) => (
+            <StyledItemRow
+              key={record.id}
+              active={currentRecordId === record.id}
+            >
+              <StyledItemLink
+                to={`${config.showPath}/${record.id}`}
+                title={record.name ?? '(unnamed)'}
               >
-                <StyledItemLink
-                  to={`${config.showPath}/${record.id}`}
-                  title={record.name ?? '(unnamed)'}
-                >
-                  <StyledItemLabel>
-                    {record.name ?? '(unnamed)'}
-                  </StyledItemLabel>
-                </StyledItemLink>
-                <StyledPinButton
-                  pinned={true}
-                  onClick={() => togglePin(record.id)}
-                  title="Unpin"
-                  type="button"
-                >
-                  ★
-                </StyledPinButton>
-              </StyledItemRow>
-            ))
-          )}
+                <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
+              </StyledItemLink>
+              <StyledPinButton
+                pinned={true}
+                onClick={() => togglePin(record.id)}
+                title="Unpin"
+                type="button"
+              >
+                ★
+              </StyledPinButton>
+            </StyledItemRow>
+          ))}
         </StyledSection>
       )}
 
@@ -418,32 +468,28 @@ export const MarketingToolSidebar = () => {
           <StyledEmpty>Loading…</StyledEmpty>
         ) : recentRecords.length === 0 ? (
           <StyledEmpty>No records yet</StyledEmpty>
-        ) : (
-          recentRecords
-            .filter((r) => !isPinned(r.id))
-            .map((record) => (
-              <StyledItemRow
-                key={record.id}
-                active={currentRecordId === record.id}
+        ) : filteredRecent.length === 0 && filterText !== '' ? null : (
+          filteredRecent.map((record) => (
+            <StyledItemRow
+              key={record.id}
+              active={currentRecordId === record.id}
+            >
+              <StyledItemLink
+                to={`${config.showPath}/${record.id}`}
+                title={record.name ?? '(unnamed)'}
               >
-                <StyledItemLink
-                  to={`${config.showPath}/${record.id}`}
-                  title={record.name ?? '(unnamed)'}
-                >
-                  <StyledItemLabel>
-                    {record.name ?? '(unnamed)'}
-                  </StyledItemLabel>
-                </StyledItemLink>
-                <StyledPinButton
-                  pinned={false}
-                  onClick={() => togglePin(record.id)}
-                  title="Pin"
-                  type="button"
-                >
-                  ☆
-                </StyledPinButton>
-              </StyledItemRow>
-            ))
+                <StyledItemLabel>{record.name ?? '(unnamed)'}</StyledItemLabel>
+              </StyledItemLink>
+              <StyledPinButton
+                pinned={false}
+                onClick={() => togglePin(record.id)}
+                title="Pin"
+                type="button"
+              >
+                ☆
+              </StyledPinButton>
+            </StyledItemRow>
+          ))
         )}
       </StyledSection>
     </StyledSidebar>
