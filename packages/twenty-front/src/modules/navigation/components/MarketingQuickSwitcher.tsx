@@ -64,6 +64,54 @@ const SECTION_NAV: SectionNavItem[] = [
   { label: 'Companies', href: '/objects/companies', hint: '', badge: 'Co' },
 ];
 
+// Action commands — non-navigation entries that perform a side effect
+// (toggle, create, sign out). Each has a runner closed over by the
+// component below. Actions are matched by keyword: typing "create",
+// "new", "toggle", "sign", "settings", etc. surfaces them in the
+// Actions group. They're hidden when the input is empty so the
+// default open is purely focused on navigation / visits.
+type ActionCommand = {
+  key: string;
+  label: string;
+  badge: string;
+  // Free-form keywords matched against the input. Concatenated with the
+  // label so a user typing "create email" finds "New Email Campaign".
+  keywords: string;
+};
+
+const ACTION_COMMANDS: ActionCommand[] = [
+  {
+    key: 'action:new-campaign',
+    label: 'New Email Campaign',
+    badge: 'Action',
+    keywords: 'create new email campaign send',
+  },
+  {
+    key: 'action:new-marketing-campaign',
+    label: 'New Marketing Campaign',
+    badge: 'Action',
+    keywords: 'create new marketing campaign group',
+  },
+  {
+    key: 'action:new-sequence',
+    label: 'New Sequence',
+    badge: 'Action',
+    keywords: 'create new sequence cadence drip',
+  },
+  {
+    key: 'action:new-form',
+    label: 'New Form',
+    badge: 'Action',
+    keywords: 'create new form lead capture embed',
+  },
+  {
+    key: 'action:settings',
+    label: 'Open Settings',
+    badge: 'Action',
+    keywords: 'settings preferences profile workspace',
+  },
+];
+
 /* oxlint-disable twenty/no-hardcoded-colors */
 const StyledBackdrop = styled.div`
   align-items: flex-start;
@@ -192,7 +240,20 @@ type SearchHit = {
   href: string;
   label: string;
   badge: string;
-  group: 'visits' | 'navigation' | 'records';
+  group: 'visits' | 'actions' | 'navigation' | 'records';
+};
+
+// Map an action key to the route that triggers it. The "create" routes
+// add ?create=1 which the marketing sidebar listens for and opens its
+// inline create form on mount.
+const hrefForAction = (actionKey: string): string => {
+  if (actionKey === 'action:new-campaign') return '/objects/campaigns?create=1';
+  if (actionKey === 'action:new-marketing-campaign')
+    return '/objects/marketingCampaigns?create=1';
+  if (actionKey === 'action:new-sequence') return '/objects/sequences?create=1';
+  if (actionKey === 'action:new-form') return '/objects/forms?create=1';
+  if (actionKey === 'action:settings') return '/settings/profile';
+  return '/';
 };
 
 // Map a recently-visited record's objectNameSingular into a short
@@ -371,12 +432,47 @@ export const MarketingQuickSwitcher = () => {
       group: 'visits',
     }));
 
-  const allHits: SearchHit[] = [...visitHits, ...navigationHits, ...recordHits];
+  // Actions surface only when the user has typed something — keeping the
+  // empty open focused on visits + section navigation, not a static
+  // wall of "New X" entries the user didn't ask for.
+  const actionHits: SearchHit[] =
+    text.trim().length === 0
+      ? []
+      : ACTION_COMMANDS.filter((a) => {
+          const haystack = `${a.label} ${a.keywords}`.toLowerCase();
+          return haystack.includes(lower);
+        }).map<SearchHit>((a) => ({
+          key: a.key,
+          href: hrefForAction(a.key),
+          label: a.label,
+          badge: a.badge,
+          group: 'actions',
+        }));
+
+  const allHits: SearchHit[] = [
+    ...visitHits,
+    ...actionHits,
+    ...navigationHits,
+    ...recordHits,
+  ];
   const safeIndex =
     allHits.length === 0
       ? -1
       : Math.min(Math.max(highlightedIndex, 0), allHits.length - 1);
   const highlightedKey = safeIndex >= 0 ? allHits[safeIndex].key : null;
+
+  // Find the index of the first item belonging to a different group
+  // than the currently-highlighted one. Used by Tab to "jump to next
+  // group". Wraps to the start once we run out of groups.
+  const indexOfNextGroupStart = (currentIndex: number): number => {
+    if (allHits.length === 0) return -1;
+    const currentGroup = allHits[currentIndex]?.group ?? null;
+    for (let i = 1; i <= allHits.length; i++) {
+      const probe = (currentIndex + i) % allHits.length;
+      if (allHits[probe].group !== currentGroup) return probe;
+    }
+    return currentIndex;
+  };
 
   const onInputKey = (e: ReactKeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
@@ -389,6 +485,12 @@ export const MarketingQuickSwitcher = () => {
       if (allHits.length === 0) return;
       e.preventDefault();
       setHighlightedIndex((i) => (i - 1 + allHits.length) % allHits.length);
+      return;
+    }
+    if (e.key === 'Tab') {
+      if (allHits.length === 0) return;
+      e.preventDefault();
+      setHighlightedIndex((i) => indexOfNextGroupStart(Math.max(i, 0)));
       return;
     }
     if (e.key === 'Enter') {
@@ -428,6 +530,25 @@ export const MarketingQuickSwitcher = () => {
             <>
               <StyledSectionLabel>Recently visited</StyledSectionLabel>
               {visitHits.map((hit) => (
+                <StyledResultRow
+                  key={hit.key}
+                  type="button"
+                  isHighlighted={highlightedKey === hit.key}
+                  onClick={() => {
+                    navigate(hit.href);
+                    setIsOpen(false);
+                  }}
+                >
+                  <StyledBadge>{hit.badge}</StyledBadge>
+                  <StyledLabel>{hit.label}</StyledLabel>
+                </StyledResultRow>
+              ))}
+            </>
+          )}
+          {actionHits.length > 0 && (
+            <>
+              <StyledSectionLabel>Actions</StyledSectionLabel>
+              {actionHits.map((hit) => (
                 <StyledResultRow
                   key={hit.key}
                   type="button"
@@ -490,6 +611,7 @@ export const MarketingQuickSwitcher = () => {
         </StyledResultsScroll>
         <StyledFooter>
           <span>↑↓ navigate</span>
+          <span>Tab next group</span>
           <span>↵ open</span>
           <span>Esc close</span>
         </StyledFooter>

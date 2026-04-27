@@ -9,6 +9,17 @@ import {
 import { isDefined } from 'twenty-shared/utils';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
+import {
+  IconBuildingSkyscraper,
+  IconChartBar,
+  IconFileText,
+  IconLayoutKanban,
+  IconMail,
+  IconSend,
+  IconUser,
+  type TablerIconsProps,
+} from 'twenty-ui/display';
+
 import { useObjectMetadataItem } from '@/object-metadata/hooks/useObjectMetadataItem';
 import { useCreateOneRecord } from '@/object-record/hooks/useCreateOneRecord';
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
@@ -40,12 +51,15 @@ type RecentRecord = ObjectRecord & {
   name?: string | null;
 };
 
+type SectionIcon = (props: TablerIconsProps) => JSX.Element;
+
 type SectionConfig = {
   title: string;
   subtitle: string;
   objectNameSingular: string;
   objectNamePlural: string;
   showPath: string;
+  Icon: SectionIcon;
 };
 
 // All sections that get the contextual sidebar. Marketing was where
@@ -58,6 +72,7 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNameSingular: 'campaign',
     objectNamePlural: 'campaigns',
     showPath: '/object/campaign',
+    Icon: IconMail,
   },
   {
     title: 'Marketing Campaigns',
@@ -65,6 +80,7 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNameSingular: 'marketingCampaign',
     objectNamePlural: 'marketingCampaigns',
     showPath: '/object/marketingCampaign',
+    Icon: IconLayoutKanban,
   },
   {
     title: 'Sequences',
@@ -72,6 +88,7 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNameSingular: 'sequence',
     objectNamePlural: 'sequences',
     showPath: '/object/sequence',
+    Icon: IconSend,
   },
   {
     title: 'Forms',
@@ -79,6 +96,7 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNameSingular: 'form',
     objectNamePlural: 'forms',
     showPath: '/object/form',
+    Icon: IconFileText,
   },
   {
     title: 'People',
@@ -86,6 +104,7 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNameSingular: 'person',
     objectNamePlural: 'people',
     showPath: '/object/person',
+    Icon: IconUser,
   },
   {
     title: 'Companies',
@@ -93,6 +112,7 @@ const SECTION_CONFIGS: SectionConfig[] = [
     objectNameSingular: 'company',
     objectNamePlural: 'companies',
     showPath: '/object/company',
+    Icon: IconBuildingSkyscraper,
   },
 ];
 
@@ -114,6 +134,7 @@ const getConfigForPath = (pathname: string): SectionConfig | null => {
       objectNameSingular: 'campaign',
       objectNamePlural: 'campaigns',
       showPath: '/object/campaign',
+      Icon: IconChartBar,
     };
   }
   return null;
@@ -211,7 +232,7 @@ const writePinned = (next: PinnedMap): void => {
   }
 };
 
-const StyledSidebar = styled.aside<{ collapsed: boolean }>`
+const StyledSidebar = styled.aside<{ collapsed: boolean; widthPx: number }>`
   background: ${themeCssVariables.background.primary};
   border-right: 1px solid ${themeCssVariables.border.color.light};
   display: flex;
@@ -220,8 +241,24 @@ const StyledSidebar = styled.aside<{ collapsed: boolean }>`
   min-width: 0;
   overflow-y: auto;
   position: relative;
+  /* Skip the width transition while the user is actively dragging the
+   * resizer — otherwise the sidebar lags the pointer in a very visible
+   * way. Width changes via collapse toggle still animate. */
   transition: width 0.18s;
-  width: ${(p) => (p.collapsed ? '24px' : '240px')};
+  width: ${(p) => (p.collapsed ? '24px' : `${p.widthPx}px`)};
+`;
+
+const StyledResizeHandle = styled.div`
+  bottom: 0;
+  cursor: col-resize;
+  position: absolute;
+  right: -3px;
+  top: 0;
+  width: 6px;
+  z-index: 2;
+  &:hover {
+    background: ${themeCssVariables.background.transparent.lighter};
+  }
 `;
 
 const StyledCollapseToggle = styled.button<{ collapsed: boolean }>`
@@ -272,10 +309,35 @@ const StyledTitleRow = styled.div`
 `;
 
 const StyledTitle = styled.div`
+  align-items: center;
   color: ${themeCssVariables.font.color.primary};
+  display: flex;
   font-size: 16px;
   font-weight: ${themeCssVariables.font.weight.semiBold};
+  gap: 8px;
   letter-spacing: -0.01em;
+`;
+
+const StyledTitleIcon = styled.span`
+  align-items: center;
+  background: ${themeCssVariables.background.transparent.lighter};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.color.orange};
+  display: flex;
+  flex-shrink: 0;
+  height: 22px;
+  justify-content: center;
+  width: 22px;
+`;
+
+const StyledCountChip = styled.span`
+  background: ${themeCssVariables.background.transparent.lighter};
+  border-radius: 10px;
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: 10.5px;
+  font-weight: ${themeCssVariables.font.weight.medium};
+  margin-left: 8px;
+  padding: 1px 7px;
 `;
 
 const StyledHelpTriggerButton = styled.button`
@@ -387,6 +449,24 @@ const StyledCreateActionButton = styled.button<{ primary?: boolean }>`
 
 const StyledSearchRow = styled.div`
   padding: 0 12px 4px;
+  position: relative;
+`;
+
+const StyledSearchClearButton = styled.button`
+  background: transparent;
+  border: 0;
+  color: ${themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 6px;
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  &:hover {
+    color: ${themeCssVariables.font.color.primary};
+  }
 `;
 
 const StyledSearchInput = styled.input`
@@ -622,6 +702,38 @@ const StyledEmpty = styled.div`
   padding: 6px 10px;
 `;
 
+const StyledEmptyCta = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 14px 10px;
+  text-align: center;
+`;
+
+const StyledEmptyCtaText = styled.div`
+  color: ${themeCssVariables.font.color.tertiary};
+  font-size: 12px;
+  line-height: 1.4;
+`;
+
+/* oxlint-disable twenty/no-hardcoded-colors */
+const StyledEmptyCtaButton = styled.button`
+  background: ${themeCssVariables.color.orange};
+  border: 0;
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: #ffffff;
+  cursor: pointer;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 12px;
+  font-weight: ${themeCssVariables.font.weight.medium};
+  padding: 6px 12px;
+  &:hover {
+    filter: brightness(0.95);
+  }
+`;
+/* oxlint-enable twenty/no-hardcoded-colors */
+
 // Help overlay — fixed full-screen dimmer with a centered card listing
 // every keyboard shortcut the sidebar reacts to. Triggered by "?" and
 // closed by Escape, click-outside, or the close button.
@@ -727,13 +839,30 @@ const SHORTCUTS: Shortcut[] = [
 
 export const MarketingToolSidebar = () => {
   const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   // oxlint-disable-next-line twenty/no-navigate-prefer-link -- jumping
   // to the first match on Enter is dynamic navigation, not a static
   // link destination.
   const navigate = useNavigate();
   const config = getConfigForPath(location.pathname);
-  const [filterText, setFilterText] = useState('');
+  // Filter text is initialized from the ?q= URL param so a shared link
+  // arrives pre-filtered. The param doesn't persist back to the URL on
+  // every keystroke (it'd pollute history); we only stamp it explicitly
+  // via the "Copy filter link" affordance below.
+  const [filterText, setFilterText] = useState<string>(
+    () => searchParams.get('q') ?? '',
+  );
+  // Sync param → state on navigation. If the user lands on a new ?q=
+  // URL while the sidebar is mounted (e.g. clicks a shared link in a
+  // sibling tab), reflect the new filter. We deliberately don't write
+  // back: the input is the source of truth once the user types.
+  useEffect(() => {
+    const paramQ = searchParams.get('q');
+    if (paramQ !== null && paramQ !== filterText) {
+      setFilterText(paramQ);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.toString()]);
   // Callback-ref pattern: capture the input element in component state
   // so the global keydown handler can call .focus() on it. Avoids
   // useRef which the codebase discourages for state storage.
@@ -747,6 +876,74 @@ export const MarketingToolSidebar = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+
+  // Cmd+K's "New X" actions navigate here with ?create=1 — when we see
+  // that param we auto-open the inline create form and strip the param
+  // from the URL so a refresh doesn't re-open the form unexpectedly.
+  useEffect(() => {
+    if (searchParams.get('create') !== '1') return;
+    setIsCreateOpen(true);
+    const next = new URLSearchParams(searchParams);
+    next.delete('create');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  // Sidebar width — dragged via the right-edge resize handle, persisted
+  // to localStorage as a number of pixels. Clamped to a sane range so a
+  // misclick can't squish or balloon the sidebar.
+  const SIDEBAR_MIN_PX = 200;
+  const SIDEBAR_MAX_PX = 480;
+  const SIDEBAR_DEFAULT_PX = 240;
+  const [sidebarWidthPx, setSidebarWidthPx] = useState<number>(() => {
+    try {
+      const raw = window.localStorage.getItem('twenty.marketingSidebar.width');
+      const parsed = raw === null ? NaN : parseInt(raw, 10);
+      if (Number.isNaN(parsed)) return SIDEBAR_DEFAULT_PX;
+      return Math.max(SIDEBAR_MIN_PX, Math.min(SIDEBAR_MAX_PX, parsed));
+    } catch {
+      return SIDEBAR_DEFAULT_PX;
+    }
+  });
+  // Snapshot of the pointer / starting width during a drag. null when
+  // no resize is in progress.
+  const [resizeStart, setResizeStart] = useState<{
+    pointerX: number;
+    startWidth: number;
+  } | null>(null);
+  useEffect(() => {
+    if (resizeStart === null) return;
+    const onMove = (e: PointerEvent) => {
+      const delta = e.clientX - resizeStart.pointerX;
+      const next = Math.max(
+        SIDEBAR_MIN_PX,
+        Math.min(SIDEBAR_MAX_PX, resizeStart.startWidth + delta),
+      );
+      setSidebarWidthPx(next);
+    };
+    const onUp = () => setResizeStart(null);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+  }, [resizeStart]);
+
+  // Persist width to localStorage whenever it settles. We could write on
+  // every pointermove but localStorage writes are synchronous and the
+  // user is unlikely to refresh mid-drag — debouncing via the resize
+  // gesture's natural endpoints (release / collapse toggle) is enough.
+  useEffect(() => {
+    if (resizeStart !== null) return;
+    try {
+      window.localStorage.setItem(
+        'twenty.marketingSidebar.width',
+        String(sidebarWidthPx),
+      );
+    } catch {
+      // ignore quota / disabled storage
+    }
+  }, [sidebarWidthPx, resizeStart]);
 
   // Sidebar collapse state, persisted to localStorage so the user's
   // preference survives reloads.
@@ -1045,15 +1242,20 @@ export const MarketingToolSidebar = () => {
   );
   const views = viewsByObjectMetadataIdFamily;
 
-  // Recent records — top 5 by createdAt desc.
-  const { records: recentRecords, loading: recentLoading } =
-    useFindManyRecords<RecentRecord>({
-      objectNameSingular: config?.objectNameSingular ?? 'campaign',
-      limit: 5,
-      orderBy: [{ createdAt: 'DescNullsLast' }],
-      recordGqlFields: { id: true, name: true },
-      skip: !config,
-    });
+  // Recent records — top 5 by createdAt desc. totalCount is consumed
+  // alongside the rows so we can surface "X total" in the section
+  // header without paying an extra query.
+  const {
+    records: recentRecords,
+    loading: recentLoading,
+    totalCount: sectionTotalCount,
+  } = useFindManyRecords<RecentRecord>({
+    objectNameSingular: config?.objectNameSingular ?? 'campaign',
+    limit: 5,
+    orderBy: [{ createdAt: 'DescNullsLast' }],
+    recordGqlFields: { id: true, name: true },
+    skip: !config,
+  });
 
   // Pinned records — fetch by id once we know which ids are pinned for
   // the current section. Pin state is in localStorage; useState mirrors
@@ -1329,7 +1531,7 @@ export const MarketingToolSidebar = () => {
       : null;
 
   return (
-    <StyledSidebar collapsed={isCollapsed}>
+    <StyledSidebar collapsed={isCollapsed} widthPx={sidebarWidthPx}>
       {contextMenu !== null && (
         <StyledContextMenu
           style={{ left: contextMenu.x, top: contextMenu.y }}
@@ -1426,13 +1628,69 @@ export const MarketingToolSidebar = () => {
       >
         {isCollapsed ? '›' : '‹'}
       </StyledCollapseToggle>
+      {!isCollapsed && (
+        <StyledResizeHandle
+          role="separator"
+          aria-label="Resize sidebar"
+          onPointerDown={(e) => {
+            e.preventDefault();
+            setResizeStart({
+              pointerX: e.clientX,
+              startWidth: sidebarWidthPx,
+            });
+          }}
+          onDoubleClick={() => {
+            // Double-click resets to the default width — same affordance
+            // most desktop apps use for a panel resizer.
+            setSidebarWidthPx(SIDEBAR_DEFAULT_PX);
+            try {
+              window.localStorage.setItem(
+                'twenty.marketingSidebar.width',
+                String(SIDEBAR_DEFAULT_PX),
+              );
+            } catch {
+              // ignore
+            }
+          }}
+        />
+      )}
       {isCollapsed ? (
-        <StyledCollapsedHint>{config.title}</StyledCollapsedHint>
+        <StyledCollapsedHint>
+          {(() => {
+            // When viewing a record, surface its name in the vertical
+            // hint so the user has context without expanding the
+            // sidebar. Falls back to the section title on index pages.
+            if (currentRecordId !== null) {
+              const fromList =
+                pinnedRecords.find((r) => r.id === currentRecordId)?.name ??
+                recentRecords.find((r) => r.id === currentRecordId)?.name ??
+                null;
+              if (fromList !== null && fromList !== '') {
+                return `${config.title} · ${fromList}`;
+              }
+            }
+            return config.title;
+          })()}
+        </StyledCollapsedHint>
       ) : (
         <>
           <StyledHeader>
             <StyledTitleRow>
-              <StyledTitle>{config.title}</StyledTitle>
+              <StyledTitle>
+                <StyledTitleIcon aria-hidden="true">
+                  <config.Icon size={14} />
+                </StyledTitleIcon>
+                {config.title}
+                {typeof sectionTotalCount === 'number' && (
+                  <StyledCountChip
+                    title={`${sectionTotalCount} total ${config.title.toLowerCase()}`}
+                  >
+                    {sectionTotalCount >= 1000
+                      ? `${(sectionTotalCount / 1000).toFixed(1)}k`
+                      : sectionTotalCount}
+                  </StyledCountChip>
+                )}
+              </StyledTitle>
               <StyledHelpTriggerButton
                 type="button"
                 onClick={() => setIsHelpOpen(true)}
@@ -1539,9 +1797,15 @@ export const MarketingToolSidebar = () => {
                   return;
                 }
                 if (e.key === 'Escape') {
-                  // Clear highlight and unfocus so subsequent "/" can re-
-                  // focus cleanly. Don't blow away the filter text — user
-                  // may still want to refine.
+                  // Two-stage Escape: first press clears non-empty filter
+                  // text (most common need); second press unfocuses the
+                  // input so subsequent "/" can re-focus cleanly. Mirrors
+                  // how most search UIs (VS Code, Sublime) handle Esc.
+                  if (filterText !== '') {
+                    setFilterText('');
+                    setHighlightedIndex(-1);
+                    return;
+                  }
                   setHighlightedIndex(-1);
                   searchInputEl?.blur();
                   return;
@@ -1572,6 +1836,20 @@ export const MarketingToolSidebar = () => {
               }}
               aria-label="Filter sidebar"
             />
+            {filterText !== '' && (
+              <StyledSearchClearButton
+                type="button"
+                aria-label="Clear filter"
+                title="Clear filter"
+                onClick={() => {
+                  setFilterText('');
+                  setHighlightedIndex(-1);
+                  searchInputEl?.focus();
+                }}
+              >
+                ×
+              </StyledSearchClearButton>
+            )}
           </StyledSearchRow>
 
           {filterText === '' && recentSearches.length > 0 && (
@@ -1621,7 +1899,10 @@ export const MarketingToolSidebar = () => {
 
           {crossSearch.length > 0 && (
             <StyledSection>
-              <StyledSectionLabel>Across sections</StyledSectionLabel>
+              <StyledSectionLabel>
+                Across sections
+                {crossSearch.length > 0 ? ` · ${crossSearch.length}` : ''}
+              </StyledSectionLabel>
               {crossSearch.map((record) => {
                 const xKey = `xsearch:${record.objectNameSingular}-${record.id}`;
                 return (
@@ -1696,7 +1977,12 @@ export const MarketingToolSidebar = () => {
                 setDropTargetPinId(null);
               }}
             >
-              <StyledSectionLabel>Pinned</StyledSectionLabel>
+              <StyledSectionLabel>
+                Pinned
+                {orderedPinnedRecords.length > 0
+                  ? ` · ${orderedPinnedRecords.length}`
+                  : ''}
+              </StyledSectionLabel>
               {orderedPinnedRecords.map((record) => (
                 <StyledItemRow
                   key={record.id}
@@ -1778,7 +2064,10 @@ export const MarketingToolSidebar = () => {
 
           {filteredVisits.length > 0 && (
             <StyledSection>
-              <StyledSectionLabel>Last visited</StyledSectionLabel>
+              <StyledSectionLabel>
+                Last visited
+                {filteredVisits.length > 0 ? ` · ${filteredVisits.length}` : ''}
+              </StyledSectionLabel>
               {filteredVisits.map((v) => {
                 const visitKey = `visit:${v.objectNameSingular}-${v.id}`;
                 return (
@@ -1848,7 +2137,18 @@ export const MarketingToolSidebar = () => {
             {recentLoading && recentRecords.length === 0 ? (
               <StyledEmpty>Loading…</StyledEmpty>
             ) : recentRecords.length === 0 ? (
-              <StyledEmpty>No records yet</StyledEmpty>
+              <StyledEmptyCta>
+                <StyledEmptyCtaText>
+                  No {config.title.toLowerCase()} yet.
+                </StyledEmptyCtaText>
+                <StyledEmptyCtaButton
+                  type="button"
+                  onClick={() => setIsCreateOpen(true)}
+                >
+                  + Create your first{' '}
+                  {config.title.replace(/s$/, '').toLowerCase()}
+                </StyledEmptyCtaButton>
+              </StyledEmptyCta>
             ) : filteredRecent.length === 0 && filterText !== '' ? null : (
               filteredRecent.map((record) => (
                 <StyledItemRow
