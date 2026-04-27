@@ -47,3 +47,7 @@ export const logVisit = (visit: Omit<Visit, 'visitedAt'>): void => {
   ].slice(0, MAX_ENTRIES);
   writeVisits(next);
 };
+
+export const clearVisits = (): void => {
+  writeVisits([]);
+};

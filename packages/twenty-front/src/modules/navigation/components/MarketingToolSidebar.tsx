@@ -25,6 +25,7 @@ import { useCreateOneRecord } from '@/object-record/hooks/useCreateOneRecord';
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
 import {
+  clearVisits,
   logVisit,
   readVisits,
   type Visit,
@@ -151,6 +152,28 @@ const getCurrentRecordId = (
   const after = pathname.slice(showPath.length + 1);
   const id = after.split('/')[0];
   return id !== '' ? id : null;
+};
+
+// Compact relative-time formatter for visit timestamps. Returns short
+// labels ("now", "5m", "2h", "3d", "Apr 24") so the strings fit on a
+// single sidebar row without truncating the record name. Ms input.
+const formatRelativeShort = (ms: number): string => {
+  const diff = Date.now() - ms;
+  if (diff < 0) return 'now';
+  const sec = Math.floor(diff / 1000);
+  if (sec < 30) return 'now';
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min}m`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h`;
+  const day = Math.floor(hr / 24);
+  if (day < 7) return `${day}d`;
+  // For older entries, use a short "Mon DD" — avoids the full year and
+  // keeps the chip small. en-US locale by design (no i18n on this UI).
+  return new Date(ms).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
 };
 
 // Pinned records are localStorage-only — no server roundtrip. Keyed by
@@ -598,6 +621,28 @@ const StyledSectionLabel = styled.div`
   text-transform: uppercase;
 `;
 
+const StyledSectionLabelRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px 0 0;
+`;
+
+const StyledSectionAction = styled.button`
+  background: transparent;
+  border: 0;
+  color: ${themeCssVariables.font.color.tertiary};
+  cursor: pointer;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 4px 6px;
+  text-transform: uppercase;
+  &:hover {
+    color: ${themeCssVariables.color.orange};
+  }
+`;
+
 const StyledItemRow = styled.div<{
   active?: boolean;
   isDragging?: boolean;
@@ -679,6 +724,15 @@ const StyledItemBadge = styled.span`
   letter-spacing: 0.04em;
   padding: 1px 6px;
   text-transform: uppercase;
+`;
+
+const StyledItemTimestamp = styled.span`
+  color: ${themeCssVariables.font.color.tertiary};
+  flex-shrink: 0;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding-left: 6px;
+  padding-right: 8px;
 `;
 
 const StyledPinButton = styled.button<{ pinned: boolean }>`
@@ -976,6 +1030,38 @@ export const MarketingToolSidebar = () => {
   // discover shortcuts even when the sidebar is collapsed.
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
+  // Cmd+K's "Toggle sidebar collapse" action dispatches a custom event;
+  // listen here so the switcher can reach across the component tree
+  // without prop-drilling.
+  useEffect(() => {
+    const onToggle = () => toggleCollapsed();
+    window.addEventListener('marketing-sidebar:toggle-collapse', onToggle);
+    return () =>
+      window.removeEventListener('marketing-sidebar:toggle-collapse', onToggle);
+    // toggleCollapsed reads/writes localStorage but uses a setState
+    // updater under the hood so it's stable for our purposes; intentional
+    // empty deps to register the listener exactly once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Auto-collapse on narrow windows so the main content area gets the
+  // space it needs. We don't auto-expand back when the window widens —
+  // the user might have collapsed it deliberately, and we want their
+  // explicit click via the toggle / "[" / Cmd+K to win on re-open.
+  // Threshold of 1100px chosen to match where Twenty's table view also
+  // gets cramped.
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth < 1100 && !isCollapsed) {
+        toggleCollapsed();
+      }
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+    // Same stability assumption as the toggle listener above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCollapsed]);
+
   // Drag-to-reorder state for pinned items. We hold the dragged record's
   // id and the id of the row currently under the pointer (drop target)
   // so we can render the orange insertion indicator. Both are reset on
@@ -1204,6 +1290,25 @@ export const MarketingToolSidebar = () => {
       if (isTypingInForm(e.target)) return;
       if (e.key === '/') {
         e.preventDefault();
+        // If sidebar is collapsed, expand it first so the input mounts;
+        // the focus has to wait for the next paint via setTimeout(0).
+        if (isCollapsed) {
+          toggleCollapsed();
+          window.setTimeout(() => {
+            // Use a fresh querySelector since searchInputEl was null
+            // when the listener was bound.
+            const el =
+              document.querySelector<HTMLInputElement>(
+                'aside[aria-label="Resize sidebar"], aside input[aria-label="Filter sidebar"]',
+              ) ??
+              document.querySelector<HTMLInputElement>(
+                'input[aria-label="Filter sidebar"]',
+              );
+            el?.focus();
+            el?.select();
+          }, 0);
+          return;
+        }
         searchInputEl?.focus();
         searchInputEl?.select();
         return;
@@ -1877,6 +1982,18 @@ export const MarketingToolSidebar = () => {
                   </StyledChipRemove>
                 </StyledChip>
               ))}
+              {recentSearches.length > 1 && (
+                <StyledChip
+                  type="button"
+                  onClick={() => {
+                    writeRecentSearches([]);
+                    setRecentSearches([]);
+                  }}
+                  title="Clear all recent searches"
+                >
+                  Clear
+                </StyledChip>
+              )}
             </StyledChipRow>
           )}
 
@@ -2064,10 +2181,24 @@ export const MarketingToolSidebar = () => {
 
           {filteredVisits.length > 0 && (
             <StyledSection>
-              <StyledSectionLabel>
-                Last visited
-                {filteredVisits.length > 0 ? ` · ${filteredVisits.length}` : ''}
-              </StyledSectionLabel>
+              <StyledSectionLabelRow>
+                <StyledSectionLabel>
+                  Last visited
+                  {filteredVisits.length > 0
+                    ? ` · ${filteredVisits.length}`
+                    : ''}
+                </StyledSectionLabel>
+                <StyledSectionAction
+                  type="button"
+                  onClick={() => {
+                    clearVisits();
+                    setRecentVisits([]);
+                  }}
+                  title="Clear visit history"
+                >
+                  Clear
+                </StyledSectionAction>
+              </StyledSectionLabelRow>
               {filteredVisits.map((v) => {
                 const visitKey = `visit:${v.objectNameSingular}-${v.id}`;
                 return (
@@ -2090,12 +2221,15 @@ export const MarketingToolSidebar = () => {
                   >
                     <StyledItemLink
                       to={`/object/${v.objectNameSingular}/${v.id}`}
-                      title={v.name ?? '(unnamed)'}
+                      title={`${v.name ?? '(unnamed)'} — visited ${new Date(v.visitedAt).toLocaleString()}`}
                     >
                       <StyledItemBadge>
                         {badgeForObject(v.objectNameSingular)}
                       </StyledItemBadge>
                       <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
+                      <StyledItemTimestamp>
+                        {formatRelativeShort(v.visitedAt)}
+                      </StyledItemTimestamp>
                     </StyledItemLink>
                   </StyledItemRow>
                 );

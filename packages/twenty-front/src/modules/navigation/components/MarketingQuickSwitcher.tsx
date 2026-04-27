@@ -1,10 +1,11 @@
 import { styled } from '@linaria/react';
 import {
   type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
   useEffect,
   useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
@@ -110,7 +111,27 @@ const ACTION_COMMANDS: ActionCommand[] = [
     badge: 'Action',
     keywords: 'settings preferences profile workspace',
   },
+  {
+    key: 'action:toggle-sidebar',
+    label: 'Toggle sidebar collapse',
+    badge: 'Action',
+    keywords: 'toggle sidebar collapse expand show hide narrow wide',
+  },
 ];
+
+// Side-effect runner for non-navigation actions. Returns true if the
+// action was handled (caller should close the switcher and skip the
+// default navigate); false if the caller should fall back to navigate.
+const runAction = (actionKey: string): boolean => {
+  if (actionKey === 'action:toggle-sidebar') {
+    // The marketing sidebar listens for this CustomEvent and flips
+    // its collapse state. Defined here as a contract; sidebar wires
+    // it up in its keydown effect.
+    window.dispatchEvent(new CustomEvent('marketing-sidebar:toggle-collapse'));
+    return true;
+  }
+  return false;
+};
 
 /* oxlint-disable twenty/no-hardcoded-colors */
 const StyledBackdrop = styled.div`
@@ -138,15 +159,35 @@ const StyledCard = styled.div`
 `;
 /* oxlint-enable twenty/no-hardcoded-colors */
 
+const StyledInputRow = styled.div`
+  align-items: center;
+  border-bottom: 1px solid ${themeCssVariables.border.color.light};
+  display: flex;
+  padding: 0 18px;
+`;
+
+const StyledContextChip = styled.span`
+  background: ${themeCssVariables.background.transparent.lighter};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.tertiary};
+  flex-shrink: 0;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  margin-right: 10px;
+  padding: 3px 8px;
+  text-transform: uppercase;
+`;
+
 const StyledInput = styled.input`
   background: transparent;
   border: 0;
-  border-bottom: 1px solid ${themeCssVariables.border.color.light};
   color: ${themeCssVariables.font.color.primary};
+  flex: 1;
   font-family: ${themeCssVariables.font.family};
   font-size: 15px;
   outline: 0;
-  padding: 14px 18px;
+  padding: 14px 0;
   &::placeholder {
     color: ${themeCssVariables.font.color.tertiary};
   }
@@ -213,6 +254,44 @@ const StyledLabel = styled.span`
   white-space: nowrap;
 `;
 
+/* oxlint-disable twenty/no-hardcoded-colors */
+const StyledHighlight = styled.span`
+  background: ${themeCssVariables.color.orange};
+  border-radius: 2px;
+  color: #ffffff;
+  padding: 0 2px;
+`;
+/* oxlint-enable twenty/no-hardcoded-colors */
+
+// Render a label with all occurrences of `query` (case-insensitive)
+// wrapped in StyledHighlight. Plain string when query is empty so we
+// don't pay for split() / regex on every render of every row.
+const renderHighlighted = (label: string, query: string): ReactNode => {
+  if (query === '') return label;
+  const trimmed = query.trim();
+  if (trimmed === '') return label;
+  const lc = label.toLowerCase();
+  const lq = trimmed.toLowerCase();
+  const out: ReactNode[] = [];
+  let cursor = 0;
+  let next = lc.indexOf(lq, cursor);
+  let key = 0;
+  while (next !== -1) {
+    if (next > cursor) {
+      out.push(label.slice(cursor, next));
+    }
+    out.push(
+      <StyledHighlight key={key++}>
+        {label.slice(next, next + trimmed.length)}
+      </StyledHighlight>,
+    );
+    cursor = next + trimmed.length;
+    next = lc.indexOf(lq, cursor);
+  }
+  if (cursor < label.length) out.push(label.slice(cursor));
+  return out;
+};
+
 const StyledHint = styled.span`
   color: ${themeCssVariables.font.color.tertiary};
   font-family: ${themeCssVariables.font.family};
@@ -256,6 +335,29 @@ const hrefForAction = (actionKey: string): string => {
   return '/';
 };
 
+// Detect a friendly label for the current URL so the switcher can show
+// the user where they are. Matches the same set of marketing routes
+// the sidebar handles, plus a generic "Settings" fallback.
+const labelForCurrentPath = (pathname: string): string | null => {
+  if (pathname.startsWith('/objects/campaigns')) return 'Email Campaigns';
+  if (pathname.startsWith('/objects/marketingCampaigns'))
+    return 'Marketing Campaigns';
+  if (pathname.startsWith('/objects/sequences')) return 'Sequences';
+  if (pathname.startsWith('/objects/forms')) return 'Forms';
+  if (pathname.startsWith('/objects/people')) return 'People';
+  if (pathname.startsWith('/objects/companies')) return 'Companies';
+  if (pathname.startsWith('/object/campaign')) return 'Email Campaign';
+  if (pathname.startsWith('/object/marketingCampaign'))
+    return 'Marketing Campaign';
+  if (pathname.startsWith('/object/sequence')) return 'Sequence';
+  if (pathname.startsWith('/object/form')) return 'Form';
+  if (pathname.startsWith('/object/person')) return 'Person';
+  if (pathname.startsWith('/object/company')) return 'Company';
+  if (pathname.startsWith('/marketing/analytics')) return 'Analytics';
+  if (pathname.startsWith('/settings')) return 'Settings';
+  return null;
+};
+
 // Map a recently-visited record's objectNameSingular into a short
 // uppercase badge that matches the convention used by the marketing
 // sidebar's "Last visited" group.
@@ -274,6 +376,7 @@ export const MarketingQuickSwitcher = () => {
   // switcher resolves to a dynamic destination chosen by the user; a
   // static <Link> doesn't fit.
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [text, setText] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -497,6 +600,17 @@ export const MarketingQuickSwitcher = () => {
       if (allHits.length === 0) return;
       e.preventDefault();
       const target = allHits[Math.max(safeIndex, 0)];
+      // Shift+Enter opens in a new tab (only meaningful for href-based
+      // hits — actions still run in-place).
+      if (e.shiftKey && target.group !== 'actions') {
+        window.open(target.href, '_blank', 'noopener,noreferrer');
+        setIsOpen(false);
+        return;
+      }
+      if (target.group === 'actions' && runAction(target.key)) {
+        setIsOpen(false);
+        return;
+      }
       navigate(target.href);
       setIsOpen(false);
     }
@@ -510,18 +624,28 @@ export const MarketingQuickSwitcher = () => {
         aria-modal="true"
         aria-label="Quick switcher"
       >
-        <StyledInput
-          ref={setInputEl}
-          type="text"
-          placeholder="Jump to a section or search by name…"
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            setHighlightedIndex(0);
-          }}
-          onKeyDown={onInputKey}
-          aria-label="Quick switcher search"
-        />
+        <StyledInputRow>
+          {(() => {
+            const ctx = labelForCurrentPath(location.pathname);
+            return ctx === null ? null : (
+              <StyledContextChip title={`Currently on: ${ctx}`}>
+                {ctx}
+              </StyledContextChip>
+            );
+          })()}
+          <StyledInput
+            ref={setInputEl}
+            type="text"
+            placeholder="Jump to a section or search by name…"
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+              setHighlightedIndex(0);
+            }}
+            onKeyDown={onInputKey}
+            aria-label="Quick switcher search"
+          />
+        </StyledInputRow>
         <StyledResultsScroll>
           {allHits.length === 0 && queryActive && (
             <StyledEmpty>No matches for &quot;{text}&quot;</StyledEmpty>
@@ -540,7 +664,9 @@ export const MarketingQuickSwitcher = () => {
                   }}
                 >
                   <StyledBadge>{hit.badge}</StyledBadge>
-                  <StyledLabel>{hit.label}</StyledLabel>
+                  <StyledLabel>
+                    {renderHighlighted(hit.label, text)}
+                  </StyledLabel>
                 </StyledResultRow>
               ))}
             </>
@@ -554,12 +680,18 @@ export const MarketingQuickSwitcher = () => {
                   type="button"
                   isHighlighted={highlightedKey === hit.key}
                   onClick={() => {
+                    if (runAction(hit.key)) {
+                      setIsOpen(false);
+                      return;
+                    }
                     navigate(hit.href);
                     setIsOpen(false);
                   }}
                 >
                   <StyledBadge>{hit.badge}</StyledBadge>
-                  <StyledLabel>{hit.label}</StyledLabel>
+                  <StyledLabel>
+                    {renderHighlighted(hit.label, text)}
+                  </StyledLabel>
                 </StyledResultRow>
               ))}
             </>
@@ -580,7 +712,9 @@ export const MarketingQuickSwitcher = () => {
                     }}
                   >
                     <StyledBadge>{hit.badge}</StyledBadge>
-                    <StyledLabel>{hit.label}</StyledLabel>
+                    <StyledLabel>
+                      {renderHighlighted(hit.label, text)}
+                    </StyledLabel>
                     {navItem !== undefined && navItem.hint !== '' && (
                       <StyledHint>{navItem.hint}</StyledHint>
                     )}
@@ -603,7 +737,9 @@ export const MarketingQuickSwitcher = () => {
                   }}
                 >
                   <StyledBadge>{hit.badge}</StyledBadge>
-                  <StyledLabel>{hit.label}</StyledLabel>
+                  <StyledLabel>
+                    {renderHighlighted(hit.label, text)}
+                  </StyledLabel>
                 </StyledResultRow>
               ))}
             </>
@@ -613,6 +749,7 @@ export const MarketingQuickSwitcher = () => {
           <span>↑↓ navigate</span>
           <span>Tab next group</span>
           <span>↵ open</span>
+          <span>⇧↵ new tab</span>
           <span>Esc close</span>
         </StyledFooter>
       </StyledCard>
