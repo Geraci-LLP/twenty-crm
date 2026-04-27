@@ -13,6 +13,11 @@ import { useObjectMetadataItem } from '@/object-metadata/hooks/useObjectMetadata
 import { useCreateOneRecord } from '@/object-record/hooks/useCreateOneRecord';
 import { useFindManyRecords } from '@/object-record/hooks/useFindManyRecords';
 import { type ObjectRecord } from '@/object-record/types/ObjectRecord';
+import {
+  logVisit,
+  readVisits,
+  type Visit,
+} from '@/navigation/utils/recentlyVisitedStore';
 import { useAtomFamilySelectorValue } from '@/ui/utilities/state/jotai/hooks/useAtomFamilySelectorValue';
 import { viewsByObjectMetadataIdFamilySelector } from '@/views/states/selectors/viewsByObjectMetadataIdFamilySelector';
 
@@ -396,6 +401,20 @@ export const MarketingToolSidebar = () => {
   const [newName, setNewName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 
+  // Browser-history-style recently-visited tracker. Mirrors localStorage
+  // into component state so re-renders pick up new visits and so
+  // mutations from other tabs sync via the storage event.
+  const [recentVisits, setRecentVisits] = useState<Visit[]>(() => readVisits());
+  useEffect(() => {
+    const refresh = () => setRecentVisits(readVisits());
+    window.addEventListener('focus', refresh);
+    window.addEventListener('storage', refresh);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, []);
+
   // Create-one hook for the current section's object. Always call with
   // a fallback name so the hook list stays stable across renders.
   const { createOneRecord } = useCreateOneRecord<RecentRecord>({
@@ -514,6 +533,25 @@ export const MarketingToolSidebar = () => {
     };
   }, []);
 
+  // Log visits to record show pages. Computed up here (before the
+  // early return) so the useEffect call order stays stable across
+  // renders. We re-derive the show-path record id and name lookup
+  // inside the effect; the deps trigger on URL changes.
+  useEffect(() => {
+    if (!config) return;
+    const recordId = getCurrentRecordId(location.pathname, config.showPath);
+    if (recordId === null) return;
+    const fromList =
+      recentRecords.find((r) => r.id === recordId) ??
+      pinnedRecords.find((r) => r.id === recordId);
+    logVisit({
+      objectNameSingular: config.objectNameSingular,
+      id: recordId,
+      name: fromList?.name ?? null,
+    });
+    setRecentVisits(readVisits());
+  }, [config, location.pathname, recentRecords, pinnedRecords]);
+
   if (!config) return null;
 
   const indexPath = `/objects/${config.objectNamePlural}`;
@@ -594,6 +632,27 @@ export const MarketingToolSidebar = () => {
         .slice(0, 8)
     : [];
   const filteredCrossRecent = crossRecent.filter((r) => matchesFilter(r.name));
+
+  // Map visit objectNameSingular → short badge for the "Last visited"
+  // list. Anything not in this map shows the singular as-is.
+  const badgeForObject = (objectNameSingular: string): string => {
+    const section = SECTION_CONFIGS.find(
+      (s) => s.objectNameSingular === objectNameSingular,
+    );
+    if (!section) return objectNameSingular;
+    // Compact 1-4 char badge derived from the section title.
+    if (section.objectNameSingular === 'campaign') return 'Email';
+    if (section.objectNameSingular === 'marketingCampaign') return 'MC';
+    if (section.objectNameSingular === 'sequence') return 'Seq';
+    if (section.objectNameSingular === 'form') return 'Form';
+    if (section.objectNameSingular === 'person') return 'Person';
+    if (section.objectNameSingular === 'company') return 'Co';
+    return objectNameSingular;
+  };
+  const filteredVisits = recentVisits
+    .filter((v) => v.id !== currentRecordId)
+    .filter((v) => matchesFilter(v.name))
+    .slice(0, 8);
   const hasAnyResults =
     filteredViews.length > 0 ||
     filteredPinned.length > 0 ||
@@ -758,6 +817,25 @@ export const MarketingToolSidebar = () => {
               >
                 ★
               </StyledPinButton>
+            </StyledItemRow>
+          ))}
+        </StyledSection>
+      )}
+
+      {filteredVisits.length > 0 && (
+        <StyledSection>
+          <StyledSectionLabel>Last visited</StyledSectionLabel>
+          {filteredVisits.map((v) => (
+            <StyledItemRow key={`${v.objectNameSingular}-${v.id}`}>
+              <StyledItemLink
+                to={`/object/${v.objectNameSingular}/${v.id}`}
+                title={v.name ?? '(unnamed)'}
+              >
+                <StyledItemBadge>
+                  {badgeForObject(v.objectNameSingular)}
+                </StyledItemBadge>
+                <StyledItemLabel>{v.name ?? '(unnamed)'}</StyledItemLabel>
+              </StyledItemLink>
             </StyledItemRow>
           ))}
         </StyledSection>
