@@ -15,6 +15,7 @@ import { type Response as ExpressResponse } from 'express';
 
 import { MagicLinkService } from 'src/engine/core-modules/portal-auth/services/magic-link.service';
 import { JwtWrapperService } from 'src/engine/core-modules/jwt/services/jwt-wrapper.service';
+import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 import { PublicEndpointGuard } from 'src/engine/guards/public-endpoint.guard';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 
@@ -38,7 +39,7 @@ export class PortalAuthController {
 
   @Post('request-link')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(PublicEndpointGuard)
+  @UseGuards(PublicEndpointGuard, NoPermissionGuard)
   async requestLink(@Body() body: RequestLinkBody) {
     // Always return a generic 200 to prevent email/workspace enumeration.
     if (!body?.email || !body?.workspaceId) {
@@ -56,7 +57,7 @@ export class PortalAuthController {
   }
 
   @Get('verify')
-  @UseGuards(PublicEndpointGuard)
+  @UseGuards(PublicEndpointGuard, NoPermissionGuard)
   async verify(
     @Query('token') token: string,
     @Res() response: ExpressResponse,
@@ -119,7 +120,7 @@ export class PortalAuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(PublicEndpointGuard)
+  @UseGuards(PublicEndpointGuard, NoPermissionGuard)
   async logout(@Res() response: ExpressResponse) {
     const portalBaseUrl = this.twentyConfigService.get('PORTAL_BASE_URL') ?? '';
 

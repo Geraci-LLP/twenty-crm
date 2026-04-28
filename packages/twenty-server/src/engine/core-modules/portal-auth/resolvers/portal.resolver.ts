@@ -21,6 +21,8 @@ import { CoreResolver } from 'src/engine/api/graphql/graphql-config/decorators/c
 import { type PortalUserWorkspaceAuthContext } from 'src/engine/core-modules/auth/types/auth-context.type';
 import { PortalAuthGuard } from 'src/engine/core-modules/portal-auth/guards/portal-auth.guard';
 import { PortalUserService } from 'src/engine/core-modules/portal-user/services/portal-user.service';
+import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
+import { PublicEndpointGuard } from 'src/engine/guards/public-endpoint.guard';
 import { GlobalWorkspaceOrmManager } from 'src/engine/twenty-orm/global-workspace-datasource/global-workspace-orm.manager';
 import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system-auth-context.util';
 import { type CompanyWorkspaceEntity } from 'src/modules/company/standard-objects/company.workspace-entity';
@@ -346,6 +348,7 @@ export class PortalResolver {
   }
 
   @Query(() => PortalProfileDto)
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async myProfile(
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalProfileDto> {
@@ -360,6 +363,7 @@ export class PortalResolver {
   }
 
   @Query(() => PortalCompanyDto, { nullable: true })
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async myCompany(
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalCompanyDto | null> {
@@ -418,6 +422,7 @@ export class PortalResolver {
   }
 
   @Query(() => [PortalQuoteDto])
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async myQuotes(
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalQuoteDto[]> {
@@ -487,6 +492,7 @@ export class PortalResolver {
   }
 
   @Query(() => PortalQuoteDto, { nullable: true })
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async myQuote(
     @Args('id', { type: () => String }) id: string,
     @Context() context: { req: ExpressRequestWithAuth },
@@ -617,6 +623,7 @@ export class PortalResolver {
   }
 
   @Mutation(() => PortalQuoteDto)
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async acceptMyQuote(
     @Args('id', { type: () => String }) id: string,
     @Args('signatureText', { type: () => String, nullable: true })
@@ -666,6 +673,7 @@ export class PortalResolver {
   }
 
   @Mutation(() => PortalQuoteDto)
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async rejectMyQuote(
     @Args('id', { type: () => String }) id: string,
     @Args('reason', { type: () => String, nullable: true })
@@ -707,6 +715,7 @@ export class PortalResolver {
   }
 
   @Query(() => [PortalDocumentDto])
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async myDocuments(
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalDocumentDto[]> {
@@ -778,6 +787,7 @@ export class PortalResolver {
   }
 
   @Query(() => [PortalOpportunityDto])
+  @UseGuards(PortalAuthGuard, PublicEndpointGuard, NoPermissionGuard)
   async myOpportunities(
     @Context() context: { req: ExpressRequestWithAuth },
   ): Promise<PortalOpportunityDto[]> {

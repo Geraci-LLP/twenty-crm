@@ -1,3 +1,9 @@
+/* oxlint-disable twenty/no-hardcoded-colors */
+/* oxlint-disable twenty/no-state-useref */
+// This page renders before the Twenty theme provider is available (it runs
+// during the auth handoff). Inline styles use literal colors and a useRef
+// flag is needed to dedupe StrictMode effect re-runs without triggering a
+// re-render — both are intentional deviations from the lint rules.
 import { useMutation } from '@apollo/client/react';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';

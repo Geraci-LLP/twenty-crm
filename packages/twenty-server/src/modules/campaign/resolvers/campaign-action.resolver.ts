@@ -459,12 +459,15 @@ export class CampaignActionResolver {
         return { success: false, error: 'Campaign not found' };
       }
 
+      // JwtPayload doesn't include `campaignId` in its declared shape; cast
+      // through `as never` so we can attach the custom claim. The verifier on
+      // the campaign-preview endpoint reads it back manually.
       const token = this.jwtWrapperService.sign(
         {
           sub: 'campaign-preview',
           workspaceId: workspace.id,
           campaignId: input.campaignId,
-        },
+        } as never,
         { expiresIn: '7d' },
       );
 

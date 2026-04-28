@@ -24,10 +24,7 @@ import { type DocumentViewWorkspaceEntity } from 'src/modules/document-tracking/
 import { type PersonWorkspaceEntity } from 'src/modules/person/standard-objects/person.workspace-entity';
 import { QuoteStatusService } from 'src/modules/quotes/services/quote-status.service';
 import { type QuoteLineItemWorkspaceEntity } from 'src/modules/quotes/standard-objects/quote-line-item.workspace-entity';
-import {
-  QuoteStatus,
-  type QuoteWorkspaceEntity,
-} from 'src/modules/quotes/standard-objects/quote.workspace-entity';
+import { type QuoteWorkspaceEntity } from 'src/modules/quotes/standard-objects/quote.workspace-entity';
 
 type IdentifyBody = {
   email: string;

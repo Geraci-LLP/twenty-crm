@@ -6,8 +6,10 @@ import { Request as ExpressRequest } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Repository } from 'typeorm';
 
-import { type PortalUserJwtPayload } from 'src/engine/core-modules/auth/types/auth-context.type';
-import { type PortalUserWorkspaceAuthContext } from 'src/engine/core-modules/auth/types/auth-context.type';
+import {
+  type PortalUserJwtPayload,
+  type PortalUserWorkspaceAuthContext,
+} from 'src/engine/core-modules/auth/types/auth-context.type';
 import { PortalUserService } from 'src/engine/core-modules/portal-user/services/portal-user.service';
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';

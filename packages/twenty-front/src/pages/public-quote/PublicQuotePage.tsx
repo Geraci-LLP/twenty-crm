@@ -1,3 +1,9 @@
+/* oxlint-disable twenty/no-hardcoded-colors */
+/* oxlint-disable twenty/no-state-useref */
+// Public quote page is shown to anonymous external clients via a sharing
+// link. The modal-overlay rgba background is intentional (it always shows on
+// white/light backgrounds), and the viewer-session ref is a stable identifier
+// for tracking pings, not application state.
 import { styled } from '@linaria/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';

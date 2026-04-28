@@ -104,6 +104,16 @@ export class FlatPageLayoutWidgetTypeValidatorService {
       EMAIL_THREAD: validateSimpleRecordPageWidgetForCreation(
         WidgetConfigurationType.EMAIL_THREAD,
       ),
+      MARKETING_CAMPAIGN_STATS: rejectWidgetType(
+        WidgetType.MARKETING_CAMPAIGN_STATS,
+        'Widget type MARKETING_CAMPAIGN_STATS is not supported yet.',
+        msg`Widget type MARKETING_CAMPAIGN_STATS is not supported yet.`,
+      ),
+      SEQUENCE_CADENCE: rejectWidgetType(
+        WidgetType.SEQUENCE_CADENCE,
+        'Widget type SEQUENCE_CADENCE is not supported yet.',
+        msg`Widget type SEQUENCE_CADENCE is not supported yet.`,
+      ),
     };
 
   private readonly PAGE_LAYOUT_WIDGET_TYPE_VALIDATOR_FOR_UPDATE_HASHMAP: FlatPageLayoutWidgetTypeValidatorForUpdate =
@@ -166,6 +176,16 @@ export class FlatPageLayoutWidgetTypeValidatorService {
       ),
       EMAIL_THREAD: validateSimpleRecordPageWidgetForUpdate(
         WidgetConfigurationType.EMAIL_THREAD,
+      ),
+      MARKETING_CAMPAIGN_STATS: rejectWidgetType(
+        WidgetType.MARKETING_CAMPAIGN_STATS,
+        'Widget type MARKETING_CAMPAIGN_STATS is not supported yet.',
+        msg`Widget type MARKETING_CAMPAIGN_STATS is not supported yet.`,
+      ),
+      SEQUENCE_CADENCE: rejectWidgetType(
+        WidgetType.SEQUENCE_CADENCE,
+        'Widget type SEQUENCE_CADENCE is not supported yet.',
+        msg`Widget type SEQUENCE_CADENCE is not supported yet.`,
       ),
     };
 
