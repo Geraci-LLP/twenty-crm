@@ -116,6 +116,17 @@ export const FormBuilderWidget = () => {
               confirmationEmailSubject: formRecord.confirmationEmailSubject,
               confirmationEmailBody: formRecord.confirmationEmailBody,
               autoCreatePerson: formRecord.autoCreatePerson ?? true,
+              tagsToApplyOnSubmission:
+                formRecord.tagsToApplyOnSubmission ?? null,
+              botProtectionEnabled: formRecord.botProtectionEnabled ?? false,
+              botProtectionSiteKey: formRecord.botProtectionSiteKey ?? null,
+              honeypotFieldName: formRecord.honeypotFieldName ?? null,
+              requireFormLoadToken: formRecord.requireFormLoadToken ?? false,
+              minSubmitTimeSeconds: formRecord.minSubmitTimeSeconds ?? null,
+              rateLimitPerMinute: formRecord.rateLimitPerMinute ?? null,
+              allowedOrigins: formRecord.allowedOrigins ?? null,
+              rejectDisposableEmails:
+                formRecord.rejectDisposableEmails ?? false,
             }}
             onSettingsChange={(settings) => updateForm(settings)}
           />

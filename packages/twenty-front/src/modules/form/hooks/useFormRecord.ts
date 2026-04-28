@@ -19,6 +19,20 @@ type FormRecord = ObjectRecord & {
   confirmationEmailSubject: string | null;
   confirmationEmailBody: string | null;
   autoCreatePerson: boolean;
+  // Person-tagging policy: tag strings merged into the auto-created
+  // Person's `tags` array on submission.
+  tagsToApplyOnSubmission: string[] | null;
+  // Bot-protection settings — six layers, all optional, configured per
+  // form. See section 8.3.1 of the marketing manual for the full
+  // breakdown.
+  botProtectionEnabled: boolean;
+  botProtectionSiteKey: string | null;
+  honeypotFieldName: string | null;
+  requireFormLoadToken: boolean;
+  minSubmitTimeSeconds: number | null;
+  rateLimitPerMinute: number | null;
+  allowedOrigins: string[] | null;
+  rejectDisposableEmails: boolean;
 };
 
 export const useFormRecord = ({ formId }: { formId: string }) => {
@@ -40,6 +54,15 @@ export const useFormRecord = ({ formId }: { formId: string }) => {
       confirmationEmailSubject: true,
       confirmationEmailBody: true,
       autoCreatePerson: true,
+      tagsToApplyOnSubmission: true,
+      botProtectionEnabled: true,
+      botProtectionSiteKey: true,
+      honeypotFieldName: true,
+      requireFormLoadToken: true,
+      minSubmitTimeSeconds: true,
+      rateLimitPerMinute: true,
+      allowedOrigins: true,
+      rejectDisposableEmails: true,
     },
   });
 
