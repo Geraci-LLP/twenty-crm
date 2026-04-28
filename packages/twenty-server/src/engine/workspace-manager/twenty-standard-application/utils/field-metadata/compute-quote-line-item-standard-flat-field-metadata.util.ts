@@ -27,10 +27,7 @@ export const buildQuoteLineItemStandardFlatFieldMetadatas = ({
 }: Omit<
   CreateStandardFieldArgs<'quoteLineItem', FieldMetadataType>,
   'context'
->): Record<
-  AllStandardObjectFieldName<'quoteLineItem'>,
-  FlatFieldMetadata
-> => ({
+>): Record<AllStandardObjectFieldName<'quoteLineItem'>, FlatFieldMetadata> => ({
   // Base fields
   id: createStandardFieldFlatMetadata({
     objectName,

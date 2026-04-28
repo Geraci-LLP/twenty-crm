@@ -1,3 +1,7 @@
+/* oxlint-disable twenty/no-hardcoded-colors */
+// Migration fallbacks use literal hex colors to match historical email
+// templates rendered for external mail clients without theme variables.
+
 import {
   type EmailDesign,
   type EmailSection,

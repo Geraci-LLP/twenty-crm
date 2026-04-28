@@ -1,3 +1,8 @@
+/* oxlint-disable twenty/component-props-naming */
+/* oxlint-disable twenty/sort-css-properties-alphabetically */
+// Generic 'Props' type matches sibling email-builder module editors;
+// CSS ordering is grouped semantically to mirror the rendered output.
+
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 

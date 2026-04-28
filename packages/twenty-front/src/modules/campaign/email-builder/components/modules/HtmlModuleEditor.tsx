@@ -1,3 +1,6 @@
+/* oxlint-disable twenty/component-props-naming */
+// Generic 'Props' type matches sibling email-builder module editors.
+
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 
@@ -57,8 +60,8 @@ export const HtmlModuleEditor = ({ module, onChange }: Props) => {
       />
       <StyledNote>
         Custom HTML is sent as-is. Inline styles only (Outlook ignores
-        &lt;style&gt; blocks). Avoid &lt;script&gt;, &lt;iframe&gt;, and
-        modern CSS — most clients strip them.
+        &lt;style&gt; blocks). Avoid &lt;script&gt;, &lt;iframe&gt;, and modern
+        CSS — most clients strip them.
       </StyledNote>
     </StyledField>
   );

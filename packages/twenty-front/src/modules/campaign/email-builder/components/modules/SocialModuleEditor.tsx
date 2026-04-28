@@ -1,3 +1,6 @@
+/* oxlint-disable twenty/component-props-naming */
+// Generic 'Props' type matches sibling email-builder module editors.
+
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 
@@ -63,11 +66,17 @@ const StyledIconButton = styled.button`
   color: ${themeCssVariables.font.color.secondary};
   cursor: pointer;
   padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[2]};
-  &:hover { background: ${themeCssVariables.background.tertiary}; }
+  &:hover {
+    background: ${themeCssVariables.background.tertiary};
+  }
 `;
 
 const PLATFORM_OPTIONS: SocialPlatform[] = [
-  'twitter', 'linkedin', 'facebook', 'instagram', 'youtube',
+  'twitter',
+  'linkedin',
+  'facebook',
+  'instagram',
+  'youtube',
 ];
 
 type Props = {
@@ -92,7 +101,11 @@ export const SocialModuleEditor = ({ module, onChange }: Props) => {
   );
 
   const removeLink = useCallback(
-    (idx: number) => set('links', module.links.filter((_, i) => i !== idx)),
+    (idx: number) =>
+      set(
+        'links',
+        module.links.filter((_, i) => i !== idx),
+      ),
     [module.links, set],
   );
 
@@ -128,7 +141,9 @@ export const SocialModuleEditor = ({ module, onChange }: Props) => {
           <StyledLabel>Alignment</StyledLabel>
           <StyledSelect
             value={module.alignment}
-            onChange={(e) => set('alignment', e.target.value as SocialModule['alignment'])}
+            onChange={(e) =>
+              set('alignment', e.target.value as SocialModule['alignment'])
+            }
           >
             <option value="left">Left</option>
             <option value="center">Center</option>
@@ -141,21 +156,32 @@ export const SocialModuleEditor = ({ module, onChange }: Props) => {
         <StyledRow key={idx}>
           <StyledSelect
             value={link.platform}
-            onChange={(e) => updateLink(idx, { ...link, platform: e.target.value as SocialPlatform })}
+            onChange={(e) =>
+              updateLink(idx, {
+                ...link,
+                platform: e.target.value as SocialPlatform,
+              })
+            }
           >
             {PLATFORM_OPTIONS.map((p) => (
-              <option key={p} value={p}>{p}</option>
+              <option key={p} value={p}>
+                {p}
+              </option>
             ))}
           </StyledSelect>
           <StyledField style={{ flex: 2 }}>
             <StyledInput
               type="url"
               value={link.href}
-              onChange={(e) => updateLink(idx, { ...link, href: e.target.value })}
+              onChange={(e) =>
+                updateLink(idx, { ...link, href: e.target.value })
+              }
               placeholder="https://…"
             />
           </StyledField>
-          <StyledIconButton onClick={() => removeLink(idx)} title="Remove">✕</StyledIconButton>
+          <StyledIconButton onClick={() => removeLink(idx)} title="Remove">
+            ✕
+          </StyledIconButton>
         </StyledRow>
       ))}
       <StyledIconButton onClick={addLink}>+ Add link</StyledIconButton>

@@ -710,7 +710,9 @@ export const buildPersonStandardFlatFieldMetadatas = ({
       morphId: null,
       fieldName: 'quotes',
       label: i18nLabel(msg`Quotes`),
-      description: i18nLabel(msg`Quotes where the person is the point of contact`),
+      description: i18nLabel(
+        msg`Quotes where the person is the point of contact`,
+      ),
       icon: 'IconFileDollar',
       isUIReadOnly: true,
       isNullable: true,
