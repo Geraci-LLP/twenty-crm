@@ -188,10 +188,21 @@
 <h3>Capture leads with a form</h3>
 <ol>
   <li><kbd>g 4</kbd> · <kbd>c</kbd> · name it · <kbd>↵</kbd></li>
-  <li>Add fields — the Type dropdown supports 16 types: text, long text, number, boolean, rating, date, date+time, email, phone, URL, address, full name, file, select, multi-select, record</li>
-  <li>Toggle <em>Auto-create person</em> on; optionally set <em>Tags to apply on submission</em> (segments contacts by which form they used)</li>
+  <li>Add fields — Type dropdown has 16 options: text, long text, number, boolean, rating, date, date+time, email, phone, URL, address, full name, file, select, multi-select, record</li>
+  <li>Toggle <em>Auto-create person</em>; optionally set <em>Tags to apply on submission</em> (segments contacts by which form they used)</li>
   <li><strong>Publish</strong> · copy the embed iframe — or POST your own form to <code>/forms/&lt;workspace-id&gt;/&lt;form-id&gt;/submit</code> (CORS open, no auth)</li>
 </ol>
+
+<h3>Stop bots without signing up for anything</h3>
+<p>Six bot-protection layers in form Settings tab. Five are native (zero accounts, zero API keys); only Turnstile is a third-party service. Recommended baseline:</p>
+<ol>
+  <li><em>Honeypot field name</em>: <code>company_url</code> — then add an off-screen <code>&lt;input name="company_url" tabindex="-1" style="position:absolute;left:-9999px"&gt;</code> to your form. Bots fill it; humans don't.</li>
+  <li><em>Require form-load token</em> on with <em>Minimum submit time</em> 2 — defeats direct-POST scrapers + instant-fire replays</li>
+  <li><em>Rate limit</em> 5 — caps per-IP submissions at 5/min</li>
+  <li><em>Allowed origins</em> <code>https://your-domain.com</code> — rejects cross-site spam</li>
+  <li>Optional: <em>Reject disposable emails</em>, <em>Cloudflare Turnstile</em> for high-volume forms</li>
+</ol>
+<p>Honeypot is <em>not a service</em>. No sign-up, no API key. Just a hidden field.</p>
 
 <h3>Spin up a landing page</h3>
 <ol>

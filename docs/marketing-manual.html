@@ -155,7 +155,7 @@
 <div class="page">
 
 <h1>Geraci CRM — Marketing User Manual</h1>
-<p class="meta">Updated 2026-04-28 · Covers Email Campaigns · Marketing Campaigns · Sequences · Forms (incl. JSON API) · Audiences · Analytics · Landing Pages · Navigation &amp; shortcuts</p>
+<p class="meta">Updated 2026-04-28 · Covers Email Campaigns · Marketing Campaigns · Sequences · Forms (incl. JSON API + 6-layer bot protection) · Audiences · Analytics · Landing Pages · Navigation &amp; shortcuts</p>
 
 <div class="toc">
 <h2>Contents</h2>
@@ -650,7 +650,7 @@ form.addEventListener('submit', async (e) =&gt; {
   </tr>
 </table>
 
-<p>Origin allowlist, rate limit, disposable emails, form-load token, and honeypot are entirely native — no third-party dependency. Turnstile is optional and adds Cloudflare's behavioral analysis on top. Pick whatever fits.</p>
+<p><strong>Heads up on what's an account vs. what's not:</strong> only Cloudflare Turnstile (the bottom row) is a third-party service that needs a sign-up + API keys. Everything else — honeypot, origin allowlist, rate limit, disposable email check, form-load token — is native to the CRM. You toggle them on in the form's Settings tab and they Just Work. No accounts, no keys, no dashboards anywhere. Don't go looking for "honeypot.io" or "rate-limit.com" — they don't exist; honeypot is a 25-year-old web technique, not a vendor.</p>
 
 <h5>Origin allowlist</h5>
 
@@ -677,23 +677,49 @@ form.addEventListener('submit', async (e) =&gt; {
 
 <h5>Honeypot field</h5>
 
-<p>Set <em>Honeypot field name</em> to any string (e.g. <code>company_url</code>). On your form, include a CSS-hidden input with that <code>name</code>. Bots that auto-fill all fields populate it; humans don't. The server returns <strong>200 OK</strong> with <code>{ "submissionId": "honeypot-rejected", "personId": null }</code> and silently discards.</p>
+<p>Honeypot is <strong>not a service</strong> — no account, no API key, no third party. Just a hidden form field that bots fill in and humans don't.</p>
+
+<ol>
+  <li>In the CRM, set <em>Honeypot field name</em> on the form to any string. Common choices: <code>company_url</code>, <code>website</code>, <code>fax</code> (deliberately unsuspicious).</li>
+  <li>On your custom form, add an input with that exact <code>name</code>, positioned off-screen with CSS:
+    <pre>&lt;input
+  type="text"
+  name="company_url"
+  tabindex="-1"
+  autocomplete="off"
+  style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;"
+/&gt;</pre>
+  </li>
+  <li>POST the form normally — the honeypot value will be empty for real users:
+    <pre>{
+  "fields": {
+    "email": "user@example.com",
+    "firstName": "Jane",
+    "company_url": ""
+  }
+}</pre>
+  </li>
+</ol>
+
+<p>Real visitors never see the field (off-screen, no tab stop, autocomplete disabled). Bots that auto-fill every input on the page populate it. When the server sees a non-empty honeypot, it returns <strong>200 OK</strong> with <code>{ "submissionId": "honeypot-rejected", "personId": null }</code> and silently discards the submission — no FormSubmission record persisted, no notification email sent, no Person created. The bot's logs say "success" and it never learns why it didn't actually convert.</p>
+
+<p>Why off-screen and not <code>display:none</code>? Some bots specifically skip <code>display:none</code> fields to dodge naive honeypots. Off-screen positioning + tabindex=-1 + autocomplete=off is the most defeat-resistant version.</p>
 
 <h5>Cloudflare Turnstile</h5>
 
 <p>Toggle <em>Bot protection</em> and set <em>Turnstile site key</em> on the form. Add <code>CLOUDFLARE_TURNSTILE_SECRET_KEY</code> to the server env. Embed Turnstile on your form page (script tag from Cloudflare); when the visitor solves the challenge, the widget produces a token. POST it in <code>body.captchaToken</code>. Server verifies via Cloudflare's <code>siteverify</code> before any field validation. Failure returns 403.</p>
 
-<h5>Recommended stack</h5>
+<h5>Recommended stack (zero third-party accounts)</h5>
 
-<p>For a low-effort baseline that stops 99% of bot traffic without any external service:</p>
+<p>For a low-effort baseline that stops ~99% of bot traffic without signing up for anything:</p>
 <ol>
-  <li><em>Honeypot field name</em>: <code>company_url</code> (and add a CSS-hidden input on your form)</li>
+  <li><em>Honeypot field name</em>: <code>company_url</code> (and add the off-screen input shown above to your form)</li>
   <li><em>Require form-load token</em>: on, with <em>Minimum submit time</em> = 2</li>
   <li><em>Rate limit</em>: 5</li>
   <li><em>Allowed origins</em>: <code>["https://your-domain.com"]</code></li>
 </ol>
 
-<p>For high-volume consumer forms (newsletter signup with active spam campaigns), add Turnstile on top. For everything else, the native stack is genuinely enough.</p>
+<p>None of those four require an external account, API key, or dashboard — they're all just toggles in the CRM Settings tab plus a few lines of HTML/JS on your form. For high-volume consumer forms (newsletter signup with active spam campaigns), add Turnstile on top — that's the only one that needs a Cloudflare account.</p>
 
 <h4 id="form-rate-limit">8.3.2 Rate limiting (edge layer)</h4>
 
