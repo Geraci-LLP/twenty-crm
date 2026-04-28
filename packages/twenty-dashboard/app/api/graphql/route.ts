@@ -8,15 +8,47 @@ import { NextResponse, type NextRequest } from 'next/server';
 // route runs server-side, pulls the token out of the cookie, and forwards
 // the request to the CRM GraphQL endpoint with the right header.
 //
-// Keeping it this small means we don't cache, don't transform, and don't
-// parse the body — we just pipe bytes through.
+// Twenty exposes TWO GraphQL endpoints:
+//   /graphql  — workspace-scoped data (standard objects, including
+//               `dashboards`, `pageLayoutWidgets` as nested relations)
+//   /metadata — metadata + config operations (`getPageLayoutTabs`,
+//               `createPageLayoutWidget`, `createPageLayoutTab`, etc.)
+// We sniff the request's operation name and route accordingly.
 
 const DASHBOARD_TOKEN_COOKIE = 'twenty_dashboard_token';
 
-const getCrmGraphqlUrl = () =>
-  process.env.TWENTY_API_URL ??
-  process.env.NEXT_PUBLIC_TWENTY_API_URL ??
-  'https://crm.geracillp.com/graphql';
+// These operations live on /metadata, not /graphql. Conservative match by
+// substring on the request body so we don't have to fully parse GraphQL.
+const METADATA_OP_PATTERNS = [
+  'getPageLayoutTabs',
+  'getPageLayoutTab',
+  'getPageLayouts',
+  'getPageLayout',
+  'getPageLayoutWidgets',
+  'getPageLayoutWidget',
+  'createPageLayoutWidget',
+  'updatePageLayoutWidget',
+  'deletePageLayoutWidget',
+  'createPageLayoutTab',
+  'updatePageLayoutTab',
+  'deletePageLayoutTab',
+];
+
+const getCrmBaseUrl = () => {
+  // Trim a trailing /graphql or /metadata so we can append our own.
+  const raw =
+    process.env.TWENTY_API_URL ??
+    process.env.NEXT_PUBLIC_TWENTY_API_URL ??
+    'https://crm.geracillp.com/graphql';
+
+  return raw.replace(/\/(graphql|metadata)\/?$/, '');
+};
+
+const pickEndpoint = (body: string): 'graphql' | 'metadata' => {
+  return METADATA_OP_PATTERNS.some((op) => body.includes(op))
+    ? 'metadata'
+    : 'graphql';
+};
 
 const proxy = async (request: NextRequest) => {
   const cookieStore = await cookies();
@@ -33,16 +65,21 @@ const proxy = async (request: NextRequest) => {
     );
   }
 
-  const upstream = await fetch(getCrmGraphqlUrl(), {
+  const body =
+    request.method === 'GET' || request.method === 'HEAD'
+      ? ''
+      : await request.text();
+
+  const endpoint = pickEndpoint(body);
+  const upstreamUrl = `${getCrmBaseUrl()}/${endpoint}`;
+
+  const upstream = await fetch(upstreamUrl, {
     method: request.method,
     headers: {
       'content-type': request.headers.get('content-type') ?? 'application/json',
       authorization: `Bearer ${token}`,
     },
-    body:
-      request.method === 'GET' || request.method === 'HEAD'
-        ? undefined
-        : await request.text(),
+    body: body || undefined,
   });
 
   const bodyText = await upstream.text();
@@ -54,7 +91,9 @@ const proxy = async (request: NextRequest) => {
       const parsed = JSON.parse(bodyText);
       if (parsed.errors) {
         console.log(
-          '[dashboard-proxy] upstream status',
+          '[dashboard-proxy] →',
+          endpoint,
+          'status',
           upstream.status,
           'errors:',
           JSON.stringify(parsed.errors),

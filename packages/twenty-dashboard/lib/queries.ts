@@ -77,10 +77,13 @@ export const UPDATE_DASHBOARD = gql`
   }
 `;
 
+// PageLayoutWidget mutations live on the /metadata endpoint and use the
+// metadata-service input convention (input: CreateXInput!), not the
+// standard-object convention (data: XCreateInput!).
 export const CREATE_PAGE_LAYOUT_WIDGET = gql`
   ${PAGE_LAYOUT_WIDGET_FRAGMENT}
-  mutation CreatePageLayoutWidget($data: PageLayoutWidgetCreateInput!) {
-    createPageLayoutWidget(data: $data) {
+  mutation CreatePageLayoutWidget($input: CreatePageLayoutWidgetInput!) {
+    createPageLayoutWidget(input: $input) {
       ...PageLayoutWidgetFields
     }
   }
@@ -89,22 +92,18 @@ export const CREATE_PAGE_LAYOUT_WIDGET = gql`
 export const UPDATE_PAGE_LAYOUT_WIDGET = gql`
   ${PAGE_LAYOUT_WIDGET_FRAGMENT}
   mutation UpdatePageLayoutWidget(
-    $id: UUID!
-    $data: PageLayoutWidgetUpdateInput!
+    $id: String!
+    $input: UpdatePageLayoutWidgetInput!
   ) {
-    updatePageLayoutWidget(id: $id, data: $data) {
+    updatePageLayoutWidget(id: $id, input: $input) {
       ...PageLayoutWidgetFields
     }
   }
 `;
 
-export const DELETE_PAGE_LAYOUT_WIDGET = gql`
-  mutation DeletePageLayoutWidget($id: UUID!) {
-    deletePageLayoutWidget(id: $id) {
-      id
-    }
-  }
-`;
+// Note: deletePageLayoutWidget mutation is not exposed by the CRM. Removing
+// widgets in the builder UI clears them from local state only; persisting the
+// removal will need a server-side mutation we don't yet have.
 
 // Page-layout tab queries/mutations — widgets must attach to a tab. The CRM
 // data model is Dashboard -> PageLayout -> PageLayoutTab -> PageLayoutWidget,

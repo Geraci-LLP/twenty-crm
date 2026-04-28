@@ -9,9 +9,12 @@ import { WidgetConfigPanel } from '../../../../components/builder/WidgetConfigPa
 import { WidgetGrid } from '../../../../components/builder/WidgetGrid';
 import { WidgetPalette } from '../../../../components/builder/WidgetPalette';
 import {
+  PALETTE_TO_BACKEND_TYPE,
+  PALETTE_TO_CONFIG_TYPE,
+} from '../../../../lib/types';
+import {
   CREATE_PAGE_LAYOUT_TAB,
   CREATE_PAGE_LAYOUT_WIDGET,
-  DELETE_PAGE_LAYOUT_WIDGET,
   FIND_DASHBOARD_BY_ID,
   GET_PAGE_LAYOUT_TABS,
   UPDATE_PAGE_LAYOUT_WIDGET,
@@ -101,7 +104,6 @@ const DashboardEditPage = () => {
 
   const [createWidget] = useMutation(CREATE_PAGE_LAYOUT_WIDGET);
   const [updateWidget] = useMutation(UPDATE_PAGE_LAYOUT_WIDGET);
-  const [deleteWidget] = useMutation(DELETE_PAGE_LAYOUT_WIDGET);
 
   const selectedWidget =
     widgets.find((widget) => widget.id === selectedWidgetId) ?? null;
@@ -148,6 +150,16 @@ const DashboardEditPage = () => {
         '',
       ) as WidgetType;
       const tempId = `new-${Date.now()}`;
+      // Seed sensible defaults so the widget is savable without forcing the
+      // user to first interact with every form field. These defaults match
+      // what the right-side panel renders as the visual default — without
+      // them, the form shows "Count" but the underlying configuration object
+      // is empty and the API rejects it.
+      const isRichText = widgetType === 'RICH_TEXT';
+      const defaultConfiguration: Record<string, unknown> = isRichText
+        ? {}
+        : { aggregateOperation: 'COUNT' };
+
       const newWidget: PageLayoutWidget = {
         id: tempId,
         title: widgetType.replace('_', ' '),
@@ -155,7 +167,7 @@ const DashboardEditPage = () => {
         // Tab id is filled in at save time via ensureTabId().
         pageLayoutTabId: resolvedTabId ?? '',
         gridPosition: { ...DEFAULT_GRID_POSITION, row: widgets.length },
-        configuration: {},
+        configuration: defaultConfiguration,
       };
       setWidgets((prev) => [...prev, newWidget]);
       setSelectedWidgetId(tempId);
@@ -185,11 +197,10 @@ const DashboardEditPage = () => {
     );
   };
 
-  const handleWidgetDelete = async (id: string) => {
-    // If it's a server-persisted widget (no `new-` prefix), call mutation
-    if (!id.startsWith('new-')) {
-      await deleteWidget({ variables: { id } });
-    }
+  const handleWidgetDelete = (id: string) => {
+    // The CRM API doesn't expose a deletePageLayoutWidget mutation yet, so
+    // for now this only removes from local state. Persisted widgets will
+    // reappear after a page reload until the server-side delete is added.
     setWidgets((prev) => prev.filter((widget) => widget.id !== id));
     setSelectedWidgetId(null);
   };
@@ -211,15 +222,36 @@ const DashboardEditPage = () => {
       }
 
       for (const widget of widgets) {
+        // Translate the palette-level type (BAR_CHART, LINE_CHART, etc.) into
+        // the backend's WidgetType enum (GRAPH or STANDALONE_RICH_TEXT). The
+        // backend's `configuration` is a tagged union keyed on
+        // `configurationType` — set that so the API knows which member of the
+        // union to validate against.
+        const backendType = PALETTE_TO_BACKEND_TYPE[widget.type];
+        const configurationType = PALETTE_TO_CONFIG_TYPE[widget.type];
+        const isRichText = widget.type === 'RICH_TEXT';
+        const baseConfiguration: Record<string, unknown> = {
+          ...(widget.configuration ?? {}),
+          configurationType,
+        };
+        // All chart/aggregate config types REQUIRE aggregateOperation, even
+        // when the user never opens the dropdown. Inject the visual default
+        // ("COUNT") so we don't 400 on save just because the user dragged a
+        // widget and clicked Save without touching the form.
+        if (!isRichText && !baseConfiguration.aggregateOperation) {
+          baseConfiguration.aggregateOperation = 'COUNT';
+        }
+        const persistedConfiguration = baseConfiguration;
+
         if (widget.id.startsWith('new-')) {
           await createWidget({
             variables: {
-              data: {
+              input: {
                 title: widget.title,
-                type: widget.type,
+                type: backendType,
                 objectMetadataId: widget.objectMetadataId,
                 gridPosition: widget.gridPosition,
-                configuration: widget.configuration,
+                configuration: persistedConfiguration,
                 pageLayoutTabId: tabIdForNewWidgets,
               },
             },
@@ -228,10 +260,10 @@ const DashboardEditPage = () => {
           await updateWidget({
             variables: {
               id: widget.id,
-              data: {
+              input: {
                 title: widget.title,
                 gridPosition: widget.gridPosition,
-                configuration: widget.configuration,
+                configuration: persistedConfiguration,
               },
             },
           });
@@ -276,7 +308,7 @@ const DashboardEditPage = () => {
                 &larr; Cancel
               </Link>
               <h2 style={{ margin: '4px 0 0', fontSize: 16 }}>
-                {data?.dashboard?.name ?? 'Dashboard'}
+                {data?.dashboard?.title ?? 'Dashboard'}
               </h2>
               {tabResolutionError ? (
                 <p

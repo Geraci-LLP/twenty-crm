@@ -1,9 +1,4 @@
-import {
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { REACT_APP_SERVER_BASE_URL } from '~/config';
 
 // Separate Apollo client for the client portal.
@@ -12,34 +7,32 @@ import { REACT_APP_SERVER_BASE_URL } from '~/config';
 //   (the browser attaches it automatically when `credentials: 'include'` is set)
 // - Keeps an isolated in-memory cache so portal data does not bleed
 //   into the main CRM user's Apollo cache
-let portalApolloClientInstance: ApolloClient<NormalizedCacheObject> | null =
-  null;
+let portalApolloClientInstance: ApolloClient | null = null;
 
-export const getPortalApolloClient =
-  (): ApolloClient<NormalizedCacheObject> => {
-    if (portalApolloClientInstance !== null) {
-      return portalApolloClientInstance;
-    }
-
-    const httpLink = new HttpLink({
-      uri: `${REACT_APP_SERVER_BASE_URL}/graphql`,
-      credentials: 'include',
-    });
-
-    portalApolloClientInstance = new ApolloClient({
-      link: httpLink,
-      cache: new InMemoryCache(),
-      defaultOptions: {
-        watchQuery: {
-          fetchPolicy: 'cache-and-network',
-          errorPolicy: 'all',
-        },
-        query: {
-          fetchPolicy: 'network-only',
-          errorPolicy: 'all',
-        },
-      },
-    });
-
+export const getPortalApolloClient = (): ApolloClient => {
+  if (portalApolloClientInstance !== null) {
     return portalApolloClientInstance;
-  };
+  }
+
+  const httpLink = new HttpLink({
+    uri: `${REACT_APP_SERVER_BASE_URL}/graphql`,
+    credentials: 'include',
+  });
+
+  portalApolloClientInstance = new ApolloClient({
+    link: httpLink,
+    cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+        errorPolicy: 'all',
+      },
+      query: {
+        fetchPolicy: 'network-only',
+        errorPolicy: 'all',
+      },
+    },
+  });
+
+  return portalApolloClientInstance;
+};

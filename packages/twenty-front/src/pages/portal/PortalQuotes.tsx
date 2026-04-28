@@ -1,4 +1,5 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { styled } from '@linaria/react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -208,6 +209,7 @@ export const PortalQuotes = () => {
     return quotes.filter((quote) => quote.status === statusFilter);
   }, [data, statusFilter]);
 
+  // oxlint-disable-next-line twenty/no-navigate-prefer-link
   const handleRowClick = (quoteId: string) => {
     navigate(AppPath.PortalQuoteDetail.replace(':id', quoteId));
   };

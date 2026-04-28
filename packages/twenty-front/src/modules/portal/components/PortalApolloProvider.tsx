@@ -1,5 +1,5 @@
-import { ApolloProvider } from '@apollo/client';
-import { ReactNode, useMemo } from 'react';
+import { ApolloProvider } from '@apollo/client/react';
+import { type ReactNode, useMemo } from 'react';
 import { getPortalApolloClient } from '@/portal/portalApolloClient';
 
 type PortalApolloProviderProps = {

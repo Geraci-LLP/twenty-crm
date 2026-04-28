@@ -1,4 +1,5 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { styled } from '@linaria/react';
 import { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';

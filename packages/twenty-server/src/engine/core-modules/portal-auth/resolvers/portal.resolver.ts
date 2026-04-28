@@ -13,11 +13,11 @@ import {
   Mutation,
   ObjectType,
   Query,
-  Resolver,
 } from '@nestjs/graphql';
 
 import { isDefined } from 'twenty-shared/utils';
 
+import { CoreResolver } from 'src/engine/api/graphql/graphql-config/decorators/core-resolver.decorator';
 import { type PortalUserWorkspaceAuthContext } from 'src/engine/core-modules/auth/types/auth-context.type';
 import { PortalAuthGuard } from 'src/engine/core-modules/portal-auth/guards/portal-auth.guard';
 import { PortalUserService } from 'src/engine/core-modules/portal-user/services/portal-user.service';
@@ -198,6 +198,15 @@ class PortalDocumentDto {
 
   @Field(() => String, { nullable: true })
   slug?: string;
+
+  @Field(() => String, { nullable: true })
+  workspaceId?: string;
+
+  @Field(() => Date, { nullable: true })
+  sharedAt?: Date;
+
+  @Field(() => Int, { nullable: true })
+  viewCount?: number;
 }
 
 @ObjectType('PortalOpportunity')
@@ -242,7 +251,7 @@ type ExpressRequestWithAuth = {
   user?: PortalUserWorkspaceAuthContext;
 };
 
-@Resolver()
+@CoreResolver()
 @UseGuards(PortalAuthGuard)
 export class PortalResolver {
   constructor(
@@ -749,14 +758,18 @@ export class PortalResolver {
 
           // oxlint-disable-next-line @typescript-eslint/no-explicit-any
           const d = doc as any;
+          // oxlint-disable-next-line @typescript-eslint/no-explicit-any
+          const l = link as any;
 
           return {
             id: link.id,
             name: d?.name ?? undefined,
             status: d?.status ?? undefined,
             sharingLinkId: link.id,
-            // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-            slug: (link as any).slug ?? undefined,
+            slug: l.slug ?? undefined,
+            workspaceId: auth.workspaceId,
+            sharedAt: l.createdAt ?? d?.createdAt ?? undefined,
+            viewCount: l.viewCount ?? d?.viewCount ?? 0,
           };
         });
       },

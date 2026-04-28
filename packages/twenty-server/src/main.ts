@@ -27,7 +27,10 @@ const bootstrap = async () => {
   setPgDateTypeParser();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
+    // Echo the request origin so browsers accept responses for cookie-credentialed
+    // requests (e.g. the client portal). `cors: true` would set `*`, which the
+    // browser rejects when credentials: 'include' is used.
+    cors: { origin: true, credentials: true },
     bufferLogs: process.env.LOGGER_IS_BUFFER_ENABLED === 'true',
     rawBody: true,
     snapshot: process.env.NODE_ENV === NodeEnvironment.DEVELOPMENT,

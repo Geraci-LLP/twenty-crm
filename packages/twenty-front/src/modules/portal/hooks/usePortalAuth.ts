@@ -1,17 +1,18 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppPath } from 'twenty-shared/types';
 import { REACT_APP_SERVER_BASE_URL } from '~/config';
 
 // Portal user shape returned by `myProfile`.
-// Keep in sync with the backend GraphQL schema.
+// Keep in sync with the backend GraphQL schema (PortalProfileDto).
 export type PortalUser = {
   id: string;
   email: string;
-  firstName: string | null;
-  lastName: string | null;
-  companyId: string | null;
+  name: string | null;
+  personId: string | null;
+  workspaceId: string;
 };
 
 const MY_PROFILE_QUERY = gql`
@@ -19,9 +20,9 @@ const MY_PROFILE_QUERY = gql`
     myProfile {
       id
       email
-      firstName
-      lastName
-      companyId
+      name
+      personId
+      workspaceId
     }
   }
 `;

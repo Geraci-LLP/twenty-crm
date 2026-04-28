@@ -1,3 +1,4 @@
+import { css } from '@linaria/core';
 import { styled } from '@linaria/react';
 import { useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
@@ -73,7 +74,7 @@ const StyledSideNav = styled.nav`
   width: 220px;
 `;
 
-const StyledNavLink = styled(NavLink)`
+const navLinkClassName = css`
   border-radius: ${themeCssVariables.border.radius.sm};
   color: ${themeCssVariables.font.color.secondary};
   font-size: ${themeCssVariables.font.size.sm};
@@ -150,14 +151,21 @@ const PortalLayoutInner = () => {
 
       <StyledBody>
         <StyledSideNav>
-          <StyledNavLink to={AppPath.Portal} end>
+          <NavLink to={AppPath.Portal} end className={navLinkClassName}>
             Dashboard
-          </StyledNavLink>
-          <StyledNavLink to={AppPath.PortalQuotes}>Quotes</StyledNavLink>
-          <StyledNavLink to={AppPath.PortalDocuments}>Documents</StyledNavLink>
-          <StyledNavLink to={`${AppPath.Portal}/profile`}>
+          </NavLink>
+          <NavLink to={AppPath.PortalQuotes} className={navLinkClassName}>
+            Quotes
+          </NavLink>
+          <NavLink to={AppPath.PortalDocuments} className={navLinkClassName}>
+            Documents
+          </NavLink>
+          <NavLink
+            to={`${AppPath.Portal}/profile`}
+            className={navLinkClassName}
+          >
             Profile
-          </StyledNavLink>
+          </NavLink>
         </StyledSideNav>
 
         <StyledMain>

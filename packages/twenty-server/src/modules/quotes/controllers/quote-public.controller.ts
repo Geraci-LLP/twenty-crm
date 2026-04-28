@@ -53,26 +53,39 @@ type RejectBody = {
   reason: string;
 };
 
-// Twenty ORM generates *Id columns for relations at the DB level,
-// but the workspace entity types only declare the relation objects.
-// These extended types expose the FK columns for type-safe access.
+// Twenty ORM generates *Id columns for relations at the DB level. For some
+// relations the FK column is exposed on the read object (`trackedDocumentId`,
+// `personId`); for others (`targetQuote`) the FK isn't projected and you have
+// to load the relation eagerly to get the related id.
 type SharingLinkWithForeignKeys = DocumentSharingLinkWorkspaceEntity & {
   quoteId?: string | null;
   trackedDocumentId?: string | null;
   targetType?: string | null;
+  targetQuote?: { id: string } | null;
 };
 
 // Polymorphism guard: documentSharingLink is shared between tracked-documents
 // (F9) and quotes (F11). The /quotes/* endpoints must only accept links whose
 // targetType is QUOTE (or, for legacy rows written before targetType existed,
-// links with a non-null quoteId).
+// links with a non-null quote relation).
 const isQuoteSharingLink = (link: SharingLinkWithForeignKeys): boolean => {
   if (link.targetType === 'QUOTE') return true;
 
-  if (!isDefined(link.targetType) && isDefined(link.quoteId)) return true;
+  if (
+    !isDefined(link.targetType) &&
+    (isDefined(link.quoteId) || isDefined(link.targetQuote?.id))
+  ) {
+    return true;
+  }
 
   return false;
 };
+
+// Pull the quote id off either the FK column (if TwentyORM projects it) or
+// the eagerly loaded relation object.
+const getQuoteIdFromLink = (
+  link: SharingLinkWithForeignKeys,
+): string | null | undefined => link.quoteId ?? link.targetQuote?.id;
 
 type LineItemWithForeignKeys = QuoteLineItemWorkspaceEntity & {
   quoteId: string;
@@ -111,6 +124,7 @@ export class QuotePublicController {
 
           const sharingLink = await sharingLinkRepository.findOne({
             where: { slug },
+            relations: { targetQuote: true } as never,
           });
 
           if (!isDefined(sharingLink) || !isQuoteSharingLink(sharingLink)) {
@@ -127,7 +141,8 @@ export class QuotePublicController {
             );
           }
 
-          if (!isDefined(sharingLink.quoteId)) {
+          const quoteId = getQuoteIdFromLink(sharingLink);
+          if (!isDefined(quoteId)) {
             throw new HttpException(
               'Sharing link is not attached to a quote',
               HttpStatus.NOT_FOUND,
@@ -142,7 +157,7 @@ export class QuotePublicController {
             );
 
           const quote = await quoteRepository.findOne({
-            where: { id: sharingLink.quoteId },
+            where: { id: quoteId },
           });
 
           if (!isDefined(quote)) {
@@ -237,6 +252,7 @@ export class QuotePublicController {
 
           const sharingLink = await sharingLinkRepository.findOne({
             where: { slug },
+            relations: { targetQuote: true } as never,
           });
 
           if (!isDefined(sharingLink) || !isQuoteSharingLink(sharingLink)) {
@@ -299,9 +315,10 @@ export class QuotePublicController {
           }
 
           // Best-effort: mark the quote as viewed when the first viewer identifies
-          if (isDefined(sharingLink.quoteId)) {
+          const linkedQuoteId = getQuoteIdFromLink(sharingLink);
+          if (isDefined(linkedQuoteId)) {
             this.quoteStatusService
-              .markViewed(sharingLink.quoteId, workspaceId)
+              .markViewed(linkedQuoteId, workspaceId)
               .catch(() => {});
           }
 
@@ -462,6 +479,7 @@ export class QuotePublicController {
 
         const sharingLink = await sharingLinkRepository.findOne({
           where: { slug },
+          relations: { targetQuote: true } as never,
         });
 
         if (!isDefined(sharingLink) || !isQuoteSharingLink(sharingLink)) {
@@ -478,14 +496,15 @@ export class QuotePublicController {
           );
         }
 
-        if (!isDefined(sharingLink.quoteId)) {
+        const quoteId = getQuoteIdFromLink(sharingLink);
+        if (!isDefined(quoteId)) {
           throw new HttpException(
             'Sharing link is not attached to a quote',
             HttpStatus.NOT_FOUND,
           );
         }
 
-        return sharingLink.quoteId;
+        return quoteId;
       },
       authContext,
     );

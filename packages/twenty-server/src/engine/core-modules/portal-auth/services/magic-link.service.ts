@@ -275,6 +275,18 @@ export class MagicLinkService {
       plainToken,
     )}`;
 
+    // Dev-only: print the link so it's testable without SendGrid wired up.
+    // Strip this branch (or move behind a feature flag) before any prod deploy
+    // since logging tokens enables session takeover via log access.
+    if (process.env.NODE_ENV !== 'production') {
+      this.logger.log(
+        `[dev] Magic link URL for ${portalUser.email}: ${magicLinkUrl}`,
+      );
+      // Also expose the raw token directly so the auto-test can hit
+      // /portal-auth/verify?token=<raw> without parsing the URL.
+      this.logger.log(`[dev] Magic link raw token: ${plainToken}`);
+    }
+
     const emailTemplate = PortalMagicLinkEmail({
       magicLinkUrl,
       expiresInMinutes: expiryMinutes,

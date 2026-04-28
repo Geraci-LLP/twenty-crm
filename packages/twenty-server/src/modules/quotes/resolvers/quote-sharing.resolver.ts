@@ -21,16 +21,20 @@ import { AuthWorkspace } from 'src/engine/decorators/auth/auth-workspace.decorat
 import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 import { WorkspaceAuthGuard } from 'src/engine/guards/workspace-auth.guard';
 import { GlobalWorkspaceOrmManager } from 'src/engine/twenty-orm/global-workspace-datasource/global-workspace-orm.manager';
+import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system-auth-context.util';
 import { type DocumentSharingLinkWorkspaceEntity } from 'src/modules/document-tracking/standard-objects/document-sharing-link.workspace-entity';
 import { QuoteSharingLinkDto } from 'src/modules/quotes/dtos/quote-sharing-link.dto';
 import { QuoteStatusService } from 'src/modules/quotes/services/quote-status.service';
 import { type QuoteWorkspaceEntity } from 'src/modules/quotes/standard-objects/quote.workspace-entity';
 
-// Twenty ORM generates *Id columns for relations at the DB level,
-// but the workspace entity types only declare the relation objects.
+// Twenty ORM generates *Id columns for relations at the DB level, but the
+// workspace entity types only declare the relation objects. The metadata
+// layer doesn't expose the *Id columns as settable fields — to write a
+// relation you must use the *relation* property (`targetQuote: { id }`),
+// not the FK directly.
 type SharingLinkWithForeignKeys = DocumentSharingLinkWorkspaceEntity & {
-  quoteId?: string | null;
-  trackedDocumentId?: string | null;
+  trackedDocument?: { id: string } | null;
+  targetQuote?: { id: string } | null;
   targetType?: string | null;
 };
 
@@ -62,68 +66,74 @@ export class QuoteSharingResolver {
     @AuthWorkspace() workspace: WorkspaceEntity,
   ): Promise<QuoteSharingLinkDto> {
     const workspaceId = workspace.id;
+    const authContext = buildSystemAuthContext(workspaceId);
 
-    // Verify the quote exists inside the caller's workspace (real user auth;
-    // permissions are checked against the caller's role by default — no bypass).
-    const quoteRepository =
-      await this.globalWorkspaceOrmManager.getRepository<QuoteWorkspaceEntity>(
-        workspaceId,
-        'quote',
+    // All TwentyORM repository operations must run inside the workspace
+    // context — getRepository() doesn't establish it on its own.
+    const result =
+      await this.globalWorkspaceOrmManager.executeInWorkspaceContext(
+        async () => {
+          // Verify the quote exists inside the caller's workspace.
+          const quoteRepository =
+            await this.globalWorkspaceOrmManager.getRepository<QuoteWorkspaceEntity>(
+              workspaceId,
+              'quote',
+              { shouldBypassPermissionChecks: true },
+            );
+
+          const quote = await quoteRepository.findOne({
+            where: { id: quoteId },
+          });
+
+          if (!isDefined(quote)) {
+            throw new HttpException('Quote not found', HttpStatus.NOT_FOUND);
+          }
+
+          const sharingLinkRepository =
+            await this.globalWorkspaceOrmManager.getRepository<SharingLinkWithForeignKeys>(
+              workspaceId,
+              'documentSharingLink',
+              { shouldBypassPermissionChecks: true },
+            );
+
+          const slug = generateSlug();
+
+          const saved = await sharingLinkRepository.save({
+            slug,
+            isActive: true,
+            recipientEmail: recipientEmail ?? null,
+            viewCount: 0,
+            targetQuote: { id: quoteId },
+            targetType: 'QUOTE',
+          } as Partial<SharingLinkWithForeignKeys>);
+
+          return { saved, slug };
+        },
+        authContext,
       );
 
-    const quote = await quoteRepository.findOne({
-      where: { id: quoteId },
-    });
-
-    if (!isDefined(quote)) {
-      throw new HttpException('Quote not found', HttpStatus.NOT_FOUND);
-    }
-
-    // Insert the sharing link. We use shouldBypassPermissionChecks: true here
-    // because documentSharingLink is a cross-cutting resource — once the user has
-    // been authorized against the quote above, they should be able to create
-    // a link regardless of per-field permissions on documentSharingLink.
-    const sharingLinkRepository =
-      await this.globalWorkspaceOrmManager.getRepository<SharingLinkWithForeignKeys>(
-        workspaceId,
-        'documentSharingLink',
-        { shouldBypassPermissionChecks: true },
-      );
-
-    const slug = generateSlug();
-
-    const saved = await sharingLinkRepository.save({
-      slug,
-      isActive: true,
-      recipientEmail: recipientEmail ?? null,
-      viewCount: 0,
-      quoteId,
-      trackedDocumentId: null,
-      targetType: 'QUOTE',
-    } as Partial<SharingLinkWithForeignKeys>);
-
-    // Transition DRAFT -> SENT (idempotent).
-    await this.quoteStatusService.markSent(quoteId, workspaceId).catch(
-      // Best-effort: failing to update the status must not block link creation.
-      (error) => {
+    // Transition DRAFT -> SENT (idempotent). markSent already wraps its own
+    // workspace context internally.
+    await this.quoteStatusService
+      .markSent(quoteId, workspaceId)
+      .catch((error) => {
         this.logger.warn(
           `Failed to mark quote ${quoteId} as SENT: ${
             error instanceof Error ? error.message : String(error)
           }`,
         );
-      },
-    );
+      });
 
     const frontUrl = this.domainServerConfigService.getFrontUrl();
-    const shareUrl = `${frontUrl.origin}/q/${workspaceId}/${slug}`;
+    const shareUrl = `${frontUrl.origin}/q/${workspaceId}/${result.slug}`;
 
     this.logger.log(
-      `Quote sharing link ${saved.id} created for quote ${quoteId} in workspace ${workspaceId}`,
+      `Quote sharing link ${result.saved.id} created for quote ${quoteId} in workspace ${workspaceId}`,
     );
 
     return {
-      id: saved.id,
-      slug,
+      id: result.saved.id,
+      slug: result.slug,
       shareUrl,
       isActive: true,
       recipientEmail: recipientEmail ?? null,
