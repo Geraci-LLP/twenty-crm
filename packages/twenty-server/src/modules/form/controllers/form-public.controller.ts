@@ -22,6 +22,8 @@ import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system
 import { type FormWorkspaceEntity } from 'src/modules/form/standard-objects/form.workspace-entity';
 import { type FormSubmissionWorkspaceEntity } from 'src/modules/form/standard-objects/form-submission.workspace-entity';
 import { FormSubmissionService } from 'src/modules/form/services/form-submission.service';
+import { LeadCreationService } from 'src/modules/lead/services/lead-creation.service';
+import { mapFieldsToLeadInput } from 'src/modules/lead/utils/map-fields-to-lead.util';
 
 type SubmitFormBody = {
   fields: Record<string, unknown>;
@@ -38,6 +40,7 @@ export class FormPublicController {
     @InjectRepository(WorkspaceEntity)
     private readonly workspaceRepository: Repository<WorkspaceEntity>,
     private readonly formSubmissionService: FormSubmissionService,
+    private readonly leadCreationService: LeadCreationService,
   ) {}
 
   @Get(':workspaceId/:formId/schema')
@@ -169,9 +172,42 @@ export class FormPublicController {
               .catch(() => {});
           }
 
+          // Auto-create Person from submission. Convention-based field mapping —
+          // any submitted value whose key looks like an email/name/phone/etc. flows
+          // into a LeadInput. Gated on the per-form `autoCreatePerson` flag
+          // (default true) so a workspace can opt specific forms out of lead
+          // auto-creation. The flag was added in PR 30; defaults to true for
+          // existing rows so behavior is unchanged unless the user opts out.
+          const autoCreatePerson =
+            (form as { autoCreatePerson?: boolean | null }).autoCreatePerson ??
+            true;
+          let personId: string | null = null;
+          if (autoCreatePerson) {
+            const submissionValues: Record<string, unknown> = {
+              ...(body.fields ?? {}),
+              ...(body.submitterEmail ? { email: body.submitterEmail } : {}),
+              ...(body.submitterName ? { firstName: body.submitterName } : {}),
+            };
+            const leadInput = mapFieldsToLeadInput(submissionValues);
+            if (leadInput) {
+              try {
+                const lead = await this.leadCreationService.findOrCreatePerson(
+                  workspaceId,
+                  { ...leadInput, source: leadInput.source ?? 'FORM' },
+                );
+                personId = lead.personId;
+              } catch (error) {
+                this.logger.error(
+                  `Form ${formId}: lead auto-create failed — ${(error as Error).message}`,
+                );
+              }
+            }
+          }
+
           return {
             success: true,
             submissionId: submission.id,
+            personId,
             thankYouMessage: form.thankYouMessage,
             redirectUrl: form.redirectUrl,
           };

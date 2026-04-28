@@ -410,6 +410,45 @@ export const buildFormStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  autoCreatePerson: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'autoCreatePerson',
+      type: FieldMetadataType.BOOLEAN,
+      label: i18nLabel(msg`Auto-create Person on submission`),
+      description: i18nLabel(
+        msg`Whether to auto-create a Person record when this form is submitted (uses email + name fields if present)`,
+      ),
+      icon: 'IconUserPlus',
+      isNullable: false,
+      defaultValue: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  // Many-to-many: any number of additional MarketingCampaign IDs this
+  // form belongs to (beyond the primary marketingCampaignId FK).
+  additionalMarketingCampaignIds: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'additionalMarketingCampaignIds',
+      type: FieldMetadataType.ARRAY,
+      label: i18nLabel(msg`Additional Marketing Campaigns`),
+      description: i18nLabel(
+        msg`UUIDs of additional MarketingCampaign records this form belongs to (beyond the primary FK).`,
+      ),
+      icon: 'IconCirclesRelation',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   searchVector: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,

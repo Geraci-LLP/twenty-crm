@@ -1,9 +1,23 @@
 import { styled } from '@linaria/react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
+import { currentUserState } from '@/auth/states/currentUserState';
 import { CampaignSaveAsTemplateButton } from '@/campaign/components/CampaignSaveAsTemplateButton';
 import { CampaignTemplateGallery } from '@/campaign/components/CampaignTemplateGallery';
+import { SendTestEmailModal } from '@/campaign/components/SendTestEmailModal';
 import { CAMPAIGN_PERSONALIZATION_TOKENS } from '@/campaign/constants/CampaignPersonalizationTokens';
+import { useGenerateCampaignPreviewLink } from '@/campaign/hooks/useGenerateCampaignPreviewLink';
+import { useSendTestEmail } from '@/campaign/hooks/useSendTestEmail';
+import { checkCampaignPreflight } from '@/campaign/utils/checkCampaignPreflight';
+import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
+import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
+import {
+  EmailBuilder,
+  buildEmptyDesign,
+  renderEmailDesign,
+  wrapHtmlAsDesign,
+} from '@/campaign/email-builder/components/EmailBuilder';
+import { type EmailDesign } from '@/campaign/email-builder/types/CampaignDesign';
 import {
   type CampaignEditorData,
   type CampaignPersonalizationToken,
@@ -29,6 +43,22 @@ const StyledLabel = styled.label`
   color: ${themeCssVariables.font.color.secondary};
   font-size: ${themeCssVariables.font.size.sm};
   font-weight: ${themeCssVariables.font.weight.medium};
+`;
+
+const StyledLabelRow = styled.div`
+  align-items: baseline;
+  display: flex;
+  gap: ${themeCssVariables.spacing[2]};
+  justify-content: space-between;
+`;
+
+const StyledCharCount = styled.span<{ overLimit: boolean }>`
+  color: ${(p) =>
+    p.overLimit
+      ? themeCssVariables.color.red
+      : themeCssVariables.font.color.tertiary};
+  font-size: ${themeCssVariables.font.size.xs};
+  font-variant-numeric: tabular-nums;
 `;
 
 const StyledInput = styled.input`
@@ -124,6 +154,28 @@ const StyledWarningBanner = styled.div`
   padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
 `;
 
+const StyledPreflightPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${themeCssVariables.spacing[1]};
+`;
+
+const StyledPreflightItem = styled.div<{ severity: 'error' | 'warning' }>`
+  background: ${(p) =>
+    p.severity === 'error'
+      ? `${themeCssVariables.color.red}15`
+      : `${themeCssVariables.color.orange}15`};
+  border: 1px solid
+    ${(p) =>
+      p.severity === 'error'
+        ? themeCssVariables.color.red
+        : themeCssVariables.color.orange};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
+`;
+
 const StyledTemplatesButton = styled.button`
   background: none;
   border: 1px solid ${themeCssVariables.border.color.medium};
@@ -148,11 +200,82 @@ const StyledToolbar = styled.div`
   justify-content: space-between;
 `;
 
+const StyledModeTabs = styled.div`
+  border-bottom: 1px solid ${themeCssVariables.border.color.medium};
+  display: flex;
+  gap: ${themeCssVariables.spacing[1]};
+`;
+
+const StyledActionsRow = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${themeCssVariables.spacing[2]};
+`;
+
+const StyledTestSendButton = styled.button`
+  background: ${themeCssVariables.background.tertiary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  font-family: ${themeCssVariables.font.family};
+  font-size: ${themeCssVariables.font.size.sm};
+  padding: ${themeCssVariables.spacing[1]} ${themeCssVariables.spacing[3]};
+  &:hover {
+    background: ${themeCssVariables.background.transparent.lighter};
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+`;
+
+const StyledModeTab = styled.button<{ active: boolean }>`
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid
+    ${(p) => (p.active ? themeCssVariables.color.blue : 'transparent')};
+  color: ${(p) =>
+    p.active
+      ? themeCssVariables.font.color.primary
+      : themeCssVariables.font.color.secondary};
+  cursor: pointer;
+  font-size: ${themeCssVariables.font.size.sm};
+  font-weight: ${(p) =>
+    p.active
+      ? themeCssVariables.font.weight.medium
+      : themeCssVariables.font.weight.regular};
+  padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[3]};
+`;
+
+// Inbox truncation thresholds — Gmail / Apple Mail / Outlook all start
+// truncating subject lines around 50 chars on mobile and around 70 on
+// desktop. Preview text gets ~90–100 chars before truncation. These are
+// soft limits; the count just turns red so the user knows.
+const SUBJECT_RECOMMENDED_LIMIT = 60;
+const PREVIEW_TEXT_RECOMMENDED_LIMIT = 90;
+
 type CampaignEditorProps = {
   campaignId?: string;
   value: CampaignEditorData;
   onChange: (data: CampaignEditorData) => void;
   readOnly?: boolean;
+};
+
+type EditorMode = 'design' | 'code';
+
+const parseDesign = (raw: unknown): EmailDesign | null => {
+  if (raw === null || raw === undefined) return null;
+  if (typeof raw === 'object') return raw as EmailDesign;
+  if (typeof raw === 'string') {
+    try {
+      return JSON.parse(raw) as EmailDesign;
+    } catch {
+      return null;
+    }
+  }
+  return null;
 };
 
 export const CampaignEditor = ({
@@ -166,12 +289,95 @@ export const CampaignEditor = ({
     useState<CampaignPersonalizationToken>(CAMPAIGN_PERSONALIZATION_TOKENS[0]);
   const [isTemplateGalleryOpen, setIsTemplateGalleryOpen] = useState(false);
 
+  const currentUser = useAtomStateValue(currentUserState);
+  const { sendTestEmail, loading: testSendLoading } = useSendTestEmail();
+  const [isTestSendOpen, setIsTestSendOpen] = useState(false);
+  const { generate: generatePreviewLink, loading: previewLinkLoading } =
+    useGenerateCampaignPreviewLink();
+  const { enqueueSuccessSnackBar, enqueueErrorSnackBar } = useSnackBar();
+
+  const handleSharePreview = useCallback(async () => {
+    if (!campaignId) return;
+    const url = await generatePreviewLink(campaignId);
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      enqueueSuccessSnackBar({
+        message: 'Preview link copied to clipboard.',
+      });
+    } catch {
+      // Clipboard API may be unavailable (e.g. insecure context); fall
+      // back to a prompt so the user can manually copy.
+      window.prompt('Preview link (copy this):', url);
+      enqueueErrorSnackBar({
+        message: "Couldn't auto-copy — link shown in the prompt.",
+      });
+    }
+  }, [
+    campaignId,
+    generatePreviewLink,
+    enqueueSuccessSnackBar,
+    enqueueErrorSnackBar,
+  ]);
+
+  const handleTestSendSubmit = useCallback(
+    async (target: string) => {
+      if (!campaignId) return;
+      const ok = await sendTestEmail(campaignId, target);
+      if (ok) setIsTestSendOpen(false);
+    },
+    [campaignId, sendTestEmail],
+  );
+
+  const initialDesign = useMemo(
+    () => parseDesign(value.designJson),
+    [value.designJson],
+  );
+  // Default to Design mode if a design exists; otherwise Code mode (legacy / new).
+  const [mode, setMode] = useState<EditorMode>(
+    initialDesign ? 'design' : 'code',
+  );
+
+  // Preflight checks — run on every edit, surface as a banner. Errors are
+  // send-blockers (subject empty, no body); warnings are advisory (no
+  // footer, unknown tokens). We don't gate save here — the actual send
+  // gate is on the server side. This is just early feedback.
+  const preflightIssues = useMemo(() => {
+    return checkCampaignPreflight(value, parseDesign(value.designJson));
+  }, [value]);
+
   const handleFieldChange = useCallback(
     (field: keyof CampaignEditorData, fieldValue: string) => {
       onChange({ ...value, [field]: fieldValue });
     },
     [onChange, value],
   );
+
+  const handleDesignChange = useCallback(
+    (nextDesign: EmailDesign, renderedHtml: string) => {
+      onChange({
+        ...value,
+        designJson: nextDesign,
+        designVersion: nextDesign.version,
+        body: renderedHtml,
+      });
+    },
+    [onChange, value],
+  );
+
+  const handleEnterDesignMode = useCallback(() => {
+    setMode('design');
+    if (initialDesign) return;
+    // Convert legacy HTML body to a single-text-module design so no content is
+    // lost. Save happens on next user edit; switching modes alone doesn't write.
+    const seed = value.body ? wrapHtmlAsDesign(value.body) : buildEmptyDesign();
+    onChange({
+      ...value,
+      designJson: seed,
+      designVersion: seed.version,
+      body: renderEmailDesign(seed),
+    });
+  }, [initialDesign, onChange, value]);
 
   const handleInsertToken = useCallback(() => {
     const textArea = bodyTextAreaRef.current;
@@ -227,7 +433,15 @@ export const CampaignEditor = ({
       </StyledSenderRow>
 
       <StyledFieldGroup>
-        <StyledLabel>Subject</StyledLabel>
+        <StyledLabelRow>
+          <StyledLabel>Subject</StyledLabel>
+          <StyledCharCount
+            overLimit={value.subject.length > SUBJECT_RECOMMENDED_LIMIT}
+            title={`Most inboxes truncate after ~${SUBJECT_RECOMMENDED_LIMIT} chars`}
+          >
+            {value.subject.length} / {SUBJECT_RECOMMENDED_LIMIT}
+          </StyledCharCount>
+        </StyledLabelRow>
         <StyledInput
           type="text"
           placeholder="Email subject line"
@@ -238,63 +452,187 @@ export const CampaignEditor = ({
       </StyledFieldGroup>
 
       <StyledFieldGroup>
-        <StyledLabel>Body</StyledLabel>
-        {!readOnly && (
-          <StyledToolbar>
-            <StyledTokenRow>
-              <StyledTokenSelect
-                value={selectedToken.value}
-                onChange={(event) => {
-                  const token = CAMPAIGN_PERSONALIZATION_TOKENS.find(
-                    (personalizationToken) =>
-                      personalizationToken.value === event.target.value,
-                  );
-
-                  if (token) {
-                    setSelectedToken(token);
-                  }
-                }}
-              >
-                {CAMPAIGN_PERSONALIZATION_TOKENS.map((personalizationToken) => (
-                  <option
-                    key={personalizationToken.value}
-                    value={personalizationToken.value}
-                  >
-                    {personalizationToken.label}
-                  </option>
-                ))}
-              </StyledTokenSelect>
-              <StyledInsertButton onClick={handleInsertToken}>
-                Insert Token
-              </StyledInsertButton>
-            </StyledTokenRow>
-            {campaignId && (
-              <StyledTemplatesButton
-                onClick={() => setIsTemplateGalleryOpen(true)}
-              >
-                Templates
-              </StyledTemplatesButton>
-            )}
-          </StyledToolbar>
-        )}
-        <StyledTextArea
-          ref={bodyTextAreaRef}
-          placeholder="Write your email content here..."
-          value={value.body}
-          onChange={(event) => handleFieldChange('body', event.target.value)}
+        <StyledLabelRow>
+          <StyledLabel>Preview text</StyledLabel>
+          <StyledCharCount
+            overLimit={
+              value.previewText.length > PREVIEW_TEXT_RECOMMENDED_LIMIT
+            }
+            title={`Most inboxes truncate after ~${PREVIEW_TEXT_RECOMMENDED_LIMIT} chars`}
+          >
+            {value.previewText.length} / {PREVIEW_TEXT_RECOMMENDED_LIMIT}
+          </StyledCharCount>
+        </StyledLabelRow>
+        <StyledInput
+          type="text"
+          placeholder="Inbox preview shown after the subject (recommended ~90 chars)"
+          value={value.previewText}
+          onChange={(event) =>
+            handleFieldChange('previewText', event.target.value)
+          }
           readOnly={readOnly}
         />
-        {!value.body.includes('{{unsubscribe_link}}') && (
-          <StyledWarningBanner>
-            Your email does not include an unsubscribe link. An unsubscribe
-            footer will be automatically appended. Use the &quot;Unsubscribe
-            Link&quot; personalization token for a custom placement.
-          </StyledWarningBanner>
+      </StyledFieldGroup>
+
+      <StyledFieldGroup>
+        <StyledLabel>Body</StyledLabel>
+        {!readOnly && (
+          <StyledModeTabs>
+            <StyledModeTab
+              active={mode === 'design'}
+              onClick={handleEnterDesignMode}
+              type="button"
+            >
+              Design
+            </StyledModeTab>
+            <StyledModeTab
+              active={mode === 'code'}
+              onClick={() => setMode('code')}
+              type="button"
+            >
+              Code
+            </StyledModeTab>
+          </StyledModeTabs>
+        )}
+        {mode === 'design' ? (
+          <>
+            {!readOnly && campaignId && (
+              <StyledToolbar>
+                <span />
+                <StyledTemplatesButton
+                  onClick={() => setIsTemplateGalleryOpen(true)}
+                >
+                  Templates
+                </StyledTemplatesButton>
+              </StyledToolbar>
+            )}
+            {!readOnly && preflightIssues.length > 0 && (
+              <StyledPreflightPanel>
+                {preflightIssues.map((issue) => (
+                  <StyledPreflightItem key={issue.id} severity={issue.severity}>
+                    <strong>
+                      {issue.severity === 'error' ? '⚠ ' : 'ℹ '}
+                    </strong>
+                    {issue.message}
+                  </StyledPreflightItem>
+                ))}
+              </StyledPreflightPanel>
+            )}
+            <EmailBuilder
+              design={parseDesign(value.designJson) ?? buildEmptyDesign()}
+              onChange={handleDesignChange}
+              readOnly={readOnly}
+              meta={{
+                fromName: value.fromName,
+                fromEmail: value.fromEmail,
+                subject: value.subject,
+                previewText: value.previewText,
+              }}
+            />
+          </>
+        ) : (
+          <>
+            {!readOnly && (
+              <StyledToolbar>
+                <StyledTokenRow>
+                  <StyledTokenSelect
+                    value={selectedToken.value}
+                    onChange={(event) => {
+                      const token = CAMPAIGN_PERSONALIZATION_TOKENS.find(
+                        (personalizationToken) =>
+                          personalizationToken.value === event.target.value,
+                      );
+
+                      if (token) {
+                        setSelectedToken(token);
+                      }
+                    }}
+                  >
+                    {CAMPAIGN_PERSONALIZATION_TOKENS.map(
+                      (personalizationToken) => (
+                        <option
+                          key={personalizationToken.value}
+                          value={personalizationToken.value}
+                        >
+                          {personalizationToken.label}
+                        </option>
+                      ),
+                    )}
+                  </StyledTokenSelect>
+                  <StyledInsertButton onClick={handleInsertToken}>
+                    Insert Token
+                  </StyledInsertButton>
+                </StyledTokenRow>
+                {campaignId && (
+                  <StyledTemplatesButton
+                    onClick={() => setIsTemplateGalleryOpen(true)}
+                  >
+                    Templates
+                  </StyledTemplatesButton>
+                )}
+              </StyledToolbar>
+            )}
+            <StyledTextArea
+              ref={bodyTextAreaRef}
+              placeholder="Write your email content here..."
+              value={value.body}
+              onChange={(event) =>
+                handleFieldChange('body', event.target.value)
+              }
+              readOnly={readOnly}
+            />
+            {!value.body.includes('{{unsubscribe_link}}') && (
+              <StyledWarningBanner>
+                Your email does not include an unsubscribe link. An unsubscribe
+                footer will be automatically appended. Use the &quot;Unsubscribe
+                Link&quot; personalization token for a custom placement.
+              </StyledWarningBanner>
+            )}
+            {!readOnly && preflightIssues.length > 0 && (
+              <StyledPreflightPanel>
+                {preflightIssues.map((issue) => (
+                  <StyledPreflightItem key={issue.id} severity={issue.severity}>
+                    <strong>
+                      {issue.severity === 'error' ? '⚠ ' : 'ℹ '}
+                    </strong>
+                    {issue.message}
+                  </StyledPreflightItem>
+                ))}
+              </StyledPreflightPanel>
+            )}
+          </>
         )}
       </StyledFieldGroup>
 
       {!readOnly && campaignId && (
-        <CampaignSaveAsTemplateButton campaignId={campaignId} />
+        <StyledActionsRow>
+          <StyledTestSendButton
+            type="button"
+            onClick={() => setIsTestSendOpen(true)}
+            disabled={testSendLoading}
+            title="Send a test copy of this email to any address"
+          >
+            {testSendLoading ? 'Sending…' : '✉️ Send test'}
+          </StyledTestSendButton>
+          <StyledTestSendButton
+            type="button"
+            onClick={handleSharePreview}
+            disabled={previewLinkLoading}
+            title="Generate a public link that anyone can open to preview this draft"
+          >
+            {previewLinkLoading ? 'Generating…' : '🔗 Share preview'}
+          </StyledTestSendButton>
+          <CampaignSaveAsTemplateButton campaignId={campaignId} />
+        </StyledActionsRow>
+      )}
+
+      {isTestSendOpen && campaignId && (
+        <SendTestEmailModal
+          defaultEmail={currentUser?.email}
+          loading={testSendLoading}
+          onSubmit={handleTestSendSubmit}
+          onClose={() => setIsTestSendOpen(false)}
+        />
       )}
 
       {isTemplateGalleryOpen && campaignId && (

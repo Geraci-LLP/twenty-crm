@@ -35,6 +35,7 @@ export class SequenceWorkspaceEntity extends BaseWorkspaceEntity {
   replyRate: number;
   autoEnrollEnabled: boolean;
   pauseOnReply: boolean;
+  additionalMarketingCampaignIds: string[] | null;
   steps: EntityRelation<SequenceStepWorkspaceEntity[]>;
   enrollments: EntityRelation<SequenceEnrollmentWorkspaceEntity[]>;
   noteTargets: EntityRelation<NoteTargetWorkspaceEntity[]>;

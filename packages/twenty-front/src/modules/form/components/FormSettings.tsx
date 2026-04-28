@@ -14,6 +14,7 @@ export type FormSettingsData = {
   sendConfirmationEmail: boolean;
   confirmationEmailSubject: string | null;
   confirmationEmailBody: string | null;
+  autoCreatePerson: boolean;
 };
 
 export type FormSettingsProps = {
@@ -148,6 +149,31 @@ export const FormSettings = ({
           />
         </FormFieldInputContainer>
       )}
+
+      <StyledSectionDivider />
+
+      {/* Lead auto-creation */}
+      <StyledSectionLabel>{t`Lead Capture`}</StyledSectionLabel>
+
+      <StyledToggleRow>
+        <StyledToggleTextContainer>
+          <StyledToggleLabel>{t`Auto-create Person on submit`}</StyledToggleLabel>
+          <StyledToggleDescription>
+            {t`Create a Person record from each submission's email/name fields. Disable for surveys or feedback forms where the submitter shouldn't become a contact.`}
+          </StyledToggleDescription>
+        </StyledToggleTextContainer>
+        <Toggle
+          value={settings.autoCreatePerson}
+          onChange={(value) =>
+            onSettingsChange({
+              ...settings,
+              autoCreatePerson: value,
+            })
+          }
+          disabled={readonly}
+          toggleSize="small"
+        />
+      </StyledToggleRow>
 
       <StyledSectionDivider />
 

@@ -60,6 +60,12 @@ export const fileFolderConfigs: Record<FileFolder, FileFolderConfig> = {
   [FileFolder.GeneratedSdkClient]: {
     ignoreExpirationToken: false,
   },
+  [FileFolder.Marketing]: {
+    // Marketing email assets are referenced by absolute URL in sent
+    // emails; the recipient may open the email weeks later, so skip
+    // signed-token expiration like CorePicture / WorkspaceLogo do.
+    ignoreExpirationToken: true,
+  },
 };
 
 export type AllowedFolders = KebabCase<keyof typeof FileFolder>;

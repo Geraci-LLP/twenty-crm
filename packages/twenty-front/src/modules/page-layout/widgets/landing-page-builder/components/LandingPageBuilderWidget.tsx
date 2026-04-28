@@ -1,12 +1,16 @@
-import { LandingPageSectionEditor } from '@/landing-page/components/LandingPageSectionEditor';
+import { LandingPageBuilder } from '@/landing-page/components/LandingPageBuilder';
 import { LandingPageSettings } from '@/landing-page/components/LandingPageSettings';
 import { useLandingPageRecord } from '@/landing-page/hooks/useLandingPageRecord';
+import { LandingPageRenderer } from '@/landing-page/render/LandingPageRenderer';
+import { migrateLandingPageDesign } from '@/landing-page/render/migrateLandingPageDesign';
+import { type LandingPageDesign } from '@/landing-page/types/LandingPageDesign';
 import { useTargetRecord } from '@/ui/layout/contexts/useTargetRecord';
 import { TabList } from '@/ui/layout/tab-list/components/TabList';
 import { activeTabIdComponentState } from '@/ui/layout/tab-list/states/activeTabIdComponentState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
+import { useMemo } from 'react';
 import { isDefined } from 'twenty-shared/utils';
 import { IconEye, IconPencil, IconSettings } from 'twenty-ui/display';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
@@ -17,52 +21,34 @@ const StyledLandingPageBuilderWidgetContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 `;
 
 const StyledTabContent = styled.div`
   flex: 1;
+  min-height: 0;
   overflow: auto;
 `;
 
-const StyledPublicUrlContainer = styled.div`
+const StyledPublicUrlBar = styled.div`
+  align-items: center;
+  background: ${themeCssVariables.background.transparent.lighter};
+  border-bottom: 1px solid ${themeCssVariables.border.color.light};
   display: flex;
-  flex-direction: column;
+  font-size: 12px;
   gap: ${themeCssVariables.spacing[3]};
-  padding: ${themeCssVariables.spacing[4]};
-  padding-bottom: 0;
+  padding: ${themeCssVariables.spacing[2]} ${themeCssVariables.spacing[4]};
 `;
 
 const StyledPublicUrl = styled.a`
-  color: ${themeCssVariables.font.color.secondary};
-  font-size: ${themeCssVariables.font.size.sm};
+  color: ${themeCssVariables.color.orange};
   text-decoration: underline;
 `;
 
-const StyledPreviewContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${themeCssVariables.spacing[4]};
-  padding: ${themeCssVariables.spacing[4]};
-`;
-
-const StyledPreviewSection = styled.div`
-  background: ${themeCssVariables.background.secondary};
-  border: 1px solid ${themeCssVariables.border.color.light};
-  border-radius: ${themeCssVariables.border.radius.sm};
-  padding: ${themeCssVariables.spacing[4]};
-`;
-
-const StyledPreviewLabel = styled.div`
-  color: ${themeCssVariables.font.color.tertiary};
-  font-size: ${themeCssVariables.font.size.xs};
-  margin-bottom: ${themeCssVariables.spacing[2]};
-  text-transform: uppercase;
-`;
-
-const StyledPreviewContent = styled.div`
-  color: ${themeCssVariables.font.color.primary};
-  font-size: ${themeCssVariables.font.size.md};
+const StyledPreviewFrame = styled.div`
+  background: ${themeCssVariables.background.tertiary};
+  border-top: 1px solid ${themeCssVariables.border.color.light};
+  min-height: 100%;
 `;
 
 export const LandingPageBuilderWidget = () => {
@@ -83,13 +69,14 @@ export const LandingPageBuilderWidget = () => {
     landingPageId: targetRecord.id,
   });
 
+  const design: LandingPageDesign = useMemo(
+    () => migrateLandingPageDesign(landingPageRecord?.sectionsConfig),
+    [landingPageRecord?.sectionsConfig],
+  );
+
   if (loading || !isDefined(landingPageRecord)) {
     return null;
   }
-
-  const sections = Array.isArray(landingPageRecord.sectionsConfig)
-    ? landingPageRecord.sectionsConfig
-    : [];
 
   const tabs = [
     {
@@ -113,6 +100,12 @@ export const LandingPageBuilderWidget = () => {
     ? `${window.location.origin}/lp/${landingPageRecord.slug}`
     : null;
 
+  const handleDesignChange = (next: LandingPageDesign) => {
+    // The backend stores sectionsConfig as a JSON column with no schema
+    // constraint — pass the whole design through unchanged.
+    updateSectionsConfig(next);
+  };
+
   return (
     <StyledLandingPageBuilderWidgetContainer>
       <TabList
@@ -120,46 +113,28 @@ export const LandingPageBuilderWidget = () => {
         tabs={tabs}
         behaveAsLinks={false}
       />
+      {landingPageRecord.status === 'PUBLISHED' && isDefined(publicUrl) && (
+        <StyledPublicUrlBar>
+          <span>Live at:</span>
+          <StyledPublicUrl
+            href={publicUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {publicUrl}
+          </StyledPublicUrl>
+        </StyledPublicUrlBar>
+      )}
 
       <StyledTabContent>
-        {landingPageRecord.status === 'PUBLISHED' && isDefined(publicUrl) && (
-          <StyledPublicUrlContainer>
-            <StyledPublicUrl
-              href={publicUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {publicUrl}
-            </StyledPublicUrl>
-          </StyledPublicUrlContainer>
-        )}
-
         {(activeTabId === 'builder' || !isDefined(activeTabId)) && (
-          <LandingPageSectionEditor
-            sections={sections}
-            onSectionsChange={updateSectionsConfig}
-          />
+          <LandingPageBuilder design={design} onChange={handleDesignChange} />
         )}
 
         {activeTabId === 'preview' && (
-          <StyledPreviewContainer>
-            {sections.length === 0 ? (
-              <StyledPreviewSection>
-                <StyledPreviewContent>
-                  {t`No sections to preview. Add sections in the Builder tab.`}
-                </StyledPreviewContent>
-              </StyledPreviewSection>
-            ) : (
-              sections.map((section) => (
-                <StyledPreviewSection key={section.id}>
-                  <StyledPreviewLabel>{section.type}</StyledPreviewLabel>
-                  <StyledPreviewContent>
-                    {JSON.stringify(section.config, null, 2)}
-                  </StyledPreviewContent>
-                </StyledPreviewSection>
-              ))
-            )}
-          </StyledPreviewContainer>
+          <StyledPreviewFrame>
+            <LandingPageRenderer design={design} />
+          </StyledPreviewFrame>
         )}
 
         {activeTabId === 'settings' && (

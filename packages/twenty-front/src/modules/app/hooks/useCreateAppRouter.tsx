@@ -178,6 +178,14 @@ const PortalDocuments = lazy(() =>
   })),
 );
 
+const MarketingAnalyticsPage = lazy(() =>
+  import('~/pages/marketing-analytics/MarketingAnalyticsPage').then(
+    (module) => ({
+      default: module.MarketingAnalyticsPage,
+    }),
+  ),
+);
+
 export const useCreateAppRouter = (
   isFunctionSettingsEnabled?: boolean,
   isAdminPageEnabled?: boolean,
@@ -305,6 +313,14 @@ export const useCreateAppRouter = (
                 isFunctionSettingsEnabled={isFunctionSettingsEnabled}
                 isAdminPageEnabled={isAdminPageEnabled}
               />
+            }
+          />
+          <Route
+            path={AppPath.MarketingAnalytics}
+            element={
+              <LazyRoute>
+                <MarketingAnalyticsPage />
+              </LazyRoute>
             }
           />
           <Route

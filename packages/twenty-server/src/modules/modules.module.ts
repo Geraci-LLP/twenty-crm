@@ -5,6 +5,8 @@ import { CampaignModule } from 'src/modules/campaign/campaign.module';
 import { DocumentTrackingModule } from 'src/modules/document-tracking/document-tracking.module';
 import { FormModule } from 'src/modules/form/form.module';
 import { LandingPageModule } from 'src/modules/landing-page/landing-page.module';
+import { LeadModule } from 'src/modules/lead/lead.module';
+import { MarketingCampaignModule } from 'src/modules/marketing-campaign/marketing-campaign.module';
 import { LiveChatModule } from 'src/modules/live-chat/live-chat.module';
 import { MeetingSchedulerModule } from 'src/modules/meeting-scheduler/meeting-scheduler.module';
 import { QuotesModule } from 'src/modules/quotes/quotes.module';
@@ -24,7 +26,9 @@ import { WorkspaceMemberModule } from 'src/modules/workspace-member/workspace-me
     DocumentTrackingModule,
     FormModule,
     LandingPageModule,
+    LeadModule,
     LiveChatModule,
+    MarketingCampaignModule,
     MeetingSchedulerModule,
     QuotesModule,
     SalesSequenceModule,

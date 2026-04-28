@@ -13,5 +13,8 @@ export const FONT_COMMON = {
     medium: 500,
     semiBold: 600,
   },
-  family: 'Inter, sans-serif',
+  // Geist is the design-mock font; Inter remains as a fallback for contexts
+  // where Geist hasn't loaded yet, plus the system stack as a last resort.
+  family:
+    '"Geist", "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif',
 };

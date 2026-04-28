@@ -18,6 +18,7 @@ type FormRecord = ObjectRecord & {
   sendConfirmationEmail: boolean;
   confirmationEmailSubject: string | null;
   confirmationEmailBody: string | null;
+  autoCreatePerson: boolean;
 };
 
 export const useFormRecord = ({ formId }: { formId: string }) => {
@@ -38,6 +39,7 @@ export const useFormRecord = ({ formId }: { formId: string }) => {
       sendConfirmationEmail: true,
       confirmationEmailSubject: true,
       confirmationEmailBody: true,
+      autoCreatePerson: true,
     },
   });
 

@@ -14,6 +14,9 @@ type CampaignRecord = ObjectRecord & {
   bodyHtml: string | null;
   fromName: string | null;
   fromEmail: string | null;
+  designJson: unknown | null;
+  designVersion: number | null;
+  previewText: string | null;
 };
 
 export const useCampaignRecord = ({ campaignId }: { campaignId: string }) => {
@@ -28,6 +31,9 @@ export const useCampaignRecord = ({ campaignId }: { campaignId: string }) => {
       bodyHtml: true,
       fromName: true,
       fromEmail: true,
+      designJson: true,
+      designVersion: true,
+      previewText: true,
     },
   });
 
@@ -43,6 +49,9 @@ export const useCampaignRecord = ({ campaignId }: { campaignId: string }) => {
           bodyHtml: data.body,
           fromName: data.fromName,
           fromEmail: data.fromEmail,
+          designJson: data.designJson,
+          designVersion: data.designVersion,
+          previewText: data.previewText,
         },
       });
     },
@@ -55,6 +64,9 @@ export const useCampaignRecord = ({ campaignId }: { campaignId: string }) => {
         body: record.bodyHtml ?? '',
         fromName: record.fromName ?? '',
         fromEmail: record.fromEmail ?? '',
+        designJson: record.designJson ?? null,
+        designVersion: record.designVersion ?? null,
+        previewText: record.previewText ?? '',
       }
     : undefined;
 

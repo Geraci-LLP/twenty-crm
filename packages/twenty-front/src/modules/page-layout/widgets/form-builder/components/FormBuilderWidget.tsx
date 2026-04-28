@@ -115,6 +115,7 @@ export const FormBuilderWidget = () => {
               sendConfirmationEmail: formRecord.sendConfirmationEmail,
               confirmationEmailSubject: formRecord.confirmationEmailSubject,
               confirmationEmailBody: formRecord.confirmationEmailBody,
+              autoCreatePerson: formRecord.autoCreatePerson ?? true,
             }}
             onSettingsChange={(settings) => updateForm(settings)}
           />

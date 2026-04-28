@@ -41,7 +41,10 @@ import { TwentyStandardApplicationModule } from 'src/engine/workspace-manager/tw
 import { WorkspaceMigrationModule } from 'src/engine/workspace-manager/workspace-migration/workspace-migration.module';
 import { WorkspaceVersionModule } from 'src/engine/workspace-manager/workspace-version/workspace-version.module';
 import { CalendarEventImportManagerModule } from 'src/modules/calendar/calendar-event-import-manager/calendar-event-import-manager.module';
+import { CampaignModule } from 'src/modules/campaign/campaign.module';
+import { MarketingCampaignModule } from 'src/modules/marketing-campaign/marketing-campaign.module';
 import { MessagingImportManagerModule } from 'src/modules/messaging/message-import-manager/messaging-import-manager.module';
+import { SalesSequenceModule } from 'src/modules/sales-sequence/sales-sequence.module';
 import { WorkflowRunQueueModule } from 'src/modules/workflow/workflow-runner/workflow-run-queue/workflow-run-queue.module';
 import { AutomatedTriggerModule } from 'src/modules/workflow/workflow-trigger/automated-trigger/automated-trigger.module';
 
@@ -82,6 +85,12 @@ import { AutomatedTriggerModule } from 'src/modules/workflow/workflow-trigger/au
     CoreEngineVersionModule,
     WorkspaceVersionModule,
     UpgradeModule,
+    // Feature modules whose cron commands need to be registered by
+    // CronRegisterAllCommand at deploy time (campaign scheduler, sequence
+    // advance, marketing-campaign stats recompute).
+    CampaignModule,
+    SalesSequenceModule,
+    MarketingCampaignModule,
   ],
   providers: [
     DataSeedWorkspaceCommand,

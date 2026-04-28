@@ -41,5 +41,6 @@ export class CampaignWorkspaceEntity extends BaseWorkspaceEntity {
   campaignRecipients: EntityRelation<CampaignRecipientWorkspaceEntity[]>;
   noteTargets: EntityRelation<NoteTargetWorkspaceEntity[]>;
   attachments: EntityRelation<AttachmentWorkspaceEntity[]>;
+  additionalMarketingCampaignIds: string[] | null;
   searchVector: string;
 }
