@@ -549,6 +549,7 @@ Content-Type: application/json
   <li><code>fields</code> — required. Map of <code>{ formFieldName: value }</code>. Field names match the <em>Name</em> set on each field in the Builder tab (default is the field's label, lowerCamelCased). Values are typed loosely; the server casts to the field's declared type.</li>
   <li><code>submitterEmail</code> — optional. If present, used for dedup against existing People records and as the recipient for the confirmation email (when <em>Send confirmation email</em> is on).</li>
   <li><code>submitterName</code> — optional. Used as <em>firstName</em> if not otherwise provided in <code>fields</code>.</li>
+  <li><code>captchaToken</code> — required when the form has <em>Bot protection</em> enabled (see 8.3.1). Cloudflare Turnstile token from the form-host page's widget.</li>
 </ul>
 
 <p><strong>Response (200 OK):</strong></p>
@@ -604,14 +605,33 @@ form.addEventListener('submit', async (e) =&gt; {
 
 <p>Same endpoint works from a backend (Node, PHP, Python, etc.) — no CORS to worry about server-side. Useful for piping leads from a third-party form builder (Typeform, JotForm, Google Forms via webhook) into the CRM.</p>
 
-<div class="callout">
-<strong>Spam protection:</strong> The endpoint has no built-in rate limiting or CAPTCHA. If you expose the form publicly via the JSON API, consider adding:
+<h4 id="form-bot-protection">8.3.1 Bot protection (built-in)</h4>
+
+<p>The CRM has native bot protection — no need to build a serverless validation layer in front of the endpoint. Enable it per-form. Two layers, both server-validated at the existing submit endpoint:</p>
+
+<p><strong>Honeypot field</strong></p>
 <ul>
-  <li>Cloudflare Turnstile / reCAPTCHA on your form, validated server-side before forwarding to the CRM.</li>
-  <li>A simple honeypot field on your form that the API call drops if filled.</li>
-  <li>Cloudflare WAF rate-limit rule on the <code>/forms/*/submit</code> path.</li>
+  <li>On the form record, set <em>Honeypot field name</em> to any string (e.g. <code>company_url</code>).</li>
+  <li>On your custom form, include an input with that <code>name</code>, hidden via CSS (<code>style="display:none"</code> or off-screen positioning).</li>
+  <li>Legitimate users won't see or fill the field. Bots that auto-fill all fields will populate it.</li>
+  <li>If the field is non-empty in the submission, the server returns a <strong>200 OK</strong> with <code>{ "submissionId": "honeypot-rejected", "personId": null }</code> and silently discards the submission. The bot thinks it succeeded; you don't get a junk record. Free, deterministic, no third-party dependency.</li>
 </ul>
-</div>
+
+<p><strong>Cloudflare Turnstile</strong></p>
+<ul>
+  <li>Toggle <em>Bot protection</em> on the form record.</li>
+  <li>Set <em>Turnstile site key</em> to your Cloudflare Turnstile site key (the public one).</li>
+  <li>The server-side secret key lives in the <code>CLOUDFLARE_TURNSTILE_SECRET_KEY</code> environment variable. Get it from the Cloudflare Turnstile dashboard. Set it once in Railway / your deploy environment and every form in the workspace can use it.</li>
+  <li>On your custom form, embed Turnstile (script tag from Cloudflare). When the visitor solves the challenge, the widget produces a token. POST that token in <code>body.captchaToken</code>.</li>
+  <li>Server verifies the token via Cloudflare's <code>siteverify</code> endpoint before any field validation or persistence. Failure returns <strong>403 Forbidden</strong> with <code>{ errors: { captchaToken: "Invalid or missing Turnstile token" } }</code>.</li>
+  <li>Failure-closed: if the secret env var isn't set on the server, every Turnstile-required submission fails. Configure the secret before turning the form toggle on.</li>
+</ul>
+
+<p>Recommended: turn both on. Honeypot drops zero-effort scrapers without surfacing UI; Turnstile catches the rest with a near-invisible challenge. Same defense pattern HubSpot, Marketo, and Webflow use.</p>
+
+<h4 id="form-rate-limit">8.3.2 Rate limiting</h4>
+
+<p>Not built into the application. Add it at the edge — for Railway deploys this is typically a Cloudflare WAF rate-limit rule on <code>/forms/*/submit</code>. A reasonable default: 5 requests / 60s per source IP. Tune up if you have legitimate high-volume use cases.</p>
 
 <h3>8.4 Submissions</h3>
 

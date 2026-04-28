@@ -429,6 +429,73 @@ export const buildFormStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // Bot-protection toggle. When true, the public submit endpoint
+  // requires a valid Cloudflare Turnstile token AND (if
+  // honeypotFieldName is set) an empty honeypot field. Default false
+  // so existing forms keep working without configuration.
+  botProtectionEnabled: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'botProtectionEnabled',
+      type: FieldMetadataType.BOOLEAN,
+      label: i18nLabel(msg`Bot protection`),
+      description: i18nLabel(
+        msg`Require a valid Cloudflare Turnstile token (and honor the honeypot field) on every submission. Default off.`,
+      ),
+      icon: 'IconShieldCheck',
+      isNullable: false,
+      defaultValue: false,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  // Cloudflare Turnstile site key (public) for this form. Set this on
+  // the form so different forms can use different Turnstile widgets.
+  // The matching secret key lives in the CLOUDFLARE_TURNSTILE_SECRET_KEY
+  // server env var.
+  botProtectionSiteKey: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'botProtectionSiteKey',
+      type: FieldMetadataType.TEXT,
+      label: i18nLabel(msg`Turnstile site key`),
+      description: i18nLabel(
+        msg`Cloudflare Turnstile site key (public) embedded in the form. Required when bot protection is enabled.`,
+      ),
+      icon: 'IconKey',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  // Honeypot field name. If set, the submit endpoint silently drops
+  // any submission whose fields[honeypotFieldName] contains a
+  // non-empty string. Bots auto-fill all fields; humans don't see
+  // CSS-hidden inputs.
+  honeypotFieldName: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'honeypotFieldName',
+      type: FieldMetadataType.TEXT,
+      label: i18nLabel(msg`Honeypot field name`),
+      description: i18nLabel(
+        msg`Name of a hidden form field that legitimate users will leave blank. Bots that auto-fill it get silently rejected.`,
+      ),
+      icon: 'IconBug',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   // Tags merged into the auto-created Person's `tags` array on
   // submission. Only applied when autoCreatePerson is true. Empty / null
   // means no tagging. Pattern mirrors additionalMarketingCampaignIds.

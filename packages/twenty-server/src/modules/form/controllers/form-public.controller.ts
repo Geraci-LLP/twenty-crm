@@ -22,6 +22,7 @@ import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system
 import { type FormWorkspaceEntity } from 'src/modules/form/standard-objects/form.workspace-entity';
 import { type FormSubmissionWorkspaceEntity } from 'src/modules/form/standard-objects/form-submission.workspace-entity';
 import { FormSubmissionService } from 'src/modules/form/services/form-submission.service';
+import { TurnstileValidatorService } from 'src/modules/form/services/turnstile-validator.service';
 import { LeadCreationService } from 'src/modules/lead/services/lead-creation.service';
 import { mapFieldsToLeadInput } from 'src/modules/lead/utils/map-fields-to-lead.util';
 
@@ -29,6 +30,9 @@ type SubmitFormBody = {
   fields: Record<string, unknown>;
   submitterEmail?: string;
   submitterName?: string;
+  // Cloudflare Turnstile token from the form host page's widget.
+  // Required when the form has botProtectionEnabled: true.
+  captchaToken?: string;
 };
 
 @Controller('forms')
@@ -41,6 +45,7 @@ export class FormPublicController {
     private readonly workspaceRepository: Repository<WorkspaceEntity>,
     private readonly formSubmissionService: FormSubmissionService,
     private readonly leadCreationService: LeadCreationService,
+    private readonly turnstileValidator: TurnstileValidatorService,
   ) {}
 
   @Get(':workspaceId/:formId/schema')
@@ -121,6 +126,63 @@ export class FormPublicController {
               'Form is not published',
               HttpStatus.NOT_FOUND,
             );
+          }
+
+          // Bot protection — runs *before* validation / persistence so
+          // bot traffic doesn't bloat counters or fire downstream side
+          // effects. Two layers, in order:
+          //
+          // 1. Honeypot: if the form has a honeypotFieldName configured
+          //    and the corresponding value in body.fields is a non-empty
+          //    string, silently return success (without persisting).
+          //    Bots that auto-fill all fields get a 200 and think they
+          //    won; we know the field is CSS-hidden on legit pages so
+          //    only bots ever populate it.
+          // 2. Turnstile: if the form has botProtectionEnabled, verify
+          //    body.captchaToken via Cloudflare. Failure → 403, no
+          //    submission persisted.
+          const honeypotName = (
+            form as { honeypotFieldName?: string | null }
+          ).honeypotFieldName;
+          if (
+            typeof honeypotName === 'string' &&
+            honeypotName.trim() !== ''
+          ) {
+            const submittedFields =
+              (body.fields ?? {}) as Record<string, unknown>;
+            const honeypotValue = submittedFields[honeypotName];
+            if (
+              typeof honeypotValue === 'string' &&
+              honeypotValue.trim() !== ''
+            ) {
+              this.logger.warn(
+                `Form ${formId}: honeypot trip on field "${honeypotName}" — silently dropping submission.`,
+              );
+              return {
+                submissionId: 'honeypot-rejected',
+                personId: null,
+              };
+            }
+          }
+          const botProtectionEnabled =
+            (form as { botProtectionEnabled?: boolean | null })
+              .botProtectionEnabled === true;
+          if (botProtectionEnabled) {
+            const verdict = await this.turnstileValidator.verify(
+              body.captchaToken,
+            );
+            if (!verdict.success) {
+              this.logger.warn(
+                `Form ${formId}: Turnstile verify failed (${(verdict.errorCodes ?? []).join(',')}) — rejecting submission.`,
+              );
+              throw new HttpException(
+                {
+                  message: 'Bot protection check failed',
+                  errors: { captchaToken: 'Invalid or missing Turnstile token' },
+                },
+                HttpStatus.FORBIDDEN,
+              );
+            }
           }
 
           // Server-side field validation

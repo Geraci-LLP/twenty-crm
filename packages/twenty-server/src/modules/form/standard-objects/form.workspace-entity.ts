@@ -38,6 +38,18 @@ export class FormWorkspaceEntity extends BaseWorkspaceEntity {
   // Empty / null means no tagging. Used by the lead-creation service
   // to merge into the new Person's `tags` array on submission.
   tagsToApplyOnSubmission: string[] | null;
+  // Bot-protection settings. When `botProtectionEnabled` is true, the
+  // public submit endpoint requires a valid Cloudflare Turnstile token
+  // (server validates against the CLOUDFLARE_TURNSTILE_SECRET_KEY env
+  // var). A non-empty `honeypotFieldName` instructs the server to
+  // silently drop any submission whose `fields[honeypotFieldName]` is
+  // a non-empty string — humans don't see the CSS-hidden field, bots
+  // auto-fill it. `botProtectionSiteKey` is the Turnstile site key
+  // (public) for the form's host page. Per-form so different brands
+  // can use different Turnstile widgets if needed.
+  botProtectionEnabled: boolean;
+  botProtectionSiteKey: string | null;
+  honeypotFieldName: string | null;
   additionalMarketingCampaignIds: string[] | null;
   formSubmissions: EntityRelation<FormSubmissionWorkspaceEntity[]>;
   searchVector: string;

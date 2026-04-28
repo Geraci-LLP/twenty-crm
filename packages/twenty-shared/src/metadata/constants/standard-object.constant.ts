@@ -4291,6 +4291,15 @@ export const STANDARD_OBJECTS = {
       tagsToApplyOnSubmission: {
         universalIdentifier: 'c2d3e4f5-a6b7-48c8-9d0e-1f2a3b4c5d6e',
       },
+      botProtectionEnabled: {
+        universalIdentifier: 'd3e4f5a6-b7c8-49d9-ae1f-2a3b4c5d6e7f',
+      },
+      botProtectionSiteKey: {
+        universalIdentifier: 'e4f5a6b7-c8d9-4aea-bf20-3b4c5d6e7f80',
+      },
+      honeypotFieldName: {
+        universalIdentifier: 'f5a6b7c8-d9ea-4bfb-8031-4c5d6e7f8091',
+      },
       additionalMarketingCampaignIds: {
         universalIdentifier: 'e7f8a9b0-3456-4567-902c-bcdef2345678',
       },
