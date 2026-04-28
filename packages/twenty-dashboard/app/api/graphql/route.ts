@@ -32,6 +32,12 @@ const METADATA_OP_PATTERNS = [
   'createPageLayoutTab',
   'updatePageLayoutTab',
   'deletePageLayoutTab',
+  // Object/field metadata introspection used by the widget config panel
+  // dropdowns. Match the parenthesized form so we don't false-positive on
+  // every payload that mentions "object" somewhere in its variables.
+  'objects(',
+  'fields(',
+  'FindObjectsWithFields',
 ];
 
 const getCrmBaseUrl = () => {

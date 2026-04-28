@@ -42,19 +42,41 @@ export const FIND_DASHBOARDS = gql`
   }
 `;
 
+// Dashboard standard-object query — Twenty doesn't expose widgets as a
+// nested relation on `dashboard`. Widgets live on pageLayoutTab; the view
+// page fetches them separately via getPageLayoutTabs + getPageLayoutWidgets.
 export const FIND_DASHBOARD_BY_ID = gql`
   ${DASHBOARD_FRAGMENT}
-  ${PAGE_LAYOUT_WIDGET_FRAGMENT}
   query FindDashboardById($id: UUID!) {
     dashboard(filter: { id: { eq: $id } }) {
       ...DashboardFields
-      pageLayoutWidgets {
-        edges {
-          node {
-            ...PageLayoutWidgetFields
-          }
-        }
-      }
+    }
+  }
+`;
+
+// Fetches all widgets attached to a single page layout. Calls the metadata
+// API which understands the PageLayout -> Tab -> Widget chain. Note this
+// returns ALL tabs' widgets flattened — the dashboard view doesn't currently
+// render a tabbed UI, so flattening is fine.
+export const FIND_WIDGETS_BY_PAGE_LAYOUT = gql`
+  ${PAGE_LAYOUT_WIDGET_FRAGMENT}
+  query FindWidgetsByPageLayout($pageLayoutId: String!) {
+    getPageLayoutTabs(pageLayoutId: $pageLayoutId) {
+      id
+      title
+      position
+    }
+  }
+`;
+
+// Separate query: widgets for a single tab. We chain in JS rather than try
+// to nest these in one GraphQL call, since each metadata query is a
+// top-level field with its own argument set.
+export const FIND_WIDGETS_BY_TAB = gql`
+  ${PAGE_LAYOUT_WIDGET_FRAGMENT}
+  query FindWidgetsByTab($pageLayoutTabId: String!) {
+    getPageLayoutWidgets(pageLayoutTabId: $pageLayoutTabId) {
+      ...PageLayoutWidgetFields
     }
   }
 `;
@@ -126,6 +148,37 @@ export const CREATE_PAGE_LAYOUT_TAB = gql`
       title
       position
       pageLayoutId
+    }
+  }
+`;
+
+// Fetch the workspace's object metadata + their fields. Used to populate the
+// widget config panel's dropdowns so the user picks valid UUIDs from a list
+// instead of typing them by hand. We deliberately ask for a generous page
+// size since most workspaces have <50 standard objects total.
+export const FIND_OBJECTS_WITH_FIELDS = gql`
+  query FindObjectsWithFields {
+    objects(paging: { first: 100 }) {
+      edges {
+        node {
+          id
+          nameSingular
+          labelSingular
+          labelPlural
+          isSystem
+          isCustom
+          fields(paging: { first: 200 }) {
+            edges {
+              node {
+                id
+                name
+                label
+                type
+              }
+            }
+          }
+        }
+      }
     }
   }
 `;

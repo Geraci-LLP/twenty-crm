@@ -16,6 +16,7 @@ import {
   CREATE_PAGE_LAYOUT_TAB,
   CREATE_PAGE_LAYOUT_WIDGET,
   FIND_DASHBOARD_BY_ID,
+  FIND_WIDGETS_BY_TAB,
   GET_PAGE_LAYOUT_TABS,
   UPDATE_PAGE_LAYOUT_WIDGET,
 } from '../../../../lib/queries';
@@ -24,10 +25,13 @@ import { PageLayoutWidget, WidgetType } from '../../../../lib/types';
 type DashboardQueryResult = {
   dashboard: {
     id: string;
-    name: string;
+    title: string | null;
     pageLayoutId: string | null;
-    pageLayoutWidgets: { edges: { node: PageLayoutWidget }[] };
   } | null;
+};
+
+type WidgetsByTabResult = {
+  getPageLayoutWidgets: PageLayoutWidget[];
 };
 
 type GetPageLayoutTabsResult = {
@@ -80,14 +84,6 @@ const DashboardEditPage = () => {
     null,
   );
 
-  useEffect(() => {
-    // pageLayoutWidgets can be null for a freshly-created dashboard with no
-    // widgets yet — guard every step of the chain.
-    const fetched =
-      data?.dashboard?.pageLayoutWidgets?.edges?.map((edge) => edge.node) ?? [];
-    setWidgets(fetched);
-  }, [data]);
-
   // Pick an existing tab if one exists on the dashboard's page layout.
   // We don't create one eagerly — only when the user tries to save a new
   // widget — to avoid writing to the CRM just because someone opened the
@@ -101,6 +97,22 @@ const DashboardEditPage = () => {
       setResolvedTabId(existing.id);
     }
   }, [tabsData]);
+
+  // Fetch persisted widgets from the resolved tab. Twenty's `dashboard`
+  // standard object doesn't expose widgets as a nested relation; widgets
+  // belong to pageLayoutTab and are read via the metadata API.
+  const { data: widgetsData } = useQuery<WidgetsByTabResult>(
+    FIND_WIDGETS_BY_TAB,
+    {
+      variables: { pageLayoutTabId: resolvedTabId ?? '' },
+      skip: !resolvedTabId,
+    },
+  );
+
+  useEffect(() => {
+    if (!widgetsData) return;
+    setWidgets(widgetsData.getPageLayoutWidgets ?? []);
+  }, [widgetsData]);
 
   const [createWidget] = useMutation(CREATE_PAGE_LAYOUT_WIDGET);
   const [updateWidget] = useMutation(UPDATE_PAGE_LAYOUT_WIDGET);
