@@ -550,6 +550,7 @@ Content-Type: application/json
   <li><code>submitterEmail</code> — optional. If present, used for dedup against existing People records and as the recipient for the confirmation email (when <em>Send confirmation email</em> is on).</li>
   <li><code>submitterName</code> — optional. Used as <em>firstName</em> if not otherwise provided in <code>fields</code>.</li>
   <li><code>captchaToken</code> — required when the form has <em>Bot protection</em> enabled (see 8.3.1). Cloudflare Turnstile token from the form-host page's widget.</li>
+  <li><code>formLoadToken</code> — required when the form has <em>Require form-load token</em> enabled. Signed JWT issued by the GET <code>/schema</code> endpoint; the host page passes it through verbatim on submit.</li>
 </ul>
 
 <p><strong>Response (200 OK):</strong></p>
@@ -607,31 +608,96 @@ form.addEventListener('submit', async (e) =&gt; {
 
 <h4 id="form-bot-protection">8.3.1 Bot protection (built-in)</h4>
 
-<p>The CRM has native bot protection — no need to build a serverless validation layer in front of the endpoint. Enable it per-form. Two layers, both server-validated at the existing submit endpoint:</p>
+<p>The CRM has six native bot-protection layers configurable per-form. Stack as many as fit your threat model. All are validated server-side at the submit endpoint, in this order (cheap → expensive):</p>
 
-<p><strong>Honeypot field</strong></p>
-<ul>
-  <li>On the form record, set <em>Honeypot field name</em> to any string (e.g. <code>company_url</code>).</li>
-  <li>On your custom form, include an input with that <code>name</code>, hidden via CSS (<code>style="display:none"</code> or off-screen positioning).</li>
-  <li>Legitimate users won't see or fill the field. Bots that auto-fill all fields will populate it.</li>
-  <li>If the field is non-empty in the submission, the server returns a <strong>200 OK</strong> with <code>{ "submissionId": "honeypot-rejected", "personId": null }</code> and silently discards the submission. The bot thinks it succeeded; you don't get a junk record. Free, deterministic, no third-party dependency.</li>
-</ul>
+<table>
+  <tr><th>Layer</th><th>Form field(s)</th><th>What it stops</th><th>Failure response</th></tr>
+  <tr>
+    <td><strong>Origin allowlist</strong></td>
+    <td><em>Allowed origins</em> (string array)</td>
+    <td>Cross-site spam (someone steals your form ID + posts from a different domain)</td>
+    <td>403 Forbidden</td>
+  </tr>
+  <tr>
+    <td><strong>Per-IP rate limit</strong></td>
+    <td><em>Rate limit (per IP per minute)</em> (number)</td>
+    <td>Rapid-fire bots posting in tight loops</td>
+    <td>429 Too Many Requests</td>
+  </tr>
+  <tr>
+    <td><strong>Disposable email blacklist</strong></td>
+    <td><em>Reject disposable emails</em> (toggle)</td>
+    <td>Mailinator / temp-mail signups for spam</td>
+    <td>400 Bad Request</td>
+  </tr>
+  <tr>
+    <td><strong>Form-load token (JWT)</strong></td>
+    <td><em>Require form-load token</em>, <em>Minimum submit time</em></td>
+    <td>Bots that scrape the form ID and POST without ever rendering the form. Time-trap also catches instant-submit replays.</td>
+    <td>403 Forbidden</td>
+  </tr>
+  <tr>
+    <td><strong>Honeypot field</strong></td>
+    <td><em>Honeypot field name</em></td>
+    <td>Form-fillers that auto-populate every field</td>
+    <td>200 OK with <code>"honeypot-rejected"</code> (silent drop)</td>
+  </tr>
+  <tr>
+    <td><strong>Cloudflare Turnstile</strong></td>
+    <td><em>Bot protection</em>, <em>Turnstile site key</em></td>
+    <td>Sophisticated bots that render the page + behave like humans</td>
+    <td>403 Forbidden</td>
+  </tr>
+</table>
 
-<p><strong>Cloudflare Turnstile</strong></p>
-<ul>
-  <li>Toggle <em>Bot protection</em> on the form record.</li>
-  <li>Set <em>Turnstile site key</em> to your Cloudflare Turnstile site key (the public one).</li>
-  <li>The server-side secret key lives in the <code>CLOUDFLARE_TURNSTILE_SECRET_KEY</code> environment variable. Get it from the Cloudflare Turnstile dashboard. Set it once in Railway / your deploy environment and every form in the workspace can use it.</li>
-  <li>On your custom form, embed Turnstile (script tag from Cloudflare). When the visitor solves the challenge, the widget produces a token. POST that token in <code>body.captchaToken</code>.</li>
-  <li>Server verifies the token via Cloudflare's <code>siteverify</code> endpoint before any field validation or persistence. Failure returns <strong>403 Forbidden</strong> with <code>{ errors: { captchaToken: "Invalid or missing Turnstile token" } }</code>.</li>
-  <li>Failure-closed: if the secret env var isn't set on the server, every Turnstile-required submission fails. Configure the secret before turning the form toggle on.</li>
-</ul>
+<p>Origin allowlist, rate limit, disposable emails, form-load token, and honeypot are entirely native — no third-party dependency. Turnstile is optional and adds Cloudflare's behavioral analysis on top. Pick whatever fits.</p>
 
-<p>Recommended: turn both on. Honeypot drops zero-effort scrapers without surfacing UI; Turnstile catches the rest with a near-invisible challenge. Same defense pattern HubSpot, Marketo, and Webflow use.</p>
+<h5>Origin allowlist</h5>
 
-<h4 id="form-rate-limit">8.3.2 Rate limiting</h4>
+<p>Set <em>Allowed origins</em> on the form to <code>["https://customer-site.com", "https://staging.customer-site.com"]</code> (or just hostnames like <code>"customer-site.com"</code>). The server rejects POSTs whose <code>Origin</code> or <code>Referer</code> header doesn't match. Empty array = all origins allowed.</p>
 
-<p>Not built into the application. Add it at the edge — for Railway deploys this is typically a Cloudflare WAF rate-limit rule on <code>/forms/*/submit</code>. A reasonable default: 5 requests / 60s per source IP. Tune up if you have legitimate high-volume use cases.</p>
+<h5>Per-IP rate limit</h5>
+
+<p>Set <em>Rate limit</em> to <code>5</code> for a 5-submissions-per-60s ceiling per source IP. The counter is in-memory (rolling window). 0 / null disables. Returns 429 when exceeded.</p>
+
+<h5>Disposable email blacklist</h5>
+
+<p>Toggle <em>Reject disposable emails</em>. The server checks both <code>body.submitterEmail</code> and <code>body.fields.email</code> against a baked-in list of common temp-mail domains (Mailinator, Tempmail, 10minutemail, Guerrilla Mail, Yopmail, etc.). Returns 400 with <code>{ errors: { email: "Please use a non-disposable email address" } }</code> on hit.</p>
+
+<h5>Form-load token (JWT) + time-trap</h5>
+
+<p>Toggle <em>Require form-load token</em>. The flow:</p>
+<ol>
+  <li>Browser GETs <code>/forms/&lt;wid&gt;/&lt;fid&gt;/schema</code> — response includes <code>formLoadToken</code> (a 24h-lifetime signed JWT).</li>
+  <li>Browser POSTs <code>/forms/&lt;wid&gt;/&lt;fid&gt;/submit</code> with <code>body.formLoadToken</code> set to that token.</li>
+  <li>Server verifies signature, subject, claims, expiration, and age against <em>Minimum submit time (seconds)</em> (default 2). Submissions with a token age below the floor are rejected as instant-fire bots.</li>
+</ol>
+
+<p>The <code>/schema</code> endpoint always issues a <code>formLoadToken</code> regardless of whether the form requires it — costs nothing and lets you flip the requirement on later without code changes on the host page.</p>
+
+<h5>Honeypot field</h5>
+
+<p>Set <em>Honeypot field name</em> to any string (e.g. <code>company_url</code>). On your form, include a CSS-hidden input with that <code>name</code>. Bots that auto-fill all fields populate it; humans don't. The server returns <strong>200 OK</strong> with <code>{ "submissionId": "honeypot-rejected", "personId": null }</code> and silently discards.</p>
+
+<h5>Cloudflare Turnstile</h5>
+
+<p>Toggle <em>Bot protection</em> and set <em>Turnstile site key</em> on the form. Add <code>CLOUDFLARE_TURNSTILE_SECRET_KEY</code> to the server env. Embed Turnstile on your form page (script tag from Cloudflare); when the visitor solves the challenge, the widget produces a token. POST it in <code>body.captchaToken</code>. Server verifies via Cloudflare's <code>siteverify</code> before any field validation. Failure returns 403.</p>
+
+<h5>Recommended stack</h5>
+
+<p>For a low-effort baseline that stops 99% of bot traffic without any external service:</p>
+<ol>
+  <li><em>Honeypot field name</em>: <code>company_url</code> (and add a CSS-hidden input on your form)</li>
+  <li><em>Require form-load token</em>: on, with <em>Minimum submit time</em> = 2</li>
+  <li><em>Rate limit</em>: 5</li>
+  <li><em>Allowed origins</em>: <code>["https://your-domain.com"]</code></li>
+</ol>
+
+<p>For high-volume consumer forms (newsletter signup with active spam campaigns), add Turnstile on top. For everything else, the native stack is genuinely enough.</p>
+
+<h4 id="form-rate-limit">8.3.2 Rate limiting (edge layer)</h4>
+
+<p>The per-form <em>Rate limit</em> field above runs in-app and is per-(form, IP). For workspace-wide spike protection (someone pounding <code>/forms/*/submit</code> with rotating form IDs), add a Cloudflare WAF rate-limit rule on the path itself — typically 20 req / 60s per IP. The two layers are complementary: in-app limits per-form abuse, edge limits aggregate flooding.</p>
 
 <h3>8.4 Submissions</h3>
 

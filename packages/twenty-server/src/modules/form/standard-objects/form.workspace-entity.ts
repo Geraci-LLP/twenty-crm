@@ -50,6 +50,24 @@ export class FormWorkspaceEntity extends BaseWorkspaceEntity {
   botProtectionEnabled: boolean;
   botProtectionSiteKey: string | null;
   honeypotFieldName: string | null;
+  // Native bot-protection layers — work standalone without Turnstile.
+  // Stack them or use Turnstile, the user picks per form.
+  // requireFormLoadToken: GET /schema returns a short-lived signed JWT
+  //   that POST /submit must echo back. Defeats bots that POST without
+  //   ever rendering the form.
+  // minSubmitTimeSeconds: reject submissions with token age younger
+  //   than this. Defeats instant-submit bots. Default 2.
+  // rateLimitPerMinute: max submissions per source IP per 60s window.
+  //   0 disables. Default 0 (off — opt-in per form).
+  // allowedOrigins: per-form allowlist of Origin headers. Empty array
+  //   or null means all origins allowed.
+  // rejectDisposableEmails: drop submissions whose submitterEmail (or
+  //   email field) ends in a known temp-mail domain.
+  requireFormLoadToken: boolean;
+  minSubmitTimeSeconds: number | null;
+  rateLimitPerMinute: number | null;
+  allowedOrigins: string[] | null;
+  rejectDisposableEmails: boolean;
   additionalMarketingCampaignIds: string[] | null;
   formSubmissions: EntityRelation<FormSubmissionWorkspaceEntity[]>;
   searchVector: string;

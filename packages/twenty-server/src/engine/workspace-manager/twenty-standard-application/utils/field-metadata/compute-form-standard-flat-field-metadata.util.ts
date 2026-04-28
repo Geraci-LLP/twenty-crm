@@ -496,6 +496,99 @@ export const buildFormStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // Native bot-protection layers, all server-validated at submit.
+  requireFormLoadToken: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'requireFormLoadToken',
+      type: FieldMetadataType.BOOLEAN,
+      label: i18nLabel(msg`Require form-load token`),
+      description: i18nLabel(
+        msg`Require submissions to include the signed JWT issued by GET /schema. Defeats bots that POST without rendering the form.`,
+      ),
+      icon: 'IconKey',
+      isNullable: false,
+      defaultValue: false,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  minSubmitTimeSeconds: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'minSubmitTimeSeconds',
+      type: FieldMetadataType.NUMBER,
+      label: i18nLabel(msg`Minimum submit time (seconds)`),
+      description: i18nLabel(
+        msg`Reject submissions whose form-load token age is below this floor. Catches instant-fire bots. Default 2.`,
+      ),
+      icon: 'IconClock',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  rateLimitPerMinute: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'rateLimitPerMinute',
+      type: FieldMetadataType.NUMBER,
+      label: i18nLabel(msg`Rate limit (per IP per minute)`),
+      description: i18nLabel(
+        msg`Max submissions per source IP per rolling 60s window. 0 or null disables.`,
+      ),
+      icon: 'IconBolt',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  allowedOrigins: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'allowedOrigins',
+      type: FieldMetadataType.ARRAY,
+      label: i18nLabel(msg`Allowed origins`),
+      description: i18nLabel(
+        msg`Allowlist of Origin / Referer hosts permitted to submit. Empty / null = all allowed. e.g. ["https://customer-site.com"].`,
+      ),
+      icon: 'IconWorld',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  rejectDisposableEmails: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'rejectDisposableEmails',
+      type: FieldMetadataType.BOOLEAN,
+      label: i18nLabel(msg`Reject disposable emails`),
+      description: i18nLabel(
+        msg`Drop submissions whose email ends in a known temp-mail domain (mailinator, tempmail, etc.).`,
+      ),
+      icon: 'IconMailX',
+      isNullable: false,
+      defaultValue: false,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   // Tags merged into the auto-created Person's `tags` array on
   // submission. Only applied when autoCreatePerson is true. Empty / null
   // means no tagging. Pattern mirrors additionalMarketingCampaignIds.

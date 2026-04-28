@@ -2,8 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   HttpException,
   HttpStatus,
+  Ip,
   Logger,
   Param,
   Post,
@@ -19,8 +21,11 @@ import { NoPermissionGuard } from 'src/engine/guards/no-permission.guard';
 import { PublicEndpointGuard } from 'src/engine/guards/public-endpoint.guard';
 import { GlobalWorkspaceOrmManager } from 'src/engine/twenty-orm/global-workspace-datasource/global-workspace-orm.manager';
 import { buildSystemAuthContext } from 'src/engine/twenty-orm/utils/build-system-auth-context.util';
+import { isDisposableEmail } from 'src/modules/form/constants/disposable-email-domains';
 import { type FormWorkspaceEntity } from 'src/modules/form/standard-objects/form.workspace-entity';
 import { type FormSubmissionWorkspaceEntity } from 'src/modules/form/standard-objects/form-submission.workspace-entity';
+import { FormLoadTokenService } from 'src/modules/form/services/form-load-token.service';
+import { FormRateLimiterService } from 'src/modules/form/services/form-rate-limiter.service';
 import { FormSubmissionService } from 'src/modules/form/services/form-submission.service';
 import { TurnstileValidatorService } from 'src/modules/form/services/turnstile-validator.service';
 import { LeadCreationService } from 'src/modules/lead/services/lead-creation.service';
@@ -33,6 +38,48 @@ type SubmitFormBody = {
   // Cloudflare Turnstile token from the form host page's widget.
   // Required when the form has botProtectionEnabled: true.
   captchaToken?: string;
+  // Signed JWT issued by GET /schema. Required when the form has
+  // requireFormLoadToken: true.
+  formLoadToken?: string;
+};
+
+// Origin allowlist matching: a stored entry matches the request's
+// Origin / Referer if the entry is exactly equal OR is the entry's
+// hostname (so users can configure either "https://example.com" or
+// "example.com"). Empty / null allowedOrigins means "all allowed".
+const requestMatchesAllowlist = (
+  origin: string | undefined,
+  referer: string | undefined,
+  allowed: string[] | null | undefined,
+): boolean => {
+  if (allowed === null || allowed === undefined || allowed.length === 0) {
+    return true;
+  }
+  const sources: string[] = [];
+  if (typeof origin === 'string' && origin !== '') sources.push(origin);
+  if (typeof referer === 'string' && referer !== '') sources.push(referer);
+  if (sources.length === 0) return false;
+  for (const src of sources) {
+    let host = '';
+    try {
+      host = new URL(src).host.toLowerCase();
+    } catch {
+      host = src.toLowerCase();
+    }
+    for (const entry of allowed) {
+      const e = entry.trim().toLowerCase();
+      if (e === '') continue;
+      // Match either full URL string or just the host portion
+      if (src.toLowerCase() === e) return true;
+      if (host === e) return true;
+      try {
+        if (new URL(e).host.toLowerCase() === host) return true;
+      } catch {
+        // entry isn't a parseable URL; fall through
+      }
+    }
+  }
+  return false;
 };
 
 @Controller('forms')
@@ -46,6 +93,8 @@ export class FormPublicController {
     private readonly formSubmissionService: FormSubmissionService,
     private readonly leadCreationService: LeadCreationService,
     private readonly turnstileValidator: TurnstileValidatorService,
+    private readonly formLoadTokenService: FormLoadTokenService,
+    private readonly formRateLimiter: FormRateLimiterService,
   ) {}
 
   @Get(':workspaceId/:formId/schema')
@@ -82,6 +131,13 @@ export class FormPublicController {
       throw new HttpException('Form is not published', HttpStatus.NOT_FOUND);
     }
 
+    // Issue a short-lived form-load token. Even forms that don't
+    // require it get one — costs nothing and lets the host page
+    // simply pass it through if the operator later toggles the
+    // requirement on. Forms with requireFormLoadToken=false ignore
+    // the token at submit time.
+    const formLoadToken = this.formLoadTokenService.sign(workspaceId, formId);
+
     return {
       id: form.id,
       name: form.name,
@@ -89,6 +145,24 @@ export class FormPublicController {
       fields: form.fieldsConfig,
       thankYouMessage: form.thankYouMessage,
       redirectUrl: form.redirectUrl,
+      formLoadToken,
+      // Surface bot-protection requirements to the client so it can
+      // wire the right widgets (Turnstile site key, etc.) without
+      // having to be told out-of-band.
+      botProtection: {
+        requireFormLoadToken:
+          (form as { requireFormLoadToken?: boolean | null })
+            .requireFormLoadToken === true,
+        turnstileEnabled:
+          (form as { botProtectionEnabled?: boolean | null })
+            .botProtectionEnabled === true,
+        turnstileSiteKey:
+          (form as { botProtectionSiteKey?: string | null })
+            .botProtectionSiteKey ?? null,
+        honeypotFieldName:
+          (form as { honeypotFieldName?: string | null })
+            .honeypotFieldName ?? null,
+      },
     };
   }
 
@@ -98,6 +172,9 @@ export class FormPublicController {
     @Param('workspaceId') workspaceId: string,
     @Param('formId') formId: string,
     @Body() body: SubmitFormBody,
+    @Ip() requestIp: string,
+    @Headers('origin') originHeader: string | undefined,
+    @Headers('referer') refererHeader: string | undefined,
   ) {
     await this.validateWorkspace(workspaceId);
 
@@ -126,6 +203,115 @@ export class FormPublicController {
               'Form is not published',
               HttpStatus.NOT_FOUND,
             );
+          }
+
+          // ────────────────────────────────────────────────────────
+          // Native bot-protection layers. Order is cheap-to-expensive
+          // so we reject obvious bots without doing JWT or HTTP work:
+          //   1. Origin allowlist (string compare)
+          //   2. Per-IP rate limit (in-memory map lookup)
+          //   3. Disposable email blacklist (set lookup)
+          //   4. Form-load token + time-trap (JWT verify, local)
+          //   5. Honeypot (string compare on field map)
+          //   6. Turnstile (network call to Cloudflare)
+          // 1, 2, 4 are all native — Turnstile is optional. The user
+          // picks per form which combination they want.
+          // ────────────────────────────────────────────────────────
+
+          // 1. Origin allowlist
+          const allowed = (
+            form as { allowedOrigins?: string[] | null }
+          ).allowedOrigins;
+          if (
+            !requestMatchesAllowlist(originHeader, refererHeader, allowed)
+          ) {
+            this.logger.warn(
+              `Form ${formId}: origin "${originHeader ?? '<none>'}" / referer "${refererHeader ?? '<none>'}" not in allowlist (${(allowed ?? []).join(',')}) — rejecting.`,
+            );
+            throw new HttpException(
+              {
+                message: 'Origin not permitted',
+                errors: { origin: 'This domain is not authorized to submit' },
+              },
+              HttpStatus.FORBIDDEN,
+            );
+          }
+
+          // 2. Per-IP rate limit
+          const rateLimit = (
+            form as { rateLimitPerMinute?: number | null }
+          ).rateLimitPerMinute;
+          if (
+            typeof rateLimit === 'number' &&
+            rateLimit > 0 &&
+            !this.formRateLimiter.check(formId, requestIp, rateLimit)
+          ) {
+            this.logger.warn(
+              `Form ${formId}: rate limit hit for IP ${requestIp} (limit ${rateLimit}/min).`,
+            );
+            throw new HttpException(
+              {
+                message: 'Rate limit exceeded',
+                errors: { rateLimit: 'Too many submissions, try again later' },
+              },
+              HttpStatus.TOO_MANY_REQUESTS,
+            );
+          }
+
+          // 3. Disposable email blacklist
+          if (
+            (form as { rejectDisposableEmails?: boolean | null })
+              .rejectDisposableEmails === true
+          ) {
+            const submittedFieldsForEmail =
+              (body.fields ?? {}) as Record<string, unknown>;
+            const candidates: string[] = [];
+            if (typeof body.submitterEmail === 'string')
+              candidates.push(body.submitterEmail);
+            if (typeof submittedFieldsForEmail.email === 'string')
+              candidates.push(submittedFieldsForEmail.email as string);
+            for (const e of candidates) {
+              if (isDisposableEmail(e)) {
+                this.logger.warn(
+                  `Form ${formId}: rejected disposable email ${e}.`,
+                );
+                throw new HttpException(
+                  {
+                    message: 'Email not accepted',
+                    errors: { email: 'Please use a non-disposable email address' },
+                  },
+                  HttpStatus.BAD_REQUEST,
+                );
+              }
+            }
+          }
+
+          // 4. Form-load token + time-trap
+          if (
+            (form as { requireFormLoadToken?: boolean | null })
+              .requireFormLoadToken === true
+          ) {
+            const minTime = (
+              form as { minSubmitTimeSeconds?: number | null }
+            ).minSubmitTimeSeconds;
+            const verdict = await this.formLoadTokenService.verify(
+              body.formLoadToken,
+              workspaceId,
+              formId,
+              minTime ?? null,
+            );
+            if (!verdict.valid) {
+              this.logger.warn(
+                `Form ${formId}: form-load token rejected (${verdict.reason}).`,
+              );
+              throw new HttpException(
+                {
+                  message: 'Form-load token check failed',
+                  errors: { formLoadToken: `Invalid: ${verdict.reason}` },
+                },
+                HttpStatus.FORBIDDEN,
+              );
+            }
           }
 
           // Bot protection — runs *before* validation / persistence so

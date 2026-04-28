@@ -4300,6 +4300,21 @@ export const STANDARD_OBJECTS = {
       honeypotFieldName: {
         universalIdentifier: 'f5a6b7c8-d9ea-4bfb-8031-4c5d6e7f8091',
       },
+      requireFormLoadToken: {
+        universalIdentifier: 'a6b7c8d9-eafb-4c0c-9142-5d6e7f8091a2',
+      },
+      minSubmitTimeSeconds: {
+        universalIdentifier: 'b7c8d9ea-fb0c-4d1d-a253-6e7f8091a2b3',
+      },
+      rateLimitPerMinute: {
+        universalIdentifier: 'c8d9eafb-0c1d-4e2e-b364-7f8091a2b3c4',
+      },
+      allowedOrigins: {
+        universalIdentifier: 'd9eafb0c-1d2e-4f3f-8475-8091a2b3c4d5',
+      },
+      rejectDisposableEmails: {
+        universalIdentifier: 'eafb0c1d-2e3f-4040-a586-91a2b3c4d5e6',
+      },
       additionalMarketingCampaignIds: {
         universalIdentifier: 'e7f8a9b0-3456-4567-902c-bcdef2345678',
       },
