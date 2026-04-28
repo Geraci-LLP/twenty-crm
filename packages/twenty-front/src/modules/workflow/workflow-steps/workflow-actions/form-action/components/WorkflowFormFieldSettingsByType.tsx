@@ -16,14 +16,17 @@ export const WorkflowFormFieldSettingsByType = ({
 }) => {
   switch (field.type) {
     case FieldMetadataType.TEXT:
+    case FieldMetadataType.RICH_TEXT:
       return (
         <WorkflowFormFieldSettingsText field={field} onChange={onChange} />
       );
     case FieldMetadataType.NUMBER:
+    case FieldMetadataType.RATING:
       return (
         <WorkflowFormFieldSettingsNumber field={field} onChange={onChange} />
       );
     case FieldMetadataType.DATE:
+    case FieldMetadataType.DATE_TIME:
       return (
         <WorkflowFormFieldSettingsDate field={field} onChange={onChange} />
       );
@@ -39,6 +42,19 @@ export const WorkflowFormFieldSettingsByType = ({
           onChange={onChange}
         />
       );
+    // Types that have no extra type-specific settings beyond label,
+    // placeholder, and required (handled in the parent settings panel).
+    // Boolean / Emails / Phones / Links / Address / Full name / Files
+    // each render a specialized input on the public form via the
+    // existing FormFieldInput dispatcher — no per-type config needed.
+    case FieldMetadataType.BOOLEAN:
+    case FieldMetadataType.EMAILS:
+    case FieldMetadataType.PHONES:
+    case FieldMetadataType.LINKS:
+    case FieldMetadataType.ADDRESS:
+    case FieldMetadataType.FULL_NAME:
+    case FieldMetadataType.FILES:
+      return null;
     default:
       return assertUnreachable(field.type, 'Unknown form field type');
   }

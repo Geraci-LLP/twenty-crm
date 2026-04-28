@@ -190,10 +190,23 @@ export class FormPublicController {
             };
             const leadInput = mapFieldsToLeadInput(submissionValues);
             if (leadInput) {
+              // Per-form tag policy: tags configured on the Form get
+              // merged into the new (or existing) Person's tags array.
+              const formTags = Array.isArray(
+                (form as { tagsToApplyOnSubmission?: string[] | null })
+                  .tagsToApplyOnSubmission,
+              )
+                ? (((form as { tagsToApplyOnSubmission?: string[] | null })
+                    .tagsToApplyOnSubmission ?? []) as string[])
+                : [];
               try {
                 const lead = await this.leadCreationService.findOrCreatePerson(
                   workspaceId,
-                  { ...leadInput, source: leadInput.source ?? 'FORM' },
+                  {
+                    ...leadInput,
+                    source: leadInput.source ?? 'FORM',
+                    tags: formTags.length > 0 ? formTags : undefined,
+                  },
                 );
                 personId = lead.personId;
               } catch (error) {

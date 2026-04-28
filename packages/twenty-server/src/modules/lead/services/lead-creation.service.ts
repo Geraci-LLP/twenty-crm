@@ -47,7 +47,27 @@ export class LeadCreationService {
           .limit(1)
           .getOne();
 
+        // Dedupe + tag merge: if the person already exists and the
+        // input carries tags, union them onto the existing record so
+        // a user who fills out two forms ends up with both tags.
         if (isDefined(existing)) {
+          const inputTags = input.tags ?? [];
+          if (inputTags.length > 0) {
+            const existingTags = Array.isArray(
+              (existing as { tags?: string[] | null }).tags,
+            )
+              ? (((existing as { tags?: string[] | null }).tags ?? []) as string[])
+              : [];
+            const merged = Array.from(
+              new Set([...existingTags, ...inputTags]),
+            );
+            if (merged.length !== existingTags.length) {
+              await personRepository.update(
+                { id: existing.id },
+                { tags: merged } as Partial<PersonWorkspaceEntity>,
+              );
+            }
+          }
           return { personId: existing.id, created: false };
         }
 
@@ -71,6 +91,9 @@ export class LeadCreationService {
 
         if (input.jobTitle) personData.jobTitle = input.jobTitle;
         if (input.city) personData.city = input.city;
+        if (Array.isArray(input.tags) && input.tags.length > 0) {
+          personData.tags = input.tags;
+        }
 
         if (input.linkedinUrl) {
           let url = input.linkedinUrl;

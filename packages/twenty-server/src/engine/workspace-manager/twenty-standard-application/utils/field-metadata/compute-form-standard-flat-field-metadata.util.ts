@@ -429,6 +429,27 @@ export const buildFormStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // Tags merged into the auto-created Person's `tags` array on
+  // submission. Only applied when autoCreatePerson is true. Empty / null
+  // means no tagging. Pattern mirrors additionalMarketingCampaignIds.
+  tagsToApplyOnSubmission: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'tagsToApplyOnSubmission',
+      type: FieldMetadataType.ARRAY,
+      label: i18nLabel(msg`Tags to apply on submission`),
+      description: i18nLabel(
+        msg`Free-form tag strings to add to a Person's tags array when this form auto-creates them.`,
+      ),
+      icon: 'IconTags',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   // Many-to-many: any number of additional MarketingCampaign IDs this
   // form belongs to (beyond the primary marketingCampaignId FK).
   additionalMarketingCampaignIds: createStandardFieldFlatMetadata({

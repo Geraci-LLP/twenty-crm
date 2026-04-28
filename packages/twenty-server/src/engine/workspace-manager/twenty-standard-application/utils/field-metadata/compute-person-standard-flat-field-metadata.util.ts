@@ -727,6 +727,28 @@ export const buildPersonStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // Free-form tag list. ARRAY of strings — same shape as
+  // additionalMarketingCampaignIds on Form, no separate Tag entity.
+  // Used by Forms (auto-tag on submission) and any future segmenter
+  // that wants a lightweight label.
+  tags: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'tags',
+      type: FieldMetadataType.ARRAY,
+      label: i18nLabel(msg`Tags`),
+      description: i18nLabel(
+        msg`Free-form tags for segmenting this person (e.g. "newsletter", "demo-requested").`,
+      ),
+      icon: 'IconTags',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   searchVector: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,

@@ -2483,6 +2483,9 @@ export const STANDARD_OBJECTS = {
       quotes: {
         universalIdentifier: '6d24a795-62d5-4eb4-85e1-d9fef6c11d7d',
       },
+      tags: {
+        universalIdentifier: 'b1e2c3d4-f56a-47b9-9c8d-1e2f3a4b5c6d',
+      },
       searchVector: {
         universalIdentifier: '57d1d7ad-fa10-44fc-82f3-ad0959ec2534',
       },
@@ -4284,6 +4287,9 @@ export const STANDARD_OBJECTS = {
       },
       autoCreatePerson: {
         universalIdentifier: 'b1c2d3e4-f5a6-4b7c-8d9e-0f1a2b3c4d5e',
+      },
+      tagsToApplyOnSubmission: {
+        universalIdentifier: 'c2d3e4f5-a6b7-48c8-9d0e-1f2a3b4c5d6e',
       },
       additionalMarketingCampaignIds: {
         universalIdentifier: 'e7f8a9b0-3456-4567-902c-bcdef2345678',

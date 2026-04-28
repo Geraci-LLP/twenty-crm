@@ -75,5 +75,10 @@ export class PersonWorkspaceEntity extends BaseWorkspaceEntity {
   bookings: EntityRelation<BookingWorkspaceEntity[]>;
   chatConversations: EntityRelation<ChatConversationWorkspaceEntity[]>;
   sequenceEnrollments: EntityRelation<SequenceEnrollmentWorkspaceEntity[]>;
+  // Free-form tag list for segmenting people. Stored as a string array
+  // (no separate Tag entity) to keep the schema simple and queryable
+  // via array-contains filters. Auto-applied when a form has
+  // `tagsToApplyOnSubmission` set and the form auto-creates a person.
+  tags: string[] | null;
   searchVector: string;
 }

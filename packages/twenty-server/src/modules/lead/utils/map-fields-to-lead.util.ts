@@ -4,7 +4,12 @@ import { type LeadInput } from 'src/modules/lead/types/lead-input.type';
 // LeadInput by matching field names against known conventions. Match is case-insensitive
 // and ignores spaces/underscores/hyphens, so "First Name", "first_name", "firstname"
 // all resolve to firstName.
-const FIELD_NAME_PATTERNS: Record<keyof LeadInput, RegExp[]> = {
+// Scalar (string-valued) lead inputs. The `tags` field is excluded
+// because it's an array and is set from the form's per-form policy,
+// not from submitted values.
+type ScalarLeadInputKey = Exclude<keyof LeadInput, 'tags'>;
+
+const FIELD_NAME_PATTERNS: Record<ScalarLeadInputKey, RegExp[]> = {
   email: [/^email$/, /^emailaddress$/, /^primaryemail$/, /^workemail$/],
   firstName: [/^firstname$/, /^givenname$/, /^fname$/],
   lastName: [/^lastname$/, /^surname$/, /^familyname$/, /^lname$/],
@@ -51,7 +56,7 @@ export const mapFieldsToLeadInput = (
 
     for (const [target, patterns] of Object.entries(FIELD_NAME_PATTERNS)) {
       if (patterns.some((re) => re.test(normalized))) {
-        const key = target as keyof LeadInput;
+        const key = target as ScalarLeadInputKey;
         // First match wins — don't overwrite a previously-mapped value
         if (result[key] === undefined) result[key] = value;
         break;

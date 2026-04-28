@@ -34,6 +34,10 @@ export class FormWorkspaceEntity extends BaseWorkspaceEntity {
   confirmationEmailSubject: string | null;
   confirmationEmailBody: string | null;
   autoCreatePerson: boolean;
+  // Tags applied to a Person record when this form auto-creates one.
+  // Empty / null means no tagging. Used by the lead-creation service
+  // to merge into the new Person's `tags` array on submission.
+  tagsToApplyOnSubmission: string[] | null;
   additionalMarketingCampaignIds: string[] | null;
   formSubmissions: EntityRelation<FormSubmissionWorkspaceEntity[]>;
   searchVector: string;
