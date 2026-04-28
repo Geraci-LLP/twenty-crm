@@ -15,13 +15,14 @@ type FormBlockEditorProps = {
   onClose: () => void;
 };
 
-const StyledPanel = styled.aside`
+// The parent (FormBuilderCanvas's StyledRightPanel) owns positioning
+// and width; this is just a flex container for the editor body.
+const StyledPanel = styled.div`
   background: ${themeCssVariables.background.primary};
-  border-left: 1px solid ${themeCssVariables.border.color.light};
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  width: 300px;
+  height: 100%;
+  width: 100%;
 `;
 
 const StyledHeader = styled.div`

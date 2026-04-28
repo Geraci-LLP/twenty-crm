@@ -29,12 +29,21 @@ type FormBuilderCanvasProps = {
 
 type LeftRailMode = 'add' | 'contents' | null;
 
+// The builder is mounted inside a page-layout widget whose width is
+// dictated by Twenty's record-show grid — often as narrow as 600px.
+// We can't get a 4-column flex layout to fit there, so the panels
+// (Add / Contents tree / Block editor) overlay the canvas like
+// Photoshop tool palettes instead of occupying permanent columns.
+// The canvas always takes all available width minus the 48px icon
+// rail; panels slide in over the top with a slight backdrop.
 const StyledRoot = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
+  flex-direction: row;
   height: 100%;
   min-height: 600px;
+  overflow: hidden;
   position: relative;
+  width: 100%;
 `;
 
 // Vertical icon strip — always visible. Two icons: + (Add) and the
@@ -44,9 +53,11 @@ const StyledIconRail = styled.div`
   border-right: 1px solid ${themeCssVariables.border.color.light};
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   gap: 2px;
   padding: 12px 8px;
   width: 48px;
+  z-index: 2;
 `;
 
 const StyledIconButton = styled.button<{ active?: boolean }>`
@@ -73,34 +84,72 @@ const StyledIconButton = styled.button<{ active?: boolean }>`
   }
 `;
 
+// Slide-over panel overlaying the canvas. Sits between the icon
+// rail and the right edge; sits OVER the canvas so the canvas never
+// loses width when a panel opens. Backdrop click dismisses.
+/* oxlint-disable twenty/no-hardcoded-colors -- panel drop shadows
+   use a low-opacity black, which doesn't have a theme equivalent. */
 const StyledLeftPanel = styled.div`
   background: ${themeCssVariables.background.primary};
   border-right: 1px solid ${themeCssVariables.border.color.light};
+  bottom: 0;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  left: 48px;
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  width: 320px;
+  z-index: 3;
+`;
+
+// Right-rail editor — overlays from the right edge.
+const StyledRightPanel = styled.aside`
+  background: ${themeCssVariables.background.primary};
+  border-left: 1px solid ${themeCssVariables.border.color.light};
+  bottom: 0;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
   width: 320px;
+  z-index: 3;
 `;
+/* oxlint-enable twenty/no-hardcoded-colors */
 
 const StyledCanvas = styled.div`
   background: ${themeCssVariables.background.tertiary};
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 24px;
-  overflow-y: auto;
+  min-width: 0;
+  overflow: auto;
   padding: 32px 24px;
 `;
 
+// Stack steps vertically when the canvas is too narrow to fit them
+// side-by-side. Below ~900px the connector arrows look bad
+// horizontally — wrap to a column so the user can still see / edit
+// each step.
 const StyledCanvasFlow = styled.div`
   align-items: stretch;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 24px;
   justify-content: center;
   margin: 0 auto;
   max-width: 1100px;
   position: relative;
   width: 100%;
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 
 const StyledStepPanel = styled.div<{ selected?: boolean }>`
@@ -378,24 +427,6 @@ export const FormBuilderCanvas = ({
         </StyledIconButton>
       </StyledIconRail>
 
-      {leftMode === 'add' && (
-        <StyledLeftPanel>
-          <FormAddPanel onAdd={handleAddFromLibrary} onClose={() => setLeftMode(null)} />
-        </StyledLeftPanel>
-      )}
-      {leftMode === 'contents' && (
-        <StyledLeftPanel>
-          <FormContentsTree
-            contents={contents}
-            selectedBlockId={selectedBlockId}
-            onSelectBlock={setSelectedBlockId}
-            onAddStep={addStep}
-            onClose={() => setLeftMode(null)}
-          />
-        </StyledLeftPanel>
-      )}
-      {leftMode === null && <div />}
-
       <StyledCanvas>
         <StyledCanvasFlow>
           {contents.steps.map((step, idx) => (
@@ -453,14 +484,34 @@ export const FormBuilderCanvas = ({
         </StyledCanvasFlow>
       </StyledCanvas>
 
-      {selectedBlock !== null ? (
-        <FormBlockEditor
-          block={selectedBlock}
-          onChange={(next) => updateBlock(selectedBlock.id, () => next)}
-          onClose={() => setSelectedBlockId(null)}
-        />
-      ) : (
-        <div />
+      {leftMode === 'add' && (
+        <StyledLeftPanel>
+          <FormAddPanel
+            onAdd={handleAddFromLibrary}
+            onClose={() => setLeftMode(null)}
+          />
+        </StyledLeftPanel>
+      )}
+      {leftMode === 'contents' && (
+        <StyledLeftPanel>
+          <FormContentsTree
+            contents={contents}
+            selectedBlockId={selectedBlockId}
+            onSelectBlock={setSelectedBlockId}
+            onAddStep={addStep}
+            onClose={() => setLeftMode(null)}
+          />
+        </StyledLeftPanel>
+      )}
+
+      {selectedBlock !== null && (
+        <StyledRightPanel>
+          <FormBlockEditor
+            block={selectedBlock}
+            onChange={(next) => updateBlock(selectedBlock.id, () => next)}
+            onClose={() => setSelectedBlockId(null)}
+          />
+        </StyledRightPanel>
       )}
     </StyledRoot>
   );
