@@ -14,14 +14,40 @@ import { WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.ent
 
 const PORTAL_COOKIE_NAME = 'twenty_portal_token';
 
+// Twenty doesn't apply cookie-parser middleware globally, so `request.cookies`
+// is undefined on /graphql and /metadata endpoints. Parse the raw Cookie
+// header ourselves to extract the portal token.
 const cookieExtractor = (request: ExpressRequest): string | null => {
   // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-  const cookies = (request as any)?.cookies as
+  const parsedCookies = (request as any)?.cookies as
     | Record<string, string>
     | undefined;
 
-  if (cookies && typeof cookies[PORTAL_COOKIE_NAME] === 'string') {
-    return cookies[PORTAL_COOKIE_NAME];
+  if (parsedCookies && typeof parsedCookies[PORTAL_COOKIE_NAME] === 'string') {
+    return parsedCookies[PORTAL_COOKIE_NAME];
+  }
+
+  const rawCookieHeader = request.headers?.cookie;
+
+  if (typeof rawCookieHeader !== 'string') {
+    return null;
+  }
+
+  for (const part of rawCookieHeader.split(';')) {
+    const eq = part.indexOf('=');
+
+    if (eq === -1) continue;
+
+    const name = part.slice(0, eq).trim();
+    const value = part.slice(eq + 1).trim();
+
+    if (name === PORTAL_COOKIE_NAME) {
+      try {
+        return decodeURIComponent(value);
+      } catch {
+        return value;
+      }
+    }
   }
 
   return null;
