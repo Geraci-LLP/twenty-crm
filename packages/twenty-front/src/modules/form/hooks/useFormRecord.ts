@@ -33,6 +33,7 @@ type FormRecord = ObjectRecord & {
   rateLimitPerMinute: number | null;
   allowedOrigins: string[] | null;
   rejectDisposableEmails: boolean;
+  submitButtonLabel: string | null;
 };
 
 export const useFormRecord = ({ formId }: { formId: string }) => {

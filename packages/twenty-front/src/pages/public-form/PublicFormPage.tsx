@@ -19,6 +19,7 @@ type FormSchema = {
   fields: WorkflowFormActionField[];
   thankYouMessage: string | null;
   redirectUrl: string | null;
+  submitButtonLabel: string | null;
 };
 
 type FormState = 'loading' | 'ready' | 'submitting' | 'success' | 'error';
@@ -400,7 +401,9 @@ export const PublicFormPage = () => {
           onClick={onSubmit}
           disabled={formState === 'submitting'}
         >
-          {formState === 'submitting' ? 'Submitting...' : 'Submit'}
+          {formState === 'submitting'
+            ? 'Submitting...'
+            : (formSchema?.submitButtonLabel ?? 'Submit')}
         </StyledSubmitButton>
       </StyledFormCard>
     </StyledPageContainer>

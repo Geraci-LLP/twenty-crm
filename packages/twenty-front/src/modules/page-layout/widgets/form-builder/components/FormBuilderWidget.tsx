@@ -1,8 +1,11 @@
-import { FormBuilder } from '@/form/components/FormBuilder';
 import { FormEmbedSnippet } from '@/form/components/FormEmbedSnippet';
-import { FormPreview } from '@/form/components/FormPreview';
 import { FormPublicUrlDisplay } from '@/form/components/FormPublicUrlDisplay';
 import { FormSettings } from '@/form/components/FormSettings';
+import { FormBuilderCanvas } from '@/form/components/v2/FormBuilderCanvas';
+import {
+  migrateToFormContents,
+} from '@/form/components/v2/defaults';
+import { type FormContents } from '@/form/components/v2/types';
 import { useFormRecord } from '@/form/hooks/useFormRecord';
 import { TabList } from '@/ui/layout/tab-list/components/TabList';
 import { useTargetRecord } from '@/ui/layout/contexts/useTargetRecord';
@@ -10,8 +13,9 @@ import { activeTabIdComponentState } from '@/ui/layout/tab-list/states/activeTab
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { styled } from '@linaria/react';
 import { useLingui } from '@lingui/react/macro';
+import { useMemo } from 'react';
 import { isDefined } from 'twenty-shared/utils';
-import { IconEye, IconPencil, IconSettings } from 'twenty-ui/display';
+import { IconPencil, IconSettings } from 'twenty-ui/display';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 const FORM_BUILDER_TAB_LIST_ID = 'form-builder-tabs';
@@ -20,12 +24,16 @@ const StyledFormBuilderWidgetContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: auto;
+  min-height: 700px;
+  overflow: hidden;
 `;
 
 const StyledTabContent = styled.div`
+  display: flex;
   flex: 1;
-  overflow: auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 `;
 
 const StyledPublicUrlContainer = styled.div`
@@ -51,24 +59,24 @@ export const FormBuilderWidget = () => {
     },
   );
 
+  // Normalize legacy {id, name, type, ...}[] to FormContents on read.
+  // Persisting the new shape happens on the next save via
+  // updateFieldsConfig — until then, the canvas works against the
+  // migrated copy in memory.
+  const contents: FormContents = useMemo(
+    () => migrateToFormContents(formRecord?.fieldsConfig),
+    [formRecord?.fieldsConfig],
+  );
+
   if (loading || !isDefined(formRecord)) {
     return null;
   }
-
-  const fields = Array.isArray(formRecord.fieldsConfig)
-    ? formRecord.fieldsConfig
-    : [];
 
   const tabs = [
     {
       id: 'builder',
       title: t`Builder`,
       Icon: IconPencil,
-    },
-    {
-      id: 'preview',
-      title: t`Preview`,
-      Icon: IconEye,
     },
     {
       id: 'settings',
@@ -94,14 +102,13 @@ export const FormBuilderWidget = () => {
         )}
 
         {(activeTabId === 'builder' || !isDefined(activeTabId)) && (
-          <FormBuilder fields={fields} onFieldsChange={updateFieldsConfig} />
-        )}
-
-        {activeTabId === 'preview' && (
-          <FormPreview
-            fields={fields}
-            formName={formRecord.name}
-            formDescription={formRecord.description ?? undefined}
+          <FormBuilderCanvas
+            contents={contents}
+            onChange={(next) =>
+              updateFieldsConfig(
+                next as unknown as Parameters<typeof updateFieldsConfig>[0],
+              )
+            }
           />
         )}
 

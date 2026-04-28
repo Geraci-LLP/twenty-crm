@@ -14,6 +14,10 @@ export type FormPreviewProps = {
   fields: WorkflowFormActionField[];
   formName?: string;
   formDescription?: string;
+  // Custom submit button copy. Defaults to "Submit" when null /
+  // undefined. Mirrors PublicFormPage so the in-CRM preview matches
+  // what visitors will see.
+  submitButtonLabel?: string | null;
 };
 
 const StyledFormPreviewContainer = styled.div`
@@ -48,10 +52,29 @@ const StyledFieldsContainer = styled.div`
   gap: ${themeCssVariables.spacing[3]};
 `;
 
+/* oxlint-disable twenty/no-hardcoded-colors -- preview submit button
+   uses the brand orange so it visually matches what visitors will
+   see on the public form (which is also brand-colored). */
+const StyledSubmitButtonPreview = styled.button`
+  background: #ff7a59;
+  border: 0;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: not-allowed;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: ${themeCssVariables.spacing[2]};
+  padding: 10px 24px;
+  width: 100%;
+`;
+/* oxlint-enable twenty/no-hardcoded-colors */
+
 export const FormPreview = ({
   fields,
   formName,
   formDescription,
+  submitButtonLabel,
 }: FormPreviewProps) => {
   const { t } = useLingui();
 
@@ -100,6 +123,13 @@ export const FormPreview = ({
               />
             </FormFieldInputContainer>
           ))}
+        <StyledSubmitButtonPreview type="button" disabled>
+          {submitButtonLabel !== undefined &&
+          submitButtonLabel !== null &&
+          submitButtonLabel.trim() !== ''
+            ? submitButtonLabel
+            : t`Submit`}
+        </StyledSubmitButtonPreview>
       </StyledFieldsContainer>
     </StyledFormPreviewContainer>
   );
