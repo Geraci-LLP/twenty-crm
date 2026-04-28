@@ -124,4 +124,16 @@ export const buildNoteTargetStandardFlatIndexMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  quoteIdIndex: createStandardIndexFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      indexName: 'quoteIdIndex',
+      relatedFieldNames: ['targetQuote'],
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
 });

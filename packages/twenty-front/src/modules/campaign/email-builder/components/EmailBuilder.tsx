@@ -1,3 +1,7 @@
+/* oxlint-disable twenty/no-hardcoded-colors */
+// Email builder previews HTML output that targets external email clients,
+// which require literal hex colors instead of theme CSS variables.
+
 import { styled } from '@linaria/react';
 import {
   Fragment,

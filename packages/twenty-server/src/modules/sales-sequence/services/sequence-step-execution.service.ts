@@ -280,14 +280,16 @@ export class SequenceStepExecutionService {
 
         const firstName = person.name?.firstName ?? '';
         const lastName = person.name?.lastName ?? '';
-        const company = (person as { company?: CompanyWorkspaceEntity }).company;
+        const company = (person as { company?: CompanyWorkspaceEntity })
+          .company;
 
         const baseUrl = process.env.SERVER_URL ?? '';
-        const unsubscribeLink = CampaignWebhookController.generateSequenceUnsubscribeUrl(
-          enrollment.id,
-          workspaceId,
-          baseUrl,
-        );
+        const unsubscribeLink =
+          CampaignWebhookController.generateSequenceUnsubscribeUrl(
+            enrollment.id,
+            workspaceId,
+            baseUrl,
+          );
 
         const tokens = {
           firstName,
@@ -304,8 +306,10 @@ export class SequenceStepExecutionService {
         // Append unsubscribe footer if the body doesn't already include the token.
         // CAN-SPAM requires a clear unsubscribe mechanism in every commercial email.
         let bodyTemplate = step.bodyHtml ?? '';
-        if (!bodyTemplate.includes('{{unsubscribe_link}}') &&
-            !bodyTemplate.includes('{{ unsubscribe_link }}')) {
+        if (
+          !bodyTemplate.includes('{{unsubscribe_link}}') &&
+          !bodyTemplate.includes('{{ unsubscribe_link }}')
+        ) {
           bodyTemplate += SEQUENCE_UNSUBSCRIBE_FOOTER_TEMPLATE;
         }
         const htmlContent = this.substitute(bodyTemplate, tokens);
@@ -382,7 +386,10 @@ export class SequenceStepExecutionService {
     out = out.replace(/\{\{\s*contact\.jobTitle\s*\}\}/g, vars.jobTitle);
     out = out.replace(/\{\{\s*contact\.city\s*\}\}/g, vars.city);
     out = out.replace(/\{\{\s*contact\.companyName\s*\}\}/g, vars.companyName);
-    out = out.replace(/\{\{\s*unsubscribe_link\s*\}\}/g, vars.unsubscribeLink ?? '');
+    out = out.replace(
+      /\{\{\s*unsubscribe_link\s*\}\}/g,
+      vars.unsubscribeLink ?? '',
+    );
     return out;
   }
 

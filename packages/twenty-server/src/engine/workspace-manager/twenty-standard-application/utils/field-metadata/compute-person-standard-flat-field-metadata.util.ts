@@ -702,6 +702,31 @@ export const buildPersonStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  quotes: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'quotes',
+      label: i18nLabel(msg`Quotes`),
+      description: i18nLabel(
+        msg`Quotes where the person is the point of contact`,
+      ),
+      icon: 'IconFileDollar',
+      isUIReadOnly: true,
+      isNullable: true,
+      targetObjectName: 'quote',
+      targetFieldName: 'pointOfContact',
+      settings: {
+        relationType: RelationType.ONE_TO_MANY,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   searchVector: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,

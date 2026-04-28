@@ -4,6 +4,7 @@ import { type FlatApiKey } from 'src/engine/core-modules/api-key/types/flat-api-
 import { type FlatAuthContextUser } from 'src/engine/core-modules/auth/types/flat-auth-context-user.type';
 import { type FlatUserWorkspace } from 'src/engine/core-modules/user-workspace/types/flat-user-workspace.type';
 import { type FlatWorkspace } from 'src/engine/core-modules/workspace/types/flat-workspace.type';
+import { type WorkspaceEntity } from 'src/engine/core-modules/workspace/workspace.entity';
 import { type WorkspaceMemberWorkspaceEntity } from 'src/modules/workspace-member/standard-objects/workspace-member.workspace-entity';
 
 export { AUTH_CONTEXT_USER_SELECT_FIELDS } from 'src/engine/core-modules/auth/constants/auth-context-user-select-fields.constants';
@@ -25,8 +26,19 @@ export type RawAuthContext = {
   };
 };
 
+export type PortalUserWorkspaceAuthContext = {
+  type: 'portalUser';
+  portalUserId: string;
+  workspaceId: string;
+  personId: string | null;
+  email: string;
+  workspace: WorkspaceEntity;
+};
+
 // @deprecated Use WorkspaceAuthContext instead
 export type AuthContext = RawAuthContext;
+
+export type AnyAuthContext = AuthContext | PortalUserWorkspaceAuthContext;
 
 export type SerializableAuthContext = {
   userId?: string;
@@ -34,6 +46,15 @@ export type SerializableAuthContext = {
   workspaceMemberId?: string;
   apiKeyId?: string;
   applicationId?: string;
+};
+
+export type PortalUserJwtPayload = {
+  sub: string;
+  type: 'portalUser';
+  portalUserId: string;
+  workspaceId: string;
+  personId: string | null;
+  email: string;
 };
 
 export enum JwtTokenTypeEnum {

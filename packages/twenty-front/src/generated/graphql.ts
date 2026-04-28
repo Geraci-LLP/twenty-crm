@@ -121,6 +121,7 @@ export enum MessageChannelVisibility {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptMyQuote: PortalQuote;
   activateWorkflowVersion: Scalars['Boolean'];
   computeStepOutputSchema: Scalars['JSON'];
   createDraftFromWorkflowVersion: WorkflowVersionDto;
@@ -133,6 +134,7 @@ export type Mutation = {
   dismissReconnectAccountBanner: Scalars['Boolean'];
   duplicateWorkflow: WorkflowVersionDto;
   duplicateWorkflowVersionStep: WorkflowVersionStepChanges;
+  rejectMyQuote: PortalQuote;
   runWorkflowVersion: RunWorkflowVersion;
   stopWorkflowRun: WorkflowRun;
   submitFormStep: Scalars['Boolean'];
@@ -140,6 +142,12 @@ export type Mutation = {
   updateWorkflowRunStep: WorkflowAction;
   updateWorkflowVersionPositions: Scalars['Boolean'];
   updateWorkflowVersionStep: WorkflowAction;
+};
+
+
+export type MutationAcceptMyQuoteArgs = {
+  id: Scalars['String'];
+  signatureText?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -198,6 +206,12 @@ export type MutationDuplicateWorkflowVersionStepArgs = {
 };
 
 
+export type MutationRejectMyQuoteArgs = {
+  id: Scalars['String'];
+  reason?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationRunWorkflowVersionArgs = {
   input: RunWorkflowVersionInput;
 };
@@ -242,6 +256,94 @@ export type ObjectRecordFilterInput = {
   updatedAt?: InputMaybe<DateTimeFilter>;
 };
 
+export type PortalCompany = {
+  __typename?: 'PortalCompany';
+  address?: Maybe<Scalars['String']>;
+  domainName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type PortalDocument = {
+  __typename?: 'PortalDocument';
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  sharedAt?: Maybe<Scalars['DateTime']>;
+  sharingLinkId?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  viewCount?: Maybe<Scalars['Int']>;
+  workspaceId?: Maybe<Scalars['String']>;
+};
+
+export type PortalOpportunity = {
+  __typename?: 'PortalOpportunity';
+  amount?: Maybe<Scalars['Float']>;
+  closeDate?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  stage?: Maybe<Scalars['String']>;
+};
+
+export type PortalProfile = {
+  __typename?: 'PortalProfile';
+  email: Scalars['String'];
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  personId?: Maybe<Scalars['String']>;
+  workspaceId: Scalars['String'];
+};
+
+export type PortalQuote = {
+  __typename?: 'PortalQuote';
+  acceptedAt?: Maybe<Scalars['DateTime']>;
+  clientSignature?: Maybe<Scalars['String']>;
+  company?: Maybe<PortalQuoteCompany>;
+  currency?: Maybe<Scalars['String']>;
+  discount?: Maybe<Scalars['Float']>;
+  expiryDate?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  issueDate?: Maybe<Scalars['DateTime']>;
+  lineItems?: Maybe<Array<PortalQuoteLineItem>>;
+  name?: Maybe<Scalars['String']>;
+  notes?: Maybe<Scalars['String']>;
+  pointOfContact?: Maybe<PortalQuoteContact>;
+  quoteNumber?: Maybe<Scalars['String']>;
+  rejectedAt?: Maybe<Scalars['DateTime']>;
+  rejectionReason?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  subtotal?: Maybe<Scalars['Float']>;
+  taxAmount?: Maybe<Scalars['Float']>;
+  taxRate?: Maybe<Scalars['Float']>;
+  terms?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Float']>;
+  workspaceId?: Maybe<Scalars['String']>;
+};
+
+export type PortalQuoteCompany = {
+  __typename?: 'PortalQuoteCompany';
+  name?: Maybe<Scalars['String']>;
+};
+
+export type PortalQuoteContact = {
+  __typename?: 'PortalQuoteContact';
+  email?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type PortalQuoteLineItem = {
+  __typename?: 'PortalQuoteLineItem';
+  description?: Maybe<Scalars['String']>;
+  discount?: Maybe<Scalars['Float']>;
+  id: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
+  position?: Maybe<Scalars['Int']>;
+  quantity?: Maybe<Scalars['Float']>;
+  total?: Maybe<Scalars['Float']>;
+  unitPrice?: Maybe<Scalars['Float']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getTimelineCalendarEventsFromCompanyId: TimelineCalendarEventsWithTotal;
@@ -251,6 +353,12 @@ export type Query = {
   getTimelineThreadsFromOpportunityId: TimelineThreadsWithTotal;
   getTimelineThreadsFromPersonId: TimelineThreadsWithTotal;
   isMaintenanceModeBannerDismissed: Scalars['Boolean'];
+  myCompany?: Maybe<PortalCompany>;
+  myDocuments: Array<PortalDocument>;
+  myOpportunities: Array<PortalOpportunity>;
+  myProfile: PortalProfile;
+  myQuote?: Maybe<PortalQuote>;
+  myQuotes: Array<PortalQuote>;
   search: SearchResultConnection;
 };
 
@@ -294,6 +402,11 @@ export type QueryGetTimelineThreadsFromPersonIdArgs = {
   page: Scalars['Int'];
   pageSize: Scalars['Int'];
   personId: Scalars['UUID'];
+};
+
+
+export type QueryMyQuoteArgs = {
+  id: Scalars['String'];
 };
 
 

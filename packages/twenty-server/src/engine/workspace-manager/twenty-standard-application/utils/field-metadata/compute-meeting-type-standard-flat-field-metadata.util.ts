@@ -216,6 +216,23 @@ export const buildMeetingTypeStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  description: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'description',
+      type: FieldMetadataType.TEXT,
+      label: i18nLabel(msg`Description`),
+      description: i18nLabel(msg`Description of the meeting type`),
+      icon: 'IconFileDescription',
+      isNullable: true,
+      defaultValue: "''",
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   durationMinutes: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,

@@ -53,6 +53,26 @@ export const usePageChangeEffectNavigateLocation = () => {
     ? returnToPath
     : readReturnToPathFromUrlSearchParams();
 
+  // Public and portal paths handle their own auth (or are intentionally public).
+  // The main-app token check below would otherwise hijack them and bounce to /welcome.
+  const isOnPublicOrPortalPath = someMatchingLocationOf([
+    AppPath.PublicForm,
+    AppPath.PublicLandingPage,
+    AppPath.PublicBooking,
+    AppPath.PublicDocument,
+    AppPath.PublicQuote,
+    AppPath.PortalLogin,
+    AppPath.PortalVerify,
+    AppPath.Portal,
+    AppPath.PortalQuotes,
+    AppPath.PortalQuoteDetail,
+    AppPath.PortalDocuments,
+  ]);
+
+  if (isOnPublicOrPortalPath) {
+    return;
+  }
+
   if (
     (!hasAccessTokenPair || (hasAccessTokenPair && !isOnAWorkspace)) &&
     !someMatchingLocationOf([

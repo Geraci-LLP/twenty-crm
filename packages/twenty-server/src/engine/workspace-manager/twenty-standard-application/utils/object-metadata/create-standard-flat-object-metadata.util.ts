@@ -1109,6 +1109,61 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  quote: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'quote'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'quote',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.quote.universalIdentifier,
+        nameSingular: 'quote',
+        namePlural: 'quotes',
+        labelSingular: i18nLabel(msg`Quote`),
+        labelPlural: i18nLabel(msg`Quotes`),
+        description: i18nLabel(msg`A sales quote`),
+        icon: 'IconFileDollar',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  quoteLineItem: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'quoteLineItem'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'quoteLineItem',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.quoteLineItem.universalIdentifier,
+        nameSingular: 'quoteLineItem',
+        namePlural: 'quoteLineItems',
+        labelSingular: i18nLabel(msg`Quote Line Item`),
+        labelPlural: i18nLabel(msg`Quote Line Items`),
+        description: i18nLabel(msg`A line item on a quote`),
+        icon: 'IconListDetails',
+        isSystem: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   sequence: ({
     now,
     workspaceId,

@@ -1,0 +1,8 @@
+# Next.js build artifacts
+.next/
+out/
+next-env.d.ts
+
+# Local env (do not commit secrets / dev URLs)
+.env.local
+.env.*.local

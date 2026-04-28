@@ -22,6 +22,11 @@ const jestConfig = {
   setupFilesAfterEnv: ['./setupTests.ts'],
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {},
+  // Several Apollo MockedProvider tests (useCreateManyRecords, useFieldMetadataItem,
+  // useOpenObjectRecordsSpreadsheetImportDialog, etc.) sit at ~5–6s on Linux
+  // CI runners under load — the default 5s jest timeout makes them coin-flip
+  // flaky. Bumping to 15s gives headroom without masking real hangs.
+  testTimeout: 15000,
 
   transformIgnorePatterns: [
     '/node_modules/(?!(twenty-ui|apollo-upload-client|extract-files|is-plain-obj)/.*)',

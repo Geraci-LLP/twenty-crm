@@ -1,3 +1,6 @@
+/* oxlint-disable twenty/component-props-naming */
+// Generic 'Props' type matches sibling email-builder module editors.
+
 import { styled } from '@linaria/react';
 import { useCallback } from 'react';
 

@@ -37,6 +37,18 @@ export enum AppPath {
   PublicLandingPage = '/lp/:workspaceId/:slug',
   PublicBooking = '/book/:workspaceId/:meetingTypeId',
   PublicDocument = '/docs/:workspaceId/:slug',
+  PublicQuote = '/q/:workspaceId/:slug',
+
+  // Client portal (separate auth)
+  Portal = '/portal',
+  PortalLogin = '/portal/login',
+  PortalVerify = '/portal/verify',
+  PortalQuotes = '/portal/quotes',
+  PortalQuoteDetail = '/portal/quotes/:id',
+  PortalDocuments = '/portal/documents',
+
+  // Dashboard redirect
+  DashboardRedirect = '/dashboard-redirect',
 
   // 404 page not found
   NotFoundWildcard = '*',

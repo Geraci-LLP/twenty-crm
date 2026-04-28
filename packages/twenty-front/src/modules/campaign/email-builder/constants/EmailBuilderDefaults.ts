@@ -1,3 +1,8 @@
+/* oxlint-disable twenty/max-consts-per-file */
+/* oxlint-disable twenty/no-hardcoded-colors */
+// Default templates use literal hex colors so generated email HTML renders
+// identically across mail clients that don't resolve theme CSS variables.
+
 import {
   type ButtonModule,
   type ColumnLayout,

@@ -8,11 +8,29 @@ const FIELD_NAME_PATTERNS: Record<keyof LeadInput, RegExp[]> = {
   email: [/^email$/, /^emailaddress$/, /^primaryemail$/, /^workemail$/],
   firstName: [/^firstname$/, /^givenname$/, /^fname$/],
   lastName: [/^lastname$/, /^surname$/, /^familyname$/, /^lname$/],
-  phone: [/^phone$/, /^phonenumber$/, /^primaryphone$/, /^mobile$/, /^mobilephone$/, /^cellphone$/],
+  phone: [
+    /^phone$/,
+    /^phonenumber$/,
+    /^primaryphone$/,
+    /^mobile$/,
+    /^mobilephone$/,
+    /^cellphone$/,
+  ],
   jobTitle: [/^jobtitle$/, /^title$/, /^role$/, /^position$/],
   city: [/^city$/, /^town$/],
-  linkedinUrl: [/^linkedin$/, /^linkedinurl$/, /^linkedinlink$/, /^linkedinprofile$/],
-  twitterHandle: [/^twitter$/, /^twitterhandle$/, /^twitterusername$/, /^xhandle$/, /^xusername$/],
+  linkedinUrl: [
+    /^linkedin$/,
+    /^linkedinurl$/,
+    /^linkedinlink$/,
+    /^linkedinprofile$/,
+  ],
+  twitterHandle: [
+    /^twitter$/,
+    /^twitterhandle$/,
+    /^twitterusername$/,
+    /^xhandle$/,
+    /^xusername$/,
+  ],
   source: [/^source$/, /^leadsource$/, /^utmsource$/],
 };
 
@@ -25,7 +43,8 @@ export const mapFieldsToLeadInput = (
   const result: Partial<LeadInput> = {};
 
   for (const [rawKey, rawValue] of Object.entries(values)) {
-    if (rawValue === null || rawValue === undefined || rawValue === '') continue;
+    if (rawValue === null || rawValue === undefined || rawValue === '')
+      continue;
     const value = String(rawValue).trim();
     if (value === '') continue;
     const normalized = normalizeKey(rawKey);
@@ -47,7 +66,10 @@ export const mapFieldsToLeadInput = (
 // Twenty's PHONES validates as E.164. Coerce common US formats; return null if we can't
 // make sense of the value (caller should drop the phone rather than reject the lead).
 export const normalizePhoneToE164 = (raw: string): string | null => {
-  let s = raw.trim().replace(/^tel:/i, '').replace(/\s*x\d+$/i, '');
+  let s = raw
+    .trim()
+    .replace(/^tel:/i, '')
+    .replace(/\s*x\d+$/i, '');
   const hasPlus = s.startsWith('+');
   const digits = s.replace(/\D/g, '');
   if (digits.length === 10) return '+1' + digits;

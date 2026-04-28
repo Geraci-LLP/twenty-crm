@@ -43,7 +43,10 @@ export class InboundLeadController {
   ) {
     const workspaceId = request.workspaceId;
     if (!workspaceId) {
-      throw new HttpException('Workspace context missing', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Workspace context missing',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const leadInput: LeadInput | null = isStructuredLead(body)

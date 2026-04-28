@@ -6,6 +6,7 @@ import { type EntityRelation } from 'src/engine/workspace-manager/workspace-migr
 import { type TrackedDocumentWorkspaceEntity } from 'src/modules/document-tracking/standard-objects/tracked-document.workspace-entity';
 import { type DocumentViewWorkspaceEntity } from 'src/modules/document-tracking/standard-objects/document-view.workspace-entity';
 import { type PersonWorkspaceEntity } from 'src/modules/person/standard-objects/person.workspace-entity';
+import { type QuoteWorkspaceEntity } from 'src/modules/quotes/standard-objects/quote.workspace-entity';
 
 const SLUG_FIELD_NAME = 'slug';
 
@@ -23,5 +24,8 @@ export class DocumentSharingLinkWorkspaceEntity extends BaseWorkspaceEntity {
   trackedDocument: EntityRelation<TrackedDocumentWorkspaceEntity>;
   person: EntityRelation<PersonWorkspaceEntity>;
   documentViews: EntityRelation<DocumentViewWorkspaceEntity[]>;
+  targetQuote: EntityRelation<QuoteWorkspaceEntity> | null;
+  quoteId: string | null;
+  targetType: 'DOCUMENT' | 'QUOTE';
   searchVector: string;
 }

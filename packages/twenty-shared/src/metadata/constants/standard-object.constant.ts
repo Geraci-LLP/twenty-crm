@@ -68,6 +68,9 @@ export const STANDARD_OBJECTS = {
       targetSequence: {
         universalIdentifier: 'd027539a-edcc-4e6a-bd20-bda638747418',
       },
+      targetQuote: {
+        universalIdentifier: '7a451285-7f2c-4ffd-b1a4-9a0525aa53eb',
+      },
       position: {
         universalIdentifier: 'cef8f62c-cd46-4444-8cbb-17d463b7464a',
       },
@@ -114,6 +117,9 @@ export const STANDARD_OBJECTS = {
       },
       sequenceIdIndex: {
         universalIdentifier: '182e7c9f-7c27-473e-be11-2feca4960f0b',
+      },
+      quoteIdIndex: {
+        universalIdentifier: 'a7cd0581-ca28-4ef0-84bb-a11e2e06327d',
       },
     },
     views: {
@@ -739,6 +745,9 @@ export const STANDARD_OBJECTS = {
       },
       timelineActivities: {
         universalIdentifier: '20202020-0414-4daf-9c0d-64fe7b27f89f',
+      },
+      quotes: {
+        universalIdentifier: '10e0965b-2a47-4289-8eb3-0d318ee6bdce',
       },
       searchVector: {
         universalIdentifier: '85c71601-72f9-4b7b-b343-d46100b2c74d',
@@ -2120,6 +2129,9 @@ export const STANDARD_OBJECTS = {
       targetSequence: {
         universalIdentifier: '63eb182a-5a4c-496f-a1e9-1d6992a25348',
       },
+      targetQuote: {
+        universalIdentifier: 'f9117215-5dcf-4d71-8f0a-8a93b2cc7d28',
+      },
       createdBy: {
         universalIdentifier: '820a3163-bb7d-41bc-93d9-81a464559c48',
       },
@@ -2163,6 +2175,9 @@ export const STANDARD_OBJECTS = {
       },
       sequenceIdIndex: {
         universalIdentifier: '911ed1d8-33d0-4a44-a6a7-7495ab1d9065',
+      },
+      quoteIdIndex: {
+        universalIdentifier: 'aa145f9c-6af4-4c27-a104-e89968ee2816',
       },
     },
     views: {
@@ -2235,6 +2250,9 @@ export const STANDARD_OBJECTS = {
       },
       timelineActivities: {
         universalIdentifier: '20202020-30e2-421f-96c7-19c69d1cf631',
+      },
+      quotes: {
+        universalIdentifier: '7ec6959a-cb6c-42ba-97c3-a776a42b021e',
       },
       searchVector: {
         universalIdentifier: '428a0da5-4b2e-4ce3-b695-89a8b384e6e3',
@@ -2462,6 +2480,9 @@ export const STANDARD_OBJECTS = {
       sequenceEnrollments: {
         universalIdentifier: '9dd5d2d4-0f17-40f1-8769-005de3530a0d',
       },
+      quotes: {
+        universalIdentifier: '6d24a795-62d5-4eb4-85e1-d9fef6c11d7d',
+      },
       searchVector: {
         universalIdentifier: '57d1d7ad-fa10-44fc-82f3-ad0959ec2534',
       },
@@ -2589,6 +2610,214 @@ export const STANDARD_OBJECTS = {
           },
           timelineActivities: {
             universalIdentifier: '20202020-af02-4a02-8a02-ae0a1ea1221c',
+          },
+        },
+      },
+    },
+  },
+  quote: {
+    universalIdentifier: 'a8b190de-d5a5-48e2-a5df-32aca76116ac',
+    fields: {
+      id: { universalIdentifier: '741da3d5-ee2b-4164-88d6-83f34f9bb2fe' },
+      createdAt: {
+        universalIdentifier: 'a40db1e6-0b49-4db3-8cd8-0b903d7f9726',
+      },
+      updatedAt: {
+        universalIdentifier: 'dce7631d-79cd-44e8-b844-4c8f0af6c9f9',
+      },
+      deletedAt: {
+        universalIdentifier: '9a268b1c-dc1b-4dbf-9a80-25e7ce425521',
+      },
+      name: { universalIdentifier: '6ef774f3-bc33-4e5e-b1e4-7934e936fc33' },
+      quoteNumber: {
+        universalIdentifier: 'b8d36a53-ca63-4dcc-84b1-8aecf16b2833',
+      },
+      status: { universalIdentifier: '45b72c86-1261-4827-b67f-8ca29a7510b5' },
+      issueDate: {
+        universalIdentifier: 'a57f51ee-1598-4703-aaf1-f45887934b4e',
+      },
+      expiryDate: {
+        universalIdentifier: 'c2864468-d827-4bf2-be4e-91c7f7ef9846',
+      },
+      acceptedAt: {
+        universalIdentifier: '463530d2-18e7-427e-ad8c-8a0d3d8cae4c',
+      },
+      rejectedAt: {
+        universalIdentifier: '2591100a-2a16-4d4f-bea4-10d59db2a598',
+      },
+      subtotal: {
+        universalIdentifier: '73c57e04-7227-4af1-8ce9-95acd5fa2b3b',
+      },
+      taxAmount: {
+        universalIdentifier: '12296e3d-2c1f-4d83-9f54-9defc177c521',
+      },
+      discount: {
+        universalIdentifier: 'c87c43bb-6c4c-4ad1-8293-4f85b1d64a14',
+      },
+      total: { universalIdentifier: '02c787cb-1efa-4e25-999f-5dea922292b8' },
+      taxRate: { universalIdentifier: '82ebaf6f-dfaa-4f41-be2b-faf46ee8ed98' },
+      notes: { universalIdentifier: 'd963e928-f8a6-4193-8569-babf77872576' },
+      terms: { universalIdentifier: '742edf99-2e8c-4724-a991-256bfeb773b9' },
+      rejectionReason: {
+        universalIdentifier: '589a9512-5756-4b3b-9841-4743d39c5940',
+      },
+      clientSignature: {
+        universalIdentifier: 'b706eeb1-2540-4065-adc0-a26cabfda261',
+      },
+      currency: {
+        universalIdentifier: 'aacf8184-0094-43c6-a07d-4329fa089e77',
+      },
+      position: {
+        universalIdentifier: '348d647c-e5bb-4432-8b68-edfc0866e7d2',
+      },
+      searchVector: {
+        universalIdentifier: '9e6eb612-235a-417e-90ed-c888336259ae',
+      },
+      createdBy: {
+        universalIdentifier: '1701aca3-01d0-4404-b63a-071e089277d8',
+      },
+      updatedBy: {
+        universalIdentifier: '6b184ad9-1db9-4933-9a6f-8ea81f0754ee',
+      },
+      opportunity: {
+        universalIdentifier: 'f3887f24-7dbf-4be4-8d3b-fccb0bda8b77',
+      },
+      company: { universalIdentifier: 'a438f2a2-9c9d-4248-b965-0dbb88027153' },
+      pointOfContact: {
+        universalIdentifier: '531a25e6-9331-4ec4-9d5a-8b6e98a4ff16',
+      },
+      lineItems: {
+        universalIdentifier: '79dd3b46-ecb1-4bef-9b97-9aadd33e167a',
+      },
+      sharingLinks: {
+        universalIdentifier: 'fff15d82-bced-4a21-8dac-3bb43e0640bf',
+      },
+      noteTargets: {
+        universalIdentifier: '564addfc-3ead-44b2-9f9b-ad85345c758e',
+      },
+      taskTargets: {
+        universalIdentifier: '89b629b9-a0f1-4b1a-ae80-bf0ed78f72cf',
+      },
+      attachments: {
+        universalIdentifier: 'd480d498-6602-4f07-80d3-1b93719bf0f5',
+      },
+    },
+    indexes: {
+      quoteNumberIndex: {
+        universalIdentifier: '0da1a4f1-cc11-42c1-890f-164d86815e85',
+      },
+      opportunityIdIndex: {
+        universalIdentifier: '73d04fa8-ea6b-4101-8c4d-784e695cce57',
+      },
+      companyIdIndex: {
+        universalIdentifier: '4680f8fe-519c-4ca7-a7c2-1916eca8d083',
+      },
+      pointOfContactIdIndex: {
+        universalIdentifier: 'a45a041e-4095-4791-b078-50afb059a1ef',
+      },
+    },
+    views: {
+      allQuotes: {
+        universalIdentifier: 'd8a0a820-723e-4c9d-9305-ed8c80b5c1cc',
+        viewFields: {
+          name: {
+            universalIdentifier: '38f177ec-8663-4ab6-ad6c-caa63d0f218a',
+          },
+          quoteNumber: {
+            universalIdentifier: '6f80fbf2-ee24-4cf2-aa1e-cbae35de7866',
+          },
+          status: {
+            universalIdentifier: 'd32d1b85-17ae-4b47-bcaa-530565b6d04e',
+          },
+          issueDate: {
+            universalIdentifier: '7f132cb4-1472-472a-9b0d-2070d5231dd4',
+          },
+          expiryDate: {
+            universalIdentifier: '266978d7-806c-46b2-9e43-da00d1be6688',
+          },
+          total: {
+            universalIdentifier: 'e6c8555e-b279-4e2c-a1e2-c44dfc33aafa',
+          },
+          company: {
+            universalIdentifier: '942f5426-03fa-4b0e-b9d2-733c5d9dceb1',
+          },
+          pointOfContact: {
+            universalIdentifier: '949582f9-a455-4446-a3b2-a622b8486531',
+          },
+          createdAt: {
+            universalIdentifier: '69029b42-b229-45dd-945a-a1f21420278a',
+          },
+        },
+      },
+    },
+  },
+  quoteLineItem: {
+    universalIdentifier: '1f25542a-13d8-4b83-a3a3-b721536adfe2',
+    fields: {
+      id: { universalIdentifier: 'c5e92a58-5263-4af0-bb16-09ad5fda9376' },
+      createdAt: {
+        universalIdentifier: 'e3b561ce-5a73-4282-afcc-3520748cfa6e',
+      },
+      updatedAt: {
+        universalIdentifier: '66499e7a-8782-4f78-8767-1001ddf23ff8',
+      },
+      deletedAt: {
+        universalIdentifier: 'c08db08f-0b5f-46b4-b930-388a344f2d4f',
+      },
+      name: { universalIdentifier: '678d062c-b5b4-4fcb-ae5f-43e9f61776e7' },
+      description: {
+        universalIdentifier: 'ebba3c0c-0195-4bf9-8618-9e1f9b09b797',
+      },
+      quantity: {
+        universalIdentifier: '86bc4aa6-043a-47f2-9ef9-c8e75a699aab',
+      },
+      unitPrice: {
+        universalIdentifier: '9d8b8473-31cb-4188-91ab-0d3ea3a22c25',
+      },
+      discount: {
+        universalIdentifier: 'c82e5b1a-ef14-459f-aad3-e9304d772c14',
+      },
+      total: { universalIdentifier: '87d5a3a9-a3bb-451f-bfbf-6df231332b70' },
+      position: {
+        universalIdentifier: '4bae6ce0-7b00-4c51-89a7-02bc8efa7d96',
+      },
+      searchVector: {
+        universalIdentifier: 'd78c541e-7b3a-45e7-bdd1-4cae81fd8c25',
+      },
+      createdBy: {
+        universalIdentifier: '834dc94b-83f5-47ff-b114-2e94d70c5f59',
+      },
+      updatedBy: {
+        universalIdentifier: 'c0bed573-5884-481f-b4a5-b67c705287c2',
+      },
+      quote: { universalIdentifier: 'dbaa5e68-72e0-49e0-a9c4-371e247768df' },
+    },
+    indexes: {
+      quoteIdIndex: {
+        universalIdentifier: 'dbf3c16b-96b9-4a6e-bde4-e2d8b5b76ddc',
+      },
+    },
+    views: {
+      allQuoteLineItems: {
+        universalIdentifier: '95734c13-36e9-4ca2-879a-5ed28fef2a75',
+        viewFields: {
+          name: {
+            universalIdentifier: 'df44f43f-4e36-4ef3-b9b9-72e4231f2c3e',
+          },
+          description: {
+            universalIdentifier: '7a2095ee-eb42-40bb-a953-17ec299e9af5',
+          },
+          quantity: {
+            universalIdentifier: '57032b59-2daa-4031-82af-066f618c7a5b',
+          },
+          unitPrice: {
+            universalIdentifier: 'e050b3b5-bc7f-4aa4-91e6-5325e5cef15a',
+          },
+          total: {
+            universalIdentifier: 'fd45bd4a-babf-45db-ae39-deae51f5c088',
+          },
+          quote: {
+            universalIdentifier: 'c56d3cb2-9efc-429e-8e3d-4554cd8ee1c1',
           },
         },
       },
@@ -2838,6 +3067,9 @@ export const STANDARD_OBJECTS = {
       targetSequence: {
         universalIdentifier: 'dc2ebb71-f064-46d5-a004-bb2b8035ae09',
       },
+      targetQuote: {
+        universalIdentifier: 'c0639a62-c03d-45f6-b5d4-103f07028557',
+      },
       createdBy: {
         universalIdentifier: '65fe2a53-45e4-4225-9711-b827f55e51cc',
       },
@@ -2878,6 +3110,9 @@ export const STANDARD_OBJECTS = {
       },
       sequenceIdIndex: {
         universalIdentifier: '4030068c-4695-47ff-8b46-44954b3df3db',
+      },
+      quoteIdIndex: {
+        universalIdentifier: '2c714178-d9b5-4855-93c3-2f1a6aebe672',
       },
     },
     views: {
@@ -4384,6 +4619,12 @@ export const STANDARD_OBJECTS = {
         universalIdentifier: '9bf7bd5c-0774-4eb7-bc06-ff8a54d59c61',
       },
       person: { universalIdentifier: '625547e3-0fd6-4d26-97d8-5fe4dcfe82a7' },
+      targetQuote: {
+        universalIdentifier: '58e0aa88-debe-4918-bda2-2e1279d367f8',
+      },
+      targetType: {
+        universalIdentifier: '1a9a2e09-e7d6-4b8f-b216-1b9dc89bdcb5',
+      },
       documentViews: {
         universalIdentifier: '077b9a6e-e669-4b45-84ac-29c201a50004',
       },
@@ -4394,6 +4635,9 @@ export const STANDARD_OBJECTS = {
     indexes: {
       trackedDocumentIdIndex: {
         universalIdentifier: '0c15eb97-af45-4156-9707-0a736f90c6d4',
+      },
+      quoteIdIndex: {
+        universalIdentifier: '6a98276c-fbcf-4759-a9c5-25ccd106b0bc',
       },
       searchVectorGinIndex: {
         universalIdentifier: '1c77a4fe-ea59-459e-b601-b368ff4028e4',
@@ -4528,6 +4772,9 @@ export const STANDARD_OBJECTS = {
       },
       name: { universalIdentifier: 'd5c9e0f1-0213-4243-a475-8a9b0c1d2e3f' },
       slug: { universalIdentifier: 'e6d0f102-1324-4354-b586-9a0b1c2d3e4f' },
+      description: {
+        universalIdentifier: '82dcce94-fd81-4c70-8542-ba238e9bb196',
+      },
       durationMinutes: {
         universalIdentifier: 'f7e10213-2435-4465-8697-0a1b2c3d4e5f',
       },

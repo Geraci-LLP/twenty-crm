@@ -16,10 +16,10 @@ export type EmailDesign = {
 };
 
 export type EmailSettings = {
-  bodyBgColor: string;       // outer page background
-  contentBgColor: string;    // content area background
-  contentWidth: number;      // px, typical 600-720
-  fontFamily: string;        // CSS font-stack
+  bodyBgColor: string; // outer page background
+  contentBgColor: string; // content area background
+  contentWidth: number; // px, typical 600-720
+  fontFamily: string; // CSS font-stack
   defaultTextColor: string;
 };
 
@@ -27,10 +27,10 @@ export type ColumnLayout = '1' | '2' | '3' | '4' | '1-2' | '2-1';
 
 // Number of columns and their relative widths, in % of content width (after gutter).
 export const COLUMN_WIDTHS: Record<ColumnLayout, ReadonlyArray<number>> = {
-  '1':   [100],
-  '2':   [50, 50],
-  '3':   [33.33, 33.33, 33.33],
-  '4':   [25, 25, 25, 25],
+  '1': [100],
+  '2': [50, 50],
+  '3': [33.33, 33.33, 33.33],
+  '4': [25, 25, 25, 25],
   '1-2': [33.33, 66.66],
   '2-1': [66.66, 33.33],
 };
@@ -38,7 +38,7 @@ export const COLUMN_WIDTHS: Record<ColumnLayout, ReadonlyArray<number>> = {
 export type EmailSection = {
   id: string;
   layout: ColumnLayout;
-  alignment: 'top' | 'center' | 'bottom';   // vertical alignment within columns
+  alignment: 'top' | 'center' | 'bottom'; // vertical alignment within columns
   bgColor: string;
   paddingTop: number;
   paddingBottom: number;
@@ -90,7 +90,7 @@ export type HeadingModule = ModuleBase & {
   level: HeadingLevel;
   alignment: 'left' | 'center' | 'right';
   textColor: string;
-  fontWeight: number;        // 400-800
+  fontWeight: number; // 400-800
 };
 
 export type ButtonModule = ModuleBase & {
@@ -109,22 +109,22 @@ export type ImageModule = ModuleBase & {
   type: 'image';
   src: string;
   alt: string;
-  width: number;       // px
+  width: number; // px
   alignment: 'left' | 'center' | 'right';
-  href?: string;       // optional click-through link
+  href?: string; // optional click-through link
 };
 
 export type DividerModule = ModuleBase & {
   type: 'divider';
   color: string;
-  thickness: number;       // px, typically 1-4
+  thickness: number; // px, typically 1-4
   style: 'solid' | 'dashed' | 'dotted';
-  widthPercent: number;    // 1-100, divider's portion of the column
+  widthPercent: number; // 1-100, divider's portion of the column
 };
 
 export type SpacerModule = ModuleBase & {
   type: 'spacer';
-  height: number;          // px
+  height: number; // px
 };
 
 export type HtmlModule = ModuleBase & {
@@ -132,7 +132,12 @@ export type HtmlModule = ModuleBase & {
   rawHtml: string;
 };
 
-export type SocialPlatform = 'twitter' | 'linkedin' | 'facebook' | 'instagram' | 'youtube';
+export type SocialPlatform =
+  | 'twitter'
+  | 'linkedin'
+  | 'facebook'
+  | 'instagram'
+  | 'youtube';
 
 export type SocialLink = {
   platform: SocialPlatform;
@@ -142,8 +147,8 @@ export type SocialLink = {
 export type SocialModule = ModuleBase & {
   type: 'social';
   links: SocialLink[];
-  iconSize: number;        // px
-  spacing: number;         // px between icons
+  iconSize: number; // px
+  spacing: number; // px between icons
   alignment: 'left' | 'center' | 'right';
 };
 
