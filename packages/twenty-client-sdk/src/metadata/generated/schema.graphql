@@ -925,6 +925,8 @@ enum WidgetType {
   FRONT_COMPONENT
   RECORD_TABLE
   EMAIL_THREAD
+  SEQUENCE_CADENCE
+  MARKETING_CAMPAIGN_STATS
 }
 
 union PageLayoutWidgetPosition = PageLayoutWidgetGridPosition | PageLayoutWidgetVerticalListPosition | PageLayoutWidgetCanvasPosition
@@ -2083,6 +2085,11 @@ type RotateClientSecret {
   clientSecret: String!
 }
 
+type DashboardTokenDto {
+  token: String!
+  expiresAt: DateTime!
+}
+
 type ResendEmailVerificationToken {
   success: Boolean!
 }
@@ -2574,6 +2581,15 @@ type ImapSmtpCaldavConnectionSuccess {
   connectedAccountId: String!
 }
 
+type QuoteSharingLink {
+  id: String!
+  slug: String!
+  shareUrl: String!
+  isActive: Boolean!
+  recipientEmail: String
+  quoteId: String!
+}
+
 type PostgresCredentials {
   id: UUID!
   user: String!
@@ -2715,6 +2731,12 @@ type AgentMessagePart {
 
 type CampaignActionOutput {
   success: Boolean!
+  error: String
+}
+
+type CampaignPreviewLinkOutput {
+  success: Boolean!
+  url: String
   error: String
 }
 
@@ -3444,6 +3466,7 @@ type Mutation {
   deleteManyNavigationMenuItems(ids: [UUID!]!): [NavigationMenuItem!]!
   deleteNavigationMenuItem(id: UUID!): NavigationMenuItem!
   uploadAIChatFile(file: Upload!): FileWithSignedUrl!
+  uploadMarketingFile(file: Upload!): FileWithSignedUrl!
   uploadWorkflowFile(file: Upload!): FileWithSignedUrl!
   uploadWorkspaceLogo(file: Upload!): FileWithSignedUrl!
   uploadWorkspaceMemberProfilePicture(file: Upload!): FileWithSignedUrl!
@@ -3533,6 +3556,7 @@ type Mutation {
   resumeCampaign(input: ResumeCampaignInput!): CampaignActionOutput!
   sendTestEmail(input: SendTestEmailInput!): CampaignActionOutput!
   resolveRecipients(input: ResolveRecipientsInput!): ResolveRecipientsOutput!
+  generateCampaignPreviewLink(input: GenerateCampaignPreviewLinkInput!): CampaignPreviewLinkOutput!
   saveAsTemplate(input: SaveAsTemplateInput!): CampaignActionOutput!
   loadTemplate(input: LoadTemplateInput!): CampaignActionOutput!
   createDripCampaign(input: CreateDripCampaignInput!): CreateDripCampaignOutputDTO!
@@ -3578,6 +3602,7 @@ type Mutation {
   deactivateSkill(id: UUID!): Skill!
   evaluateAgentTurn(turnId: UUID!): AgentTurnEvaluation!
   runEvaluationInput(agentId: UUID!, input: String!): AgentTurn!
+  createQuoteSharingLink(quoteId: String!, recipientEmail: String): QuoteSharingLink!
   duplicateDashboard(id: UUID!): DuplicatedDashboard!
   getAuthorizationUrlForSSO(input: GetAuthorizationUrlForSSOInput!): GetAuthorizationUrlForSSO!
   getLoginTokenFromCredentials(email: String!, password: String!, captchaToken: String, locale: String, verifyEmailRedirectPath: String, origin: String!): LoginToken!
@@ -3595,6 +3620,7 @@ type Mutation {
   generateApiKeyToken(apiKeyId: UUID!, expiresAt: String!): ApiKeyToken!
   emailPasswordResetLink(email: String!, workspaceId: UUID): EmailPasswordResetLink!
   updatePasswordViaResetToken(passwordResetToken: String!, newPassword: String!): InvalidatePassword!
+  generateDashboardToken: DashboardTokenDto!
   createApplicationRegistration(input: CreateApplicationRegistrationInput!): CreateApplicationRegistration!
   updateApplicationRegistration(input: UpdateApplicationRegistrationInput!): ApplicationRegistration!
   deleteApplicationRegistration(id: String!): Boolean!
@@ -4259,6 +4285,10 @@ enum RecipientSelectionMode {
   MANUAL
 }
 
+input GenerateCampaignPreviewLinkInput {
+  campaignId: String!
+}
+
 input SaveAsTemplateInput {
   campaignId: String!
   templateName: String!
@@ -4734,6 +4764,7 @@ enum FileFolder {
   Workflow
   AppTarball
   GeneratedSdkClient
+  Marketing
 }
 
 type Subscription {

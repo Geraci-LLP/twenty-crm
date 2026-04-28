@@ -851,6 +851,13 @@ export type CampaignEditorConfiguration = {
   configurationType: WidgetConfigurationType;
 };
 
+export type CampaignPreviewLinkOutput = {
+  __typename?: 'CampaignPreviewLinkOutput';
+  error?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+  url?: Maybe<Scalars['String']>;
+};
+
 export type Captcha = {
   __typename?: 'Captcha';
   provider?: Maybe<CaptchaDriverType>;
@@ -1379,6 +1386,12 @@ export type CursorPaging = {
   first?: InputMaybe<Scalars['Int']>;
   /** Paginate last */
   last?: InputMaybe<Scalars['Int']>;
+};
+
+export type DashboardTokenDto = {
+  __typename?: 'DashboardTokenDto';
+  expiresAt: Scalars['DateTime'];
+  token: Scalars['String'];
 };
 
 /** Database Event Action */
@@ -1940,6 +1953,7 @@ export enum FileFolder {
   File = 'File',
   FilesField = 'FilesField',
   GeneratedSdkClient = 'GeneratedSdkClient',
+  Marketing = 'Marketing',
   PersonPicture = 'PersonPicture',
   ProfilePicture = 'ProfilePicture',
   PublicAsset = 'PublicAsset',
@@ -2018,6 +2032,10 @@ export type GaugeChartConfiguration = {
   filter?: Maybe<Scalars['JSON']>;
   firstDayOfTheWeek?: Maybe<Scalars['Int']>;
   timezone?: Maybe<Scalars['String']>;
+};
+
+export type GenerateCampaignPreviewLinkInput = {
+  campaignId: Scalars['String'];
 };
 
 export type GetApiKeyInput = {
@@ -2610,6 +2628,7 @@ export type Mutation = {
   createPageLayoutTab: PageLayoutTab;
   createPageLayoutWidget: PageLayoutWidget;
   createPublicDomain: PublicDomain;
+  createQuoteSharingLink: QuoteSharingLink;
   createSAMLIdentityProvider: SetupSso;
   createSkill: Skill;
   createView: View;
@@ -2675,6 +2694,8 @@ export type Mutation = {
   executeOneLogicFunction: LogicFunctionExecutionResult;
   generateApiKeyToken: ApiKeyToken;
   generateApplicationToken: ApplicationTokenPair;
+  generateCampaignPreviewLink: CampaignPreviewLinkOutput;
+  generateDashboardToken: DashboardTokenDto;
   generateTransientToken: TransientToken;
   getAuthTokensFromLoginToken: AuthTokens;
   getAuthTokensFromOTP: AuthTokens;
@@ -2779,6 +2800,7 @@ export type Mutation = {
   uploadApplicationFile: File;
   uploadFilesFieldFile: FileWithSignedUrl;
   uploadFilesFieldFileByUniversalIdentifier: FileWithSignedUrl;
+  uploadMarketingFile: FileWithSignedUrl;
   uploadWorkflowFile: FileWithSignedUrl;
   uploadWorkspaceLogo: FileWithSignedUrl;
   uploadWorkspaceMemberProfilePicture: FileWithSignedUrl;
@@ -3000,6 +3022,12 @@ export type MutationCreatePageLayoutWidgetArgs = {
 
 export type MutationCreatePublicDomainArgs = {
   domain: Scalars['String'];
+};
+
+
+export type MutationCreateQuoteSharingLinkArgs = {
+  quoteId: Scalars['String'];
+  recipientEmail?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -3303,6 +3331,11 @@ export type MutationGenerateApiKeyTokenArgs = {
 
 export type MutationGenerateApplicationTokenArgs = {
   applicationId: Scalars['UUID'];
+};
+
+
+export type MutationGenerateCampaignPreviewLinkArgs = {
+  input: GenerateCampaignPreviewLinkInput;
 };
 
 
@@ -3847,6 +3880,11 @@ export type MutationUploadFilesFieldFileArgs = {
 
 export type MutationUploadFilesFieldFileByUniversalIdentifierArgs = {
   fieldMetadataUniversalIdentifier: Scalars['String'];
+  file: Scalars['Upload'];
+};
+
+
+export type MutationUploadMarketingFileArgs = {
   file: Scalars['Upload'];
 };
 
@@ -4946,6 +4984,16 @@ export type QueueRetentionConfig = {
   completedMaxCount: Scalars['Float'];
   failedMaxAge: Scalars['Float'];
   failedMaxCount: Scalars['Float'];
+};
+
+export type QuoteSharingLink = {
+  __typename?: 'QuoteSharingLink';
+  id: Scalars['String'];
+  isActive: Scalars['Boolean'];
+  quoteId: Scalars['String'];
+  recipientEmail?: Maybe<Scalars['String']>;
+  shareUrl: Scalars['String'];
+  slug: Scalars['String'];
 };
 
 export type RatioAggregateConfig = {
@@ -6258,8 +6306,10 @@ export enum WidgetType {
   GRAPH = 'GRAPH',
   IFRAME = 'IFRAME',
   LANDING_PAGE_BUILDER = 'LANDING_PAGE_BUILDER',
+  MARKETING_CAMPAIGN_STATS = 'MARKETING_CAMPAIGN_STATS',
   NOTES = 'NOTES',
   RECORD_TABLE = 'RECORD_TABLE',
+  SEQUENCE_CADENCE = 'SEQUENCE_CADENCE',
   STANDALONE_RICH_TEXT = 'STANDALONE_RICH_TEXT',
   TASKS = 'TASKS',
   TIMELINE = 'TIMELINE',
@@ -6729,6 +6779,11 @@ export type GenerateApiKeyTokenMutationVariables = Exact<{
 
 
 export type GenerateApiKeyTokenMutation = { __typename?: 'Mutation', generateApiKeyToken: { __typename?: 'ApiKeyToken', token: string } };
+
+export type GenerateDashboardTokenMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GenerateDashboardTokenMutation = { __typename?: 'Mutation', generateDashboardToken: { __typename?: 'DashboardTokenDto', token: string, expiresAt: string } };
 
 export type GenerateTransientTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -8515,6 +8570,7 @@ export const FindOneApplicationByUniversalIdentifierDocument = {"kind":"Document
 export const AuthorizeAppDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"authorizeApp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clientId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"codeChallenge"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"redirectUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"state"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authorizeApp"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clientId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clientId"}}},{"kind":"Argument","name":{"kind":"Name","value":"codeChallenge"},"value":{"kind":"Variable","name":{"kind":"Name","value":"codeChallenge"}}},{"kind":"Argument","name":{"kind":"Name","value":"redirectUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"redirectUrl"}}},{"kind":"Argument","name":{"kind":"Name","value":"state"},"value":{"kind":"Variable","name":{"kind":"Name","value":"state"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"redirectUrl"}}]}}]}}]} as unknown as DocumentNode<AuthorizeAppMutation, AuthorizeAppMutationVariables>;
 export const EmailPasswordResetLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EmailPasswordResetLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"emailPasswordResetLink"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"workspaceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"workspaceId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"}}]}}]}}]} as unknown as DocumentNode<EmailPasswordResetLinkMutation, EmailPasswordResetLinkMutationVariables>;
 export const GenerateApiKeyTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GenerateApiKeyToken"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"apiKeyId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"expiresAt"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"generateApiKeyToken"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"apiKeyId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"apiKeyId"}}},{"kind":"Argument","name":{"kind":"Name","value":"expiresAt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"expiresAt"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<GenerateApiKeyTokenMutation, GenerateApiKeyTokenMutationVariables>;
+export const GenerateDashboardTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"generateDashboardToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"generateDashboardToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}}]}}]} as unknown as DocumentNode<GenerateDashboardTokenMutation, GenerateDashboardTokenMutationVariables>;
 export const GenerateTransientTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"generateTransientToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"generateTransientToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transientToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]}}]} as unknown as DocumentNode<GenerateTransientTokenMutation, GenerateTransientTokenMutationVariables>;
 export const GetAuthTokensFromLoginTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"getAuthTokensFromLoginToken"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"loginToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"origin"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAuthTokensFromLoginToken"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"loginToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"loginToken"}}},{"kind":"Argument","name":{"kind":"Name","value":"origin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"origin"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AuthTokenPairFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AuthTokenFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthToken"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AuthTokenPairFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthTokenPair"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessOrWorkspaceAgnosticToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AuthTokenFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AuthTokenFragment"}}]}}]}}]} as unknown as DocumentNode<GetAuthTokensFromLoginTokenMutation, GetAuthTokensFromLoginTokenMutationVariables>;
 export const GetAuthTokensFromOtpDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"getAuthTokensFromOTP"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"loginToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"otp"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"captchaToken"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"origin"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAuthTokensFromOTP"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"loginToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"loginToken"}}},{"kind":"Argument","name":{"kind":"Name","value":"otp"},"value":{"kind":"Variable","name":{"kind":"Name","value":"otp"}}},{"kind":"Argument","name":{"kind":"Name","value":"captchaToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"captchaToken"}}},{"kind":"Argument","name":{"kind":"Name","value":"origin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"origin"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AuthTokenPairFragment"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AuthTokenFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthToken"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"expiresAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AuthTokenPairFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthTokenPair"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessOrWorkspaceAgnosticToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AuthTokenFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AuthTokenFragment"}}]}}]}}]} as unknown as DocumentNode<GetAuthTokensFromOtpMutation, GetAuthTokensFromOtpMutationVariables>;

@@ -676,7 +676,7 @@ export interface PageLayoutWidget {
     __typename: 'PageLayoutWidget'
 }
 
-export type WidgetType = 'VIEW' | 'IFRAME' | 'FIELD' | 'FIELDS' | 'GRAPH' | 'STANDALONE_RICH_TEXT' | 'TIMELINE' | 'TASKS' | 'NOTES' | 'FILES' | 'EMAILS' | 'CALENDAR' | 'FIELD_RICH_TEXT' | 'CAMPAIGN_EDITOR' | 'FORM_BUILDER' | 'LANDING_PAGE_BUILDER' | 'WORKFLOW' | 'WORKFLOW_VERSION' | 'WORKFLOW_RUN' | 'FRONT_COMPONENT' | 'RECORD_TABLE' | 'EMAIL_THREAD'
+export type WidgetType = 'VIEW' | 'IFRAME' | 'FIELD' | 'FIELDS' | 'GRAPH' | 'STANDALONE_RICH_TEXT' | 'TIMELINE' | 'TASKS' | 'NOTES' | 'FILES' | 'EMAILS' | 'CALENDAR' | 'FIELD_RICH_TEXT' | 'CAMPAIGN_EDITOR' | 'FORM_BUILDER' | 'LANDING_PAGE_BUILDER' | 'WORKFLOW' | 'WORKFLOW_VERSION' | 'WORKFLOW_RUN' | 'FRONT_COMPONENT' | 'RECORD_TABLE' | 'EMAIL_THREAD' | 'SEQUENCE_CADENCE' | 'MARKETING_CAMPAIGN_STATS'
 
 export type PageLayoutWidgetPosition = (PageLayoutWidgetGridPosition | PageLayoutWidgetVerticalListPosition | PageLayoutWidgetCanvasPosition) & { __isUnion?: true }
 
@@ -1748,6 +1748,12 @@ export interface RotateClientSecret {
     __typename: 'RotateClientSecret'
 }
 
+export interface DashboardTokenDto {
+    token: Scalars['String']
+    expiresAt: Scalars['DateTime']
+    __typename: 'DashboardTokenDto'
+}
+
 export interface ResendEmailVerificationToken {
     success: Scalars['Boolean']
     __typename: 'ResendEmailVerificationToken'
@@ -2281,6 +2287,16 @@ export interface ImapSmtpCaldavConnectionSuccess {
     __typename: 'ImapSmtpCaldavConnectionSuccess'
 }
 
+export interface QuoteSharingLink {
+    id: Scalars['String']
+    slug: Scalars['String']
+    shareUrl: Scalars['String']
+    isActive: Scalars['Boolean']
+    recipientEmail?: Scalars['String']
+    quoteId: Scalars['String']
+    __typename: 'QuoteSharingLink'
+}
+
 export interface PostgresCredentials {
     id: Scalars['UUID']
     user: Scalars['String']
@@ -2358,6 +2374,13 @@ export interface CampaignActionOutput {
     success: Scalars['Boolean']
     error?: Scalars['String']
     __typename: 'CampaignActionOutput'
+}
+
+export interface CampaignPreviewLinkOutput {
+    success: Scalars['Boolean']
+    url?: Scalars['String']
+    error?: Scalars['String']
+    __typename: 'CampaignPreviewLinkOutput'
 }
 
 export interface ResolveRecipientsOutput {
@@ -2893,6 +2916,7 @@ export interface Mutation {
     deleteManyNavigationMenuItems: NavigationMenuItem[]
     deleteNavigationMenuItem: NavigationMenuItem
     uploadAIChatFile: FileWithSignedUrl
+    uploadMarketingFile: FileWithSignedUrl
     uploadWorkflowFile: FileWithSignedUrl
     uploadWorkspaceLogo: FileWithSignedUrl
     uploadWorkspaceMemberProfilePicture: FileWithSignedUrl
@@ -2982,6 +3006,7 @@ export interface Mutation {
     resumeCampaign: CampaignActionOutput
     sendTestEmail: CampaignActionOutput
     resolveRecipients: ResolveRecipientsOutput
+    generateCampaignPreviewLink: CampaignPreviewLinkOutput
     saveAsTemplate: CampaignActionOutput
     loadTemplate: CampaignActionOutput
     createDripCampaign: CreateDripCampaignOutputDTO
@@ -3027,6 +3052,7 @@ export interface Mutation {
     deactivateSkill: Skill
     evaluateAgentTurn: AgentTurnEvaluation
     runEvaluationInput: AgentTurn
+    createQuoteSharingLink: QuoteSharingLink
     duplicateDashboard: DuplicatedDashboard
     getAuthorizationUrlForSSO: GetAuthorizationUrlForSSO
     getLoginTokenFromCredentials: LoginToken
@@ -3044,6 +3070,7 @@ export interface Mutation {
     generateApiKeyToken: ApiKeyToken
     emailPasswordResetLink: EmailPasswordResetLink
     updatePasswordViaResetToken: InvalidatePassword
+    generateDashboardToken: DashboardTokenDto
     createApplicationRegistration: CreateApplicationRegistration
     updateApplicationRegistration: ApplicationRegistration
     deleteApplicationRegistration: Scalars['Boolean']
@@ -3122,7 +3149,7 @@ export type AiModelRole = 'FAST' | 'SMART'
 
 export type WorkspaceMigrationActionType = 'delete' | 'create' | 'update'
 
-export type FileFolder = 'ProfilePicture' | 'WorkspaceLogo' | 'Attachment' | 'PersonPicture' | 'CorePicture' | 'File' | 'AgentChat' | 'BuiltLogicFunction' | 'BuiltFrontComponent' | 'PublicAsset' | 'Source' | 'FilesField' | 'Dependencies' | 'Workflow' | 'AppTarball' | 'GeneratedSdkClient'
+export type FileFolder = 'ProfilePicture' | 'WorkspaceLogo' | 'Attachment' | 'PersonPicture' | 'CorePicture' | 'File' | 'AgentChat' | 'BuiltLogicFunction' | 'BuiltFrontComponent' | 'PublicAsset' | 'Source' | 'FilesField' | 'Dependencies' | 'Workflow' | 'AppTarball' | 'GeneratedSdkClient' | 'Marketing'
 
 export interface Subscription {
     onEventSubscription?: EventSubscription
@@ -4958,6 +4985,13 @@ export interface RotateClientSecretGenqlSelection{
     __scalar?: boolean | number
 }
 
+export interface DashboardTokenDtoGenqlSelection{
+    token?: boolean | number
+    expiresAt?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
 export interface ResendEmailVerificationTokenGenqlSelection{
     success?: boolean | number
     __typename?: boolean | number
@@ -5551,6 +5585,17 @@ export interface ImapSmtpCaldavConnectionSuccessGenqlSelection{
     __scalar?: boolean | number
 }
 
+export interface QuoteSharingLinkGenqlSelection{
+    id?: boolean | number
+    slug?: boolean | number
+    shareUrl?: boolean | number
+    isActive?: boolean | number
+    recipientEmail?: boolean | number
+    quoteId?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
 export interface PostgresCredentialsGenqlSelection{
     id?: boolean | number
     user?: boolean | number
@@ -5626,6 +5671,14 @@ export interface AgentMessagePartGenqlSelection{
 
 export interface CampaignActionOutputGenqlSelection{
     success?: boolean | number
+    error?: boolean | number
+    __typename?: boolean | number
+    __scalar?: boolean | number
+}
+
+export interface CampaignPreviewLinkOutputGenqlSelection{
+    success?: boolean | number
+    url?: boolean | number
     error?: boolean | number
     __typename?: boolean | number
     __scalar?: boolean | number
@@ -6219,6 +6272,7 @@ export interface MutationGenqlSelection{
     deleteManyNavigationMenuItems?: (NavigationMenuItemGenqlSelection & { __args: {ids: Scalars['UUID'][]} })
     deleteNavigationMenuItem?: (NavigationMenuItemGenqlSelection & { __args: {id: Scalars['UUID']} })
     uploadAIChatFile?: (FileWithSignedUrlGenqlSelection & { __args: {file: Scalars['Upload']} })
+    uploadMarketingFile?: (FileWithSignedUrlGenqlSelection & { __args: {file: Scalars['Upload']} })
     uploadWorkflowFile?: (FileWithSignedUrlGenqlSelection & { __args: {file: Scalars['Upload']} })
     uploadWorkspaceLogo?: (FileWithSignedUrlGenqlSelection & { __args: {file: Scalars['Upload']} })
     uploadWorkspaceMemberProfilePicture?: (FileWithSignedUrlGenqlSelection & { __args: {file: Scalars['Upload']} })
@@ -6308,6 +6362,7 @@ export interface MutationGenqlSelection{
     resumeCampaign?: (CampaignActionOutputGenqlSelection & { __args: {input: ResumeCampaignInput} })
     sendTestEmail?: (CampaignActionOutputGenqlSelection & { __args: {input: SendTestEmailInput} })
     resolveRecipients?: (ResolveRecipientsOutputGenqlSelection & { __args: {input: ResolveRecipientsInput} })
+    generateCampaignPreviewLink?: (CampaignPreviewLinkOutputGenqlSelection & { __args: {input: GenerateCampaignPreviewLinkInput} })
     saveAsTemplate?: (CampaignActionOutputGenqlSelection & { __args: {input: SaveAsTemplateInput} })
     loadTemplate?: (CampaignActionOutputGenqlSelection & { __args: {input: LoadTemplateInput} })
     createDripCampaign?: (CreateDripCampaignOutputDTOGenqlSelection & { __args: {input: CreateDripCampaignInput} })
@@ -6353,6 +6408,7 @@ export interface MutationGenqlSelection{
     deactivateSkill?: (SkillGenqlSelection & { __args: {id: Scalars['UUID']} })
     evaluateAgentTurn?: (AgentTurnEvaluationGenqlSelection & { __args: {turnId: Scalars['UUID']} })
     runEvaluationInput?: (AgentTurnGenqlSelection & { __args: {agentId: Scalars['UUID'], input: Scalars['String']} })
+    createQuoteSharingLink?: (QuoteSharingLinkGenqlSelection & { __args: {quoteId: Scalars['String'], recipientEmail?: (Scalars['String'] | null)} })
     duplicateDashboard?: (DuplicatedDashboardGenqlSelection & { __args: {id: Scalars['UUID']} })
     getAuthorizationUrlForSSO?: (GetAuthorizationUrlForSSOGenqlSelection & { __args: {input: GetAuthorizationUrlForSSOInput} })
     getLoginTokenFromCredentials?: (LoginTokenGenqlSelection & { __args: {email: Scalars['String'], password: Scalars['String'], captchaToken?: (Scalars['String'] | null), locale?: (Scalars['String'] | null), verifyEmailRedirectPath?: (Scalars['String'] | null), origin: Scalars['String']} })
@@ -6370,6 +6426,7 @@ export interface MutationGenqlSelection{
     generateApiKeyToken?: (ApiKeyTokenGenqlSelection & { __args: {apiKeyId: Scalars['UUID'], expiresAt: Scalars['String']} })
     emailPasswordResetLink?: (EmailPasswordResetLinkGenqlSelection & { __args: {email: Scalars['String'], workspaceId?: (Scalars['UUID'] | null)} })
     updatePasswordViaResetToken?: (InvalidatePasswordGenqlSelection & { __args: {passwordResetToken: Scalars['String'], newPassword: Scalars['String']} })
+    generateDashboardToken?: DashboardTokenDtoGenqlSelection
     createApplicationRegistration?: (CreateApplicationRegistrationGenqlSelection & { __args: {input: CreateApplicationRegistrationInput} })
     updateApplicationRegistration?: (ApplicationRegistrationGenqlSelection & { __args: {input: UpdateApplicationRegistrationInput} })
     deleteApplicationRegistration?: { __args: {id: Scalars['String']} }
@@ -6644,6 +6701,8 @@ export interface ResumeCampaignInput {campaignId: Scalars['String']}
 export interface SendTestEmailInput {campaignId: Scalars['String'],testEmailAddress: Scalars['String']}
 
 export interface ResolveRecipientsInput {campaignId: Scalars['String'],mode: RecipientSelectionMode,viewId?: (Scalars['String'] | null),personIds?: (Scalars['String'][] | null)}
+
+export interface GenerateCampaignPreviewLinkInput {campaignId: Scalars['String']}
 
 export interface SaveAsTemplateInput {campaignId: Scalars['String'],templateName: Scalars['String'],category?: (Scalars['String'] | null)}
 
@@ -8042,6 +8101,14 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     
 
 
+    const DashboardTokenDto_possibleTypes: string[] = ['DashboardTokenDto']
+    export const isDashboardTokenDto = (obj?: { __typename?: any } | null): obj is DashboardTokenDto => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isDashboardTokenDto"')
+      return DashboardTokenDto_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const ResendEmailVerificationToken_possibleTypes: string[] = ['ResendEmailVerificationToken']
     export const isResendEmailVerificationToken = (obj?: { __typename?: any } | null): obj is ResendEmailVerificationToken => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isResendEmailVerificationToken"')
@@ -8602,6 +8669,14 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     
 
 
+    const QuoteSharingLink_possibleTypes: string[] = ['QuoteSharingLink']
+    export const isQuoteSharingLink = (obj?: { __typename?: any } | null): obj is QuoteSharingLink => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isQuoteSharingLink"')
+      return QuoteSharingLink_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
     const PostgresCredentials_possibleTypes: string[] = ['PostgresCredentials']
     export const isPostgresCredentials = (obj?: { __typename?: any } | null): obj is PostgresCredentials => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isPostgresCredentials"')
@@ -8638,6 +8713,14 @@ export interface LogicFunctionLogsInput {applicationId?: (Scalars['UUID'] | null
     export const isCampaignActionOutput = (obj?: { __typename?: any } | null): obj is CampaignActionOutput => {
       if (!obj?.__typename) throw new Error('__typename is missing in "isCampaignActionOutput"')
       return CampaignActionOutput_possibleTypes.includes(obj.__typename)
+    }
+    
+
+
+    const CampaignPreviewLinkOutput_possibleTypes: string[] = ['CampaignPreviewLinkOutput']
+    export const isCampaignPreviewLinkOutput = (obj?: { __typename?: any } | null): obj is CampaignPreviewLinkOutput => {
+      if (!obj?.__typename) throw new Error('__typename is missing in "isCampaignPreviewLinkOutput"')
+      return CampaignPreviewLinkOutput_possibleTypes.includes(obj.__typename)
     }
     
 
@@ -9194,7 +9277,9 @@ export const enumWidgetType = {
    WORKFLOW_RUN: 'WORKFLOW_RUN' as const,
    FRONT_COMPONENT: 'FRONT_COMPONENT' as const,
    RECORD_TABLE: 'RECORD_TABLE' as const,
-   EMAIL_THREAD: 'EMAIL_THREAD' as const
+   EMAIL_THREAD: 'EMAIL_THREAD' as const,
+   SEQUENCE_CADENCE: 'SEQUENCE_CADENCE' as const,
+   MARKETING_CAMPAIGN_STATS: 'MARKETING_CAMPAIGN_STATS' as const
 }
 
 export const enumPageLayoutTabLayoutMode = {
@@ -9736,5 +9821,6 @@ export const enumFileFolder = {
    Dependencies: 'Dependencies' as const,
    Workflow: 'Workflow' as const,
    AppTarball: 'AppTarball' as const,
-   GeneratedSdkClient: 'GeneratedSdkClient' as const
+   GeneratedSdkClient: 'GeneratedSdkClient' as const,
+   Marketing: 'Marketing' as const
 }
