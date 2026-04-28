@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Geraci CRM — Marketing User Manual</title>
+<style>
+  :root {
+    --ink: #1a1a18;
+    --muted: #5b5b58;
+    --rule: #d8d6d1;
+    --soft: #f6f5f1;
+    --accent: #ff7a59;
+    --warn: #c2410c;
+    --good: #15803d;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    color: var(--ink);
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    margin: 0;
+    padding: 0;
+  }
+  .page {
+    margin: 0 auto;
+    max-width: 7.2in;
+    padding: 0.7in 0.6in;
+  }
+  h1, h2, h3, h4 {
+    color: var(--ink);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.25;
+    margin-top: 1.4em;
+  }
+  h1 {
+    border-bottom: 2px solid var(--ink);
+    font-size: 24pt;
+    margin-top: 0;
+    padding-bottom: 0.2em;
+  }
+  h2 {
+    border-bottom: 1px solid var(--rule);
+    font-size: 16pt;
+    margin-top: 2em;
+    padding-bottom: 0.15em;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 13pt;
+    margin-top: 1.6em;
+    page-break-after: avoid;
+  }
+  h4 {
+    font-size: 11.5pt;
+    margin-top: 1.3em;
+    page-break-after: avoid;
+  }
+  p { margin: 0.6em 0; }
+  ol, ul { margin: 0.4em 0 0.8em 1.4em; padding: 0; }
+  li { margin: 0.25em 0; }
+  ol ol, ul ul, ol ul, ul ol { margin-top: 0.2em; margin-bottom: 0.2em; }
+  code, kbd {
+    background: var(--soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-family: "SF Mono", Consolas, "Liberation Mono", monospace;
+    font-size: 0.86em;
+    padding: 1px 5px;
+  }
+  kbd {
+    background: #fff;
+    box-shadow: 0 1px 0 var(--rule);
+    font-weight: 600;
+  }
+  pre {
+    background: var(--soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-family: "SF Mono", Consolas, "Liberation Mono", monospace;
+    font-size: 0.86em;
+    line-height: 1.4;
+    overflow-x: auto;
+    padding: 0.6em 0.8em;
+    page-break-inside: avoid;
+  }
+  blockquote {
+    border-left: 3px solid var(--accent);
+    color: var(--muted);
+    margin: 0.8em 0;
+    padding: 0.1em 0.9em;
+  }
+  .callout {
+    background: var(--soft);
+    border-left: 3px solid var(--accent);
+    margin: 0.8em 0;
+    padding: 0.6em 0.9em;
+    page-break-inside: avoid;
+  }
+  .callout.warn  { border-left-color: var(--warn); }
+  .callout.good  { border-left-color: var(--good); }
+  .callout strong:first-child { color: var(--accent); }
+  .callout.warn strong:first-child { color: var(--warn); }
+  .callout.good strong:first-child { color: var(--good); }
+  .toc {
+    background: var(--soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    margin: 1.2em 0;
+    padding: 0.9em 1.2em;
+  }
+  .toc h2 {
+    border: none;
+    font-size: 12pt;
+    margin: 0 0 0.5em 0;
+    padding: 0;
+  }
+  .toc ol { margin-left: 1.1em; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .meta {
+    color: var(--muted);
+    font-size: 10pt;
+    margin-top: -0.5em;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 0.8em 0;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid var(--rule);
+    font-size: 10pt;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--soft);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
+  }
+  td.kbd-cell { font-family: "SF Mono", Consolas, monospace; white-space: nowrap; }
+  hr { border: none; border-top: 1px solid var(--rule); margin: 2em 0; }
+  @page { margin: 0.6in 0.5in; }
+  @media print {
+    .page { padding: 0; }
+    h2 { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Geraci CRM — Marketing User Manual</h1>
+<p class="meta">Updated 2026-04-28 · Covers Email Campaigns · Marketing Campaigns · Sequences · Forms (incl. JSON API) · Audiences · Analytics · Landing Pages · Navigation &amp; shortcuts</p>
+
+<div class="toc">
+<h2>Contents</h2>
+<ol>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#nav">Navigation &amp; the contextual sidebar</a></li>
+  <li><a href="#cmdk">The Quick Switcher (Cmd+K)</a></li>
+  <li><a href="#shortcuts">Keyboard shortcuts</a></li>
+  <li><a href="#email">Email Campaigns</a></li>
+  <li><a href="#marketing-campaigns">Marketing Campaigns</a></li>
+  <li><a href="#sequences">Sequences</a></li>
+  <li><a href="#forms">Forms</a></li>
+  <li><a href="#landing">Landing Pages</a></li>
+  <li><a href="#audiences">Audiences (People)</a></li>
+  <li><a href="#analytics">Marketing Analytics</a></li>
+  <li><a href="#admin">Admin / housekeeping</a></li>
+  <li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+</div>
+
+<h2 id="intro">1. Introduction</h2>
+
+<p>Geraci CRM (a Twenty fork) bundles a complete marketing toolkit alongside the core CRM. This manual is the full reference for everyone who runs marketing — set up campaigns, build sequences, capture leads with forms, design landing pages, and read the analytics that tell you whether any of it worked.</p>
+
+<p>The CRM is at <code>crm.geracillp.com</code>. Sign in with your workspace email; if you don't have an account yet, ask the workspace owner to invite you (Settings → Members).</p>
+
+<div class="callout">
+<strong>What changed since the last manual:</strong> Everything navigation is new. The marketing area now has a contextual sidebar (filter, pinned, recent, visit history), a global Cmd+K palette, dozens of keyboard shortcuts, and a HubSpot-style visual landing page builder. If you used the older version, sections 2-4 below are the most important read.
+</div>
+
+<h2 id="nav">2. Navigation &amp; the contextual sidebar</h2>
+
+<h3>2.1 Where things live</h3>
+
+<p>The left side of the screen has three panels (left to right):</p>
+
+<ol>
+  <li><strong>Workspace drawer</strong> — the dark navy rail furthest left. This is the main app navigation: Workspace, Marketing, Other (Settings, Documentation).</li>
+  <li><strong>Marketing Tool Sidebar</strong> — the second column, contextual to whatever marketing section you're in. Shows a section title, +&nbsp;New button, filter, Pinned, Last visited, Frequently visited, and Recent records.</li>
+  <li><strong>Main work area</strong> — record list or record show page, depending on where you are.</li>
+</ol>
+
+<p>The Marketing drawer (in the dark rail) groups all marketing surfaces in one place:</p>
+
+<ul>
+  <li><strong>Email Campaigns</strong> (<kbd>g 1</kbd>)</li>
+  <li><strong>Marketing Campaigns</strong> (<kbd>g 2</kbd>)</li>
+  <li><strong>Sequences</strong> (<kbd>g 3</kbd>)</li>
+  <li><strong>Forms</strong> (<kbd>g 4</kbd>)</li>
+  <li><strong>Analytics</strong> (<kbd>g 5</kbd>)</li>
+  <li><strong>Audiences (People)</strong> (<kbd>g 6</kbd>)</li>
+  <li><strong>Landing Pages</strong> (<kbd>g 7</kbd>)</li>
+</ul>
+
+<p>Each item shows a live record count next to it. The little number after &nbsp;·&nbsp; is the total. <kbd>g</kbd> followed by the digit is the keyboard shortcut that navigates there from anywhere.</p>
+
+<h3>2.2 The Marketing Tool Sidebar (second column)</h3>
+
+<p>This is the workhorse. Whenever you're on a marketing section — Email Campaigns, Sequences, Forms, Landing Pages, etc. — the sidebar shows up populated with content for that section.</p>
+
+<h4>2.2.1 Header</h4>
+<ul>
+  <li>An icon chip (Mail, Send, etc.) — clickable to collapse the sidebar to a 24px strip.</li>
+  <li>The section title (e.g. "Email Campaigns") with a count chip showing the total record count.</li>
+  <li>If you're on a record show page, a star icon (☆ or ★) lets you pin / unpin <em>this page</em> with one click. Or press <kbd>p</kbd>.</li>
+  <li>A <strong>?</strong> button opens the keyboard shortcut overlay.</li>
+  <li>Subtitle is a quick description on index pages, but turns into a breadcrumb (Section › Record name) when you're viewing a record.</li>
+</ul>
+
+<h4>2.2.2 + New <em>type</em></h4>
+<p>Below the header. Click it and a small inline form appears with a name input and Cancel / Create buttons. Type a name, hit <kbd>Enter</kbd>, and the new record opens. <kbd>Esc</kbd> cancels. The shortcut <kbd>c</kbd> opens this form from anywhere on the route.</p>
+
+<h4>2.2.3 Filter</h4>
+<p>Type to narrow Pinned, Recent, Last visited, and Across-sections. Press <kbd>/</kbd> from anywhere on a marketing route to jump into the filter without using the mouse. <kbd>Esc</kbd> clears the filter; press it again to unfocus. The filter is remembered per section — leave Email Campaigns filtered to "Q4", come back later, the filter is still there.</p>
+
+<p>Type at least 2 characters to also search <em>across other marketing sections</em> — the filter shows matching campaigns / marketing campaigns / sequences / forms / landing pages from all sections, not just the one you're on.</p>
+
+<p>Recent searches show as quick-select chips when the input is empty — click a chip to re-run that search. <strong>×</strong> on a chip removes it; the rightmost <strong>Clear</strong> chip wipes the whole list.</p>
+
+<p>While the filter is active, press <kbd>↑</kbd> / <kbd>↓</kbd> to walk a highlighted cursor through results. <kbd>Enter</kbd> opens the highlighted record. <kbd>Tab</kbd> moves focus from the input to the first row.</p>
+
+<h4>2.2.4 Section</h4>
+<p>One row: "All <em>type</em>" — links to the section's full table view. The badge with the section's record count is shown nearby in the title.</p>
+
+<h4>2.2.5 Pinned</h4>
+<p>Records you want one-click access to. Click the ☆ on any Recent row to pin it; click the ★ on a Pinned row to unpin. New pins go to the top of the list.</p>
+
+<ul>
+  <li><strong>Position numbers</strong> 1–9 show as small chips on the first nine pinned records. Press <kbd>1</kbd>–<kbd>9</kbd> from anywhere on the route to jump to that pinned record.</li>
+  <li><strong>Drag to reorder</strong> — grab the <code>⋮⋮</code> handle and drop a row above another to change its order.</li>
+  <li><strong>Double-click to rename</strong> — double-click any pinned row's label to give it a sidebar-only alias. Press <kbd>Enter</kbd> to save, <kbd>Esc</kbd> to cancel. Aliases are local to the sidebar; the underlying record name doesn't change.</li>
+  <li><strong>Right-click → Move to top</strong> promotes a pinned record to position 1.</li>
+  <li><strong>Right-click → Unpin</strong> removes it.</li>
+  <li><strong>Right-click → Open in new tab / Copy link</strong> work on any sidebar row, not just pinned.</li>
+  <li><strong>Clear</strong> in the section header unpins everything.</li>
+  <li><kbd>n</kbd> / <kbd>b</kbd> walk to the next / previous pinned record.</li>
+</ul>
+
+<h4>2.2.6 Last visited</h4>
+<p>The last 8 record show pages you opened, across all marketing types. Each row has a section badge ("Email", "Seq", "Form", "Page", etc.) and a relative-time chip (<code>5m</code>, <code>2h</code>, <code>yest</code>, <code>3d</code>, <code>Apr 24</code>). If you've visited a record more than once, it shows <code>5× 2h</code> with the visit count.</p>
+
+<p><strong>Clear</strong> in the header wipes visit history. Right-click any row → <strong>Remove from history</strong> to drop just that one. Visits older than 30 days auto-prune on read.</p>
+
+<h4>2.2.7 Frequently visited</h4>
+<p>Records you've visited 3+ times in the current section that you haven't pinned. Surfaced at the top of the sidebar so you can see what you keep coming back to and decide whether to pin it. Each row shows the visit count (e.g. <code>5×</code>).</p>
+
+<h4>2.2.8 Recent</h4>
+<p>The 5 most recently created records in the current section. Each row has a ☆ to pin. If the section has more records than fit, a "→ View all <em>N</em> in table" link at the bottom takes you to the index view. The ↻ button refreshes.</p>
+
+<h4>2.2.9 Across sections (search results)</h4>
+<p>Only shows when the filter is active and there are matching records in <em>other</em> marketing sections. Each result has the type badge + record name and links straight to its show page.</p>
+
+<h3>2.3 Resizing &amp; collapsing the sidebar</h3>
+
+<ul>
+  <li><strong>Drag to resize</strong> — pointer-down on the right edge of the sidebar and drag. Width clamps to 200–480px and persists across reloads. Double-click the resize handle to reset to 240px.</li>
+  <li><strong>Collapse to a 24px strip</strong> — click the chevron pinned to the right edge, click the icon chip in the header, or press <kbd>[</kbd>. When collapsed the section title is shown in a vertical "writing-mode" hint; click the hint or the chevron to expand.</li>
+  <li><strong>Auto-collapse</strong> — the sidebar auto-collapses if your window is narrower than 1100px. A toast confirms.</li>
+</ul>
+
+<h3>2.4 Right-click context menu</h3>
+
+<p>Right-click any sidebar row (Pinned, Recent, Last visited, Across sections, Frequently visited) for:</p>
+
+<ul>
+  <li><strong>Open in new tab</strong> — opens the record in a new browser tab.</li>
+  <li><strong>Copy link</strong> — writes the absolute URL of the record to your clipboard. A toast confirms.</li>
+  <li><strong>Pin / Unpin</strong> — only on Pinned + Recent rows.</li>
+  <li><strong>Move to top</strong> — only on Pinned rows. Moves the record to position 1 in the pinned list.</li>
+  <li><strong>Remove from history</strong> — only on Last visited rows.</li>
+</ul>
+
+<h2 id="cmdk">3. The Quick Switcher (Cmd+K)</h2>
+
+<p>Press <kbd>⌘</kbd>+<kbd>K</kbd> (Mac) or <kbd>Ctrl</kbd>+<kbd>K</kbd> (Windows / Linux) on <em>any</em> page in the CRM — settings, records, dashboards — to open a centered command-palette overlay.</p>
+
+<p>The switcher is the fastest way to navigate, especially when you're not on a marketing route and the contextual sidebar isn't available.</p>
+
+<h3>3.1 What's in the switcher</h3>
+
+<p>When you first open it (empty input):</p>
+<ul>
+  <li><strong>Recent searches</strong> — quick-select chips for queries you've typed before.</li>
+  <li><strong>Today</strong> — records you visited in the last 24 hours.</li>
+  <li><strong>Recently visited</strong> — broader visit history (last 8, deduped against Today).</li>
+  <li><strong>Sections</strong> — all 7 marketing sections plus Settings, with their <kbd>g</kbd>+digit shortcut hints.</li>
+</ul>
+
+<p>When you start typing (≥ 2 characters):</p>
+<ul>
+  <li><strong>Actions</strong> — verbs like "New Email Campaign", "New Landing Page", "Toggle sidebar collapse", "Open Settings".</li>
+  <li><strong>Records</strong> — live ilike search across campaigns / marketing campaigns / sequences / forms / landing pages.</li>
+</ul>
+
+<p>Records that are pinned in the marketing sidebar get a small <strong>★</strong> next to their badge in the switcher results, so you can eyeball familiar records at a glance.</p>
+
+<p>The footer shows hints (<code>↑↓ nav · Tab group · ↵ open · ⇧↵ tab · ⌘P pin · + new · ⌫ close</code>) and the live result count.</p>
+
+<h3>3.2 Switcher keyboard shortcuts</h3>
+
+<table>
+  <tr><th>Key</th><th>What it does</th></tr>
+  <tr><td class="kbd-cell">⌘ K · Ctrl K</td><td>Open / close switcher</td></tr>
+  <tr><td class="kbd-cell">⇧ ⌘ K</td><td>Open with last query pre-filled</td></tr>
+  <tr><td class="kbd-cell">↑ / ↓</td><td>Walk highlighted result up / down</td></tr>
+  <tr><td class="kbd-cell">PageUp / PageDown</td><td>Walk in chunks of 5</td></tr>
+  <tr><td class="kbd-cell">Home / End</td><td>Jump to first / last result</td></tr>
+  <tr><td class="kbd-cell">Tab</td><td>Jump to next group's first item</td></tr>
+  <tr><td class="kbd-cell">⇧ Tab</td><td>Jump to previous group's first item</td></tr>
+  <tr><td class="kbd-cell">↵</td><td>Open highlighted result (or first match)</td></tr>
+  <tr><td class="kbd-cell">⇧ ↵</td><td>Open in a new tab</td></tr>
+  <tr><td class="kbd-cell">⌘ P</td><td>Pin / unpin highlighted record (no leave)</td></tr>
+  <tr><td class="kbd-cell">+</td><td>On a Section result: create a new record there</td></tr>
+  <tr><td class="kbd-cell">⌘ Backspace</td><td>Clear the input</td></tr>
+  <tr><td class="kbd-cell">Backspace</td><td>On empty input: close the switcher</td></tr>
+  <tr><td class="kbd-cell">Esc</td><td>Close</td></tr>
+  <tr><td class="kbd-cell">⌘ ,</td><td>Open Settings (works without opening switcher)</td></tr>
+  <tr><td class="kbd-cell">⌘ 1 – ⌘ 6</td><td>Direct section jump (works without opening switcher)</td></tr>
+</table>
+
+<h2 id="shortcuts">4. Keyboard shortcuts (full list)</h2>
+
+<p>Most shortcuts are scoped to a marketing route — they don't fire while you're typing in another input or text area. The exceptions are <kbd>⌘ K</kbd>, <kbd>⌘ ,</kbd>, and <kbd>⌘ 1</kbd>–<kbd>⌘ 6</kbd>, which work everywhere.</p>
+
+<h3>4.1 Sidebar / page-level</h3>
+
+<table>
+  <tr><th>Key</th><th>What it does</th></tr>
+  <tr><td class="kbd-cell">/</td><td>Focus the sidebar filter</td></tr>
+  <tr><td class="kbd-cell">f</td><td>Focus the sidebar filter (alternate to /)</td></tr>
+  <tr><td class="kbd-cell">?</td><td>Open the keyboard shortcut help overlay</td></tr>
+  <tr><td class="kbd-cell">z</td><td>Open the help overlay (alternate to ?)</td></tr>
+  <tr><td class="kbd-cell">[</td><td>Collapse / expand the sidebar</td></tr>
+  <tr><td class="kbd-cell">c</td><td>Open the inline + New form</td></tr>
+  <tr><td class="kbd-cell">p</td><td>Pin / unpin the current record (show pages only)</td></tr>
+  <tr><td class="kbd-cell">y</td><td>Copy the current record's link to clipboard</td></tr>
+  <tr><td class="kbd-cell">m</td><td>Jump to Marketing Analytics</td></tr>
+  <tr><td class="kbd-cell">Esc</td><td>1st: clear filter · 2nd: unfocus · also closes any modal</td></tr>
+</table>
+
+<h3>4.2 Section navigation</h3>
+
+<table>
+  <tr><th>Key</th><th>What it does</th></tr>
+  <tr><td class="kbd-cell">g 1</td><td>Email Campaigns</td></tr>
+  <tr><td class="kbd-cell">g 2</td><td>Marketing Campaigns</td></tr>
+  <tr><td class="kbd-cell">g 3</td><td>Sequences</td></tr>
+  <tr><td class="kbd-cell">g 4</td><td>Forms</td></tr>
+  <tr><td class="kbd-cell">g 5</td><td>Marketing Analytics</td></tr>
+  <tr><td class="kbd-cell">g 6</td><td>Audiences (People)</td></tr>
+  <tr><td class="kbd-cell">g 7</td><td>Landing Pages</td></tr>
+  <tr><td class="kbd-cell">j / k</td><td>Walk to next / previous marketing section</td></tr>
+  <tr><td class="kbd-cell">⌘ 1 – ⌘ 6</td><td>Section jump from anywhere (incl. non-marketing routes)</td></tr>
+</table>
+
+<h3>4.3 Pinned navigation</h3>
+
+<table>
+  <tr><th>Key</th><th>What it does</th></tr>
+  <tr><td class="kbd-cell">1 – 9</td><td>Jump to pinned record at that position</td></tr>
+  <tr><td class="kbd-cell">n / b</td><td>Walk to next / previous pinned record</td></tr>
+</table>
+
+<h3>4.4 Sidebar filter (when focused)</h3>
+
+<table>
+  <tr><th>Key</th><th>What it does</th></tr>
+  <tr><td class="kbd-cell">↑ / ↓</td><td>Walk highlighted result</td></tr>
+  <tr><td class="kbd-cell">↵</td><td>Open highlighted (or first match)</td></tr>
+  <tr><td class="kbd-cell">Tab</td><td>Move focus from input to first row</td></tr>
+  <tr><td class="kbd-cell">Esc</td><td>1st: clear filter · 2nd: unfocus input</td></tr>
+</table>
+
+<h3>4.5 Sidebar scrolling (vim-style)</h3>
+
+<table>
+  <tr><th>Key</th><th>What it does</th></tr>
+  <tr><td class="kbd-cell">g g</td><td>Scroll sidebar to top</td></tr>
+  <tr><td class="kbd-cell">⇧ G</td><td>Scroll sidebar to bottom</td></tr>
+</table>
+
+<h2 id="email">5. Email Campaigns</h2>
+
+<p>Email Campaigns are one-off and scheduled marketing emails. Each campaign has a name, subject, body (built visually), recipients, and a status (Draft → Scheduled → Sending → Sent / Paused).</p>
+
+<h3>5.1 Creating a campaign</h3>
+
+<ol>
+  <li>Press <kbd>g 1</kbd> or click <strong>Marketing → Email Campaigns</strong> in the drawer.</li>
+  <li>Click <strong>+ New email campaign</strong> in the sidebar (or press <kbd>c</kbd>).</li>
+  <li>Type a name (e.g. "Q4 Newsletter") and press <kbd>Enter</kbd>. The new campaign opens.</li>
+  <li>Fill in <em>Subject</em>, <em>From email</em>, <em>From name</em> in the right-rail.</li>
+  <li>Build the body in the <strong>Email builder</strong> tab.</li>
+  <li>Add recipients — either bulk via "Add recipients from view" or one-at-a-time.</li>
+  <li>Send a test (<strong>Send test</strong>) to confirm the rendering looks right.</li>
+  <li>Either <strong>Send now</strong> or set a Scheduled Date for delivery later.</li>
+</ol>
+
+<h3>5.2 The email builder</h3>
+
+<p>The body is composed of <em>sections</em>, each split into <em>columns</em>, each holding <em>modules</em>:</p>
+
+<ul>
+  <li><strong>Heading</strong> — H1 / H2 / H3 with alignment, color, weight controls.</li>
+  <li><strong>Text</strong> — rich-text block with token support (<code>{{contact.firstName}}</code>, etc.).</li>
+  <li><strong>Button</strong> — call-to-action with bg / text colors, padding, radius.</li>
+  <li><strong>Image</strong> — uploads through the Twenty file system.</li>
+  <li><strong>Divider · Spacer · HTML</strong> — layout primitives + raw HTML escape hatch.</li>
+  <li><strong>Social · Footer</strong> — social icon row + footer with literal <code>{{unsubscribe_link}}</code> token.</li>
+</ul>
+
+<p>Section layouts: 1 column, 2 columns, 3 columns, 4 columns, or asymmetric 1/2 and 2/1. Drag the section divider to change widths. Modules drag-reorder within a column.</p>
+
+<h3>5.3 Tokens and substitutions</h3>
+
+<p>Anywhere a text or button accepts content, you can use these tokens. The send executor replaces them at delivery time:</p>
+
+<ul>
+  <li><code>{{contact.firstName}}</code> · <code>{{contact.lastName}}</code></li>
+  <li><code>{{contact.email}}</code></li>
+  <li><code>{{contact.companyName}}</code></li>
+  <li><code>{{unsubscribe_link}}</code> — required in every send (compliance)</li>
+</ul>
+
+<h3>5.4 Test sends &amp; preview links</h3>
+
+<p>Before sending, use:</p>
+<ul>
+  <li><strong>Send test</strong> — sends the current body to one or more email addresses you specify, with a sample contact's substitutions.</li>
+  <li><strong>Generate preview link</strong> — produces a 7-day signed URL where anyone can view the rendered email in a browser. Useful for sharing with stakeholders for review.</li>
+</ul>
+
+<h3>5.5 Stats</h3>
+
+<p>Once sent, the campaign tracks <em>recipientCount</em>, <em>sentCount</em>, <em>openCount</em>, <em>clickCount</em>, <em>bounceCount</em>, <em>unsubscribeCount</em>. The Marketing Analytics page (section 11) aggregates these across all campaigns.</p>
+
+<h2 id="marketing-campaigns">6. Marketing Campaigns</h2>
+
+<p>Marketing Campaigns are <em>groupings</em> — they tie together emails, sequences, forms, and landing pages that all serve a single initiative (e.g. "Spring 2026 Product Launch"). They give you one place to see everything related to a campaign, plus aggregated metrics.</p>
+
+<h3>6.1 Creating one</h3>
+
+<ol>
+  <li><kbd>g 2</kbd> or <strong>Marketing → Marketing Campaigns</strong>.</li>
+  <li><strong>+ New marketing campaign</strong>, name it, hit <kbd>Enter</kbd>.</li>
+  <li>On the new record, set <em>Status</em>, <em>Owner</em>, <em>Start date</em>, <em>End date</em>, <em>Goal</em>.</li>
+</ol>
+
+<h3>6.2 Linking emails to a campaign</h3>
+
+<p>Two ways:</p>
+<ul>
+  <li><strong>Primary FK</strong> — set <em>Marketing Campaign</em> on an email's record-show page.</li>
+  <li><strong>Additional campaigns</strong> (many-to-many) — use the <em>Additional Marketing Campaigns</em> field to link an email to <em>any number</em> of other marketing campaigns. Useful when one email is shared across two initiatives.</li>
+</ul>
+
+<h2 id="sequences">7. Sequences</h2>
+
+<p>Sequences are multi-step automated cadences — drip campaigns. Each step is a delay + an action (send email, wait, branch on engagement, etc.).</p>
+
+<h3>7.1 Building a sequence</h3>
+
+<ol>
+  <li><kbd>g 3</kbd> or <strong>Marketing → Sequences</strong>.</li>
+  <li><strong>+ New sequence</strong>, name it, open the record.</li>
+  <li>In the <strong>Cadence</strong> tab, add steps:
+    <ul>
+      <li><strong>Send email</strong> — pick a campaign template.</li>
+      <li><strong>Wait</strong> — N days / hours.</li>
+      <li><strong>Branch</strong> — split if the recipient opened or clicked.</li>
+    </ul>
+  </li>
+  <li>Set the <em>Entry</em> trigger: form submission, list membership, manual enroll.</li>
+  <li>Activate by setting <em>Status</em> to <code>Active</code>.</li>
+</ol>
+
+<div class="callout warn">
+<strong>Heads up:</strong> Once active, the sequence runs on its own. Test with a small audience first by using a tag or test list as the entry trigger.
+</div>
+
+<h2 id="forms">8. Forms</h2>
+
+<p>Forms capture leads from external pages or embed-style placements. Each form publishes a public URL (<code>https://crm.geracillp.com/forms/&lt;form-id&gt;</code>), an iframe embed snippet, and a JSON submission API for posting from any external domain.</p>
+
+<h3>8.1 Creating a form</h3>
+
+<ol>
+  <li><kbd>g 4</kbd> or <strong>Marketing → Forms</strong>.</li>
+  <li><strong>+ New form</strong>, name it.</li>
+  <li>Add fields in the <strong>Builder</strong> tab. The Type dropdown supports 16 field types: short text, long text, number, boolean (checkbox), rating (1-5 stars), date, date &amp; time, email (validated), phone (E.164), URL (validated), address, full name, file upload, single-select, multi-select, and record (CRM lookup).</li>
+  <li>Configure:
+    <ul>
+      <li><em>Submit button label</em></li>
+      <li><em>Success message</em> (or redirect URL)</li>
+      <li><em>Auto-create person</em> — if on, every submission creates a new Person record.</li>
+      <li><em>Tags to apply on submission</em> — string array. When auto-create is on, these tags are merged into the new (or matched) Person's <code>tags</code> field. Use them to segment "submitted Newsletter signup form" vs "submitted Demo request form".</li>
+    </ul>
+  </li>
+  <li><strong>Publish</strong> — flips status to PUBLISHED and exposes the public URL.</li>
+</ol>
+
+<h3>8.2 Embedding (iframe)</h3>
+
+<p>From the form's record show page, copy the iframe snippet from <strong>Public URL → Embed code</strong>. Paste it into any HTML page. The iframe loads the CRM-rendered form and posts back to the CRM directly — no JS required on the host page. This is the simplest integration path; the form's UI is the CRM's UI.</p>
+
+<h3>8.3 Custom-form integration (JSON API)</h3>
+
+<p>If you want to build your own form on a different domain (your marketing site, a custom landing page, etc.) and post to the CRM, use the public submission endpoint directly. No auth, no API key, just a POST.</p>
+
+<h4>Endpoint</h4>
+
+<pre>POST https://crm.geracillp.com/forms/&lt;workspace-id&gt;/&lt;form-id&gt;/submit
+Content-Type: application/json
+
+{
+  "fields": {
+    "email": "user@example.com",
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "phone": "+15551234567",
+    "company": "Acme Inc."
+  },
+  "submitterEmail": "user@example.com",
+  "submitterName": "Jane Doe"
+}</pre>
+
+<p><strong>workspace-id</strong> is a stable UUID for the workspace (same one you see in admin URLs). <strong>form-id</strong> is the form record's <code>id</code> — visible at the top of the form's record show page or via the embed iframe URL.</p>
+
+<p><strong>Body shape:</strong></p>
+<ul>
+  <li><code>fields</code> — required. Map of <code>{ formFieldName: value }</code>. Field names match the <em>Name</em> set on each field in the Builder tab (default is the field's label, lowerCamelCased). Values are typed loosely; the server casts to the field's declared type.</li>
+  <li><code>submitterEmail</code> — optional. If present, used for dedup against existing People records and as the recipient for the confirmation email (when <em>Send confirmation email</em> is on).</li>
+  <li><code>submitterName</code> — optional. Used as <em>firstName</em> if not otherwise provided in <code>fields</code>.</li>
+</ul>
+
+<p><strong>Response (200 OK):</strong></p>
+<pre>{
+  "submissionId": "&lt;uuid&gt;",
+  "personId": "&lt;uuid|null&gt;"
+}</pre>
+
+<p>If <em>Auto-create person</em> is on, <code>personId</code> is the id of the created (or matched, by email) Person record. If off, <code>personId</code> is <code>null</code>.</p>
+
+<p><strong>Error responses:</strong></p>
+<ul>
+  <li><strong>400</strong> — validation failure (missing required field, pattern mismatch, etc.). Body: <code>{ "errors": { "fieldName": "human message" } }</code>.</li>
+  <li><strong>404</strong> — form not found, not PUBLISHED, or workspace not found.</li>
+  <li><strong>500</strong> — server error. Lead auto-creation failures are logged but don't fail the submission — the FormSubmission record is still saved.</li>
+</ul>
+
+<h4>CORS</h4>
+
+<p>The endpoint is configured with <code>origin: true</code> globally — the response's <code>Access-Control-Allow-Origin</code> header echoes the request <code>Origin</code>, so cross-origin POSTs from any external domain work in browsers. <code>Access-Control-Allow-Credentials: true</code> is also set (for the cookie-credentialed admin app), but you don't need to pass cookies for form submissions.</p>
+
+<h4>Custom-form fetch example (browser-side JS)</h4>
+
+<pre>const form = document.querySelector('#my-form');
+
+form.addEventListener('submit', async (e) =&gt; {
+  e.preventDefault();
+  const data = new FormData(form);
+
+  const res = await fetch(
+    'https://crm.geracillp.com/forms/&lt;workspace-id&gt;/&lt;form-id&gt;/submit',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fields: Object.fromEntries(data),
+        submitterEmail: data.get('email'),
+        submitterName: data.get('firstName'),
+      }),
+    },
+  );
+
+  if (res.ok) {
+    const { submissionId, personId } = await res.json();
+    // redirect, show success message, fire analytics, etc.
+  } else {
+    const { errors } = await res.json();
+    // surface field-level errors to the user
+  }
+});</pre>
+
+<h4>Server-to-server submissions</h4>
+
+<p>Same endpoint works from a backend (Node, PHP, Python, etc.) — no CORS to worry about server-side. Useful for piping leads from a third-party form builder (Typeform, JotForm, Google Forms via webhook) into the CRM.</p>
+
+<div class="callout">
+<strong>Spam protection:</strong> The endpoint has no built-in rate limiting or CAPTCHA. If you expose the form publicly via the JSON API, consider adding:
+<ul>
+  <li>Cloudflare Turnstile / reCAPTCHA on your form, validated server-side before forwarding to the CRM.</li>
+  <li>A simple honeypot field on your form that the API call drops if filled.</li>
+  <li>Cloudflare WAF rate-limit rule on the <code>/forms/*/submit</code> path.</li>
+</ul>
+</div>
+
+<h3>8.4 Submissions</h3>
+
+<p>Each submission shows up under the form's <strong>Submissions</strong> tab. If <em>Auto-create person</em> was on, the corresponding Person record is linked. The Person inherits any tags configured in <em>Tags to apply on submission</em> on the Form. If the Person already existed (matched by email), the new tags are unioned onto the existing <code>tags</code> array — you don't lose tags from earlier form submissions.</p>
+
+<h2 id="landing">9. Landing Pages</h2>
+
+<p>Landing Pages are public web pages built inside the CRM. Each page has a slug (the URL path), title, status (Draft / Published / Archived), meta title, meta description, and a visual design built from sections + columns + modules — same mental model as the email builder.</p>
+
+<h3>9.1 Creating a landing page</h3>
+
+<ol>
+  <li><kbd>g 7</kbd> or <strong>Marketing → Landing Pages</strong>.</li>
+  <li><strong>+ New landing page</strong>, give it a title, hit <kbd>Enter</kbd>.</li>
+  <li>The new record opens with three tabs: <strong>Builder</strong>, <strong>Preview</strong>, <strong>Settings</strong>.</li>
+  <li>In <strong>Settings</strong>, set the slug (e.g. <code>spring-launch</code>) and meta tags.</li>
+  <li>In <strong>Builder</strong>, design the page (next subsection).</li>
+  <li>Set <em>Status</em> to <code>PUBLISHED</code>. The page goes live at <code>/lp/&lt;slug&gt;</code>.</li>
+</ol>
+
+<h3>9.2 The builder</h3>
+
+<p>Three panels:</p>
+
+<h4>Left rail — module library</h4>
+<p>Click any tile to add a module to the currently-selected section. If no section exists yet, clicking auto-creates one. Modules are grouped:</p>
+
+<ul>
+  <li><strong>Layouts</strong> — 1 / 2 / 3 / 4 columns, plus 1/2 and 2/1 asymmetric splits. Click a layout tile to add a new section with that layout.</li>
+  <li><strong>Layout modules</strong> — Header / Nav (top bar with brand + links + CTA), Hero (full-width banner + heading + subheading + CTA), Feature list (2/3-col grid or list of icon + title + body cards), Social (icon row).</li>
+  <li><strong>Content</strong> — Heading (H1–H4), Text (HTML body), Button (CTA).</li>
+  <li><strong>Media</strong> — Image (with width + alignment + optional click-through link), HTML (raw escape hatch).</li>
+  <li><strong>Forms</strong> — Form embed (drops in a published form from the Forms section by ID).</li>
+  <li><strong>Spacers</strong> — Divider (line), Spacer (vertical gap).</li>
+</ul>
+
+<h4>Center — live canvas</h4>
+<p>Each section renders live with its modules. Click a section to select it (orange dashed border). Click a module to open the editor (right rail). Sections show:</p>
+<ul>
+  <li>↑ / ↓ — move section up / down in the page</li>
+  <li>× — delete section</li>
+  <li>A chip strip below the section's modules — click any chip to add another module to this section</li>
+</ul>
+
+<p>The top bar shows the active section's layout picker (1 / 2 / 3 / 4 / 1-2 / 2-1) and a <strong>+ Add section</strong> button.</p>
+
+<h4>Right rail — module editor</h4>
+<p>Opens when you click a module. Type-specific fields:</p>
+<ul>
+  <li><strong>Heading / Text / Button</strong> — content + alignment + colors + size.</li>
+  <li><strong>Image</strong> — URL + alt + width % + alignment + optional link.</li>
+  <li><strong>Hero</strong> — heading, subheading, CTA label / link, bg color, optional bg image URL (with dark overlay), text color, alignment, min-height.</li>
+  <li><strong>Feature list</strong> — layout (2-col / 3-col / list) + colors. Add / edit / remove items inline (icon + title + body each).</li>
+  <li><strong>Form embed</strong> — paste a form's UUID. Optional heading + CTA label overrides.</li>
+  <li><strong>Header / Nav</strong> — brand text + logo URL, link list (label + href), CTA, bg / text colors.</li>
+  <li><strong>Social</strong> — icon size + spacing + alignment + per-platform links.</li>
+</ul>
+
+<p>The <strong>×</strong> in the editor's header closes it.</p>
+
+<h3>9.3 Preview &amp; publish</h3>
+
+<p>The <strong>Preview</strong> tab renders the page as visitors will see it (no editor chrome). When status is PUBLISHED a <strong>Live at: <em>url</em></strong> bar appears at the top of the widget — click the URL to open the public page in a new tab.</p>
+
+<p>The public URL pattern is <code>https://crm.geracillp.com/lp/&lt;slug&gt;</code>. Each visit increments the page's <em>viewCount</em> (visible on the record).</p>
+
+<h3>9.4 Migration note</h3>
+
+<p>Pages created before the visual builder shipped used a simpler section format. They auto-migrate to the new design schema on first open — no action needed. Old pages keep rendering at their public URLs throughout the migration.</p>
+
+<h2 id="audiences">10. Audiences (People)</h2>
+
+<p>People are your contact records — leads, customers, partners. Same record shape as the core CRM's Person object; the marketing tools layer adds segmentation features on top.</p>
+
+<h3>10.1 Adding people</h3>
+
+<ul>
+  <li><strong>Manually</strong> — <kbd>g 6</kbd> → + New person. Fill in fields.</li>
+  <li><strong>Form submissions</strong> — when <em>Auto-create person</em> is on for a form (section 8.1), each submission creates a Person.</li>
+  <li><strong>Bulk import</strong> — see Admin section 12.2.</li>
+  <li><strong>HubSpot migration</strong> — there's an in-progress scripted import via the metadata API. Companies + people are imported; deals + notes are pending. Talk to admin if you need to refresh from HubSpot.</li>
+</ul>
+
+<h3>10.2 Segmentation</h3>
+
+<p>Use Twenty's standard list / tag / view machinery. Saved views in the People section show up as Views in the Marketing Tool Sidebar — one click to load that filter on the index page.</p>
+
+<h2 id="analytics">11. Marketing Analytics</h2>
+
+<p><kbd>g 5</kbd> or <strong>Marketing → Analytics</strong>. The page aggregates send / open / click / bounce / unsubscribe stats across all email campaigns, plus per-marketing-campaign rollups.</p>
+
+<p>Charts:</p>
+<ul>
+  <li><strong>Sends over time</strong> — week / month series.</li>
+  <li><strong>Engagement funnel</strong> — sent → delivered → opened → clicked.</li>
+  <li><strong>Top campaigns</strong> — by open rate, click rate, conversion.</li>
+  <li><strong>Per-marketing-campaign rollup</strong> — aggregates all child emails / sequences / forms / landing pages of each marketing campaign.</li>
+</ul>
+
+<p>The Marketing Tool Sidebar on this page also surfaces a <strong>Recently updated</strong> cross-section feed — the 8 most-recently-touched marketing records of any type, so you can dive into whatever you were last working on.</p>
+
+<h2 id="admin">12. Admin / housekeeping</h2>
+
+<h3>12.1 Workspace settings</h3>
+
+<p><kbd>⌘ ,</kbd> or <strong>Other → Settings</strong>. The bits relevant to marketing:</p>
+<ul>
+  <li><strong>Email sender domain</strong> — DKIM / SPF setup. Without proper auth, sends will land in spam.</li>
+  <li><strong>Members</strong> — invite / revoke users.</li>
+  <li><strong>API keys</strong> — for the metadata-API import scripts.</li>
+</ul>
+
+<h3>12.2 Bulk import gotchas</h3>
+
+<p>If you're loading contacts at scale via the API, watch out for:</p>
+<ul>
+  <li><strong>Rate limits</strong> — the metadata API throttles. Use batches of ~100 with retry-on-429.</li>
+  <li><strong>E.164 phone format</strong> — phones must include country code (<code>+15551234567</code>). Plain US numbers fail validation.</li>
+  <li><strong>Reserved field names</strong> — <code>type</code>, <code>status</code> have special meanings; check field docs before mapping.</li>
+  <li><strong>Split-and-retry</strong> — if a batch fails, halve it and retry recursively until you find the bad row.</li>
+</ul>
+
+<h3>12.3 Deployment notes (for admins)</h3>
+
+<p>The CRM runs on Railway pulling <code>ghcr.io/geraci-llp/twenty-crm:railway</code>. Each push to main triggers a GitHub Actions image build (~10 min) and a Railway redeploy (~10 min). Total ~20 minutes from push to live.</p>
+
+<p>If a feature requires a new database column or workspace entity, the admin must run <code>workspace:sync-metadata</code> against the live database after the deploy. Check the deploy notes for any migration step.</p>
+
+<h2 id="troubleshooting">13. Troubleshooting</h2>
+
+<h3>13.1 "I don't see the sidebar"</h3>
+
+<p>The Marketing Tool Sidebar only renders on marketing routes — <code>/objects/campaigns</code>, <code>/objects/sequences</code>, <code>/marketing/analytics</code>, etc. If you're on a non-marketing page (like Settings), it won't appear. Use <kbd>⌘ K</kbd> instead.</p>
+
+<h3>13.2 "Cmd+K doesn't open"</h3>
+
+<p>Make sure your cursor isn't focused inside an editor that grabs <kbd>⌘ K</kbd> for itself (some rich-text editors do). Click somewhere outside, then try again. If it still doesn't open, hard-refresh (<kbd>⌘ ⇧ R</kbd>) — the latest deploy may not have loaded.</p>
+
+<h3>13.3 "My pinned record disappeared"</h3>
+
+<p>Pinned records are local to your browser (localStorage). If you cleared site data, switched browsers, or are using a different device, you'll need to re-pin. Pinning is per-section: pinned campaigns don't show up under People.</p>
+
+<h3>13.4 "The landing page isn't live"</h3>
+
+<p>Check three things:</p>
+<ol>
+  <li>Status is <code>PUBLISHED</code> (not DRAFT or ARCHIVED).</li>
+  <li>Slug is set and unique.</li>
+  <li>You're using the right URL: <code>https://crm.geracillp.com/lp/&lt;slug&gt;</code> — note the <code>/lp/</code> prefix, not <code>/landing-pages/</code>.</li>
+</ol>
+
+<h3>13.5 "Email goes to spam"</h3>
+
+<p>Almost always a sender-auth issue. Verify:</p>
+<ul>
+  <li>SPF record on the sender domain includes the CRM's send infrastructure.</li>
+  <li>DKIM is configured and verified (Settings → Email sender domain).</li>
+  <li>The from-email matches the verified domain — no random gmail.com sender on a custom domain campaign.</li>
+</ul>
+
+<h3>13.6 "I broke something"</h3>
+
+<p><kbd>⌘ Z</kbd> doesn't undo CRM operations. But you can:</p>
+<ul>
+  <li>Restore a deleted record from the trash (Settings → Data model → Trash).</li>
+  <li>Revert a campaign body — not currently versioned. Test sends before saving major edits.</li>
+  <li>Land in a weird state — sign out and back in. Most stuck UIs clear that way.</li>
+</ul>
+
+<hr />
+
+<p class="meta">End of manual. Questions? Hit <kbd>?</kbd> on any marketing page for the in-app shortcut overlay, or open the Quick Switcher with <kbd>⌘ K</kbd> and type "settings" to find Documentation links.</p>
+
+</div>
+</body>
+</html>
