@@ -4,7 +4,7 @@ const DASHBOARD_TOKEN_COOKIE = 'twenty_dashboard_token';
 const AUTH_CALLBACK_PATH = '/auth-callback';
 
 export const middleware = (request: NextRequest) => {
-  const { pathname, origin, search } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
 
   // Skip for the auth callback route (it sets the cookie)
   if (pathname.startsWith(AUTH_CALLBACK_PATH)) {
@@ -17,9 +17,19 @@ export const middleware = (request: NextRequest) => {
     return NextResponse.next();
   }
 
+  // Behind Railway's edge proxy, request.nextUrl.origin is the internal
+  // http://localhost:<port> — useless for the returnTo. Reconstruct the
+  // public origin from the forwarded headers Railway sets.
+  const forwardedProto = request.headers.get('x-forwarded-proto') ?? 'https';
+  const forwardedHost =
+    request.headers.get('x-forwarded-host') ?? request.headers.get('host');
+  const publicOrigin = forwardedHost
+    ? `${forwardedProto}://${forwardedHost}`
+    : request.nextUrl.origin;
+
   const crmBaseUrl =
     process.env.NEXT_PUBLIC_CRM_BASE_URL ?? 'https://crm.geracillp.com';
-  const returnTo = encodeURIComponent(`${origin}${pathname}${search}`);
+  const returnTo = encodeURIComponent(`${publicOrigin}${pathname}${search}`);
   const redirectUrl = `${crmBaseUrl}/dashboard-redirect?returnTo=${returnTo}`;
 
   return NextResponse.redirect(redirectUrl);
