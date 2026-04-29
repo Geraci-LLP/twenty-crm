@@ -35,12 +35,26 @@ const looksLikeJwt = (token: string): boolean => {
   return parts.every((part) => /^[A-Za-z0-9_-]+$/.test(part));
 };
 
+// Behind Railway's edge proxy, `request.nextUrl.origin` is the internal
+// `http://localhost:<port>` — useless for any redirect we hand back to the
+// browser. Reconstruct the public origin from the forwarded headers Railway
+// sets, falling back to `request.nextUrl.origin` for local dev.
+const getPublicOrigin = (request: NextRequest): string => {
+  const forwardedProto = request.headers.get('x-forwarded-proto') ?? 'https';
+  const forwardedHost =
+    request.headers.get('x-forwarded-host') ?? request.headers.get('host');
+  return forwardedHost
+    ? `${forwardedProto}://${forwardedHost}`
+    : request.nextUrl.origin;
+};
+
 export const GET = async (request: NextRequest) => {
   const token = request.nextUrl.searchParams.get('token');
+  const publicOrigin = getPublicOrigin(request);
 
   if (!token || !looksLikeJwt(token)) {
     // No/invalid token — bounce back to CRM to restart the handshake.
-    const returnTo = encodeURIComponent(request.nextUrl.origin);
+    const returnTo = encodeURIComponent(publicOrigin);
     return NextResponse.redirect(
       `${getCrmBaseUrl()}/dashboard-redirect?returnTo=${returnTo}`,
     );
@@ -52,7 +66,11 @@ export const GET = async (request: NextRequest) => {
   // `dash.`; leave it unset in local dev (where we're on localhost or a
   // single host) so the browser scopes it to the current origin.
   const cookieDomain = process.env.DASHBOARD_COOKIE_DOMAIN;
-  const isSecure = request.nextUrl.protocol === 'https:';
+  // Behind the edge proxy the upstream protocol is plain http; trust the
+  // forwarded-proto header to know whether the browser came in via https.
+  const forwardedProto = request.headers.get('x-forwarded-proto');
+  const isSecure =
+    forwardedProto === 'https' || request.nextUrl.protocol === 'https:';
 
   cookieStore.set({
     name: DASHBOARD_TOKEN_COOKIE,
@@ -65,6 +83,6 @@ export const GET = async (request: NextRequest) => {
     ...(cookieDomain ? { domain: cookieDomain } : {}),
   });
 
-  const redirectUrl = new URL('/', request.nextUrl.origin);
+  const redirectUrl = new URL('/', publicOrigin);
   return NextResponse.redirect(redirectUrl);
 };
