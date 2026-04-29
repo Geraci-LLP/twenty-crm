@@ -132,24 +132,20 @@ const StyledCanvas = styled.div`
   padding: 32px 24px;
 `;
 
-// Stack steps vertically when the canvas is too narrow to fit them
-// side-by-side. Below ~900px the connector arrows look bad
-// horizontally — wrap to a column so the user can still see / edit
-// each step.
+// Always stack steps vertically — the builder is mounted inside
+// Twenty's record-show widget area, never the full viewport, so
+// even when @media says "wide" the actual container is narrow.
+// Vertical stacking always fits and keeps Step 1 + On Submit both
+// fully visible inside whatever column we're given.
 const StyledCanvasFlow = styled.div`
   align-items: stretch;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 24px;
-  justify-content: center;
   margin: 0 auto;
-  max-width: 1100px;
+  max-width: 720px;
   position: relative;
   width: 100%;
-  @media (max-width: 900px) {
-    flex-direction: column;
-  }
 `;
 
 const StyledStepPanel = styled.div<{ selected?: boolean }>`
@@ -208,7 +204,10 @@ export const FormBuilderCanvas = ({
   contents,
   onChange,
 }: FormBuilderCanvasProps) => {
-  const [leftMode, setLeftMode] = useState<LeftRailMode>('contents');
+  // Default both panels closed so the canvas is visible on first
+  // open. User opens panels via the icon rail; they overlay the
+  // canvas and a × in the panel header dismisses.
+  const [leftMode, setLeftMode] = useState<LeftRailMode>(null);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   // ─── Mutation helpers ──────────────────────────────────────────
