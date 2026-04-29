@@ -31,9 +31,9 @@ const redirectToCrmAuth = () => {
   window.location.href = `${crmBaseUrl}/dashboard-redirect?returnTo=${returnTo}`;
 };
 
-let client: ApolloClient<unknown> | null = null;
+let client: ApolloClient | null = null;
 
-export const getApolloClient = (): ApolloClient<unknown> => {
+export const getApolloClient = (): ApolloClient => {
   if (client !== null) {
     return client;
   }
