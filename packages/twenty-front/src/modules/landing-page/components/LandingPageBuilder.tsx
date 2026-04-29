@@ -37,22 +37,79 @@ type LandingPageBuilderProps = {
   onChange: (next: LandingPageDesign) => void;
 };
 
+// Same pattern as the form builder: builder lives inside Twenty's
+// record-show widget area which is often <800px wide. Use an icon
+// rail (48px) + full-width canvas, with the module library as a
+// click-to-open overlay panel that slides over the canvas. The
+// canvas is always visible at full width — panels float above.
 const StyledLayout = styled.div`
-  display: grid;
-  grid-template-columns: 220px 1fr;
+  display: flex;
+  flex-direction: row;
   height: 100%;
   min-height: 600px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
 `;
 
-const StyledLeftRail = styled.div`
+// Slim icon rail — always visible. Click "+" to toggle the module
+// library overlay.
+const StyledIconRail = styled.div`
   background: ${themeCssVariables.background.primary};
   border-right: 1px solid ${themeCssVariables.border.color.light};
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 12px 8px;
+  width: 48px;
+  z-index: 2;
+`;
+
+const StyledRailIconButton = styled.button<{ active?: boolean }>`
+  align-items: center;
+  background: ${(p) =>
+    p.active === true
+      ? themeCssVariables.background.transparent.medium
+      : 'transparent'};
+  border: 0;
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${(p) =>
+    p.active === true
+      ? themeCssVariables.color.orange
+      : themeCssVariables.font.color.secondary};
+  cursor: pointer;
+  display: flex;
+  font-size: 18px;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+  &:hover {
+    background: ${themeCssVariables.background.transparent.lighter};
+    color: ${themeCssVariables.font.color.primary};
+  }
+`;
+
+// Module library — overlays the canvas instead of taking column space.
+/* oxlint-disable twenty/no-hardcoded-colors -- panel drop shadows
+   use a low-opacity black, no theme equivalent. */
+const StyledLeftRail = styled.div`
+  background: ${themeCssVariables.background.primary};
+  border-right: 1px solid ${themeCssVariables.border.color.light};
+  bottom: 0;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
   gap: ${themeCssVariables.spacing[3]};
+  left: 48px;
   overflow-y: auto;
   padding: ${themeCssVariables.spacing[3]};
+  position: absolute;
+  top: 0;
+  width: 280px;
+  z-index: 3;
 `;
+/* oxlint-enable twenty/no-hardcoded-colors */
 
 const StyledRailGroupLabel = styled.div`
   color: ${themeCssVariables.font.color.tertiary};
@@ -64,10 +121,14 @@ const StyledRailGroupLabel = styled.div`
   text-transform: uppercase;
 `;
 
+// Single-column layout so cards have room for their full label.
+// HubSpot's screenshot uses 2-column at ~250px-per-card; we don't
+// have that width budget inside Twenty's widget, so collapse to
+// one wider card per row.
 const StyledRailGrid = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: ${themeCssVariables.spacing[1]};
-  grid-template-columns: 1fr 1fr;
 `;
 
 const StyledRailItem = styled.button`
@@ -78,14 +139,15 @@ const StyledRailItem = styled.button`
   color: ${themeCssVariables.font.color.primary};
   cursor: pointer;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   font-family: ${themeCssVariables.font.family};
-  font-size: 11px;
-  gap: 4px;
-  padding: 10px 6px;
-  text-align: center;
+  font-size: 12.5px;
+  gap: 10px;
+  padding: 10px 12px;
+  text-align: left;
   &:hover {
     background: ${themeCssVariables.background.transparent.medium};
+    border-color: ${themeCssVariables.color.orange};
   }
 `;
 
@@ -272,6 +334,9 @@ export const LandingPageBuilder = ({
   onChange,
 }: LandingPageBuilderProps) => {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+  // Module library overlay open/closed. Default closed so canvas is
+  // visible by default; user opens it via the icon rail.
+  const [isLibraryOpen, setIsLibraryOpen] = useState<boolean>(false);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(
     design.sections[0]?.id ?? null,
   );
@@ -433,6 +498,16 @@ export const LandingPageBuilder = ({
 
   return (
     <StyledLayout>
+      <StyledIconRail>
+        <StyledRailIconButton
+          active={isLibraryOpen}
+          onClick={() => setIsLibraryOpen((v) => !v)}
+          title="Add layout / module"
+        >
+          +
+        </StyledRailIconButton>
+      </StyledIconRail>
+      {isLibraryOpen && (
       <StyledLeftRail>
         <StyledRailGroupLabel>Layouts</StyledRailGroupLabel>
         <StyledRailGrid>
@@ -492,6 +567,7 @@ export const LandingPageBuilder = ({
           );
         })}
       </StyledLeftRail>
+      )}
 
       <StyledCanvasWrapper>
         <StyledTopBar>
