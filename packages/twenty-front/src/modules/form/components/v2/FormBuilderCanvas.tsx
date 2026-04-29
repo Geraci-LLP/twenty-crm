@@ -1,5 +1,5 @@
 import { styled } from '@linaria/react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 import { FormAddPanel } from '@/form/components/v2/FormAddPanel';
@@ -36,14 +36,45 @@ type LeftRailMode = 'add' | 'contents' | null;
 // Photoshop tool palettes instead of occupying permanent columns.
 // The canvas always takes all available width minus the 48px icon
 // rail; panels slide in over the top with a slight backdrop.
-const StyledRoot = styled.div`
+// Two layout modes: embedded (inside Twenty's record-show widget)
+// and fullscreen (fixed-position takeover of the viewport).
+// HubSpot's form/page builder is its own full-screen surface; the
+// fullscreen toggle gives the user the same option here.
+const StyledRoot = styled.div<{ isFullscreen?: boolean }>`
+  background: ${themeCssVariables.background.tertiary};
   display: flex;
   flex-direction: row;
-  height: 100%;
+  height: ${(p) => (p.isFullscreen === true ? '100vh' : '100%')};
+  inset: ${(p) => (p.isFullscreen === true ? '0' : 'auto')};
   min-height: 600px;
   overflow: hidden;
-  position: relative;
-  width: 100%;
+  position: ${(p) => (p.isFullscreen === true ? 'fixed' : 'relative')};
+  width: ${(p) => (p.isFullscreen === true ? '100vw' : '100%')};
+  z-index: ${(p) => (p.isFullscreen === true ? '9999' : 'auto')};
+`;
+
+const StyledFullscreenToggle = styled.button`
+  align-items: center;
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  display: flex;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11px;
+  font-weight: 500;
+  gap: 4px;
+  padding: 5px 10px;
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  z-index: 10;
+  &:hover {
+    background: ${themeCssVariables.background.transparent.lighter};
+    border-color: ${themeCssVariables.color.orange};
+    color: ${themeCssVariables.color.orange};
+  }
 `;
 
 // Vertical icon strip — always visible. Two icons: + (Add) and the
@@ -209,6 +240,18 @@ export const FormBuilderCanvas = ({
   // canvas and a × in the panel header dismisses.
   const [leftMode, setLeftMode] = useState<LeftRailMode>(null);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isFullscreen]);
 
   // ─── Mutation helpers ──────────────────────────────────────────
 
@@ -406,7 +449,18 @@ export const FormBuilderCanvas = ({
   })();
 
   return (
-    <StyledRoot>
+    <StyledRoot isFullscreen={isFullscreen}>
+      <StyledFullscreenToggle
+        type="button"
+        onClick={() => setIsFullscreen((v) => !v)}
+        title={
+          isFullscreen
+            ? 'Exit fullscreen (Esc)'
+            : 'Open in fullscreen — recommended for editing'
+        }
+      >
+        {isFullscreen ? '⤡ Exit fullscreen' : '⤢ Fullscreen'}
+      </StyledFullscreenToggle>
       <StyledIconRail>
         <StyledIconButton
           active={leftMode === 'add'}

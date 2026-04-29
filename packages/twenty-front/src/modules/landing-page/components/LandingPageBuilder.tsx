@@ -1,5 +1,5 @@
 import { styled } from '@linaria/react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
 import {
@@ -37,19 +37,52 @@ type LandingPageBuilderProps = {
   onChange: (next: LandingPageDesign) => void;
 };
 
-// Same pattern as the form builder: builder lives inside Twenty's
-// record-show widget area which is often <800px wide. Use an icon
-// rail (48px) + full-width canvas, with the module library as a
-// click-to-open overlay panel that slides over the canvas. The
-// canvas is always visible at full width — panels float above.
-const StyledLayout = styled.div`
+// Two layout modes:
+//   - Embedded: builder mounted inside Twenty's record-show widget
+//     area, typically <800px wide. Compact layout.
+//   - Fullscreen: builder takes over the entire viewport via fixed
+//     positioning. The way HubSpot actually does this — there's no
+//     attempt to cram a serious visual builder into a side widget.
+//
+// Toggled by the Maximize / Restore button at the top right of the
+// builder. Esc also exits fullscreen.
+const StyledLayout = styled.div<{ isFullscreen?: boolean }>`
+  background: ${themeCssVariables.background.tertiary};
   display: flex;
   flex-direction: row;
-  height: 100%;
+  height: ${(p) => (p.isFullscreen === true ? '100vh' : '100%')};
+  inset: ${(p) => (p.isFullscreen === true ? '0' : 'auto')};
   min-height: 600px;
   overflow: hidden;
-  position: relative;
-  width: 100%;
+  position: ${(p) => (p.isFullscreen === true ? 'fixed' : 'relative')};
+  width: ${(p) => (p.isFullscreen === true ? '100vw' : '100%')};
+  z-index: ${(p) => (p.isFullscreen === true ? '9999' : 'auto')};
+`;
+
+// Floating action button for the fullscreen toggle. Pinned to the
+// top-right of the canvas so the user always has an exit hatch.
+const StyledFullscreenToggle = styled.button`
+  align-items: center;
+  background: ${themeCssVariables.background.primary};
+  border: 1px solid ${themeCssVariables.border.color.medium};
+  border-radius: ${themeCssVariables.border.radius.sm};
+  color: ${themeCssVariables.font.color.primary};
+  cursor: pointer;
+  display: flex;
+  font-family: ${themeCssVariables.font.family};
+  font-size: 11px;
+  font-weight: 500;
+  gap: 4px;
+  padding: 5px 10px;
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  z-index: 10;
+  &:hover {
+    background: ${themeCssVariables.background.transparent.lighter};
+    border-color: ${themeCssVariables.color.orange};
+    color: ${themeCssVariables.color.orange};
+  }
 `;
 
 // Slim icon rail — always visible. Click "+" to toggle the module
@@ -337,6 +370,20 @@ export const LandingPageBuilder = ({
   // Module library overlay open/closed. Default closed so canvas is
   // visible by default; user opens it via the icon rail.
   const [isLibraryOpen, setIsLibraryOpen] = useState<boolean>(false);
+  // Fullscreen takeover — escapes Twenty's narrow record-show widget.
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  // Esc exits fullscreen so the user always has a keyboard exit.
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isFullscreen]);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(
     design.sections[0]?.id ?? null,
   );
@@ -497,7 +544,18 @@ export const LandingPageBuilder = ({
       : null;
 
   return (
-    <StyledLayout>
+    <StyledLayout isFullscreen={isFullscreen}>
+      <StyledFullscreenToggle
+        type="button"
+        onClick={() => setIsFullscreen((v) => !v)}
+        title={
+          isFullscreen
+            ? 'Exit fullscreen (Esc)'
+            : 'Open in fullscreen — recommended for editing'
+        }
+      >
+        {isFullscreen ? '⤡ Exit fullscreen' : '⤢ Fullscreen'}
+      </StyledFullscreenToggle>
       <StyledIconRail>
         <StyledRailIconButton
           active={isLibraryOpen}
