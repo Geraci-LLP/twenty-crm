@@ -160,8 +160,8 @@ export class FormPublicController {
           (form as { botProtectionSiteKey?: string | null })
             .botProtectionSiteKey ?? null,
         honeypotFieldName:
-          (form as { honeypotFieldName?: string | null })
-            .honeypotFieldName ?? null,
+          (form as { honeypotFieldName?: string | null }).honeypotFieldName ??
+          null,
       },
     };
   }
@@ -219,12 +219,9 @@ export class FormPublicController {
           // ────────────────────────────────────────────────────────
 
           // 1. Origin allowlist
-          const allowed = (
-            form as { allowedOrigins?: string[] | null }
-          ).allowedOrigins;
-          if (
-            !requestMatchesAllowlist(originHeader, refererHeader, allowed)
-          ) {
+          const allowed = (form as { allowedOrigins?: string[] | null })
+            .allowedOrigins;
+          if (!requestMatchesAllowlist(originHeader, refererHeader, allowed)) {
             this.logger.warn(
               `Form ${formId}: origin "${originHeader ?? '<none>'}" / referer "${refererHeader ?? '<none>'}" not in allowlist (${(allowed ?? []).join(',')}) — rejecting.`,
             );
@@ -238,9 +235,8 @@ export class FormPublicController {
           }
 
           // 2. Per-IP rate limit
-          const rateLimit = (
-            form as { rateLimitPerMinute?: number | null }
-          ).rateLimitPerMinute;
+          const rateLimit = (form as { rateLimitPerMinute?: number | null })
+            .rateLimitPerMinute;
           if (
             typeof rateLimit === 'number' &&
             rateLimit > 0 &&
@@ -263,8 +259,10 @@ export class FormPublicController {
             (form as { rejectDisposableEmails?: boolean | null })
               .rejectDisposableEmails === true
           ) {
-            const submittedFieldsForEmail =
-              (body.fields ?? {}) as Record<string, unknown>;
+            const submittedFieldsForEmail = (body.fields ?? {}) as Record<
+              string,
+              unknown
+            >;
             const candidates: string[] = [];
             if (typeof body.submitterEmail === 'string')
               candidates.push(body.submitterEmail);
@@ -278,7 +276,9 @@ export class FormPublicController {
                 throw new HttpException(
                   {
                     message: 'Email not accepted',
-                    errors: { email: 'Please use a non-disposable email address' },
+                    errors: {
+                      email: 'Please use a non-disposable email address',
+                    },
                   },
                   HttpStatus.BAD_REQUEST,
                 );
@@ -291,9 +291,8 @@ export class FormPublicController {
             (form as { requireFormLoadToken?: boolean | null })
               .requireFormLoadToken === true
           ) {
-            const minTime = (
-              form as { minSubmitTimeSeconds?: number | null }
-            ).minSubmitTimeSeconds;
+            const minTime = (form as { minSubmitTimeSeconds?: number | null })
+              .minSubmitTimeSeconds;
             const verdict = await this.formLoadTokenService.verify(
               body.formLoadToken,
               workspaceId,
@@ -327,15 +326,13 @@ export class FormPublicController {
           // 2. Turnstile: if the form has botProtectionEnabled, verify
           //    body.captchaToken via Cloudflare. Failure → 403, no
           //    submission persisted.
-          const honeypotName = (
-            form as { honeypotFieldName?: string | null }
-          ).honeypotFieldName;
-          if (
-            typeof honeypotName === 'string' &&
-            honeypotName.trim() !== ''
-          ) {
-            const submittedFields =
-              (body.fields ?? {}) as Record<string, unknown>;
+          const honeypotName = (form as { honeypotFieldName?: string | null })
+            .honeypotFieldName;
+          if (typeof honeypotName === 'string' && honeypotName.trim() !== '') {
+            const submittedFields = (body.fields ?? {}) as Record<
+              string,
+              unknown
+            >;
             const honeypotValue = submittedFields[honeypotName];
             if (
               typeof honeypotValue === 'string' &&
@@ -364,7 +361,9 @@ export class FormPublicController {
               throw new HttpException(
                 {
                   message: 'Bot protection check failed',
-                  errors: { captchaToken: 'Invalid or missing Turnstile token' },
+                  errors: {
+                    captchaToken: 'Invalid or missing Turnstile token',
+                  },
                 },
                 HttpStatus.FORBIDDEN,
               );

@@ -77,11 +77,16 @@ export const DISPOSABLE_EMAIL_DOMAINS: ReadonlySet<string> = new Set([
   'spambox.org',
 ]);
 
-export const isDisposableEmail = (email: string | null | undefined): boolean => {
+export const isDisposableEmail = (
+  email: string | null | undefined,
+): boolean => {
   if (typeof email !== 'string' || email.trim() === '') return false;
   const at = email.lastIndexOf('@');
   if (at === -1) return false;
-  const domain = email.slice(at + 1).trim().toLowerCase();
+  const domain = email
+    .slice(at + 1)
+    .trim()
+    .toLowerCase();
   if (domain === '') return false;
   return DISPOSABLE_EMAIL_DOMAINS.has(domain);
 };
