@@ -12,6 +12,7 @@ import { WidgetPalette } from '../../../../components/builder/WidgetPalette';
 import {
   PALETTE_TO_BACKEND_TYPE,
   PALETTE_TO_CONFIG_TYPE,
+  type PaletteKey,
 } from '../../../../lib/types';
 import {
   CREATE_PAGE_LAYOUT_TAB,
@@ -63,21 +64,51 @@ const validateWidget = (widget: PageLayoutWidget): string | null => {
   if (!widget.title || widget.title.trim() === '') {
     return 'Title is required';
   }
-  if (widget.type === 'RICH_TEXT') {
-    // Rich text widgets just need a title; html body is optional.
+  // Rich text widgets just need a title; html body is optional. Match both
+  // the palette key (new widgets) and the backend value (loaded widgets).
+  if (
+    widget.type === 'RICH_TEXT' ||
+    widget.type === 'STANDALONE_RICH_TEXT'
+  ) {
+    return null;
+  }
+  // IFRAME widgets only need a URL in their configuration; we don't render
+  // CRM-only types so we don't validate them here.
+  if (widget.type === 'IFRAME') {
+    const url = (widget.configuration as Record<string, unknown> | null)
+      ?.url as string | undefined;
+    if (!url || url.trim() === '') {
+      return 'IFRAME widget needs a URL';
+    }
     return null;
   }
   if (!widget.objectMetadataId) {
     return 'Pick an Object before saving';
   }
   const config = (widget.configuration ?? {}) as Record<string, unknown>;
+  // Discriminate chart-subtype from either the palette key (new widgets,
+  // type === 'BAR_CHART' etc.) or the loaded configuration's
+  // configurationType (for existing widgets, type === 'GRAPH').
+  const subtype =
+    widget.type === 'GRAPH'
+      ? (config.configurationType as string | undefined)
+      : widget.type;
   const isGroupBased =
-    widget.type === 'BAR_CHART' ||
-    widget.type === 'LINE_CHART' ||
-    widget.type === 'PIE_CHART' ||
-    widget.type === 'GAUGE_CHART';
-  if (isGroupBased && !config.groupByFieldMetadataId) {
-    return 'Pick a Group by field before saving';
+    subtype === 'BAR_CHART' ||
+    subtype === 'LINE_CHART' ||
+    subtype === 'PIE_CHART' ||
+    subtype === 'GAUGE_CHART';
+  if (isGroupBased) {
+    // Bar/Line use `primaryAxisGroupByFieldMetadataId`, Pie uses
+    // `groupByFieldMetadataId`, Gauge has no group-by at all (it's a single
+    // aggregated value drawn as a radial bar). Accept either name to cover
+    // both — the per-config validation on the server will pick up an
+    // actually-malformed payload.
+    const hasGroupBy =
+      config.groupByFieldMetadataId || config.primaryAxisGroupByFieldMetadataId;
+    if (subtype !== 'GAUGE_CHART' && !hasGroupBy) {
+      return 'Pick a Group by field before saving';
+    }
   }
   // For aggregate operations other than COUNT, an aggregate field is required
   // (you can't SUM/AVG/MIN/MAX without telling the API which numeric field to
@@ -340,17 +371,30 @@ const DashboardEditPage = () => {
       let firstError: string | null = null;
 
       for (const widget of widgets) {
-        // Translate the palette-level type (BAR_CHART, LINE_CHART, etc.) into
-        // the backend's WidgetType enum (GRAPH or STANDALONE_RICH_TEXT). The
-        // backend's `configuration` is a tagged union keyed on
-        // `configurationType` — set that so the API knows which member of the
-        // union to validate against.
-        const backendType = PALETTE_TO_BACKEND_TYPE[widget.type];
-        const configurationType = PALETTE_TO_CONFIG_TYPE[widget.type];
-        const isRichText = widget.type === 'RICH_TEXT';
+        // For NEW widgets (dragged from the palette, id starts with 'new-')
+        // widget.type is a palette key like 'BAR_CHART' — translate to the
+        // backend WidgetType (GRAPH / STANDALONE_RICH_TEXT) and write the
+        // matching configurationType so the API validates against the right
+        // tagged-union member.
+        // For EXISTING widgets, widget.type is already a backend value
+        // (GRAPH / STANDALONE_RICH_TEXT / IFRAME / ...) and we don't pass it
+        // back to the update mutation, so no translation is needed.
+        const isNew = widget.id.startsWith('new-');
+        const isPaletteKey = isNew && widget.type in PALETTE_TO_BACKEND_TYPE;
+        const backendType = isPaletteKey
+          ? PALETTE_TO_BACKEND_TYPE[widget.type as PaletteKey]
+          : null;
+        const configurationType = isPaletteKey
+          ? PALETTE_TO_CONFIG_TYPE[widget.type as PaletteKey]
+          : ((widget.configuration as Record<string, unknown> | null)
+              ?.configurationType as string | undefined);
+        const isRichText =
+          widget.type === 'RICH_TEXT' ||
+          widget.type === 'STANDALONE_RICH_TEXT' ||
+          configurationType === 'STANDALONE_RICH_TEXT';
         const baseConfiguration: Record<string, unknown> = {
           ...(widget.configuration ?? {}),
-          configurationType,
+          ...(configurationType ? { configurationType } : {}),
         };
         // All chart/aggregate config types REQUIRE aggregateOperation, even
         // when the user never opens the dropdown. Inject the visual default
@@ -365,7 +409,15 @@ const DashboardEditPage = () => {
         // rest. We log full details for diagnosis but only surface the first
         // human-readable message in the banner.
         try {
-          if (widget.id.startsWith('new-')) {
+          if (isNew) {
+            if (!backendType) {
+              // Shouldn't happen — UI only allows palette keys for new
+              // widgets — but bail with a clear message rather than sending
+              // a malformed mutation.
+              throw new Error(
+                `Cannot create widget of unsupported type "${widget.type}"`,
+              );
+            }
             await createWidget({
               variables: {
                 input: {

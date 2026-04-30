@@ -13,6 +13,11 @@ const DASHBOARD_FRAGMENT = gql`
   }
 `;
 
+// Twenty's `WidgetConfiguration` is a GraphQL union — we have to spell out
+// inline fragments per subtype to read it. We only fragment over the subtypes
+// the dashboard knows how to render (charts + iframe + rich text); CRM-only
+// widget types (CAMPAIGN_EDITOR, EMAILS, FORM_BUILDER, etc.) fall through and
+// the renderer treats them as unsupported.
 const PAGE_LAYOUT_WIDGET_FRAGMENT = gql`
   fragment PageLayoutWidgetFields on PageLayoutWidget {
     id
@@ -25,6 +30,44 @@ const PAGE_LAYOUT_WIDGET_FRAGMENT = gql`
       columnSpan
       row
       rowSpan
+    }
+    configuration {
+      __typename
+      ... on BarChartConfiguration {
+        configurationType
+        aggregateOperation
+        aggregateFieldMetadataId
+        primaryAxisGroupByFieldMetadataId
+      }
+      ... on LineChartConfiguration {
+        configurationType
+        aggregateOperation
+        aggregateFieldMetadataId
+        primaryAxisGroupByFieldMetadataId
+      }
+      ... on PieChartConfiguration {
+        configurationType
+        aggregateOperation
+        aggregateFieldMetadataId
+        groupByFieldMetadataId
+      }
+      ... on GaugeChartConfiguration {
+        configurationType
+        aggregateOperation
+        aggregateFieldMetadataId
+      }
+      ... on AggregateChartConfiguration {
+        configurationType
+        aggregateOperation
+        aggregateFieldMetadataId
+      }
+      ... on IframeConfiguration {
+        configurationType
+        url
+      }
+      ... on StandaloneRichTextConfiguration {
+        configurationType
+      }
     }
   }
 `;

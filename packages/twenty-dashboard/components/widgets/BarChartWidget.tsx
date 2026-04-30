@@ -1,6 +1,7 @@
 'use client';
 
 import { ResponsiveBar } from '@nivo/bar';
+import { ChartPlaceholder } from './ChartPlaceholder';
 
 export type BarChartWidgetProps = {
   configuration: Record<string, unknown>;
@@ -8,6 +9,9 @@ export type BarChartWidgetProps = {
 };
 
 export const BarChartWidget = ({ data }: BarChartWidgetProps) => {
+  if (!data || data.length === 0) {
+    return <ChartPlaceholder chartLabel="Bar chart" />;
+  }
   return (
     <div style={{ height: '100%', minHeight: 240 }}>
       <ResponsiveBar

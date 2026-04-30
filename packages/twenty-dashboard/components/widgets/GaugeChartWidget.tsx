@@ -1,6 +1,7 @@
 'use client';
 
 import { ResponsiveRadialBar } from '@nivo/radial-bar';
+import { ChartPlaceholder } from './ChartPlaceholder';
 
 export type GaugeChartWidgetProps = {
   configuration: Record<string, unknown>;
@@ -8,6 +9,13 @@ export type GaugeChartWidgetProps = {
 };
 
 export const GaugeChartWidget = ({ data }: GaugeChartWidgetProps) => {
+  if (
+    !data ||
+    data.length === 0 ||
+    data.every((series) => !series.data || series.data.length === 0)
+  ) {
+    return <ChartPlaceholder chartLabel="Gauge" />;
+  }
   return (
     <div style={{ height: '100%', minHeight: 240 }}>
       <ResponsiveRadialBar

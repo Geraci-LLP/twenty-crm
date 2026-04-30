@@ -1,6 +1,7 @@
 'use client';
 
 import { ResponsivePie } from '@nivo/pie';
+import { ChartPlaceholder } from './ChartPlaceholder';
 
 export type PieChartWidgetProps = {
   configuration: Record<string, unknown>;
@@ -8,6 +9,9 @@ export type PieChartWidgetProps = {
 };
 
 export const PieChartWidget = ({ data }: PieChartWidgetProps) => {
+  if (!data || data.length === 0) {
+    return <ChartPlaceholder chartLabel="Pie chart" />;
+  }
   return (
     <div style={{ height: '100%', minHeight: 240 }}>
       <ResponsivePie

@@ -13,6 +13,21 @@ export const RichTextWidget = ({ configuration }: RichTextWidgetProps) => {
   const html =
     (configuration?.html as string | undefined) ?? body?.markdown ?? '';
 
+  if (!html.trim()) {
+    return (
+      <div
+        style={{
+          padding: 16,
+          color: '#94a3b8',
+          fontSize: 13,
+          fontStyle: 'italic',
+        }}
+      >
+        Empty rich text widget. Edit content in the CRM page-builder.
+      </div>
+    );
+  }
+
   // Rich-text widget content is author-controlled inside the CRM, but we
   // still run it through DOMPurify to strip scripts / dangerous attrs
   // before injecting into the DOM — an admin account compromise should not
