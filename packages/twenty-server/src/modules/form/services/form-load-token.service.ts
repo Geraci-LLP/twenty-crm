@@ -61,8 +61,9 @@ export class FormLoadTokenService {
     }
     let payload: FormLoadTokenPayload;
     try {
-      payload =
-        (await this.jwtWrapperService.verifyJwtToken(token)) as FormLoadTokenPayload;
+      payload = (await this.jwtWrapperService.verifyJwtToken(
+        token,
+      )) as FormLoadTokenPayload;
     } catch {
       return { valid: false, reason: 'invalid-or-expired-token' };
     }
