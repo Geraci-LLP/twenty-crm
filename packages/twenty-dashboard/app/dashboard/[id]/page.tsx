@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { LoadingScreen } from '../../../components/LoadingScreen';
+import { WidgetErrorBoundary } from '../../../components/WidgetErrorBoundary';
 import { WidgetRenderer } from '../../../components/widgets/WidgetRenderer';
 import {
   FIND_DASHBOARD_BY_ID,
@@ -142,7 +143,9 @@ const DashboardViewPage = () => {
               <h3 style={{ margin: '0 0 12px', fontSize: 14 }}>
                 {widget.title}
               </h3>
-              <WidgetRenderer widget={widget} data={null} />
+              <WidgetErrorBoundary widgetTitle={widget.title}>
+                <WidgetRenderer widget={widget} data={null} />
+              </WidgetErrorBoundary>
             </div>
           ))}
         </div>

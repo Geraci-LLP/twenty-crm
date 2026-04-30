@@ -2,7 +2,13 @@
 
 import { useQuery } from '@apollo/client/react';
 import { ResponsivePie } from '@nivo/pie';
+import { useMemo } from 'react';
 import { ChartPlaceholder } from './ChartPlaceholder';
+import {
+  capDataPoints,
+  dedupeById,
+  isFiniteNumber,
+} from '../../lib/chart-safety';
 import { PIE_CHART_DATA } from '../../lib/queries';
 
 export type PieChartWidgetProps = {
@@ -59,30 +65,45 @@ export const PieChartWidget = ({
   }
 
   // Resolved data: prefer fresh server data, fall back to prefetched (for
-  // optimistic in-memory widgets that haven't been saved yet).
-  const items = queryData?.pieChartData?.data ?? prefetchedData ?? [];
+  // optimistic in-memory widgets that haven't been saved yet). All filtering /
+  // dedupe / cap happens inside useMemo so an upstream re-render that produces
+  // a structurally-equal payload doesn't recreate the array reference and
+  // re-render Nivo unnecessarily.
+  const { nivoData, truncated, originalLength } = useMemo(() => {
+    const rawItems = queryData?.pieChartData?.data ?? prefetchedData ?? [];
 
-  if (items.length === 0) {
+    // Map first (server returns { id, value }; Nivo wants { id, label, value }),
+    // then strip non-finite values, dedupe by id, and cap.
+    const mapped = rawItems
+      .map((item) => {
+        const itemLabel =
+          'label' in item && typeof item.label === 'string' && item.label
+            ? item.label
+            : item.id;
+        return {
+          id: item.id,
+          label: itemLabel,
+          value: item.value,
+        };
+      })
+      .filter((item) => isFiniteNumber(item.value));
+
+    const deduped = dedupeById(mapped);
+    const capped = capDataPoints(deduped);
+
+    return {
+      nivoData: capped.data,
+      truncated: capped.truncated,
+      originalLength: capped.originalLength,
+    };
+  }, [queryData, prefetchedData]);
+
+  if (nivoData.length === 0) {
     return <ChartPlaceholder chartLabel="Pie chart" />;
   }
 
-  // Nivo expects { id, label, value }; the server returns { id, value } so
-  // we synthesize a label from the id (it's already a human-readable string
-  // for SELECT fields and dates).
-  const nivoData = items.map((item) => {
-    const itemLabel =
-      'label' in item && typeof item.label === 'string' && item.label
-        ? item.label
-        : item.id;
-    return {
-      id: item.id,
-      label: itemLabel,
-      value: item.value,
-    };
-  });
-
   return (
-    <div style={{ height: '100%', minHeight: 240 }}>
+    <div style={{ height: '100%', minHeight: 240, position: 'relative' }}>
       <ResponsivePie
         data={nivoData}
         margin={{ top: 20, right: 20, bottom: 40, left: 20 }}
@@ -92,6 +113,20 @@ export const PieChartWidget = ({
           queryData?.pieChartData?.showDataLabels ?? false
         }
       />
+      {truncated ? (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 4,
+            right: 8,
+            fontSize: 11,
+            color: '#94a3b8',
+            fontStyle: 'italic',
+          }}
+        >
+          Showing top {nivoData.length} of {originalLength}
+        </div>
+      ) : null}
     </div>
   );
 };

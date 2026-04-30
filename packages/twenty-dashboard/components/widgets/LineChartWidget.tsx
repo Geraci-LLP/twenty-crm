@@ -2,7 +2,12 @@
 
 import { useQuery } from '@apollo/client/react';
 import { ResponsiveLine } from '@nivo/line';
+import { useMemo } from 'react';
 import { ChartPlaceholder } from './ChartPlaceholder';
+import {
+  capDataPoints,
+  isFiniteNumber,
+} from '../../lib/chart-safety';
 import { LINE_CHART_DATA } from '../../lib/queries';
 
 export type LineChartWidgetProps = {
@@ -60,21 +65,29 @@ export const LineChartWidget = ({
     );
   }
 
-  const series =
-    queryData?.lineChartData?.series ?? prefetchedData ?? [];
+  // Filter non-finite y values per point (Nivo can throw on NaN/Infinity),
+  // then cap the point count per series to MAX_DATA_POINTS so a noisy
+  // dataset doesn't OOM the renderer mid-layout.
+  const safeSeries = useMemo(() => {
+    const raw = queryData?.lineChartData?.series ?? prefetchedData ?? [];
+    return raw
+      .map((s) => ({
+        ...s,
+        data: capDataPoints(
+          (s.data ?? []).filter((point) => isFiniteNumber(point.y)),
+        ).data,
+      }))
+      .filter((s) => s.data.length > 0);
+  }, [queryData, prefetchedData]);
 
-  // No data at all (or every series has empty data) — show placeholder.
-  if (
-    series.length === 0 ||
-    series.every((s) => !s.data || s.data.length === 0)
-  ) {
+  if (safeSeries.length === 0) {
     return <ChartPlaceholder chartLabel="Line chart" />;
   }
 
   return (
     <div style={{ height: '100%', minHeight: 240 }}>
       <ResponsiveLine
-        data={series}
+        data={safeSeries}
         margin={{ top: 20, right: 20, bottom: 40, left: 50 }}
         xScale={{ type: 'point' }}
         yScale={{ type: 'linear' }}
