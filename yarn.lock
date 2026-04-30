@@ -47871,6 +47871,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:^0.468.0":
+  version: 0.468.0
+  resolution: "lucide-react@npm:0.468.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+  checksum: 10c0/da7640e4ad09d8987716e9124fd85c4a0c49b7658dbbf45db64547fc0f155f7e8b2d7f68115ada3e24012f3e1a4f209d7a87762ba4de5ca3dd753f6b68d8e622
+  languageName: node
+  linkType: hard
+
 "luxon@npm:^3.2.1, luxon@npm:^3.6.1":
   version: 3.6.1
   resolution: "luxon@npm:3.6.1"
@@ -61394,6 +61403,7 @@ __metadata:
     eslint-config-next: "npm:^14.2.25"
     graphql: "npm:^16.8.1"
     isomorphic-dompurify: "npm:^2.14.0"
+    lucide-react: "npm:^0.468.0"
     next: "npm:^14.2.25"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"

@@ -56,16 +56,14 @@ export class LeadCreationService {
             const existingTags = Array.isArray(
               (existing as { tags?: string[] | null }).tags,
             )
-              ? (((existing as { tags?: string[] | null }).tags ?? []) as string[])
+              ? (((existing as { tags?: string[] | null }).tags ??
+                  []) as string[])
               : [];
-            const merged = Array.from(
-              new Set([...existingTags, ...inputTags]),
-            );
+            const merged = Array.from(new Set([...existingTags, ...inputTags]));
             if (merged.length !== existingTags.length) {
-              await personRepository.update(
-                { id: existing.id },
-                { tags: merged } as Partial<PersonWorkspaceEntity>,
-              );
+              await personRepository.update({ id: existing.id }, {
+                tags: merged,
+              } as Partial<PersonWorkspaceEntity>);
             }
           }
           return { personId: existing.id, created: false };
