@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation, useQuery } from '@apollo/client/react';
+import { CombinedGraphQLErrors, ServerError } from '@apollo/client/errors';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -53,6 +54,62 @@ type CreatePageLayoutTabResult = {
 };
 
 const DEFAULT_GRID_POSITION = { column: 0, row: 0, columnSpan: 4, rowSpan: 2 };
+
+// Returns null if the widget has all required fields, or a human-readable
+// reason otherwise. Twenty's API will reject the mutation with a 400 if any
+// of these are missing — surfacing the reason client-side gives the user a
+// useful message instead of "Received status code 400".
+const validateWidget = (widget: PageLayoutWidget): string | null => {
+  if (!widget.title || widget.title.trim() === '') {
+    return 'Title is required';
+  }
+  if (widget.type === 'RICH_TEXT') {
+    // Rich text widgets just need a title; html body is optional.
+    return null;
+  }
+  if (!widget.objectMetadataId) {
+    return 'Pick an Object before saving';
+  }
+  const config = (widget.configuration ?? {}) as Record<string, unknown>;
+  const isGroupBased =
+    widget.type === 'BAR_CHART' ||
+    widget.type === 'LINE_CHART' ||
+    widget.type === 'PIE_CHART' ||
+    widget.type === 'GAUGE_CHART';
+  if (isGroupBased && !config.groupByFieldMetadataId) {
+    return 'Pick a Group by field before saving';
+  }
+  // For aggregate operations other than COUNT, an aggregate field is required
+  // (you can't SUM/AVG/MIN/MAX without telling the API which numeric field to
+  // aggregate). COUNT works without one because it counts rows.
+  const aggOp = (config.aggregateOperation as string) ?? 'COUNT';
+  if (aggOp !== 'COUNT' && !config.aggregateFieldMetadataId) {
+    return `Pick an Aggregate field, or change Aggregate operation to Count (currently "${aggOp}")`;
+  }
+  return null;
+};
+
+// Apollo Client v4 wraps errors differently depending on whether they came
+// from the server (HTTP error), from GraphQL (response with errors[]), or
+// from the network. The default `error.message` is often generic
+// ("Response not successful: Received status code 400") — extract the
+// real reason where we can.
+const extractApolloErrorMessage = (error: unknown): string => {
+  if (CombinedGraphQLErrors.is(error)) {
+    return error.errors.map((e) => e.message).join('; ');
+  }
+  if (ServerError.is(error)) {
+    // ServerError.bodyText often contains the JSON-encoded GraphQL error
+    // payload from the server when status >= 400.
+    const body = error.bodyText ?? '';
+    const detail = body.length > 0 ? ` — ${body.slice(0, 200)}` : '';
+    return `HTTP ${error.statusCode}${detail}`;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
+};
 
 const DashboardEditPage = () => {
   const params = useParams<{ id: string }>();
@@ -229,6 +286,37 @@ const DashboardEditPage = () => {
     setTabResolutionError(null);
     setSaveResult(null);
     try {
+      // Validate ALL widgets before sending any mutation. If any one is
+      // missing required config, abort the whole save and tell the user
+      // exactly which widget needs attention. Without this, the user
+      // would see a generic "HTTP 400" from the API.
+      const validationFailures: { widget: PageLayoutWidget; reason: string }[] =
+        [];
+      for (const widget of widgets) {
+        const reason = validateWidget(widget);
+        if (reason) {
+          validationFailures.push({ widget, reason });
+        }
+      }
+      if (validationFailures.length > 0) {
+        const first = validationFailures[0];
+        const widgetLabel = first.widget.title?.trim()
+          ? `"${first.widget.title}"`
+          : `(untitled ${first.widget.type.toLowerCase().replace('_', ' ')})`;
+        const extra =
+          validationFailures.length > 1
+            ? ` (and ${validationFailures.length - 1} more widget(s) need configuration)`
+            : '';
+        setSaveResult({
+          kind: 'failure',
+          firstError: `Widget ${widgetLabel}: ${first.reason}${extra}`,
+        });
+        // Auto-select the first invalid widget so its config panel is
+        // already open for the user to fix.
+        setSelectedWidgetId(first.widget.id);
+        return;
+      }
+
       const hasNewWidgets = widgets.some((widget) =>
         widget.id.startsWith('new-'),
       );
@@ -311,10 +399,7 @@ const DashboardEditPage = () => {
             mutationError,
           );
           if (!firstError) {
-            firstError =
-              mutationError instanceof Error
-                ? mutationError.message
-                : String(mutationError);
+            firstError = extractApolloErrorMessage(mutationError);
           }
         }
       }
@@ -345,10 +430,7 @@ const DashboardEditPage = () => {
       console.error('Unexpected save error:', unexpectedError);
       setSaveResult({
         kind: 'failure',
-        firstError:
-          unexpectedError instanceof Error
-            ? unexpectedError.message
-            : String(unexpectedError),
+        firstError: extractApolloErrorMessage(unexpectedError),
       });
     } finally {
       setSaving(false);
