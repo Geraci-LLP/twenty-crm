@@ -2,10 +2,7 @@ import { styled } from '@linaria/react';
 import { useState } from 'react';
 import { themeCssVariables } from 'twenty-ui/theme-constants';
 
-import {
-  type FormBlock,
-  type FormContents,
-} from '@/form/components/v2/types';
+import { type FormBlock, type FormContents } from '@/form/components/v2/types';
 
 // Left-rail tree view of the form structure. Mirrors HubSpot
 // screenshot 3 — collapsible Step 1 / On submit nodes with each
@@ -227,8 +224,7 @@ const glyphForFieldKind = (kind: string): string => {
   }
 };
 
-const stripHtml = (html: string): string =>
-  html.replace(/<[^>]+>/g, '').trim();
+const stripHtml = (html: string): string => html.replace(/<[^>]+>/g, '').trim();
 
 export const FormContentsTree = ({
   contents,
@@ -276,7 +272,9 @@ export const FormContentsTree = ({
       </StyledSearchRow>
       <StyledSectionHeader>
         <StyledSectionLabel>All content</StyledSectionLabel>
-        <StyledCollapseAll onClick={collapseAll}>Collapse all</StyledCollapseAll>
+        <StyledCollapseAll onClick={collapseAll}>
+          Collapse all
+        </StyledCollapseAll>
       </StyledSectionHeader>
 
       {contents.steps.map((step) => {

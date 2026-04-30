@@ -1,4 +1,5 @@
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
+import { coerceRecordNameToString } from '@/object-metadata/utils/generateDefaultRecordChipData';
 import { getRelationObjectMetadataNameSingular } from '@/object-metadata/utils/formatFieldMetadataItemsAsFilterDefinitions';
 import { getFieldMetadataItemByIdOrThrow } from '@/object-metadata/utils/getFieldMetadataItemByIdOrThrow';
 import { MAX_RECORDS_TO_DISPLAY } from '@/object-record/object-filter-dropdown/components/ObjectFilterDropdownRecordSelect';
@@ -82,9 +83,13 @@ export const useComputeRecordRelationFilterLabelValue = ({
     return { labelValue: t`: Loading...` };
   }
 
+  // For Person relation filters (or anything else with a FullName composite
+  // name), record.name is `{firstName, lastName}` — joining objects with
+  // `.join(', ')` yields "[object Object]" and rendering them as JSX child
+  // crashes React with error #31. Coerce to a plain string up front.
   const labelValueItems = [
     ...(isCurrentWorkspaceMemberSelected ? [t`Me`] : []),
-    ...selectedRecords.map((record) => record.name),
+    ...selectedRecords.map((record) => coerceRecordNameToString(record.name)),
   ];
 
   const filterDisplayValue =

@@ -365,7 +365,11 @@ export const FormBuilderCanvas = ({
     (blockId: string) => {
       const all = [
         ...contents.steps.flatMap((s) =>
-          s.blocks.map((b) => ({ block: b, stepId: s.id, target: 'step' as const })),
+          s.blocks.map((b) => ({
+            block: b,
+            stepId: s.id,
+            target: 'step' as const,
+          })),
         ),
         ...contents.onSubmit.blocks.map((b) => ({
           block: b,
@@ -487,10 +491,7 @@ export const FormBuilderCanvas = ({
               {idx > 0 && (
                 <StyledStepConnector>
                   <StyledConnectorLine />
-                  <StyledConnectorPlus
-                    title="Add a step"
-                    onClick={addStep}
-                  >
+                  <StyledConnectorPlus title="Add a step" onClick={addStep}>
                     +
                   </StyledConnectorPlus>
                   <StyledConnectorLine />

@@ -112,7 +112,9 @@ const StyledCard = styled.button`
   justify-content: center;
   padding: 14px 8px 10px;
   text-align: center;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
   &:hover {
     background: ${themeCssVariables.background.transparent.lighter};
     border-color: ${themeCssVariables.color.orange};
@@ -177,8 +179,8 @@ export const FormAddPanel = ({ onAdd, onClose }: FormAddPanelProps) => {
         <StyledContent>
           <StyledSubheading>Fields</StyledSubheading>
           <StyledHint>
-            Choose which type of field to add to your form. You'll connect it
-            to a property later.
+            Choose which type of field to add to your form. You'll connect it to
+            a property later.
           </StyledHint>
           <StyledCardGrid>
             {fieldEntries.map((entry) => (
