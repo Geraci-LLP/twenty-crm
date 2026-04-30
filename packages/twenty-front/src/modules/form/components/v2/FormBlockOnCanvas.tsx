@@ -21,9 +21,7 @@ type FormBlockOnCanvasProps = {
 const StyledWrapper = styled.div<{ selected?: boolean }>`
   border: 1px solid
     ${(p) =>
-      p.selected === true
-        ? themeCssVariables.color.orange
-        : 'transparent'};
+      p.selected === true ? themeCssVariables.color.orange : 'transparent'};
   border-radius: ${themeCssVariables.border.radius.sm};
   cursor: pointer;
   padding: 6px 8px;
@@ -193,8 +191,10 @@ const StyledImagePlaceholder = styled.div`
 const StyledImage = styled.img<{ widthPercent: number; align: string }>`
   display: block;
   height: auto;
-  margin-left: ${(p) => (p.align === 'right' ? 'auto' : p.align === 'center' ? 'auto' : '0')};
-  margin-right: ${(p) => (p.align === 'left' ? 'auto' : p.align === 'center' ? 'auto' : '0')};
+  margin-left: ${(p) =>
+    p.align === 'right' ? 'auto' : p.align === 'center' ? 'auto' : '0'};
+  margin-right: ${(p) =>
+    p.align === 'left' ? 'auto' : p.align === 'center' ? 'auto' : '0'};
   max-width: ${(p) => p.widthPercent}%;
 `;
 
@@ -339,7 +339,9 @@ const renderBlock = (block: FormBlock): JSX.Element => {
           return (
             <div>
               {label}
-              <StyledNotice>⎙ File upload — drag &amp; drop or click</StyledNotice>
+              <StyledNotice>
+                ⎙ File upload — drag &amp; drop or click
+              </StyledNotice>
             </div>
           );
         default:

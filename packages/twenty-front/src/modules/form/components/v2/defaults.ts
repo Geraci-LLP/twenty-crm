@@ -19,7 +19,11 @@ export const labelToFieldName = (label: string): string => {
   const parts = cleaned.split(/\s+/);
   return lcFirst(
     parts
-      .map((p, i) => (i === 0 ? p.toLowerCase() : p[0].toUpperCase() + p.slice(1).toLowerCase()))
+      .map((p, i) =>
+        i === 0
+          ? p.toLowerCase()
+          : p[0].toUpperCase() + p.slice(1).toLowerCase(),
+      )
       .join(''),
   );
 };

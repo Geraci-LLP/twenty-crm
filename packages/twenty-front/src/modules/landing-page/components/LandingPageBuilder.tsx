@@ -566,65 +566,65 @@ export const LandingPageBuilder = ({
         </StyledRailIconButton>
       </StyledIconRail>
       {isLibraryOpen && (
-      <StyledLeftRail>
-        <StyledRailGroupLabel>Layouts</StyledRailGroupLabel>
-        <StyledRailGrid>
-          {LANDING_PAGE_LAYOUT_LIBRARY.map((entry) => (
-            <StyledRailItem
-              key={entry.layout}
-              type="button"
-              onClick={() => addSection(entry.layout)}
-              title={`Add ${entry.label} section`}
-            >
-              <StyledRailGlyph>{entry.glyph}</StyledRailGlyph>
-              {entry.label}
-            </StyledRailItem>
-          ))}
-        </StyledRailGrid>
+        <StyledLeftRail>
+          <StyledRailGroupLabel>Layouts</StyledRailGroupLabel>
+          <StyledRailGrid>
+            {LANDING_PAGE_LAYOUT_LIBRARY.map((entry) => (
+              <StyledRailItem
+                key={entry.layout}
+                type="button"
+                onClick={() => addSection(entry.layout)}
+                title={`Add ${entry.label} section`}
+              >
+                <StyledRailGlyph>{entry.glyph}</StyledRailGlyph>
+                {entry.label}
+              </StyledRailItem>
+            ))}
+          </StyledRailGrid>
 
-        {groupOrder.map((groupKey) => {
-          const list = groups[groupKey];
-          if (list === undefined || list.length === 0) return null;
-          return (
-            <div key={groupKey}>
-              <StyledRailGroupLabel>{groupKey}</StyledRailGroupLabel>
-              <StyledRailGrid>
-                {list.map((entry) => (
-                  <StyledRailItem
-                    key={entry.type}
-                    type="button"
-                    onClick={() => {
-                      const targetSectionId =
-                        selectedSectionId ?? design.sections[0]?.id ?? null;
-                      if (targetSectionId === null) {
-                        // No sections yet — auto-create a 1-column section
-                        // and add the module there in one shot.
-                        const next = buildDefaultLandingPageSection('1');
-                        const newModule = buildDefaultLandingPageModule(
-                          entry.type,
-                        );
-                        next.columns[0].modules.push(newModule);
-                        onChange({
-                          ...design,
-                          sections: [...design.sections, next],
-                        });
-                        setSelectedSectionId(next.id);
-                        setSelectedModuleId(newModule.id);
-                      } else {
-                        addModuleToSection(targetSectionId, entry.type);
-                      }
-                    }}
-                    title={`Add ${entry.label}`}
-                  >
-                    <StyledRailGlyph>{entry.glyph}</StyledRailGlyph>
-                    {entry.label}
-                  </StyledRailItem>
-                ))}
-              </StyledRailGrid>
-            </div>
-          );
-        })}
-      </StyledLeftRail>
+          {groupOrder.map((groupKey) => {
+            const list = groups[groupKey];
+            if (list === undefined || list.length === 0) return null;
+            return (
+              <div key={groupKey}>
+                <StyledRailGroupLabel>{groupKey}</StyledRailGroupLabel>
+                <StyledRailGrid>
+                  {list.map((entry) => (
+                    <StyledRailItem
+                      key={entry.type}
+                      type="button"
+                      onClick={() => {
+                        const targetSectionId =
+                          selectedSectionId ?? design.sections[0]?.id ?? null;
+                        if (targetSectionId === null) {
+                          // No sections yet — auto-create a 1-column section
+                          // and add the module there in one shot.
+                          const next = buildDefaultLandingPageSection('1');
+                          const newModule = buildDefaultLandingPageModule(
+                            entry.type,
+                          );
+                          next.columns[0].modules.push(newModule);
+                          onChange({
+                            ...design,
+                            sections: [...design.sections, next],
+                          });
+                          setSelectedSectionId(next.id);
+                          setSelectedModuleId(newModule.id);
+                        } else {
+                          addModuleToSection(targetSectionId, entry.type);
+                        }
+                      }}
+                      title={`Add ${entry.label}`}
+                    >
+                      <StyledRailGlyph>{entry.glyph}</StyledRailGlyph>
+                      {entry.label}
+                    </StyledRailItem>
+                  ))}
+                </StyledRailGrid>
+              </div>
+            );
+          })}
+        </StyledLeftRail>
       )}
 
       <StyledCanvasWrapper>

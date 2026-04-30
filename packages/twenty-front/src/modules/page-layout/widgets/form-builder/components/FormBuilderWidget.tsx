@@ -2,9 +2,7 @@ import { FormEmbedSnippet } from '@/form/components/FormEmbedSnippet';
 import { FormPublicUrlDisplay } from '@/form/components/FormPublicUrlDisplay';
 import { FormSettings } from '@/form/components/FormSettings';
 import { FormBuilderCanvas } from '@/form/components/v2/FormBuilderCanvas';
-import {
-  migrateToFormContents,
-} from '@/form/components/v2/defaults';
+import { migrateToFormContents } from '@/form/components/v2/defaults';
 import { type FormContents } from '@/form/components/v2/types';
 import { useFormRecord } from '@/form/hooks/useFormRecord';
 import { TabList } from '@/ui/layout/tab-list/components/TabList';
