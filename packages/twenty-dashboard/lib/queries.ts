@@ -242,3 +242,80 @@ export const GROUP_BY_TEMPLATE = `
     }
   }
 `;
+
+// ---------------------------------------------------------------------------
+// Chart-specific data queries (metadata API)
+//
+// Twenty exposes purpose-built queries that take an `objectMetadataId` plus
+// the full chart configuration JSON, and return data already shaped for the
+// chart type — so we don't have to assemble groupBy queries ourselves on
+// every render. Each query returns Nivo-friendly data:
+//
+//  - barChartData    → { data, indexBy, keys, series }
+//  - lineChartData   → { series: [{ id, label, data: [{x, y}] }] }
+//  - pieChartData    → { data: [{ id, value }] }
+//
+// Plus chart-display flags (showLegend, showDataLabels, hasTooManyGroups,
+// formattedToRawLookup) that callers can use for tooltip formatting and
+// "too many slices" warnings.
+//
+// The `configuration` argument is the same shape we already query in the
+// PageLayoutWidget fragment — passing it through as JSON keeps us decoupled
+// from the union typing.
+// ---------------------------------------------------------------------------
+
+export const BAR_CHART_DATA = gql`
+  query BarChartData($input: BarChartDataInput!) {
+    barChartData(input: $input) {
+      data
+      indexBy
+      keys
+      series {
+        key
+        label
+      }
+      xAxisLabel
+      yAxisLabel
+      showLegend
+      showDataLabels
+      layout
+      groupMode
+      hasTooManyGroups
+    }
+  }
+`;
+
+export const LINE_CHART_DATA = gql`
+  query LineChartData($input: LineChartDataInput!) {
+    lineChartData(input: $input) {
+      series {
+        id
+        label
+        data {
+          x
+          y
+        }
+      }
+      xAxisLabel
+      yAxisLabel
+      showLegend
+      showDataLabels
+      hasTooManyGroups
+    }
+  }
+`;
+
+export const PIE_CHART_DATA = gql`
+  query PieChartData($input: PieChartDataInput!) {
+    pieChartData(input: $input) {
+      data {
+        id
+        value
+      }
+      showLegend
+      showDataLabels
+      showCenterMetric
+      hasTooManyGroups
+    }
+  }
+`;

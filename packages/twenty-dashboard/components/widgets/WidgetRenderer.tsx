@@ -67,7 +67,7 @@ export const WidgetRenderer = ({ widget, data }: WidgetRendererProps) => {
         case 'BarChartConfiguration':
         case 'BAR_CHART':
           return (
-            <BarChartWidget
+            <BarChartWidget objectMetadataId={widget.objectMetadataId}
               configuration={configuration}
               data={(data as { key: string; value: number }[]) ?? []}
             />
@@ -75,7 +75,7 @@ export const WidgetRenderer = ({ widget, data }: WidgetRendererProps) => {
         case 'LineChartConfiguration':
         case 'LINE_CHART':
           return (
-            <LineChartWidget
+            <LineChartWidget objectMetadataId={widget.objectMetadataId}
               configuration={configuration}
               data={
                 (data as {
@@ -88,7 +88,7 @@ export const WidgetRenderer = ({ widget, data }: WidgetRendererProps) => {
         case 'PieChartConfiguration':
         case 'PIE_CHART':
           return (
-            <PieChartWidget
+            <PieChartWidget objectMetadataId={widget.objectMetadataId}
               configuration={configuration}
               data={
                 (data as { id: string; label: string; value: number }[]) ?? []
@@ -136,14 +136,14 @@ export const WidgetRenderer = ({ widget, data }: WidgetRendererProps) => {
     // hold the palette key directly.
     case 'BAR_CHART':
       return (
-        <BarChartWidget
+        <BarChartWidget objectMetadataId={widget.objectMetadataId}
           configuration={configuration}
           data={(data as { key: string; value: number }[]) ?? []}
         />
       );
     case 'LINE_CHART':
       return (
-        <LineChartWidget
+        <LineChartWidget objectMetadataId={widget.objectMetadataId}
           configuration={configuration}
           data={
             (data as {
@@ -155,7 +155,7 @@ export const WidgetRenderer = ({ widget, data }: WidgetRendererProps) => {
       );
     case 'PIE_CHART':
       return (
-        <PieChartWidget
+        <PieChartWidget objectMetadataId={widget.objectMetadataId}
           configuration={configuration}
           data={(data as { id: string; label: string; value: number }[]) ?? []}
         />
