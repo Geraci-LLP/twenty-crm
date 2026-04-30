@@ -38,6 +38,17 @@ const METADATA_OP_PATTERNS = [
   'objects(',
   'fields(',
   'FindObjectsWithFields',
+  // Chart data queries — these live on the metadata API too because they
+  // take widget configuration (a metadata object) as input. Without these
+  // patterns the proxy routed them to /graphql and the workspace schema
+  // returned "Unknown type 'PieChartDataInput'. Cannot query field
+  // 'pieChartData' on type 'Query'."
+  'barChartData',
+  'lineChartData',
+  'pieChartData',
+  'BarChartData',
+  'LineChartData',
+  'PieChartData',
 ];
 
 const getCrmBaseUrl = () => {

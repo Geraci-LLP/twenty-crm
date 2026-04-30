@@ -2,6 +2,7 @@
 
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import { PageLayoutWidget } from '../../lib/types';
+import { WidgetErrorBoundary } from '../WidgetErrorBoundary';
 import { WidgetRenderer } from '../widgets/WidgetRenderer';
 
 export type WidgetGridProps = {
@@ -74,7 +75,9 @@ export const WidgetGrid = ({
                       <h4 style={{ margin: '0 0 8px', fontSize: 13 }}>
                         {widget.title}
                       </h4>
-                      <WidgetRenderer widget={widget} />
+                      <WidgetErrorBoundary widgetTitle={widget.title}>
+                        <WidgetRenderer widget={widget} />
+                      </WidgetErrorBoundary>
                     </div>
                   )}
                 </Draggable>

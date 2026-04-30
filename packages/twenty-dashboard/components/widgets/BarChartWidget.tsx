@@ -2,7 +2,9 @@
 
 import { useQuery } from '@apollo/client/react';
 import { ResponsiveBar } from '@nivo/bar';
+import { useMemo } from 'react';
 import { ChartPlaceholder } from './ChartPlaceholder';
+import { capDataPoints } from '../../lib/chart-safety';
 import { BAR_CHART_DATA } from '../../lib/queries';
 
 export type BarChartWidgetProps = {
@@ -62,11 +64,23 @@ export const BarChartWidget = ({
 
   const result = queryData?.barChartData;
 
-  if (result && result.data.length > 0) {
+  // Cap the bar count before handing to Nivo. SVG layout for hundreds of
+  // bars can OOM the renderer (the Aw, Snap! crash class). Memoize so the
+  // cap doesn't run on every render.
+  const cappedBars = useMemo(() => {
+    if (!result || result.data.length === 0) {
+      return null;
+    }
+    return capDataPoints(
+      result.data as Record<string, string | number>[],
+    );
+  }, [result]);
+
+  if (result && cappedBars && cappedBars.data.length > 0) {
     return (
-      <div style={{ height: '100%', minHeight: 240 }}>
+      <div style={{ height: '100%', minHeight: 240, position: 'relative' }}>
         <ResponsiveBar
-          data={result.data as Record<string, string | number>[]}
+          data={cappedBars.data}
           keys={result.keys}
           indexBy={result.indexBy}
           margin={{ top: 20, right: 20, bottom: 40, left: 50 }}
@@ -76,6 +90,20 @@ export const BarChartWidget = ({
           axisLeft={{ legend: result.yAxisLabel || '', legendOffset: -40 }}
           enableLabel={result.showDataLabels}
         />
+        {cappedBars.truncated ? (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 4,
+              right: 8,
+              fontSize: 11,
+              color: '#94a3b8',
+              fontStyle: 'italic',
+            }}
+          >
+            Showing first {cappedBars.data.length} of {cappedBars.originalLength}
+          </div>
+        ) : null}
       </div>
     );
   }
