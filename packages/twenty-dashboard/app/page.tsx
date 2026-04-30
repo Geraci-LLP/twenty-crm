@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { LayoutGrid, Plus, AlertTriangle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { LoadingScreen } from '../components/LoadingScreen';
 import { CREATE_DASHBOARD, FIND_DASHBOARDS } from '../lib/queries';
 import { theme } from '../lib/theme';
 import { Dashboard } from '../lib/types';
@@ -34,17 +35,7 @@ const HomePage = () => {
   };
 
   if (loading) {
-    return (
-      <main
-        style={{
-          padding: theme.spacing.xxl,
-          color: theme.text.secondary,
-          fontSize: theme.font.sizeMd,
-        }}
-      >
-        Loading dashboards...
-      </main>
-    );
+    return <LoadingScreen label="Loading dashboards" />;
   }
 
   if (error) {

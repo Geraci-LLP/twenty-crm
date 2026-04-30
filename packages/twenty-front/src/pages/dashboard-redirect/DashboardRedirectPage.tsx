@@ -122,34 +122,140 @@ export const DashboardRedirectPage = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
-        flexDirection: 'column',
-        gap: 16,
+        minHeight: '100vh',
         padding: 24,
+        background: '#f8fafc',
+        fontFamily:
+          '"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      {errorMsg ? (
-        <>
-          <p style={{ color: '#d00', fontWeight: 600 }}>
-            Dashboard redirect failed
-          </p>
-          <pre
-            style={{
-              maxWidth: 600,
-              whiteSpace: 'pre-wrap',
-              background: '#fff1f0',
-              padding: 12,
-              borderRadius: 4,
-              border: '1px solid #ffa39e',
-            }}
-          >
-            {errorMsg}
-          </pre>
-          <a href="/">Back to CRM</a>
-        </>
-      ) : (
-        <p>{statusMsg}</p>
-      )}
+      {/* Inline spinner keyframes — this page renders before the Twenty
+          theme/css providers so we can't rely on a class. */}
+      <style>{`@keyframes dashboardRedirectSpin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }`}</style>
+
+      <div
+        style={{
+          width: '100%',
+          maxWidth: 480,
+          padding: 32,
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
+          borderRadius: 12,
+          boxShadow: '0 4px 12px rgba(15, 23, 42, 0.06)',
+          textAlign: 'center',
+        }}
+      >
+        {errorMsg ? (
+          <>
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                margin: '0 auto 16px',
+                borderRadius: '50%',
+                background: '#fef2f2',
+                color: '#dc2626',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 24,
+                fontWeight: 600,
+              }}
+            >
+              !
+            </div>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 18,
+                fontWeight: 600,
+                color: '#0f172a',
+              }}
+            >
+              Dashboard redirect failed
+            </h1>
+            <p
+              style={{
+                margin: '8px 0 16px',
+                fontSize: 13,
+                color: '#475569',
+              }}
+            >
+              We couldn&apos;t hand you off to the dashboard. Details below.
+            </p>
+            <pre
+              style={{
+                margin: '0 0 16px',
+                padding: 12,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                background: '#fef2f2',
+                color: '#991b1b',
+                border: '1px solid #fecaca',
+                borderRadius: 6,
+                fontSize: 12,
+                textAlign: 'left',
+                maxHeight: 200,
+                overflow: 'auto',
+              }}
+            >
+              {errorMsg}
+            </pre>
+            <a
+              href="/"
+              style={{
+                display: 'inline-block',
+                padding: '8px 16px',
+                background: '#1d4ed8',
+                color: '#ffffff',
+                borderRadius: 6,
+                fontSize: 13,
+                fontWeight: 600,
+                textDecoration: 'none',
+              }}
+            >
+              Back to CRM
+            </a>
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                margin: '0 auto 20px',
+                border: '3px solid #e2e8f0',
+                borderTopColor: '#1d4ed8',
+                borderRadius: '50%',
+                animation: 'dashboardRedirectSpin 0.8s linear infinite',
+              }}
+            />
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 18,
+                fontWeight: 600,
+                color: '#0f172a',
+              }}
+            >
+              Opening your dashboard
+            </h1>
+            <p
+              style={{
+                margin: '8px 0 0',
+                fontSize: 13,
+                color: '#475569',
+                minHeight: 20,
+              }}
+            >
+              {statusMsg}
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 };

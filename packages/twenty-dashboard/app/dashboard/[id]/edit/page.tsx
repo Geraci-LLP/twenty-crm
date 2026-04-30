@@ -6,6 +6,7 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { LoadingScreen } from '../../../../components/LoadingScreen';
 import { WidgetConfigPanel } from '../../../../components/builder/WidgetConfigPanel';
 import { WidgetGrid } from '../../../../components/builder/WidgetGrid';
 import { WidgetPalette } from '../../../../components/builder/WidgetPalette';
@@ -496,7 +497,12 @@ const DashboardEditPage = () => {
   );
 
   if (isLoading) {
-    return <main style={{ padding: 32 }}>Loading builder...</main>;
+    return (
+      <LoadingScreen
+        label="Loading builder"
+        hint="Resolving the dashboard's page layout and widgets."
+      />
+    );
   }
 
   return (
