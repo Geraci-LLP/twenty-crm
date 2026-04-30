@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
+import { LoadingScreen } from '../../../components/LoadingScreen';
 import { WidgetRenderer } from '../../../components/widgets/WidgetRenderer';
 import {
   FIND_DASHBOARD_BY_ID,
@@ -64,7 +65,12 @@ const DashboardViewPage = () => {
   const isLoading = dashLoading || tabsLoading || widgetsLoading;
 
   if (isLoading) {
-    return <main style={{ padding: 32 }}>Loading dashboard...</main>;
+    return (
+      <LoadingScreen
+        label="Loading dashboard"
+        hint="Fetching widgets and the latest CRM data."
+      />
+    );
   }
 
   if (dashError || !dashboard) {
