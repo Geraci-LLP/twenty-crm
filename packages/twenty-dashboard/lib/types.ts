@@ -1,9 +1,37 @@
 // TS types for Dashboard + PageLayoutWidget
 
-// Backend `WidgetType` enum — only the values our scaffolded dashboard app
-// actually uses. Twenty's full enum is much larger (VIEW / IFRAME / TIMELINE
-// / etc.) but we only render charts and rich text for the MVP.
-export type BackendWidgetType = 'GRAPH' | 'STANDALONE_RICH_TEXT';
+// Subset of the backend `WidgetType` enum that our writes use — when we
+// CREATE a widget from this dashboard's palette, we always pick GRAPH (for
+// any chart subtype) or STANDALONE_RICH_TEXT. Reads can return any value.
+export type WriteableBackendWidgetType = 'GRAPH' | 'STANDALONE_RICH_TEXT';
+
+// Full Twenty WidgetType enum, kept here so `widget.type` round-trips
+// safely even for widgets created via the CRM page-builder (IFRAME,
+// CALENDAR, EMAILS, etc.) — the dashboard renders a subset and treats the
+// rest as "unsupported" rather than crashing.
+export type BackendWidgetType =
+  | 'GRAPH'
+  | 'STANDALONE_RICH_TEXT'
+  | 'IFRAME'
+  | 'VIEW'
+  | 'CALENDAR'
+  | 'EMAILS'
+  | 'EMAIL_THREAD'
+  | 'CAMPAIGN_EDITOR'
+  | 'FIELD'
+  | 'FIELD_RICH_TEXT'
+  | 'FIELDS'
+  | 'FILES'
+  | 'FORM_BUILDER'
+  | 'LANDING_PAGE_BUILDER'
+  | 'NOTES'
+  | 'RECORD_TABLE'
+  | 'TASKS'
+  | 'TIMELINE'
+  | 'WORKFLOW'
+  | 'WORKFLOW_RUN'
+  | 'WORKFLOW_VERSION'
+  | 'FRONT_COMPONENT';
 
 // Internal palette identifier — picks which subtype of GRAPH (bar/line/pie/
 // gauge/metric/aggregate) or STANDALONE_RICH_TEXT to render. Stored alongside
@@ -18,8 +46,13 @@ export type PaletteKey =
   | 'RICH_TEXT'
   | 'GAUGE_CHART';
 
-// Map a palette key to the backend WidgetType the API expects.
-export const PALETTE_TO_BACKEND_TYPE: Record<PaletteKey, BackendWidgetType> = {
+// Map a palette key to the backend WidgetType the API accepts when creating
+// a new widget. Only GRAPH and STANDALONE_RICH_TEXT are valid here — those
+// are the two that our palette can construct.
+export const PALETTE_TO_BACKEND_TYPE: Record<
+  PaletteKey,
+  WriteableBackendWidgetType
+> = {
   BAR_CHART: 'GRAPH',
   LINE_CHART: 'GRAPH',
   PIE_CHART: 'GRAPH',
@@ -45,10 +78,11 @@ export const PALETTE_TO_CONFIG_TYPE: Record<PaletteKey, string> = {
   RICH_TEXT: 'STANDALONE_RICH_TEXT',
 };
 
-// Old alias used throughout the app — keep it pointing at PaletteKey so we
-// don't have to rename props everywhere. Source of truth for "what kind of
-// widget is this" remains the palette key; the backend type is derived.
-export type WidgetType = PaletteKey;
+// `widget.type` can be either a backend WidgetType (when loaded from the
+// API) OR a palette key (when freshly dragged onto the canvas, before save).
+// The renderer/save logic both have to handle both cases — this union lets
+// TypeScript catch missed branches.
+export type WidgetType = PaletteKey | BackendWidgetType;
 
 export type GridPosition = {
   column: number;
