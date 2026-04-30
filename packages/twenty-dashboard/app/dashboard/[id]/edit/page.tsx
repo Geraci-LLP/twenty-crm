@@ -83,6 +83,13 @@ const DashboardEditPage = () => {
   const [tabResolutionError, setTabResolutionError] = useState<string | null>(
     null,
   );
+  // Surface save outcomes to the user. The previous version swallowed errors
+  // silently — the loading spinner cleared and the user assumed success.
+  type SaveResult =
+    | { kind: 'success'; savedCount: number }
+    | { kind: 'partial'; savedCount: number; failedCount: number; firstError: string }
+    | { kind: 'failure'; firstError: string };
+  const [saveResult, setSaveResult] = useState<SaveResult | null>(null);
 
   // Pick an existing tab if one exists on the dashboard's page layout.
   // We don't create one eagerly — only when the user tries to save a new
@@ -220,6 +227,7 @@ const DashboardEditPage = () => {
   const handleSave = async () => {
     setSaving(true);
     setTabResolutionError(null);
+    setSaveResult(null);
     try {
       const hasNewWidgets = widgets.some((widget) =>
         widget.id.startsWith('new-'),
@@ -228,10 +236,20 @@ const DashboardEditPage = () => {
       if (hasNewWidgets) {
         tabIdForNewWidgets = await ensureTabId();
         if (!tabIdForNewWidgets) {
-          // ensureTabId already set an error message; bail out cleanly.
+          // ensureTabId already set tabResolutionError; show a save banner
+          // too so the user has one place to look for failure feedback.
+          setSaveResult({
+            kind: 'failure',
+            firstError:
+              'Could not resolve or create a tab for new widgets. See banner above.',
+          });
           return;
         }
       }
+
+      let savedCount = 0;
+      let failedCount = 0;
+      let firstError: string | null = null;
 
       for (const widget of widgets) {
         // Translate the palette-level type (BAR_CHART, LINE_CHART, etc.) into
@@ -255,33 +273,83 @@ const DashboardEditPage = () => {
         }
         const persistedConfiguration = baseConfiguration;
 
-        if (widget.id.startsWith('new-')) {
-          await createWidget({
-            variables: {
-              input: {
-                title: widget.title,
-                type: backendType,
-                objectMetadataId: widget.objectMetadataId,
-                gridPosition: widget.gridPosition,
-                configuration: persistedConfiguration,
-                pageLayoutTabId: tabIdForNewWidgets,
+        // Per-widget try/catch so one bad widget doesn't silently abort the
+        // rest. We log full details for diagnosis but only surface the first
+        // human-readable message in the banner.
+        try {
+          if (widget.id.startsWith('new-')) {
+            await createWidget({
+              variables: {
+                input: {
+                  title: widget.title,
+                  type: backendType,
+                  objectMetadataId: widget.objectMetadataId,
+                  gridPosition: widget.gridPosition,
+                  configuration: persistedConfiguration,
+                  pageLayoutTabId: tabIdForNewWidgets,
+                },
               },
-            },
-          });
-        } else {
-          await updateWidget({
-            variables: {
-              id: widget.id,
-              input: {
-                title: widget.title,
-                gridPosition: widget.gridPosition,
-                configuration: persistedConfiguration,
+            });
+          } else {
+            await updateWidget({
+              variables: {
+                id: widget.id,
+                input: {
+                  title: widget.title,
+                  gridPosition: widget.gridPosition,
+                  configuration: persistedConfiguration,
+                },
               },
-            },
-          });
+            });
+          }
+          savedCount += 1;
+        } catch (mutationError) {
+          failedCount += 1;
+          // oxlint-disable-next-line no-console
+          console.error(
+            `Failed to save widget "${widget.title || widget.id}":`,
+            mutationError,
+          );
+          if (!firstError) {
+            firstError =
+              mutationError instanceof Error
+                ? mutationError.message
+                : String(mutationError);
+          }
         }
       }
-      router.push(`/dashboard/${params.id}`);
+
+      if (failedCount === 0) {
+        setSaveResult({ kind: 'success', savedCount });
+        // Only navigate away on full success. On any failure, stay on the
+        // edit page so the user can see what went wrong and retry.
+        router.push(`/dashboard/${params.id}`);
+      } else if (savedCount > 0) {
+        setSaveResult({
+          kind: 'partial',
+          savedCount,
+          failedCount,
+          firstError: firstError ?? 'Unknown error',
+        });
+      } else {
+        setSaveResult({
+          kind: 'failure',
+          firstError: firstError ?? 'Unknown error',
+        });
+      }
+    } catch (unexpectedError) {
+      // Catches anything outside the per-widget loop (e.g., ensureTabId
+      // throws unexpectedly). Without this, the previous version showed
+      // nothing to the user.
+      // oxlint-disable-next-line no-console
+      console.error('Unexpected save error:', unexpectedError);
+      setSaveResult({
+        kind: 'failure',
+        firstError:
+          unexpectedError instanceof Error
+            ? unexpectedError.message
+            : String(unexpectedError),
+      });
     } finally {
       setSaving(false);
     }
@@ -331,6 +399,40 @@ const DashboardEditPage = () => {
                   }}
                 >
                   {tabResolutionError}
+                </p>
+              ) : null}
+              {saveResult?.kind === 'failure' ? (
+                <p
+                  style={{
+                    margin: '4px 0 0',
+                    color: '#b00020',
+                    fontSize: 12,
+                  }}
+                >
+                  Save failed: {saveResult.firstError}
+                </p>
+              ) : null}
+              {saveResult?.kind === 'partial' ? (
+                <p
+                  style={{
+                    margin: '4px 0 0',
+                    color: '#b08000',
+                    fontSize: 12,
+                  }}
+                >
+                  Saved {saveResult.savedCount} widget(s),{' '}
+                  {saveResult.failedCount} failed: {saveResult.firstError}
+                </p>
+              ) : null}
+              {saveResult?.kind === 'success' && saveResult.savedCount > 0 ? (
+                <p
+                  style={{
+                    margin: '4px 0 0',
+                    color: '#0a7a0a',
+                    fontSize: 12,
+                  }}
+                >
+                  Saved {saveResult.savedCount} widget(s).
                 </p>
               ) : null}
             </div>
